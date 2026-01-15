@@ -1,0 +1,59 @@
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: elbruso-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: elbruso
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "7900:5432"  # PostgreSQL на порту 7900 (79xx - базы данных)
+    volumes:
+      # Persistent data storage - сохраняется на диск
+      - postgres_data:/var/lib/postgresql/data
+      # SQL scripts for initialization
+      - ./docs/database:/docker-entrypoint-initdb.d:ro
+    networks:
+      - elbruso-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: elbruso-redis
+    restart: unless-stopped
+    ports:
+      - "7800:6379"  # Redis на порту 7800 (78xx - кеш и утилиты)
+    volumes:
+      # Persistent Redis data
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - elbruso-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Beekeeper Studio - GUI для управления БД
+  # Запускается отдельно через desktop приложение
+  # Подключение: localhost:5432, user: postgres, password: postgres, db: elbruso
+
+networks:
+  elbruso-network:
+    driver: bridge
+
+volumes:
+  # Named volumes - данные сохраняются на диске хоста
+  # Даже при удалении контейнера данные останутся
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
