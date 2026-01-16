@@ -86,6 +86,34 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Pages table
+CREATE TABLE IF NOT EXISTS pages (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+  parent_page_id UUID REFERENCES pages(id) ON DELETE CASCADE,
+  title VARCHAR(500) NOT NULL,
+  icon VARCHAR(100),
+  cover_image TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_by UUID NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+-- Blocks table
+CREATE TABLE IF NOT EXISTS blocks (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  page_id UUID NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
+  block_type VARCHAR(50) NOT NULL CHECK (block_type IN ('text', 'table', 'chart', 'divider', 'image')),
+  content JSONB NOT NULL,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_by UUID NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
@@ -95,3 +123,9 @@ CREATE INDEX IF NOT EXISTS idx_api_keys_key_hash ON api_keys(key_hash);
 CREATE INDEX IF NOT EXISTS idx_workspaces_slug ON workspaces(slug);
 CREATE INDEX IF NOT EXISTS idx_workspace_permissions_workspace_id ON workspace_permissions(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_workspace_permissions_user_id ON workspace_permissions(user_id);
+CREATE INDEX IF NOT EXISTS idx_pages_workspace ON pages(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_pages_parent ON pages(parent_page_id);
+CREATE INDEX IF NOT EXISTS idx_pages_sort ON pages(workspace_id, parent_page_id, sort_order);
+CREATE INDEX IF NOT EXISTS idx_blocks_page ON blocks(page_id);
+CREATE INDEX IF NOT EXISTS idx_blocks_sort ON blocks(page_id, sort_order);
+CREATE INDEX IF NOT EXISTS idx_blocks_type ON blocks(block_type);

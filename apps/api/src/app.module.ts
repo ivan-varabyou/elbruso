@@ -6,6 +6,8 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { WorkspacesModule } from './workspaces/workspaces.module';
+import { PagesModule } from './pages/pages.module';
+import { BlocksModule } from './blocks/blocks.module';
 import { AuditModule } from './common/audit/audit.module';
 
 @Module({
@@ -24,6 +26,8 @@ import { AuditModule } from './common/audit/audit.module';
     AuthModule,
     UsersModule,
     WorkspacesModule,
+    PagesModule,
+    BlocksModule,
     AuditModule,
   ],
   providers: [

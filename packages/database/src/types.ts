@@ -139,27 +139,23 @@ export interface Pages {
   title: string;
   icon: string | null;
   cover_image: string | null;
-  page_type: Generated<string>;
-  is_public: Generated<boolean>;
-  public_url: string | null;
-  metadata: string | null; // JSONB
+  sort_order: number;
   created_by: string;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
-  sort_order: Generated<number>;
+  is_active: Generated<boolean>;
 }
 
 export interface Blocks {
   id: Generated<string>; // UUID
   page_id: string;
-  parent_block_id: string | null;
-  block_type: string;
-  content: string; // JSONB
-  settings: string | null; // JSONB
-  sort_order: Generated<number>;
+  block_type: string; // 'text', 'table', 'chart', 'divider', 'image'
+  content: unknown; // JSONB
+  sort_order: number;
   created_by: string;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
+  is_active: Generated<boolean>;
 }
 
 export interface Charts {
