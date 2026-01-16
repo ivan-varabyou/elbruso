@@ -14,12 +14,14 @@ import {
   UpdateMemberRoleDto,
   WorkspaceRole,
 } from './dto';
+import { AuditService, AuditAction } from '../common/audit/audit.service';
 
 @Injectable()
 export class WorkspacesService {
   constructor(
     private readonly db: DatabaseService,
     private readonly usersService: UsersService,
+    private readonly auditService: AuditService,
   ) {}
 
   async create(userId: string, dto: CreateWorkspaceDto) {
@@ -50,6 +52,15 @@ export class WorkspacesService {
         role: WorkspaceRole.OWNER,
       })
       .execute();
+
+    // Log action
+    await this.auditService.log({
+      userId,
+      action: AuditAction.WORKSPACE_CREATE,
+      entityType: 'Workspace',
+      entityId: workspace.id,
+      details: { name: workspace.name, slug: workspace.slug },
+    });
 
     return {
       ...workspace,
@@ -145,6 +156,15 @@ export class WorkspacesService {
 
     const userRole = await this.getUserRole(id, userId);
 
+    // Log action
+    await this.auditService.log({
+      userId,
+      action: AuditAction.WORKSPACE_UPDATE,
+      entityType: 'Workspace',
+      entityId: id,
+      details: dto,
+    });
+
     return {
       ...workspace,
       userRole,
@@ -168,6 +188,14 @@ export class WorkspacesService {
     if (!workspace) {
       throw new NotFoundException('Workspace not found');
     }
+
+    // Log action
+    await this.auditService.log({
+      userId,
+      action: AuditAction.WORKSPACE_DELETE,
+      entityType: 'Workspace',
+      entityId: id,
+    });
 
     return { message: 'Workspace deleted successfully' };
   }
@@ -205,6 +233,15 @@ export class WorkspacesService {
         role: dto.role,
       })
       .execute();
+
+    // Log action
+    await this.auditService.log({
+      userId,
+      action: AuditAction.MEMBER_ADD,
+      entityType: 'Workspace',
+      entityId: id,
+      details: { memberId: member.id, role: dto.role },
+    });
 
     return {
       id: member.id,
@@ -271,6 +308,15 @@ export class WorkspacesService {
       .where('user_id', '=', memberId)
       .execute();
 
+    // Log action
+    await this.auditService.log({
+      userId,
+      action: AuditAction.MEMBER_ROLE_UPDATE,
+      entityType: 'Workspace',
+      entityId: id,
+      details: { memberId, role: dto.role },
+    });
+
     return { message: 'Member role updated successfully' };
   }
 
@@ -299,6 +345,15 @@ export class WorkspacesService {
       .where('user_id', '=', memberId)
       .execute();
 
+    // Log action
+    await this.auditService.log({
+      userId,
+      action: AuditAction.MEMBER_REMOVE,
+      entityType: 'Workspace',
+      entityId: id,
+      details: { memberId },
+    });
+
     return { message: 'Member removed successfully' };
   }
 
@@ -318,7 +373,7 @@ export class WorkspacesService {
       throw new ForbiddenException('Access denied');
     }
 
-    const roleHierarchy = {
+    const roleHierarchy: Record<string, number> = {
       [WorkspaceRole.OWNER]: 4,
       [WorkspaceRole.ADMIN]: 3,
       [WorkspaceRole.WRITE]: 2,

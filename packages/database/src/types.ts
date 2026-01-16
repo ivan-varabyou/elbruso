@@ -179,6 +179,18 @@ export interface Charts {
   updated_at: Generated<Timestamp>;
 }
 
+export interface AuditLogs {
+  id: Generated<string>; // UUID
+  user_id: string | null;
+  action: string;
+  entity_type: string;
+  entity_id: string | null;
+  details: string | null; // JSONB
+  ip_address: string | null;
+  user_agent: string | null;
+  created_at: Generated<Timestamp>;
+}
+
 // Database type combining all tables
 export interface Database {
   languages: Languages;
@@ -196,4 +208,5 @@ export interface Database {
   pages: Pages;
   blocks: Blocks;
   charts: Charts;
+  audit_logs: AuditLogs;
 }

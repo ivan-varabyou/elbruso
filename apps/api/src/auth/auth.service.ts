@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { WorkspacesService } from '../workspaces/workspaces.service';
+import { AuditService, AuditAction } from '../common/audit/audit.service';
 import { LoginDto, RegisterDto, RefreshTokenDto } from './dto';
 import { JwtPayload, AuthResponse } from './interfaces';
 
@@ -14,6 +15,7 @@ export class AuthService {
     private readonly workspacesService: WorkspacesService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly auditService: AuditService,
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponse> {
@@ -33,6 +35,15 @@ export class AuthService {
       icon: '🏠',
     });
 
+    // Log registration
+    await this.auditService.log({
+      userId: user.id,
+      action: AuditAction.REGISTER,
+      entityType: 'User',
+      entityId: user.id,
+      details: { email: user.email },
+    });
+
     // Генерируем токены
     return this.generateTokens(user.id, user.email);
   }
@@ -42,6 +53,14 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
+    // Log login
+    await this.auditService.log({
+      userId: user.id,
+      action: AuditAction.LOGIN,
+      entityType: 'User',
+      entityId: user.id,
+    });
 
     return this.generateTokens(user.id, user.email);
   }
@@ -65,12 +84,38 @@ export class AuthService {
 
   async refreshToken(dto: RefreshTokenDto): Promise<AuthResponse> {
     try {
-      const payload = this.jwtService.verify(dto.refreshToken, {
+      const payload: JwtPayload = this.jwtService.verify(dto.refreshToken, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
-      return this.generateTokens(payload.sub, payload.email);
+      // Validate token exists in database (rotation/security check)
+      const isValid = await this.usersService.validateRefreshToken(
+        payload.sub,
+        dto.refreshToken,
+      );
+
+      if (!isValid) {
+        throw new UnauthorizedException('Invalid or expired refresh token');
+      }
+
+      // Revoke the old token (rotation)
+      await this.usersService.revokeRefreshToken(payload.sub, dto.refreshToken);
+
+      // Issue new tokens
+      const tokens = await this.generateTokens(payload.sub, payload.email);
+
+      // Log token refresh
+      await this.auditService.log({
+        userId: payload.sub,
+        action: AuditAction.TOKEN_REFRESH,
+        entityType: 'Session',
+      });
+
+      return tokens;
     } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
       throw new UnauthorizedException('Invalid refresh token');
     }
   }

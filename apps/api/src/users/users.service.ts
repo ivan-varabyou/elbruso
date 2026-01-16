@@ -97,7 +97,7 @@ export class UsersService {
 
   async saveRefreshToken(userId: string, refreshToken: string) {
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7); // 7 дней
+    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
 
     await this.db.client
       .insertInto('sessions')
@@ -106,6 +106,26 @@ export class UsersService {
         refresh_token: refreshToken,
         expires_at: expiresAt,
       })
+      .execute();
+  }
+
+  async validateRefreshToken(userId: string, refreshToken: string) {
+    const session = await this.db.client
+      .selectFrom('sessions')
+      .selectAll()
+      .where('user_id', '=', userId)
+      .where('refresh_token', '=', refreshToken)
+      .where('expires_at', '>', new Date())
+      .executeTakeFirst();
+
+    return !!session;
+  }
+
+  async revokeRefreshToken(userId: string, refreshToken: string) {
+    await this.db.client
+      .deleteFrom('sessions')
+      .where('user_id', '=', userId)
+      .where('refresh_token', '=', refreshToken)
       .execute();
   }
 

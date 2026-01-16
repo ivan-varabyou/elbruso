@@ -8,6 +8,7 @@ import {
   Param,
   UseGuards,
   Request,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -54,7 +55,10 @@ export class WorkspacesController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Workspace not found' })
-  findOne(@Request() req: RequestWithUser, @Param('id') id: string) {
+  findOne(
+    @Request() req: RequestWithUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
     return this.workspacesService.findOne(id, req.user.sub);
   }
 
@@ -66,7 +70,7 @@ export class WorkspacesController {
   @ApiResponse({ status: 404, description: 'Workspace not found' })
   update(
     @Request() req: RequestWithUser,
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateWorkspaceDto,
   ) {
     return this.workspacesService.update(id, req.user.sub, dto);
@@ -78,7 +82,10 @@ export class WorkspacesController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Workspace not found' })
-  delete(@Request() req: RequestWithUser, @Param('id') id: string) {
+  delete(
+    @Request() req: RequestWithUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
     return this.workspacesService.delete(id, req.user.sub);
   }
 
@@ -91,7 +98,7 @@ export class WorkspacesController {
   @ApiResponse({ status: 409, description: 'User is already a member' })
   addMember(
     @Request() req: RequestWithUser,
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: AddMemberDto,
   ) {
     return this.workspacesService.addMember(id, req.user.sub, dto);
@@ -103,7 +110,10 @@ export class WorkspacesController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Workspace not found' })
-  getMembers(@Request() req: RequestWithUser, @Param('id') id: string) {
+  getMembers(
+    @Request() req: RequestWithUser,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
     return this.workspacesService.getMembers(id, req.user.sub);
   }
 
@@ -115,8 +125,8 @@ export class WorkspacesController {
   @ApiResponse({ status: 404, description: 'Member not found' })
   updateMemberRole(
     @Request() req: RequestWithUser,
-    @Param('id') id: string,
-    @Param('memberId') memberId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('memberId', ParseUUIDPipe) memberId: string,
     @Body() dto: UpdateMemberRoleDto,
   ) {
     return this.workspacesService.updateMemberRole(
@@ -135,8 +145,8 @@ export class WorkspacesController {
   @ApiResponse({ status: 404, description: 'Member not found' })
   removeMember(
     @Request() req: RequestWithUser,
-    @Param('id') id: string,
-    @Param('memberId') memberId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('memberId', ParseUUIDPipe) memberId: string,
   ) {
     return this.workspacesService.removeMember(id, req.user.sub, memberId);
   }
