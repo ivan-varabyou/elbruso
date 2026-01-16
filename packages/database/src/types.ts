@@ -62,11 +62,10 @@ export interface ApiKeys {
 export interface Workspaces {
   id: Generated<string>; // UUID
   name: string;
+  slug: string;
   description: string | null;
-  season_id: number | null;
-  organization_id: number | null;
-  sport_id: number | null;
-  owner_id: string;
+  icon: string | null;
+  is_active: Generated<boolean>;
   created_at: Generated<Timestamp>;
   updated_at: Generated<Timestamp>;
 }
@@ -127,15 +126,9 @@ export interface Roles {
 export interface WorkspacePermissions {
   id: Generated<string>; // UUID
   workspace_id: string;
-  user_id: string | null;
-  role_id: string | null;
-  organization_id: number | null;
-  permission_level: string;
-  can_share: Generated<boolean>;
-  can_create_tables: Generated<boolean>;
-  granted_by: string;
-  granted_at: Generated<Timestamp>;
-  expires_at: Timestamp | null;
+  user_id: string;
+  role: string; // owner, admin, write, read
+  created_at: Generated<Timestamp>;
 }
 
 // Dashboard & Reports

@@ -148,7 +148,10 @@ describe('Auth & Users E2E Tests (Sequential)', () => {
       .expect(200);
 
     expect(profileResponse.body).toHaveProperty('id');
-    expect(profileResponse.body).toHaveProperty('email', 'main-test@example.com');
+    expect(profileResponse.body).toHaveProperty(
+      'email',
+      'main-test@example.com',
+    );
     expect(profileResponse.body).toHaveProperty('name', 'Test User');
     expect(profileResponse.body).not.toHaveProperty('password');
 
@@ -161,7 +164,10 @@ describe('Auth & Users E2E Tests (Sequential)', () => {
       .expect(200);
 
     expect(userByIdResponse.body).toHaveProperty('id', userId);
-    expect(userByIdResponse.body).toHaveProperty('email', 'main-test@example.com');
+    expect(userByIdResponse.body).toHaveProperty(
+      'email',
+      'main-test@example.com',
+    );
     expect(userByIdResponse.body).not.toHaveProperty('password');
 
     // 14. Get user with non-existent id

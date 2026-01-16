@@ -8,7 +8,7 @@ module.exports = async () => {
   
   try {
     const cleanupSQL = `
-      TRUNCATE TABLE api_keys, sessions, users RESTART IDENTITY CASCADE;
+      TRUNCATE TABLE workspace_permissions, workspaces, api_keys, sessions, users RESTART IDENTITY CASCADE;
     `;
     
     const command = `docker exec elbruso-postgres psql -U postgres -d elbruso -c "${cleanupSQL}"`;

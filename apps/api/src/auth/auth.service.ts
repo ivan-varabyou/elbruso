@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
+import { WorkspacesService } from '../workspaces/workspaces.service';
 import { LoginDto, RegisterDto, RefreshTokenDto } from './dto';
 import { JwtPayload, AuthResponse } from './interfaces';
 
@@ -10,6 +11,7 @@ import { JwtPayload, AuthResponse } from './interfaces';
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly workspacesService: WorkspacesService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -22,6 +24,13 @@ export class AuthService {
     const user = await this.usersService.create({
       ...dto,
       password: hashedPassword,
+    });
+
+    // Создаем default workspace
+    await this.workspacesService.create(user.id, {
+      name: `${user.name}'s Workspace`,
+      description: 'Personal workspace',
+      icon: '🏠',
     });
 
     // Генерируем токены
