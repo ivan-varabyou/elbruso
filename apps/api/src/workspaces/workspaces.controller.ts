@@ -26,8 +26,8 @@ import {
 } from './dto';
 import { RequestWithUser } from '../auth/interfaces';
 
-@ApiTags('workspaces')
-@ApiBearerAuth()
+@ApiTags('Workspaces')
+@ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
 @Controller('workspaces')
 export class WorkspacesController {

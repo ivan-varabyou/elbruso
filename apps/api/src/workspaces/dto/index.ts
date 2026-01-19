@@ -73,9 +73,8 @@ export class UpdateWorkspaceDto {
 
 export enum WorkspaceRole {
   OWNER = 'owner',
-  ADMIN = 'admin',
-  WRITE = 'write',
-  READ = 'read',
+  EDITOR = 'editor',
+  VIEWER = 'viewer',
 }
 
 export class AddMemberDto {
@@ -90,7 +89,7 @@ export class AddMemberDto {
   @ApiProperty({
     description: 'Member role',
     enum: WorkspaceRole,
-    example: WorkspaceRole.WRITE,
+    example: WorkspaceRole.EDITOR,
   })
   @IsEnum(WorkspaceRole)
   @IsNotEmpty()
@@ -101,7 +100,7 @@ export class UpdateMemberRoleDto {
   @ApiProperty({
     description: 'New member role',
     enum: WorkspaceRole,
-    example: WorkspaceRole.ADMIN,
+    example: WorkspaceRole.EDITOR,
   })
   @IsEnum(WorkspaceRole)
   @IsNotEmpty()

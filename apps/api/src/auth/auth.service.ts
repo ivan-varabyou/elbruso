@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -19,33 +20,29 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponse> {
-    // Хешируем пароль
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    // Создаем пользователя
     const user = await this.usersService.create({
       ...dto,
       password: hashedPassword,
     });
 
-    // Создаем default workspace
-    await this.workspacesService.create(user.id, {
+    const userId = (user as any).id as string;
+
+    await this.workspacesService.create(userId, {
       name: `${user.name}'s Workspace`,
       description: 'Personal workspace',
-      icon: '🏠',
     });
 
-    // Log registration
     await this.auditService.log({
-      userId: user.id,
+      userId,
       action: AuditAction.REGISTER,
       entityType: 'User',
-      entityId: user.id,
+      entityId: userId,
       details: { email: user.email },
     });
 
-    // Генерируем токены
-    return this.generateTokens(user.id, user.email);
+    return this.generateTokens(userId, user.email);
   }
 
   async login(dto: LoginDto): Promise<AuthResponse> {
@@ -54,15 +51,16 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Log login
+    const userId = (user as any).id as string;
+
     await this.auditService.log({
-      userId: user.id,
+      userId,
       action: AuditAction.LOGIN,
       entityType: 'User',
-      entityId: user.id,
+      entityId: userId,
     });
 
-    return this.generateTokens(user.id, user.email);
+    return this.generateTokens(userId, user.email);
   }
 
   async validateUser(email: string, password: string) {
@@ -71,15 +69,21 @@ export class AuthService {
       return null;
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      (user as any).password,
+    );
     if (!isPasswordValid) {
       return null;
     }
 
-    // Return user without password
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _pwd, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user as any;
     return userWithoutPassword;
+  }
+
+  async validateApiKey(apiKey: string) {
+    return this.usersService.findByApiKey(apiKey);
   }
 
   async refreshToken(dto: RefreshTokenDto): Promise<AuthResponse> {
@@ -88,7 +92,6 @@ export class AuthService {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
-      // Validate token exists in database (rotation/security check)
       const isValid = await this.usersService.validateRefreshToken(
         payload.sub,
         dto.refreshToken,
@@ -98,13 +101,10 @@ export class AuthService {
         throw new UnauthorizedException('Invalid or expired refresh token');
       }
 
-      // Revoke the old token (rotation)
       await this.usersService.revokeRefreshToken(payload.sub, dto.refreshToken);
 
-      // Issue new tokens
       const tokens = await this.generateTokens(payload.sub, payload.email);
 
-      // Log token refresh
       await this.auditService.log({
         userId: payload.sub,
         action: AuditAction.TOKEN_REFRESH,
@@ -120,10 +120,6 @@ export class AuthService {
     }
   }
 
-  async validateApiKey(apiKey: string) {
-    return this.usersService.findByApiKey(apiKey);
-  }
-
   private async generateTokens(
     userId: string,
     email: string,
@@ -135,7 +131,6 @@ export class AuthService {
       expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRES_IN', '7d'),
     });
 
-    // Сохраняем refresh token в БД
     await this.usersService.saveRefreshToken(userId, refreshToken);
 
     return {

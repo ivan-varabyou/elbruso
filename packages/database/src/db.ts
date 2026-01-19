@@ -1,6 +1,6 @@
 import { Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
-import type { Database } from './types';
+import type { DB as Database } from './types';
 
 let db: Kysely<Database> | null = null;
 
@@ -42,4 +42,4 @@ export async function closeDatabase(): Promise<void> {
 }
 
 // Export only the type reference, not the interface itself
-export type { Database } from './types';
+export type { Database };

@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { WorkspacesService } from '../workspaces/workspaces.service';
 import { AuditService, AuditAction } from '../common/audit/audit.service';
@@ -34,7 +39,7 @@ export class PagesService {
     await this.workspacesService.checkPermission(
       workspaceId,
       userId,
-      WorkspaceRole.WRITE
+      WorkspaceRole.EDITOR,
     );
 
     // Calculate sort order
@@ -99,18 +104,21 @@ export class PagesService {
     await this.workspacesService.checkPermission(
       page.workspace_id,
       userId,
-      WorkspaceRole.READ
+      WorkspaceRole.VIEWER,
     );
 
     return page;
   }
 
-  async getPageTree(workspaceId: string, userId: string): Promise<PageTreeNode[]> {
+  async getPageTree(
+    workspaceId: string,
+    userId: string,
+  ): Promise<PageTreeNode[]> {
     // Check permission
     await this.workspacesService.checkPermission(
       workspaceId,
       userId,
-      WorkspaceRole.READ
+      WorkspaceRole.VIEWER,
     );
 
     // Get all pages
@@ -128,8 +136,8 @@ export class PagesService {
 
   private buildTree(pages: any[], parentId: string | null): PageTreeNode[] {
     return pages
-      .filter(p => p.parent_page_id === parentId)
-      .map(page => ({
+      .filter((p) => p.parent_page_id === parentId)
+      .map((page) => ({
         ...page,
         children: this.buildTree(pages, page.id),
       }));
@@ -142,7 +150,7 @@ export class PagesService {
     await this.workspacesService.checkPermission(
       page.workspace_id,
       userId,
-      WorkspaceRole.WRITE
+      WorkspaceRole.EDITOR,
     );
 
     const updateData: any = {
@@ -185,7 +193,7 @@ export class PagesService {
     await this.workspacesService.checkPermission(
       page.workspace_id,
       userId,
-      WorkspaceRole.WRITE
+      WorkspaceRole.EDITOR,
     );
 
     // Prevent circular references
@@ -200,7 +208,7 @@ export class PagesService {
     const newOrder = await this.calculateSortOrder(
       page.workspace_id,
       dto.parentPageId || null,
-      dto.afterPageId
+      dto.afterPageId,
     );
 
     // Update page
@@ -233,7 +241,7 @@ export class PagesService {
     await this.workspacesService.checkPermission(
       page.workspace_id,
       userId,
-      WorkspaceRole.WRITE
+      WorkspaceRole.EDITOR,
     );
 
     // Soft delete (cascades to children via DB)
@@ -257,7 +265,10 @@ export class PagesService {
     return { message: 'Page deleted successfully' };
   }
 
-  private async isDescendant(pageId: string, potentialDescendantId: string): Promise<boolean> {
+  private async isDescendant(
+    pageId: string,
+    potentialDescendantId: string,
+  ): Promise<boolean> {
     const page = await this.db.client
       .selectFrom('pages')
       .select(['parent_page_id'])
@@ -278,7 +289,7 @@ export class PagesService {
   private async calculateSortOrder(
     workspaceId: string,
     parentPageId: string | null,
-    afterPageId?: string
+    afterPageId?: string,
   ): Promise<number> {
     if (!afterPageId) {
       // Insert at beginning

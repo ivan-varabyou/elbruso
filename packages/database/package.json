@@ -5,7 +5,8 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "generate-types": "kysely-codegen --dialect postgres --out-file ./src/types.ts"
   },
   "dependencies": {
     "kysely": "latest",
@@ -15,6 +16,7 @@
     "@elbruso/types": "workspace:*",
     "@types/node": "latest",
     "@types/pg": "latest",
+    "kysely-codegen": "^0.19.0",
     "typescript": "^5.0.0"
   }
 }

@@ -2,24 +2,24 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsUUID, IsOptional, IsObject, IsIn } from 'class-validator';
 
 export class CreateBlockDto {
-  @ApiProperty({ 
+  @ApiProperty({
     example: 'text',
-    enum: ['text', 'table', 'chart', 'divider', 'image']
+    enum: ['text', 'table', 'chart', 'divider', 'image'],
   })
   @IsString()
   @IsIn(['text', 'table', 'chart', 'divider', 'image'])
   type: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     example: { text: '# Welcome', format: 'markdown' },
-    description: 'Block content (structure depends on type)'
+    description: 'Block content (structure depends on type)',
   })
   @IsObject()
   content: Record<string, unknown>;
 
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     example: '550e8400-e29b-41d4-a716-446655440001',
-    description: 'Insert after this block. Null for first position.' 
+    description: 'Insert after this block. Null for first position.',
   })
   @IsOptional()
   @IsUUID()
@@ -27,8 +27,8 @@ export class CreateBlockDto {
 }
 
 export class UpdateBlockDto {
-  @ApiPropertyOptional({ 
-    example: { text: '# Updated Content', format: 'markdown' }
+  @ApiPropertyOptional({
+    example: { text: '# Updated Content', format: 'markdown' },
   })
   @IsOptional()
   @IsObject()
@@ -36,9 +36,9 @@ export class UpdateBlockDto {
 }
 
 export class MoveBlockDto {
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     example: '550e8400-e29b-41d4-a716-446655440002',
-    description: 'Insert after this block. Null for first position.' 
+    description: 'Insert after this block. Null for first position.',
   })
   @IsOptional()
   @IsUUID()

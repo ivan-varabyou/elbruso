@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Controller,
   Get,
@@ -9,13 +10,18 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiParam,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BlocksService } from './blocks.service';
 import { CreateBlockDto, UpdateBlockDto, MoveBlockDto } from './dto';
 
-@ApiTags('blocks')
-@ApiBearerAuth()
+@ApiTags('Blocks')
+@ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
 @Controller()
 export class BlocksController {
@@ -35,10 +41,7 @@ export class BlocksController {
   @Get('pages/:pageId/blocks')
   @ApiOperation({ summary: 'Get all blocks for a page' })
   @ApiParam({ name: 'pageId', type: 'string' })
-  async findByPage(
-    @Param('pageId') pageId: string,
-    @Request() req: any,
-  ) {
+  async findByPage(@Param('pageId') pageId: string, @Request() req: any) {
     return this.blocksService.findByPage(pageId, req.user.sub);
   }
 
@@ -67,10 +70,7 @@ export class BlocksController {
   @Delete('blocks/:id')
   @ApiOperation({ summary: 'Delete block (soft delete)' })
   @ApiParam({ name: 'id', type: 'string' })
-  async delete(
-    @Param('id') id: string,
-    @Request() req: any,
-  ) {
+  async delete(@Param('id') id: string, @Request() req: any) {
     return this.blocksService.delete(id, req.user.sub);
   }
 }

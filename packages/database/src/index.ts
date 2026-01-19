@@ -1,2 +1,2 @@
-export { createDatabase, getDatabase, closeDatabase } from './db';
-export type { Database } from './types';
+export { createDatabase, getDatabase, closeDatabase, type Database } from './db';
+export * from './types';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 
@@ -20,6 +21,13 @@ export enum AuditAction {
   BLOCK_UPDATE = 'BLOCK_UPDATE',
   BLOCK_DELETE = 'BLOCK_DELETE',
   BLOCK_MOVE = 'BLOCK_MOVE',
+  TABLE_CREATE = 'TABLE_CREATE',
+  TABLE_UPDATE = 'TABLE_UPDATE',
+  TABLE_DELETE = 'TABLE_DELETE',
+  VERSION_CREATE = 'VERSION_CREATE',
+  VERSION_ACTIVATE = 'VERSION_ACTIVATE',
+  CELLS_UPDATE = 'CELLS_UPDATE',
+  FORMULA_CALCULATE = 'FORMULA_CALCULATE',
 }
 
 @Injectable()

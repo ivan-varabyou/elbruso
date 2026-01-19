@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Controller,
   Get,
@@ -9,13 +10,18 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiParam,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PagesService } from './pages.service';
 import { CreatePageDto, UpdatePageDto, MovePageDto } from './dto';
 
-@ApiTags('pages')
-@ApiBearerAuth()
+@ApiTags('Pages')
+@ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
 @Controller()
 export class PagesController {
@@ -45,10 +51,7 @@ export class PagesController {
   @Get('pages/:id')
   @ApiOperation({ summary: 'Get page by ID' })
   @ApiParam({ name: 'id', type: 'string' })
-  async findOne(
-    @Param('id') id: string,
-    @Request() req: any,
-  ) {
+  async findOne(@Param('id') id: string, @Request() req: any) {
     return this.pagesService.findById(id, req.user.sub);
   }
 
@@ -77,10 +80,7 @@ export class PagesController {
   @Delete('pages/:id')
   @ApiOperation({ summary: 'Delete page (soft delete)' })
   @ApiParam({ name: 'id', type: 'string' })
-  async delete(
-    @Param('id') id: string,
-    @Request() req: any,
-  ) {
+  async delete(@Param('id') id: string, @Request() req: any) {
     return this.pagesService.delete(id, req.user.sub);
   }
 }

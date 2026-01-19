@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
@@ -25,13 +26,11 @@ describe('Pages & Blocks E2E Tests', () => {
 
     // 1. Register and login
     const email = `test-pages-${Date.now()}@example.com`;
-    await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({
-        email,
-        password: 'Password123!',
-        name: 'Test User',
-      });
+    await request(app.getHttpServer()).post('/auth/register').send({
+      email,
+      password: 'Password123!',
+      name: 'Test User',
+    });
 
     const loginRes = await request(app.getHttpServer())
       .post('/auth/login')
@@ -50,7 +49,7 @@ describe('Pages & Blocks E2E Tests', () => {
         name: 'Test Workspace',
       })
       .expect(201);
-    
+
     workspaceId = wsRes.body.id;
   });
 
@@ -201,7 +200,7 @@ describe('Pages & Blocks E2E Tests', () => {
       const res = await request(app.getHttpServer())
         .get(`/pages/${rootPageId}/blocks`)
         .set('Authorization', `Bearer ${accessToken}`);
-      
+
       const deleted = res.body.find((b: any) => b.id === textBlockId);
       expect(deleted).toBeUndefined();
     });
@@ -211,13 +210,11 @@ describe('Pages & Blocks E2E Tests', () => {
     it('should prevent other users from accessing pages', async () => {
       // 1. Create second user
       const secondUserEmail = `test-pages-other-${Date.now()}@example.com`;
-      await request(app.getHttpServer())
-        .post('/auth/register')
-        .send({
-          email: secondUserEmail,
-          password: 'Password123!',
-          name: 'Other User',
-        });
+      await request(app.getHttpServer()).post('/auth/register').send({
+        email: secondUserEmail,
+        password: 'Password123!',
+        name: 'Other User',
+      });
 
       const secondLoginRes = await request(app.getHttpServer())
         .post('/auth/login')

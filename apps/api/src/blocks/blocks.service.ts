@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { PagesService } from '../pages/pages.service';
 import { AuditService, AuditAction } from '../common/audit/audit.service';
 import { CreateBlockDto, UpdateBlockDto, MoveBlockDto } from './dto';
-import { sql } from 'kysely';
+import { Blocks } from '@elbruso/database';
 
 @Injectable()
 export class BlocksService {
@@ -24,17 +29,17 @@ export class BlocksService {
     const newOrder = await this.calculateSortOrder(pageId, dto.afterBlockId);
 
     // Create block
-    const block = await this.db.client
+    const block = (await this.db.client
       .insertInto('blocks')
       .values({
         page_id: pageId,
         block_type: dto.type,
-        content: dto.content,
+        content: dto.content as any,
         sort_order: newOrder,
         created_by: userId,
       })
       .returningAll()
-      .executeTakeFirst();
+      .executeTakeFirst()) as unknown as Blocks;
 
     if (!block) {
       throw new BadRequestException('Failed to create block');
@@ -45,7 +50,7 @@ export class BlocksService {
       userId,
       action: AuditAction.BLOCK_CREATE,
       entityType: 'Block',
-      entityId: block.id,
+      entityId: block.id as any,
       details: { pageId, type: dto.type },
     });
 
@@ -62,20 +67,21 @@ export class BlocksService {
       .where('page_id', '=', pageId)
       .where('is_active', '=', true)
       .orderBy('sort_order', 'asc')
-      .execute();
+      .execute() as unknown as Blocks[];
   }
 
   async update(id: string, dto: UpdateBlockDto, userId: string) {
-    const block = await this.db.client
+    const blockData = await this.db.client
       .selectFrom('blocks')
       .selectAll()
       .where('id', '=', id)
       .where('is_active', '=', true)
       .executeTakeFirst();
 
-    if (!block) {
+    if (!blockData) {
       throw new NotFoundException('Block not found');
     }
+    const block = blockData as unknown as Blocks;
 
     // Check permission via page
     await this.pagesService.findById(block.page_id, userId);
@@ -85,22 +91,22 @@ export class BlocksService {
       this.validateBlockContent(block.block_type, dto.content);
     }
 
-    const updated = await this.db.client
+    const updated = (await this.db.client
       .updateTable('blocks')
       .set({
-        content: dto.content || block.content,
+        content: (dto.content || block.content) as any,
         updated_at: new Date(),
       })
       .where('id', '=', id)
       .returningAll()
-      .executeTakeFirst();
+      .executeTakeFirst()) as unknown as Blocks;
 
     // Audit log
     await this.auditService.log({
       userId,
       action: AuditAction.BLOCK_UPDATE,
       entityType: 'Block',
-      entityId: id,
+      entityId: id as any,
       details: dto,
     });
 
@@ -108,22 +114,26 @@ export class BlocksService {
   }
 
   async move(id: string, dto: MoveBlockDto, userId: string) {
-    const block = await this.db.client
+    const blockData = await this.db.client
       .selectFrom('blocks')
       .selectAll()
       .where('id', '=', id)
       .where('is_active', '=', true)
       .executeTakeFirst();
 
-    if (!block) {
+    if (!blockData) {
       throw new NotFoundException('Block not found');
     }
+    const block = blockData as unknown as Blocks;
 
     // Check permission
     await this.pagesService.findById(block.page_id, userId);
 
     // Calculate new sort order
-    const newOrder = await this.calculateSortOrder(block.page_id, dto.afterBlockId);
+    const newOrder = await this.calculateSortOrder(
+      block.page_id,
+      dto.afterBlockId,
+    );
 
     // Update block
     await this.db.client
@@ -140,7 +150,7 @@ export class BlocksService {
       userId,
       action: AuditAction.BLOCK_MOVE,
       entityType: 'Block',
-      entityId: id,
+      entityId: id as any,
       details: { newOrder },
     });
 
@@ -148,16 +158,17 @@ export class BlocksService {
   }
 
   async delete(id: string, userId: string) {
-    const block = await this.db.client
+    const blockData = await this.db.client
       .selectFrom('blocks')
       .selectAll()
       .where('id', '=', id)
       .where('is_active', '=', true)
       .executeTakeFirst();
 
-    if (!block) {
+    if (!blockData) {
       throw new NotFoundException('Block not found');
     }
+    const block = blockData as unknown as Blocks;
 
     // Check permission
     await this.pagesService.findById(block.page_id, userId);
@@ -177,7 +188,7 @@ export class BlocksService {
       userId,
       action: AuditAction.BLOCK_DELETE,
       entityType: 'Block',
-      entityId: id,
+      entityId: id as any,
     });
 
     return { message: 'Block deleted successfully' };
@@ -197,7 +208,9 @@ export class BlocksService {
         break;
       case 'chart':
         if (!content.tableId || !content.chartType) {
-          throw new BadRequestException('Chart block must have tableId and chartType');
+          throw new BadRequestException(
+            'Chart block must have tableId and chartType',
+          );
         }
         break;
       case 'divider':
@@ -213,7 +226,10 @@ export class BlocksService {
     }
   }
 
-  private async calculateSortOrder(pageId: string, afterBlockId?: string): Promise<number> {
+  private async calculateSortOrder(
+    pageId: string,
+    afterBlockId?: string,
+  ): Promise<number> {
     if (!afterBlockId) {
       // Insert at beginning
       return 0;
@@ -230,6 +246,6 @@ export class BlocksService {
       throw new BadRequestException('Reference block not found');
     }
 
-    return afterBlock.sort_order + 1;
+    return (afterBlock.sort_order ?? 0) + 1;
   }
 }

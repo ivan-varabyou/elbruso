@@ -1,5 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsUUID, IsOptional, MinLength, MaxLength, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsUUID,
+  IsOptional,
+  MinLength,
+  MaxLength,
+  IsNotEmpty,
+} from 'class-validator';
 
 export class CreatePageDto {
   @ApiPropertyOptional({ example: '550e8400-e29b-41d4-a716-446655440000' })
@@ -46,17 +53,17 @@ export class UpdatePageDto {
 }
 
 export class MovePageDto {
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     example: '550e8400-e29b-41d4-a716-446655440002',
-    description: 'New parent page ID. Null for root level.' 
+    description: 'New parent page ID. Null for root level.',
   })
   @IsOptional()
   @IsUUID()
   parentPageId?: string;
 
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     example: '550e8400-e29b-41d4-a716-446655440003',
-    description: 'Insert after this page. Null for first position.' 
+    description: 'Insert after this page. Null for first position.',
   })
   @IsOptional()
   @IsUUID()

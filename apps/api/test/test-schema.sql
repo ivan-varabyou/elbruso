@@ -129,3 +129,71 @@ CREATE INDEX IF NOT EXISTS idx_pages_sort ON pages(workspace_id, parent_page_id,
 CREATE INDEX IF NOT EXISTS idx_blocks_page ON blocks(page_id);
 CREATE INDEX IF NOT EXISTS idx_blocks_sort ON blocks(page_id, sort_order);
 CREATE INDEX IF NOT EXISTS idx_blocks_type ON blocks(block_type);
+
+-- Workspace Groups table
+CREATE TABLE IF NOT EXISTS workspace_groups (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Dynamic Tables table
+CREATE TABLE IF NOT EXISTS dynamic_tables (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+  group_id UUID REFERENCES workspace_groups(id) ON DELETE SET NULL,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  row_count INTEGER NOT NULL DEFAULT 0,
+  column_count INTEGER NOT NULL DEFAULT 0,
+  created_by UUID NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table Versions table
+CREATE TABLE IF NOT EXISTS table_versions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  table_id UUID NOT NULL REFERENCES dynamic_tables(id) ON DELETE CASCADE,
+  version_number INTEGER NOT NULL DEFAULT 1,
+  column_definitions JSONB NOT NULL DEFAULT '[]',
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_by UUID NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table Cells table
+CREATE TABLE IF NOT EXISTS table_cells (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  version_id UUID NOT NULL REFERENCES table_versions(id) ON DELETE CASCADE,
+  row_index INTEGER NOT NULL,
+  col_index INTEGER NOT NULL,
+  cell_data JSONB NOT NULL DEFAULT '{}',
+  created_by UUID NOT NULL REFERENCES users(id),
+  updated_by UUID NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(version_id, row_index, col_index)
+);
+
+-- Indexes for workspace groups
+CREATE INDEX IF NOT EXISTS idx_workspace_groups_workspace ON workspace_groups(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_workspace_groups_sort ON workspace_groups(workspace_id, sort_order);
+
+-- Indexes for dynamic tables
+CREATE INDEX IF NOT EXISTS idx_dynamic_tables_workspace ON dynamic_tables(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_dynamic_tables_group ON dynamic_tables(group_id);
+CREATE INDEX IF NOT EXISTS idx_dynamic_tables_workspace_group ON dynamic_tables(workspace_id, group_id);
+
+-- Indexes for table versions
+CREATE INDEX IF NOT EXISTS idx_table_versions_table ON table_versions(table_id);
+CREATE INDEX IF NOT EXISTS idx_table_versions_active ON table_versions(table_id, is_active);
+
+-- Indexes for table cells (critical for performance)
+CREATE INDEX IF NOT EXISTS idx_table_cells_version ON table_cells(version_id);
+CREATE INDEX IF NOT EXISTS idx_table_cells_coordinates ON table_cells(version_id, row_index, col_index);
+CREATE INDEX IF NOT EXISTS idx_table_cells_row ON table_cells(version_id, row_index);
+CREATE INDEX IF NOT EXISTS idx_table_cells_col ON table_cells(version_id, col_index);

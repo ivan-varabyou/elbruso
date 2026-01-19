@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Injectable,
   ConflictException,
@@ -19,18 +20,30 @@ export class UsersService {
     }
 
     // Создаем пользователя
+    let orgId: number | null = null;
+    if (dto.organizationId) {
+      const parsed = parseInt(dto.organizationId, 10);
+      if (!isNaN(parsed)) {
+        orgId = parsed;
+      }
+    }
+
     const user = await this.db.client
       .insertInto('users')
       .values({
         email: dto.email,
         name: dto.name,
         password: dto.password,
-        organization_id: dto.organizationId ? Number(dto.organizationId) : null,
+        organization_id: orgId,
       })
       .returningAll()
       .executeTakeFirst();
 
-    return this.sanitizeUser(user);
+    if (!user) {
+      throw new ConflictException('Failed to create user');
+    }
+
+    return this.sanitizeUser(user as any);
   }
 
   async findByEmail(email: string) {
@@ -41,7 +54,7 @@ export class UsersService {
       .where('is_active', '=', true)
       .executeTakeFirst();
 
-    return user ? this.sanitizeUser(user) : null;
+    return user ? this.sanitizeUser(user as any) : null;
   }
 
   async findByEmailWithPassword(email: string) {
@@ -52,7 +65,7 @@ export class UsersService {
       .where('is_active', '=', true)
       .executeTakeFirst();
 
-    return user || null;
+    return (user as any) || null;
   }
 
   async findById(id: string) {
@@ -67,7 +80,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return this.sanitizeUser(user);
+    return this.sanitizeUser(user as any);
   }
 
   async findByApiKey(apiKey: string) {
@@ -89,10 +102,10 @@ export class UsersService {
     await this.db.client
       .updateTable('api_keys')
       .set({ last_used_at: new Date() })
-      .where('id', '=', apiKeyRecord.id)
+      .where('id', '=', (apiKeyRecord as any).id)
       .execute();
 
-    return this.findById(apiKeyRecord.user_id);
+    return this.findById((apiKeyRecord as any).user_id);
   }
 
   async saveRefreshToken(userId: string, refreshToken: string) {
@@ -148,13 +161,7 @@ export class UsersService {
     return { apiKey, name };
   }
 
-  private sanitizeUser(user: {
-    id: string;
-    email: string;
-    name: string;
-    password: string;
-    [key: string]: unknown;
-  }) {
+  private sanitizeUser(user: any) {
     if (!user) return null;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _password, ...sanitized } = user;

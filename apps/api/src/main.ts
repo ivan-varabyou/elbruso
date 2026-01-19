@@ -7,8 +7,45 @@ import helmet from 'helmet';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Security Headers
-  app.use(helmet());
+  // Security Headers with enhanced configuration
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          baseUri: ["'self'"],
+          fontSrc: ["'self'", 'https:', 'data:'],
+          formAction: ["'self'"],
+          frameAncestors: ["'self'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          objectSrc: ["'none'"],
+          scriptSrc: ["'self'"],
+          scriptSrcAttr: ["'none'"],
+          styleSrc: ["'self'", 'https:', "'unsafe-inline'"], // Swagger requires unsafe-inline
+          upgradeInsecureRequests: [],
+        },
+      },
+      crossOriginEmbedderPolicy: false, // Disable for Swagger compatibility
+      crossOriginResourcePolicy: { policy: 'same-origin' },
+      crossOriginOpenerPolicy: { policy: 'same-origin' },
+      referrerPolicy: { policy: 'no-referrer' },
+      hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true,
+      },
+    }),
+  );
+
+  // Additional security headers
+  app.use((req, res, next) => {
+    // Permissions Policy (Feature Policy)
+    res.setHeader(
+      'Permissions-Policy',
+      'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
+    );
+    next();
+  });
 
   // Global validation pipe
   app.useGlobalPipes(
@@ -53,12 +90,21 @@ async function bootstrap() {
       },
       'API-Key',
     )
-    .addTag('auth', 'Authentication endpoints')
-    .addTag('users', 'User management')
-    .addTag('workspaces', 'Workspace management')
-    .addTag('tables', 'Dynamic tables')
-    .addTag('pages', 'Dashboard pages')
-    .addTag('charts', 'Charts and visualizations')
+    .addTag('Authentication', 'Authentication and session management')
+    .addTag('Users', 'User profile and account management')
+    .addTag('Workspaces', 'Workspace organization and permissions')
+    .addTag('Workspace Groups', 'Logical grouping of items within workspaces')
+    .addTag('Pages', 'Dashboard and report pages')
+    .addTag('Blocks', 'Content blocks within pages')
+    .addTag('Dynamic Tables', 'Spreadsheet-like dynamic tables with formulas')
+    .addTag('Sports', 'Catalog of sports and disciplines')
+    .addTag('Seasons', 'Athletic seasons and time periods')
+    .addTag('Regions', 'Geographic regions and districts')
+    .addTag('Organizations', 'Sports organizations and federations')
+    .addTag('Events', 'Catalog of sports events and competitions')
+    .addTag('Indicator Groups', 'Groups of performance indicators')
+    .addTag('Indicators', 'Performance indicator catalog')
+    .addTag('Charts', 'Data visualization and charting')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

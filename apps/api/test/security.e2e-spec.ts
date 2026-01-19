@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
@@ -33,7 +34,7 @@ describe('Security & Authorization E2E Tests (Sequential)', () => {
 
   it('should pass all security audit scenarios', async () => {
     // --- SETUP: Register two users ---
-    
+
     // User A
     const registerAResponse = await request(app.getHttpServer())
       .post('/auth/register')
@@ -145,9 +146,7 @@ describe('Security & Authorization E2E Tests (Sequential)', () => {
       .expect(401);
 
     // Missing token
-    await request(app.getHttpServer())
-      .get('/workspaces')
-      .expect(401);
+    await request(app.getHttpServer()).get('/workspaces').expect(401);
 
     // --- 5. Data Leakage ---
 
@@ -156,13 +155,13 @@ describe('Security & Authorization E2E Tests (Sequential)', () => {
       .get(`/workspaces/${userAWorkspaceId}/members`)
       .set('Authorization', `Bearer ${userAToken}`)
       .expect(200);
-    
+
     expect(membersResponse.body[0]).not.toHaveProperty('password');
     expect(membersResponse.body[0]).not.toHaveProperty('passwordHash');
     expect(membersResponse.body[0]).not.toHaveProperty('hash');
 
     // --- 6. Input Validation / Injection ---
-    
+
     // SQL Injection attempt in ID parameter (Kysely should handle this)
     await request(app.getHttpServer())
       .get("/workspaces/' OR 1=1 --")
@@ -173,21 +172,24 @@ describe('Security & Authorization E2E Tests (Sequential)', () => {
     const xssResponse = await request(app.getHttpServer())
       .post('/workspaces')
       .set('Authorization', `Bearer ${userAToken}`)
-      .send({ 
+      .send({
         name: '<script>alert("xss")</script>',
-        description: 'Testing XSS'
+        description: 'Testing XSS',
       })
       .expect(201);
-    
-    // We should ensure the output is properly escaped by frontend, 
+
+    // We should ensure the output is properly escaped by frontend,
     // but backend should at least store it as provided OR strip tags if policy requires.
     // Here we just check it was created without crashing.
     // --- 7. Rate Limiting ---
-    
+
     // Smoke test for rate limiting. sending 5 requests to ensure they pass.
     // Full 100/min test is too intensive for E2E environment.
     for (let i = 0; i < 5; i++) {
-        await request(app.getHttpServer()).get('/workspaces').set('Authorization', `Bearer ${userAToken}`).expect(200);
+      await request(app.getHttpServer())
+        .get('/workspaces')
+        .set('Authorization', `Bearer ${userAToken}`)
+        .expect(200);
     }
   });
 });
