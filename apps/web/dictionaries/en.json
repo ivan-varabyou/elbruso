@@ -1,0 +1,169 @@
+{
+  "metadata": {
+    "title": "Elbruso - Industrial audit of sports data",
+    "description": "Platform for auditing, analyzing and visualizing structured sports data."
+  },
+      "header": {
+        "nav": {
+          "home": "Home",
+          "products": "Products",
+          "pricing": "Pricing",
+          "blog": "Blog",
+          "contact": "Contact Us"
+        },
+        "actions": {
+          "signIn": "Sign In",
+          "requestDemo": "Request a Demo"
+        },
+        "logo": {
+          "elbruso": "Elbruso",
+          "technologies": "Technologies"
+        }
+      },  "hero": {
+    "badge": "Industrial Audit Platform",
+    "title": "Elevate Sports Analytics <br /> With <span class=\"text-primary-blue\">AI-Driven Audit</span>",
+    "subtitle": "The first high-performance auditing platform for professional sports. Validate performance data, automate complex reports, and unlock predictive insights.",
+    "button": {
+      "audit": "Start Free Audit",
+      "case": "View Case Study"
+    },
+    "metrics": {
+      "validated": "Metrics Validated",
+      "validatedValue": "1.4B+",
+      "organizations": "Organizations",
+      "organizationsValue": "200+"
+    },
+    "panel": {
+      "title": "Live Audit Engine",
+      "status": "Sync Active",
+      "chartTitle": "Performance Velocity",
+      "chartLabel": "Real-time",
+      "score": "Integrity Score",
+      "scoreValue": "98.4%",
+      "auditors": "Active Auditors",
+      "auditorsValue": "1,240",
+      "prediction": "AI Prediction",
+      "stability": "Stability",
+      "passed": "Audit Passed"
+    }
+  },
+  "brands": {
+    "title": "Trusted by forward-thinking businesses across industries.",
+    "names": ["Humana", "Jeep", "HOLOGIC", "bitcoin", "HubSpot", "stripe"]
+  },
+  "productsShowcase": {
+    "title": "The Elbruso Advantage",
+    "subtitle": "Engineering the future of sports data integrity with industrial-grade tools.",
+    "coreCapabilities": "Core Capabilities:",
+    "buttons": {
+      "deepDive": "Schedule Deep Dive",
+      "technicalSpecs": "Technical Specs"
+    },
+    "auditStatus": "Audit Status: Verified",
+    "dataLinked": "Data Linked",
+    "usps": [
+      { 
+        "id": "auditor", 
+        "label": "Universal Auditor", 
+        "title": "Cross-Source Validation",
+        "description": "Automatically verify disparate sports data against multiple official sources. Ensure 100% integrity across federations, clubs, and media providers.",
+        "features": [
+          "Auto-conflict resolution",
+          "Source weighted reliability",
+          "Immutable audit logs",
+          "Real-time fraud detection"
+        ]
+      },
+      { 
+        "id": "engine", 
+        "label": "Dynamic Engine", 
+        "title": "Hyper-Performance Calc",
+        "description": "Spreadsheet flexibility at platform scale. Build complex sports models using our Dyanmic Table Engine powered by HyperFormula.",
+        "features": [
+          "60FPS re-calculation",
+          "Excel-compatible syntax",
+          "Dependency graph tracing",
+          "Custom sports functions"
+        ]
+      },
+      { 
+        "id": "hud", 
+        "label": "Contextual HUD", 
+        "title": "Formula HUD Overlay",
+        "description": "Select data points across any table without losing your architectural context. Our innovative HUD makes complex data linking intuitive.",
+        "features": [
+          "Visual point-and-click links",
+          "Cross-workspace selector",
+          "In-line formula assistant",
+          "Smart range detection"
+        ]
+      },
+      { 
+        "id": "linking", 
+        "label": "Entity Linking", 
+        "title": "Workspace Connectivity",
+        "description": "Connect athletes, events, and performance metrics across fragmented workspaces. Create a unified source of truth for your entire organization.",
+        "features": [
+          "Recursive object linking",
+          "One-to-many relationship mgmt",
+          "Global entity lookup",
+          "Data lineage visualization"
+        ]
+      },
+      { 
+        "id": "ai", 
+        "label": "Predictive AI", 
+        "title": "Performance Forecasting",
+        "description": "Leverage built-in AI models to forecast athlete load, injury risk, and team success probability based on audited historical data.",
+        "features": [
+          "Automated trend analysis",
+          "Injury risk profiling",
+          "Success probability modeling",
+          "ML model integration"
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "description": "Industrial-grade platform for auditing, analyzing and visualizing sports data. Trust your metrics.",
+    "columns": {
+      "products": {
+        "title": "Products",
+        "links": [
+          { "label": "Universal Auditor", "href": "#" },
+          { "label": "Dynamic Engine", "href": "#" },
+          { "label": "Contextual HUD", "href": "#" },
+          { "label": "Entity Linking", "href": "#" },
+          { "label": "Predictive AI", "href": "#" }
+        ]
+      },
+      "company": {
+        "title": "Company",
+        "links": [
+          { "label": "About Us", "href": "#" },
+          { "label": "Blog", "href": "#" },
+          { "label": "Careers", "href": "#" },
+          { "label": "Contact Us", "href": "#" }
+        ]
+      },
+      "resources": {
+        "title": "Resources",
+        "links": [
+          { "label": "Documentation", "href": "#" },
+          { "label": "Help Center", "href": "#" },
+          { "label": "Guides", "href": "#" },
+          { "label": "Partners", "href": "#" }
+        ]
+      },
+      "legal": {
+        "title": "Legal",
+        "links": [
+          { "label": "Privacy Policy", "href": "#" },
+          { "label": "Terms of Service", "href": "#" },
+          { "label": "Cookies", "href": "#" }
+        ]
+      }
+    },
+    "copyright": "© 2026 Elbruso Technologies. All rights reserved."
+  }
+}

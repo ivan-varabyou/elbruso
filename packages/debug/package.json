@@ -1,0 +1,24 @@
+{
+  "name": "@elbruso/debug",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@nextui-org/react": "^2.6.11",
+    "framer-motion": "^12.27.0",
+    "lucide-react": "^0.562.0",
+    "html2canvas": "^1.4.1",
+    "axe-core": "^4.11.1"
+  },
+  "devDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1"
+  }
+}
