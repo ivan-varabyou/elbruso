@@ -5,10 +5,28 @@ Elbruso is a modular monorepo system designed for sports data management, dynami
 
 ### Architecture
 - **Monorepo**: Managed by `pnpm` and `Turbo`.
-- **Backend**: NestJS application with a modular architecture.
+- **Backend**: NestJS application with a modular architecture, ready for microservices.
 - **Frontend**: Next.js application following Feature-Sliced Design (FSD).
 - **Database**: PostgreSQL (main storage) and Redis (caching).
 - **Database Client**: Kysely (type-safe SQL query builder).
+
+## Service Port Mapping
+We use the **7xxx** range for consistent service management:
+
+### 71xx - Backend Microservices
+- `7100`: Main API (NestJS)
+- `7102`: Users Service
+- `7103`: Workspaces Service
+- `7104`: Tables Service
+- `7105`: Indicators Service
+
+### 72xx - Frontend Applications
+- `7200`: User Web App (Next.js)
+- `7201`: Admin App (Next.js)
+
+### Infrastructure
+- `7800`: Redis (Cache)
+- `7900`: PostgreSQL (Database)
 
 ## Database Connection Details
 - **Type**: PostgreSQL 16
@@ -61,7 +79,16 @@ Below is a consolidated list of the main database tables and their fields, categ
 
 ### Metrics & Analytics
 - `indicator_catalog`: `id`, `sport_id`, `discipline_id`, `category_id`, `gender_id`, `age_group_id`, `measurement_unit_id`, `code`, `name_ru`, `description`, `value_type`, `calculation_formula`, `default_weight`, `use_population`, `source_hint`, `is_active`, `metadata`, `created_at`, `updated_at`
+- `indicator_groups_catalog`: `id`, `sport_id`, `code`, `name_ru`, `description`, `sort_order`, `is_active`, `created_at`
+- `indicator_group_relationships`: `id`, `parent_group_id`, `child_group_id`, `sort_order`, `is_active` (Supports Many-to-Many hierarchy)
+- `indicator_catalog_groups`: `indicator_catalog_id`, `group_catalog_id`, `sort_order`
 - `organization_indicator_values`: `id`, `organization_id`, `indicator_catalog_id`, `season_id`, `data_source_id`, `event_result_id`, `value_number`, `value_boolean`, `value_text`, `notes`, `metadata`, `created_at`, `updated_at`
+- `organization_scores`: `id`, `organization_id`, `season_id`, `total_score`, `score_federation`, `score_marketing`, `score_infrastructure`, `score_achievements`, `score_personnel`, `score_finance`, `score_development`, `calculation_date`, `metadata`
+
+### Events & Rankings
+- `events_catalog`: `id`, `parent_event_id`, `sport_id`, `discipline_id`, `event_type_id`, `level_id`, `stage_id`, `organizer_id`, `code`, `name_ru`, `short_name_ru`, `description`, `is_active`, `metadata` (Supports hierarchical event structure)
+- `event_results`: `id`, `event_id`, `organization_id`, `season_id`, `place`, `points`, `participants_count`, `team_count`, `notes`, `metadata`
+- `event_indicator_mapping`: `id`, `event_id`, `indicator_catalog_id`, `place_from`, `place_to`, `weight_multiplier`
 
 ### System & Reference
 - `countries`: `id`, `code_alpha2`, `code_alpha3`, `name_ru`, `capital_city_code`, `currency_code`, `phone_code`, `is_active`, `created_at`
