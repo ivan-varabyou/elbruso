@@ -2,6 +2,7 @@
   "name": "@elbruso/path-copier",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -9,6 +10,7 @@
     "dev": "tsc -w"
   },
   "devDependencies": {
+    "@swc/helpers": "^0.5.18",
     "@swc/types": "0.1.25",
     "typescript": "latest"
   },

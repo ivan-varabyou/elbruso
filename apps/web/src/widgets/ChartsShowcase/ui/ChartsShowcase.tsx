@@ -2,15 +2,71 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LineChart as LineChartIcon, BarChart3, PieChart as PieChartIcon, TrendingUp, Activity, Radar } from 'lucide-react';
+import {
+  LineChart as LineChartIcon,
+  BarChart3,
+  PieChart as PieChartIcon,
+  TrendingUp,
+  Activity,
+  Radar,
+  Layers,
+  BarChart4,
+  Waves,
+  TrendingDown,
+  Sun,
+  Target
+} from 'lucide-react';
 import { LineChart } from '@/shared/ui/charts/LineChart';
 import { BarChart } from '@/shared/ui/charts/BarChart';
 import { PieChart } from '@/shared/ui/charts/PieChart';
 import { AreaChart } from '@/shared/ui/d3/basic/AreaChart';
 import { Histogram } from '@/shared/ui/d3/basic/Histogram';
 import { RadarChart } from '@/shared/ui/d3/statistical/RadarChart';
+import { GroupedBarChart } from '@/shared/ui/d3/basic/GroupedBarChart';
+import { StackedBarChart } from '@/shared/ui/d3/basic/StackedBarChart';
+import { StreamGraph } from '@/shared/ui/d3/basic/StreamGraph';
+import { WaterfallChart } from '@/shared/ui/d3/basic/WaterfallChart';
+import { Sunburst } from '@/shared/ui/d3/basic/Sunburst';
+import { RadialBarChart } from '@/shared/ui/d3/basic/RadialBarChart';
 import { DEMO_DATA } from '@/shared/lib/visualization';
 import { Dictionary } from '@/types';
+import { useI18n } from '@/shared/lib/i18n';
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { VisualizationService } from "@/shared/lib/visualization";
+import {
+  LineChartConfig,
+  BarChartConfig,
+  PieChartConfig,
+  AreaChartConfig,
+  ScatterChartConfig,
+} from "@/shared/lib/visualization/types";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const demoData = {
+  line: [
+    { label: "Jan", value: 30 },
+    { label: "Feb", value: 45 },
+    { label: "Mar", value: 35 },
+    { label: "Apr", value: 55 },
+    { label: "May", value: 48 },
+    { label: "Jun", value: 65 },
+  ],
+  bar: [
+    { label: "Q1", value: 120 },
+    { label: "Q2", value: 150 },
+    { label: "Q3", value: 180 },
+    { label: "Q4", value: 200 },
+  ],
+  pie: [
+    { label: "Category A", value: 30 },
+    { label: "Category B", value: 25 },
+    { label: "Category C", value: 45 },
+  ],
+};
 
 interface ChartTab {
   id: string;
@@ -19,7 +75,8 @@ interface ChartTab {
   description: string;
 }
 
-export const ChartsShowcase = ({ dictionary }: { dictionary: Dictionary }) => {
+export const ChartsShowcase = () => {
+  const dictionary = useI18n() as Dictionary;
   const tabs: ChartTab[] = [
     {
       id: 'line',
@@ -34,28 +91,28 @@ export const ChartsShowcase = ({ dictionary }: { dictionary: Dictionary }) => {
       description: 'Compare metrics across categories with vertical or horizontal bars',
     },
     {
+      id: 'grouped-bar',
+      name: 'Grouped Bar',
+      icon: BarChart4,
+      description: 'Compare multiple series side-by-side across categories',
+    },
+    {
+      id: 'stacked-bar',
+      name: 'Stacked Bar',
+      icon: Layers,
+      description: 'Show cumulative values stacked in bars',
+    },
+    {
       id: 'pie',
       name: 'Pie Chart',
       icon: PieChartIcon,
       description: 'Visualize proportions and distributions with interactive slices',
     },
     {
-      id: 'area',
-      name: 'Area Chart',
-      icon: TrendingUp,
-      description: 'Show trends with filled areas and smooth gradients',
-    },
-    {
-      id: 'histogram',
-      name: 'Histogram',
-      icon: Activity,
-      description: 'Display distribution of continuous data in bins',
-    },
-    {
-      id: 'radar',
-      name: 'Radar Chart',
-      icon: Radar,
-      description: 'Compare multiple variables in a circular layout',
+      id: 'radial-bar',
+      name: 'Radial Bar',
+      icon: Target,
+      description: 'Circular bar chart for performance metrics',
     },
   ];
 
@@ -88,11 +145,10 @@ export const ChartsShowcase = ({ dictionary }: { dictionary: Dictionary }) => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`relative flex items-center gap-2.5 px-6 py-3.5 rounded-full border transition-all duration-300 ${
-                  isActive
-                    ? 'bg-primary-blue border-primary-blue text-white shadow-xl shadow-primary-blue/20 translate-y-[-2px]'
-                    : 'bg-white border-elbruso-border text-elbruso-text hover:border-primary-blue/40'
-                }`}
+                className={`relative flex items-center gap-2.5 px-6 py-3.5 rounded-full border transition-all duration-300 ${isActive
+                  ? 'bg-primary-blue border-primary-blue text-white shadow-xl shadow-primary-blue/20 translate-y-[-2px]'
+                  : 'bg-white border-elbruso-border text-elbruso-text hover:border-primary-blue/40'
+                  }`}
               >
                 <Icon size={18} className={isActive ? 'text-white' : 'text-primary-blue'} />
                 <span className="font-bold text-[14px]">{tab.name}</span>
@@ -162,19 +218,42 @@ export const ChartsShowcase = ({ dictionary }: { dictionary: Dictionary }) => {
                   className="w-full max-w-4xl"
                 />
               )}
-              {activeTab === 'histogram' && (
-                <Histogram
-                  data={DEMO_DATA.barChart}
-                  xAxisLabel="Value Range"
-                  yAxisLabel="Frequency"
-                  className="w-full max-w-3xl"
+              {activeTab === 'grouped-bar' && (
+                <GroupedBarChart
+                  series={DEMO_DATA.groupedBarChart}
+                  orientation="vertical"
+                  xAxisLabel="Quarter"
+                  yAxisLabel="Performance"
+                  showValues={true}
+                  showLegend={true}
+                  className="w-full max-w-4xl"
                 />
               )}
-              {activeTab === 'radar' && (
-                <RadarChart
-                  series={DEMO_DATA.radarChart}
-                  showAxes={true}
-                  showLegend={false}
+              {activeTab === 'stacked-bar' && (
+                <StackedBarChart
+                  categories={DEMO_DATA.stackedBarChart.categories}
+                  series={DEMO_DATA.stackedBarChart.series}
+                  orientation="vertical"
+                  xAxisLabel="Day of Week"
+                  yAxisLabel="Training Hours"
+                  showLegend={true}
+                  className="w-full max-w-4xl"
+                />
+              )}
+              {activeTab === 'stream' && (
+                <StreamGraph
+                  series={DEMO_DATA.streamGraph}
+                  xAxisLabel="Time Period"
+                  yAxisLabel="Activity Level"
+                  offset="wiggle"
+                  className="w-full max-w-4xl"
+                />
+              )}
+              {activeTab === 'radial-bar' && (
+                <RadialBarChart
+                  data={DEMO_DATA.radialBarChart}
+                  showLabels={true}
+                  showValues={true}
                   className="w-full max-w-2xl"
                 />
               )}

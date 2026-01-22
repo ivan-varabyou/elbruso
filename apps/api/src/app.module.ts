@@ -21,6 +21,10 @@ import { SeasonsModule } from './seasons/seasons.module';
 import { IndicatorGroupsModule } from './indicator-groups/indicator-groups.module';
 import { EventsModule } from './events/events.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { CountriesModule } from './countries/countries.module';
+
+// Infrastructure Modules
+import { EmailModule } from './email/email.module';
 
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
@@ -29,7 +33,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     EventEmitterModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../../.env',
+      envFilePath: '.env',
     }),
     ThrottlerModule.forRoot([
       {
@@ -47,6 +51,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     FormulaModule,
     DynamicTablesModule,
     AuditModule,
+    EmailModule,
 
     // Reference Data Modules
     RegionsModule,
@@ -56,6 +61,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     IndicatorGroupsModule,
     EventsModule,
     OrganizationsModule,
+    CountriesModule,
   ],
   providers: [
     {
@@ -64,4 +70,4 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,0 +1,174 @@
+.russia-map-viz-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    z-index: 10;
+}
+
+.russia-map-card {
+    position: relative;
+    background: rgba(10, 15, 30, 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 32px;
+    padding: 2.5rem;
+    box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.5),
+        inset 0 0 20px rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+}
+
+.map-glass-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.premium-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.premium-subtitle {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0.5rem 0 0 0;
+    font-weight: 500;
+}
+
+.year-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background: rgba(79, 124, 255, 0.15);
+    padding: 0.5rem 1.25rem;
+    border-radius: 16px;
+    border: 1px solid rgba(79, 124, 255, 0.3);
+}
+
+.year-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #4F7CFF;
+    font-weight: 800;
+}
+
+.year-value {
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.map-content-area {
+    min-height: 500px;
+    margin: 0 -1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.d3-map-svg {
+    filter: drop-shadow(0 0 30px rgba(79, 124, 255, 0.3));
+}
+
+.map-footer-stats {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.pill-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #4F7CFF;
+    box-shadow: 0 0 10px #4F7CFF;
+}
+
+.stat-pill.success {
+    color: #4ADE80;
+    border-color: rgba(74, 222, 128, 0.2);
+    background: rgba(74, 222, 128, 0.05);
+}
+
+.success .pill-icon {
+    font-weight: 800;
+}
+
+.pulse-anim {
+    background: #FF4F4F;
+    box-shadow: 0 0 10px #FF4F4F;
+    animation: pill-pulse 2s infinite ease-in-out;
+}
+
+@keyframes pill-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Background Glows */
+.map-bg-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.glow-1 {
+    top: -200px;
+    left: -200px;
+    background: #4F7CFF;
+}
+
+.glow-2 {
+    bottom: -200px;
+    right: -200px;
+    background: #9334E6;
+}
+
+/* Responsive Customizations */
+@media (max-width: 1200px) {
+    .russia-map-viz-wrapper {
+        display: none;
+    }
+}

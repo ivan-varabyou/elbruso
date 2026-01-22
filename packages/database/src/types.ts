@@ -249,6 +249,19 @@ export interface DynamicTables {
   workspace_id: string;
 }
 
+export interface EmailTemplates {
+  body_en: string;
+  body_ru: string;
+  created_at: Generated<Timestamp | null>;
+  id: Generated<string>;
+  is_active: Generated<boolean | null>;
+  key: string;
+  subject_en: string;
+  subject_ru: string;
+  updated_at: Generated<Timestamp | null>;
+  variables: Generated<Json | null>;
+}
+
 export interface EventIndicatorMapping {
   event_id: number;
   id: Generated<number>;
@@ -711,6 +724,15 @@ export interface Pages {
   workspace_id: string;
 }
 
+export interface PasswordResetTokens {
+  created_at: Generated<Timestamp | null>;
+  expires_at: Timestamp;
+  id: Generated<number>;
+  token: string;
+  used_at: Timestamp | null;
+  user_id: string;
+}
+
 export interface PermissionHistory {
   action: string;
   changed_at: Generated<Timestamp | null>;
@@ -968,6 +990,7 @@ export interface Translations {
 }
 
 export interface Users {
+  country_id: Generated<number | null>;
   created_at: Generated<Timestamp | null>;
   email: string;
   id: Generated<string>;
@@ -1224,6 +1247,7 @@ export interface DB {
   data_sources: DataSources;
   disciplines: Disciplines;
   dynamic_tables: DynamicTables;
+  email_templates: EmailTemplates;
   event_indicator_mapping: EventIndicatorMapping;
   event_levels: EventLevels;
   event_results: EventResults;
@@ -1256,6 +1280,7 @@ export interface DB {
   organizations: Organizations;
   page_permissions: PagePermissions;
   pages: Pages;
+  password_reset_tokens: PasswordResetTokens;
   permission_history: PermissionHistory;
   reference_links: ReferenceLinks;
   region_population: RegionPopulation;

@@ -10,7 +10,7 @@ import * as crypto from 'crypto';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(private readonly db: DatabaseService) { }
 
   async create(dto: CreateUserDto) {
     // Проверяем существование пользователя
@@ -28,6 +28,8 @@ export class UsersService {
       }
     }
 
+    const countryId = (dto as any).countryId || 1; // Default to Russia (id=1)
+
     const user = await this.db.client
       .insertInto('users')
       .values({
@@ -35,6 +37,7 @@ export class UsersService {
         name: dto.name,
         password: dto.password,
         organization_id: orgId,
+        country_id: countryId,
       })
       .returningAll()
       .executeTakeFirst();

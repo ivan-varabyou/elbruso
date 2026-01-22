@@ -10,23 +10,23 @@ const getElementPath = (element: HTMLElement): string => {
   let current: HTMLElement | null = element;
   let depth = 0;
   const maxDepth = 5;
-  
+
   while (current && depth < maxDepth) {
     const tag = current.tagName.toLowerCase();
     const id = current.id ? `#${current.id}` : '';
     const stableId = current.getAttribute('data-stable-id') ? `[${current.getAttribute('data-stable-id')}]` : '';
     const classes = current.className ? `.${current.className.split(' ')[0]}` : '';
-    
+
     let identifier = tag;
     if (stableId) identifier += stableId;
     else if (id) identifier += id;
     else if (classes && !classes.includes('undefined')) identifier += classes;
-    
+
     path.unshift(identifier);
     current = current.parentElement;
     depth++;
   }
-  
+
   return path.join(' > ');
 };
 
@@ -81,7 +81,12 @@ export const PathCopier = () => {
   }, [isDebugMode, isInspecting, highlightedElement, selectedElement, isGroupSelectionMode, selectedGroup, isScreenshotMode, screenshotSelection]);
 
   useEffect(() => {
-    if (!isDebugMode) return;
+    const isDev = typeof window !== 'undefined' && (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1'
+    );
+
+    if (!isDebugMode && !isDev) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const { isDebugMode, isGroupSelectionMode } = stateRef.current;
@@ -89,7 +94,7 @@ export const PathCopier = () => {
 
       const target = e.target as HTMLElement;
       const isEditable = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
-      
+
       if (isEditable && !e.ctrlKey && !e.shiftKey) return;
 
       if (e.key === 'Escape') {
@@ -150,8 +155,8 @@ export const PathCopier = () => {
 
           const copyText = JSON.stringify(copyData, null, 2);
           navigator.clipboard.writeText(copyText);
-          addLog({ 
-            type: 'info', 
+          addLog({
+            type: 'info',
             message: `📋 Copied info for ${selectedGroup.length} elements`,
             data: copyText
           });
@@ -194,14 +199,14 @@ export const PathCopier = () => {
 
     const handleMouseMove = (e: MouseEvent) => {
       const { isScreenshotMode, screenshotSelection, isInspecting } = stateRef.current;
-      
+
       if (isScreenshotMode && screenshotSelection) {
         setScreenshotSelection((prev: any) => prev ? { ...prev, endX: e.clientX, endY: e.clientY } : null);
         return;
       }
 
       if (!isInspecting) return;
-      
+
       const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
       if (!target || target.closest('.debug-console') || target.closest('.debug-overlay') || target.closest('.debug-trigger')) {
         setHighlightedElement(null);
@@ -244,7 +249,7 @@ export const PathCopier = () => {
         const id = meaningful.getAttribute('data-testid') || meaningful.id;
         const stableId = meaningful.getAttribute('data-stable-id');
         const debugAction = (stableId && ActionRegistry.get(stableId)) || (id && ActionRegistry.get(id)) || meaningful.getAttribute('data-debug-action');
-        
+
         const rect = meaningful.getBoundingClientRect();
         const message = debugAction ? `Action: ${debugAction}` : `Clicked <${meaningful.tagName.toLowerCase()}> ${meaningful.innerText?.substring(0, 20) || ''}`;
 

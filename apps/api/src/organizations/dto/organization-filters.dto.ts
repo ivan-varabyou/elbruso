@@ -1,29 +1,29 @@
 import { IsOptional, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class OrganizationFiltersDto {
-  @ApiPropertyOptional({ description: 'Filter by organization type ID' })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
+  @Type(() => Number)
   typeId?: number;
 
-  @ApiPropertyOptional({ description: 'Filter by sport ID' })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
+  @Type(() => Number)
   sportId?: number;
 
-  @ApiPropertyOptional({ description: 'Filter by region ID' })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
+  @Type(() => Number)
   regionId?: number;
 
-  @ApiPropertyOptional({ description: 'Filter by parent organization ID' })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
+  @Type(() => Number)
   parentId?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  countryId?: number;
 }

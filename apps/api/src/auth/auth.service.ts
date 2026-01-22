@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { UsersService } from '../users/users.service';
 import { WorkspacesService } from '../workspaces/workspaces.service';
+import { EmailService } from '../email/email.service';
+import { DatabaseService } from '../database/database.service';
 import { AuditService, AuditAction } from '../common/audit/audit.service';
-import { LoginDto, RegisterDto, RefreshTokenDto } from './dto';
+import { LoginDto, RegisterDto, RefreshTokenDto, ForgotPasswordDto, ResetPasswordDto, VerifyTokenDto } from './dto';
 import { JwtPayload, AuthResponse } from './interfaces';
 
 @Injectable()
@@ -17,7 +20,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly auditService: AuditService,
-  ) {}
+    private readonly emailService: EmailService,
+    private readonly db: DatabaseService,
+  ) { }
 
   async register(dto: RegisterDto): Promise<AuthResponse> {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
@@ -41,6 +46,14 @@ export class AuthService {
       entityId: userId,
       details: { email: user.email },
     });
+
+    // Send welcome email
+    try {
+      await this.emailService.sendWelcome(user as any, (dto as any).lang || 'ru');
+    } catch (error) {
+      console.error('Failed to send welcome email:', error);
+      // Don't fail registration if email fails
+    }
 
     return this.generateTokens(userId, user.email);
   }
@@ -120,6 +133,15 @@ export class AuthService {
     }
   }
 
+  async getMe(userId: string) {
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+
   private async generateTokens(
     userId: string,
     email: string,
@@ -138,5 +160,113 @@ export class AuthService {
       refreshToken,
       expiresIn: this.configService.get<string>('JWT_EXPIRES_IN', '15m'),
     };
+  }
+
+  async forgotPassword(dto: ForgotPasswordDto): Promise<{ message: string }> {
+    const user = await this.usersService.findByEmail(dto.email);
+
+    // Don't reveal if user exists or not for security
+    if (!user) {
+      return { message: 'If the email exists, a reset link has been sent' };
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // Save token to database (expires in 1 hour)
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 1);
+
+    await this.db.client
+      .insertInto('password_reset_tokens')
+      .values({
+        user_id: (user as any).id,
+        token: tokenHash,
+        expires_at: expiresAt,
+      })
+      .execute();
+
+    // Send email
+    await this.emailService.sendPasswordReset(
+      user as any,
+      resetToken,
+      dto.lang || 'ru',
+    );
+
+    // TODO: Add PASSWORD_RESET_REQUEST to AuditAction enum
+    // await this.auditService.log({
+    //   userId: (user as any).id,
+    //   action: AuditAction.PASSWORD_RESET_REQUEST,
+    //   entityType: 'User',
+    //   entityId: (user as any).id,
+    // });
+
+    return { message: 'If the email exists, a reset link has been sent' };
+  }
+
+  async resetPassword(dto: ResetPasswordDto): Promise<{ message: string }> {
+    // Hash the provided token
+    const tokenHash = crypto.createHash('sha256').update(dto.token).digest('hex');
+
+    // Find valid token
+    const tokenRecord = await this.db.client
+      .selectFrom('password_reset_tokens')
+      .selectAll()
+      .where('token', '=', tokenHash)
+      .where('expires_at', '>', new Date())
+      .where('used_at', 'is', null)
+      .executeTakeFirst();
+
+    if (!tokenRecord) {
+      throw new BadRequestException('Invalid or expired reset token');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(dto.newPassword, 10);
+
+    // Update user password
+    await this.db.client
+      .updateTable('users')
+      .set({ password: hashedPassword })
+      .where('id', '=', (tokenRecord as any).user_id)
+      .execute();
+
+    // Mark token as used
+    await this.db.client
+      .updateTable('password_reset_tokens')
+      .set({ used_at: new Date() })
+      .where('token', '=', tokenHash)
+      .execute();
+
+    // Get user for email
+    const user = await this.usersService.findById((tokenRecord as any).user_id);
+
+    // Send confirmation email
+    await this.emailService.sendPasswordChanged(user as any, 'ru');
+
+    // TODO: Add PASSWORD_RESET to AuditAction enum
+    // await this.auditService.log({
+    //   userId: (tokenRecord as any).user_id,
+    //   action: AuditAction.PASSWORD_RESET,
+    //   entityType: 'User',
+    //   entityId: (tokenRecord as any).user_id,
+    // });
+
+    return { message: 'Password successfully reset' };
+  }
+
+  async verifyResetToken(dto: VerifyTokenDto): Promise<{ valid: boolean }> {
+    const tokenHash = crypto.createHash('sha256').update(dto.token).digest('hex');
+
+    const tokenRecord = await this.db.client
+      .selectFrom('password_reset_tokens')
+      .select(['id'])
+      .where('token', '=', tokenHash)
+      .where('expires_at', '>', new Date())
+      .where('used_at', 'is', null)
+      .executeTakeFirst();
+
+    return { valid: !!tokenRecord };
   }
 }

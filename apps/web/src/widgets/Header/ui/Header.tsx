@@ -1,45 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import { Button } from "@/shared/ui/Button";
+import { useI18n } from "@/shared/lib/i18n";
+import { Logo } from "@/shared/ui/Logo";
 import { Dictionary } from "@/types";
+import Link from "next/link";
 
-export const Header = ({ dictionary }: { dictionary: Dictionary }) => {
+export const Header = () => {
+  const dictionary = useI18n() as Dictionary;
   const { header } = dictionary;
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-elbruso-border">
       <div className="container h-[64px] flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-8">
-          <div className="w-32 h-32 bg-primary-blue rounded-6 flex items-center justify-center">
-            <div className="w-16 h-16 border-2 border-white rounded-full opacity-80" />
-          </div>
-          <span className="text-[18px] font-bold text-elbruso-text tracking-tight">
-            {header.logo.elbruso}
-          </span>
-        </Link>
-
-        {/* Navigation */}
-        <nav className="hidden md:flex items-center gap-32">
-          <Link
-            href="#"
-            className="nav-link text-primary-blue font-semibold"
-          >
-            {header.nav.home}
-          </Link>
-          <Link href="#" className="nav-link">
-            {header.nav.products}
-          </Link>
-          <Link href="#" className="nav-link">
-            {header.nav.pricing}
-          </Link>
-          <Link href="#" className="nav-link">
-            {header.nav.blog}
-          </Link>
-          <Link href="#" className="nav-link">
-            {header.nav.contact}
-          </Link>
-        </nav>
+        <Logo />
 
         {/* Actions */}
         <div className="flex items-center gap-16">
@@ -49,9 +22,6 @@ export const Header = ({ dictionary }: { dictionary: Dictionary }) => {
           >
             {header.actions.signIn}
           </Link>
-          <Button variant="primary" className="hidden sm:flex">
-            {header.actions.requestDemo}
-          </Button>
         </div>
       </div>
     </header>

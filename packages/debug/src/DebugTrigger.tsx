@@ -1,31 +1,48 @@
-'use client';
+"use client";
 
 import React from 'react';
 import { useDebug } from './DebugContext';
-import { Button } from '@nextui-org/react';
-import { Bug } from 'lucide-react';
 
-export const DebugTrigger = () => {
-  const { isConsoleVisible, setIsConsoleVisible, isDebugMode } = useDebug();
-  
-  const isDev = typeof window !== 'undefined' && (
-    window.location.hostname === 'localhost' || 
-    window.location.hostname === '127.0.0.1'
-  );
+export const DebugTrigger: React.FC = () => {
+  const { isDebugMode, toggleDebugMode } = useDebug();
 
-  if (!isDebugMode && !isDev) return null;
-  if (isConsoleVisible) return null;
+  // Показываем только в dev режиме
+  if (process.env.NODE_ENV !== 'development') {
+    return null;
+  }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[51]">
-      <Button
-        isIconOnly
-        radius="full"
-        className="w-12 h-12 bg-black border border-gray-800 text-green-400 shadow-2xl hover:scale-110 transition-transform"
-        onPress={() => setIsConsoleVisible(true)}
-      >
-        <Bug size={32} />
-      </Button>
-    </div>
+    <button
+      onClick={toggleDebugMode}
+      style={{
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        width: '56px',
+        height: '56px',
+        borderRadius: '50%',
+        border: 'none',
+        backgroundColor: isDebugMode ? '#5cd843ff' : '#9E9E9E',
+        color: 'white',
+        fontSize: '28px',
+        cursor: 'pointer',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        zIndex: 999998,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'all 0.3s ease',
+        transform: isDebugMode ? 'scale(1.1)' : 'scale(1)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'scale(1.15)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = isDebugMode ? 'scale(1.1)' : 'scale(1)';
+      }}
+      title={isDebugMode ? 'Debug Mode: ON (Click to disable)' : 'Debug Mode: OFF (Click to enable)'}
+    >
+      🐞
+    </button>
   );
 };

@@ -9,11 +9,17 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { ApiKeyStrategy } from './strategies/api-key.strategy';
 import { UsersModule } from '../users/users.module';
 import { WorkspacesModule } from '../workspaces/workspaces.module';
+import { EmailModule } from '../email/email.module';
+import { DatabaseModule } from '../database/database.module';
+import { AuditModule } from '../common/audit/audit.module';
 
 @Module({
   imports: [
     UsersModule,
     WorkspacesModule,
+    EmailModule,
+    DatabaseModule,
+    AuditModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -30,4 +36,4 @@ import { WorkspacesModule } from '../workspaces/workspaces.module';
   providers: [AuthService, JwtStrategy, LocalStrategy, ApiKeyStrategy],
   exports: [AuthService, JwtModule],
 })
-export class AuthModule {}
+export class AuthModule { }

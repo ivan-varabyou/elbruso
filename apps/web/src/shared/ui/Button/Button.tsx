@@ -9,7 +9,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', ...props }, ref) => {
     const variants = {
-      primary: 'btn-primary',
+      primary: 'btn-primary text-white bg-blue-600 hover:bg-blue-500 active:bg-blue-700',
       coral: 'btn-coral',
       dark: 'btn-primary',
       outline: 'btn-outline',
@@ -20,11 +20,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center whitespace-nowrap rounded-8 text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-elbruso-blue focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+          className = 'h-[44px] px-6 inline-flex items-center justify-center whitespace-nowrap rounded-8 text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-elbruso-blue focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
           variants[variant],
           className
         )}
         {...props}
+        onClick={props.onClick}
       />
     );
   }

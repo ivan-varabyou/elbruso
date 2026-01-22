@@ -2,27 +2,53 @@
 
 import { motion } from "framer-motion";
 import { Dictionary } from "@/types";
+import { useI18n } from '@/shared/lib/i18n';
 
-export const Brands = ({ dictionary }: { dictionary: Dictionary }) => {
+export const Brands = () => {
+  const dictionary = useI18n() as Dictionary;
   const { brands } = dictionary;
+
+  // Дублируем массив для бесконечной прокрутки
+  const duplicatedBrands = [...brands.names, ...brands.names, ...brands.names];
+
   return (
-    <section className="py-64 bg-white border-b border-elbruso-border">
-      <div className="container">
+    <section className="mt-[120px] bg-white overflow-hidden">
+      <div>
         <p className="text-center text-[14px] font-medium text-elbruso-text-muted mb-12">
           {brands.title}
         </p>
-        <div className="flex flex-wrap items-center justify-center md:justify-between gap-8 md:gap-12 opacity-40 grayscale">
-          {brands.names.map((brand, i) => (
-            <motion.span
-              key={brand}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: i * 0.1 }}
-              className="text-[24px] md:text-[32px] font-bold text-elbruso-dark tracking-tight"
+
+        <div className="relative">
+          {/* Градиенты по краям для плавного исчезновения */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+          {/* Бесконечная прокрутка */}
+          <div className="flex">
+            <motion.div
+              className="flex gap-60 md:gap-48"
+              animate={{
+                x: [0, -100 * brands.names.length / 3],
+              }}
+              transition={{
+                x: {
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: brands.names.length * 2,
+                  ease: "linear",
+                },
+              }}
             >
-              {brand}
-            </motion.span>
-          ))}
+              {duplicatedBrands.map((brand, i) => (
+                <span
+                  key={`${brand}-${i}`}
+                  className="text-[24px] md:text-[32px] font-bold text-elbruso-dark tracking-tight opacity-40 grayscale whitespace-nowrap"
+                >
+                  {brand}
+                </span>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

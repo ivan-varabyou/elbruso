@@ -5,6 +5,7 @@ import {
   MinLength,
   IsOptional,
   Matches,
+  IsNumber,
 } from 'class-validator';
 
 export class RegisterDto {
@@ -32,6 +33,11 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   organizationId?: string;
+
+  @ApiProperty({ required: false, example: 1 })
+  @IsOptional()
+  @IsNumber()
+  countryId?: number;
 }
 
 export class LoginDto {
@@ -48,4 +54,39 @@ export class RefreshTokenDto {
   @ApiProperty()
   @IsString()
   refreshToken: string;
+}
+
+export class ForgotPasswordDto {
+  @ApiProperty({ example: 'user@example.com' })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({ required: false, example: 'ru' })
+  @IsOptional()
+  @IsString()
+  lang?: string;
+}
+
+export class ResetPasswordDto {
+  @ApiProperty()
+  @IsString()
+  token: string;
+
+  @ApiProperty({ example: 'NewPassword123!', minLength: 8 })
+  @IsString()
+  @MinLength(8)
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    {
+      message:
+        'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character',
+    },
+  )
+  newPassword: string;
+}
+
+export class VerifyTokenDto {
+  @ApiProperty()
+  @IsString()
+  token: string;
 }

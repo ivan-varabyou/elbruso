@@ -1,0 +1,1 @@
+export { GeoHeatMap } from './GeoHeatMap';

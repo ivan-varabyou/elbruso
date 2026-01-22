@@ -5,7 +5,7 @@ import { OrganizationFiltersDto } from './dto/organization-filters.dto';
 
 @Injectable()
 export class OrganizationsService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(private readonly db: DatabaseService) { }
 
   async findAll(filters: OrganizationFiltersDto): Promise<Organizations[]> {
     let query = this.db.client.selectFrom('organizations');
@@ -21,6 +21,9 @@ export class OrganizationsService {
     }
     if (filters.parentId) {
       query = query.where('parent_id', '=', filters.parentId);
+    }
+    if (filters.countryId) {
+      query = query.where('country_id', '=', filters.countryId);
     }
 
     return query
