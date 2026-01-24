@@ -375,3 +375,394 @@ nypm-workspace/
     ├── feod-scaffold/
     ├── backend-module-scaffold/
     └── service-scaffold/
+
+Таблица разрешённых импортов (FEOD + Backend Modular Monolith)
+Легенда
+✔ — разрешено
+⚠ — разрешено, но только через фасад / публичный API
+✖ — запрещено
+
+⭐ 1. FEOD FRONTEND — Таблица импортов
+Откуда → Куда	app	pages	modules	common	global
+app	✔	✖	✖	✖	✖
+pages	✔	✔	✔	✔	✔
+modules	✔	✔	✔	✔	✔
+common	✔	✔	✔	✔	✔
+global	✔	✔	✔	✔	✔
+FEOD‑правила:
+Никто не импортирует app
+
+pages → используют modules и common
+
+modules → используют только common и global
+
+common → можно импортировать откуда угодно
+
+global → не импортируется напрямую, только через wrapper
+
+⭐ 2. BACKEND API — Таблица импортов
+Backend API в apps/api имеет FEOD‑аналогичную структуру:
+
+app/ — оркестрация, DI, конфигурация
+
+modules/ — домены (как будущие микросервисы)
+
+shared/ — общие backend‑утилиты
+
+contracts/ — схемы, события
+
+generated/ — codegen артефакты
+
+infra/ — DevOps, миграции
+
+Таблица:
+Откуда → Куда	app	modules	shared	contracts	generated	infra
+app	✔	✔	✔	✔	✔	✔
+modules	✖	✔	✔	✔	✔	✖
+shared	✖	✔	✔	✔	✔	✖
+contracts	✖	✔	✔	✔	✔	✖
+generated	✖	✔	✔	✔	✔	✖
+infra	✖	✖	✖	✖	✖	✔
+Backend‑правила:
+app может импортировать всех (как FEOD‑frontend app)
+
+modules не могут импортировать app
+
+modules могут импортировать shared, contracts, generated
+
+shared не может импортировать modules
+
+infra не импортирует ничего из runtime‑кода
+
+generated — read‑only слой
+
+⭐ 3. Общие пакеты (packages/*) — Таблица импортов
+Пакет → Куда	apps/web	apps/admin	apps/api	backend/modules	shared	contracts	generated
+ui-kit	✔	✔	✖	✖	✖	✖	✖
+analytics-sdk	✔	✔	✔	✔	✔	✖	✖
+feature-flags	✔	✔	✔	✔	✔	✖	✖
+http-client	✔	✔	✔	✔	✔	✖	✖
+config	✔	✔	✔	✔	✔	✔	✔
+Правила:
+UI‑пакеты → только фронтенд
+
+SDK‑пакеты → FE и BE
+
+Config‑пакеты → все
+
+⭐ 4. Общая сводная таблица (Frontend + Backend)
+Слой → Куда	FE app	FE pages	FE modules	FE common	BE app	BE modules	BE shared	contracts	generated
+FE app	✔	✖	✖	✖	✖	✖	✖	✖	✖
+FE pages	✔	✔	✔	✔	✖	✖	✖	✖	✖
+FE modules	✔	✔	✔	✔	✖	✖	✖	✖	✖
+FE common	✔	✔	✔	✔	✖	✖	✖	✖	✖
+BE app	✖	✖	✖	✖	✔	✔	✔	✔	✔
+BE modules	✖	✖	✖	✖	✖	✔	✔	✔	✔
+BE shared	✖	✖	✖	✖	✖	✔	✔	✔	✔
+contracts	✖	✖	✖	✖	✖	✔	✔	✔	✔
+generated	✖	✖	✖	✖	✖	✔	✔	✔	✔
+⭐ 5. Короткие выводы
+FEOD фронтенд:
+никто не импортирует app
+
+pages → композиция
+
+modules → бизнес‑логика
+
+common → shared
+
+global → только через wrapper
+
+Backend:
+API в apps/api — это приложение
+
+modules — будущие микросервисы
+
+shared — общие утилиты
+
+contracts — единый источник истины
+
+generated — read‑only слой
+
+infra — не импортирует runtime
+
+⭐ 1. FEOD FRONTEND — Направленность импортов
+Код
+Global  →  Common  →  Modules  →  Pages  →  App
+Поток:
+Global → все (но не импортируется напрямую)
+
+Common → Modules → Pages → App
+
+App — верхушка, никто не импортирует App
+
+Визуально:
+Код
+[global]
+    ↓
+[common]
+    ↓
+[modules]
+    ↓
+[pages]
+    ↓
+[app]
+Правила:
+Поток идёт снизу вверх по слоям, но импорты — сверху вниз.
+
+То есть:
+App импортирует Pages,
+Pages импортируют Modules,
+Modules импортируют Common,
+Common импортирует Global (косвенно).
+
+⭐ 2. BACKEND API (apps/api) — Направленность импортов
+Backend FEOD‑аналог:
+
+Код
+Generated → Contracts → Shared → Modules → App(API)
+Поток:
+Код
+[generated]   (read-only)
+      ↓
+[contracts]   (schemas, events)
+      ↓
+[shared]      (kernel, utils, logger)
+      ↓
+[modules]     (domain, application, infrastructure)
+      ↓
+[app/api]     (server, router, DI, middleware)
+Правила:
+App(API) — верхний слой, может импортировать всех
+
+Modules — могут импортировать shared, contracts, generated
+
+Shared — не может импортировать modules
+
+Contracts — не может импортировать shared/modules
+
+Generated — никто не пишет руками, только читает
+
+⭐ 3. Общая сводная направленность (Frontend + Backend)
+Код
+GLOBAL
+  ↓
+COMMON
+  ↓
+FE MODULES
+  ↓
+FE PAGES
+  ↓
+FE APP
+──────────────────────────────────────────────
+GENERATED
+  ↓
+CONTRACTS
+  ↓
+BE SHARED
+  ↓
+BE MODULES
+  ↓
+BE APP(API)
+Поток FE и BE не пересекается напрямую
+Они связаны только через:
+
+contracts (DTO, схемы, события)
+
+generated (типизация)
+
+packages/ (общие SDK)
+
+⭐ 1. FEOD FRONTEND — ESLint правила
+❌ Никто не может импортировать app/
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": ["@apps/web/src/app/*", "@apps/admin/src/app/*"],
+          "message": "Нельзя импортировать app — это верхний слой FEOD."
+        }
+      ]
+    }
+  ]
+}
+❌ pages не могут импортировать app
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": ["../app/*"],
+          "message": "Pages не должны импортировать app."
+        }
+      ]
+    }
+  ]
+}
+❌ modules не могут импортировать pages или app
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": ["../pages/*", "../app/*"],
+          "message": "Modules не могут импортировать pages или app."
+        }
+      ]
+    }
+  ]
+}
+❌ common не может импортировать modules, pages, app
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": ["../modules/*", "../pages/*", "../app/*"],
+          "message": "Common — нижний слой, он не может импортировать верхние."
+        }
+      ]
+    }
+  ]
+}
+❌ Запрет на common/index.ts
+jsonc
+{
+  "no-restricted-files": [
+    "error",
+    {
+      "patterns": ["**/common/index.ts"],
+      "message": "В common запрещён index.ts — он создаёт скрытые зависимости."
+    }
+  ]
+}
+⭐ 2. BACKEND API — ESLint правила
+❌ modules не могут импортировать app
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": ["@apps/api/src/app/*"],
+          "message": "Backend modules не могут импортировать app."
+        }
+      ]
+    }
+  ]
+}
+❌ shared не может импортировать modules
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": ["@apps/api/src/modules/*"],
+          "message": "Shared — фундамент, он не может зависеть от modules."
+        }
+      ]
+    }
+  ]
+}
+❌ contracts не могут импортировать runtime‑код
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": [
+            "@apps/api/src/modules/*",
+            "@apps/api/src/shared/*",
+            "@apps/api/src/app/*"
+          ],
+          "message": "Contracts — чистый слой, он не может импортировать runtime."
+        }
+      ]
+    }
+  ]
+}
+❌ generated — read‑only слой
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": ["@apps/api/src/generated/*"],
+          "message": "Generated — только для чтения, не импортирует ничего."
+        }
+      ]
+    }
+  ]
+}
+⭐ 3. Общие правила для монорепозитория
+❌ FE не может импортировать backend‑код
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": ["@apps/api/*"],
+          "message": "Фронтенд не может импортировать backend."
+        }
+      ]
+    }
+  ]
+}
+✔ FE и BE могут импортировать packages/*
+jsonc
+{
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": ["apps/*/tsconfig.json", "packages/*/tsconfig.json"]
+      }
+    }
+  }
+}
+❌ Запрет на кросс‑импорты между приложениями
+jsonc
+{
+  "no-restricted-imports": [
+    "error",
+    {
+      "patterns": [
+        {
+          "group": [
+            "@apps/web/*",
+            "@apps/admin/*",
+            "@apps/api/*"
+          ],
+          "message": "Приложения не должны импортировать друг друга."
+        }
+      ]
+    }
+  ]
+}
+⭐ 4. FEOD + Backend — Итоговая направленность импортов (в виде ESLint)
+FEOD Frontend:
+Код
+global → common → modules → pages → app
+Backend API:
+Код
+generated → contracts → shared → modules → app(api)
+FE ↔ BE:
+Код
+FE → contracts → generated → BE

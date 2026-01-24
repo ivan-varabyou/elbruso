@@ -74,11 +74,16 @@ sleep 2
 
 # Check database package
 echo -e "${YELLOW}🔨 Building database package...${NC}"
-cd packages/database && npm run build && cd ../..
-echo -e "${GREEN}✅ Database package built${NC}"
+(cd packages/database && npm run build) || {
+    echo -e "${RED}❌ Failed to build database package. Trying to continue anyway...${NC}"
+}
+echo -e "${GREEN}✅ Database package build step finished${NC}"
 
 # Check environment files
 echo -e "${YELLOW}📝 Checking environment files...${NC}"
+
+# Ensure directories exist
+mkdir -p apps/api apps/web
 
 if [ ! -f "apps/api/.env" ]; then
     echo -e "${YELLOW}📝 Creating API .env file...${NC}"
@@ -116,4 +121,4 @@ echo -e "${GREEN}🚀 Starting development servers...${NC}"
 echo ""
 
 # Start development servers
-pnpm run dev:only
+pnpm -w run dev:only

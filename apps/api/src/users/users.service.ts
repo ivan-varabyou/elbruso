@@ -34,7 +34,7 @@ export class UsersService {
       .insertInto('users')
       .values({
         email: dto.email,
-        name: dto.name,
+        first_name: dto.name,
         password: dto.password,
         organization_id: orgId,
         country_id: countryId,

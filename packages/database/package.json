@@ -16,6 +16,8 @@
     "@elbruso/types": "workspace:*",
     "@types/node": "latest",
     "@types/pg": "latest",
+    "@types/lodash": "latest",
+    "@types/lodash-es": "latest",
     "kysely-codegen": "^0.19.0",
     "typescript": "^5.0.0"
   }
