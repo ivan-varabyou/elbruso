@@ -4,7 +4,7 @@ import React from 'react';
 import { useDebug } from './DebugContext';
 
 export const DebugTrigger: React.FC = () => {
-  const { isDebugMode, toggleDebugMode } = useDebug();
+  const { isActive, isDebugMode, toggleDebugMode } = useDebug();
 
   // Показываем только в dev режиме
   if (process.env.NODE_ENV !== 'development') {
@@ -33,6 +33,7 @@ export const DebugTrigger: React.FC = () => {
         justifyContent: 'center',
         transition: 'all 0.3s ease',
         transform: isDebugMode ? 'scale(1.1)' : 'scale(1)',
+        visibility: isActive ? 'visible' : 'hidden',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'scale(1.15)';

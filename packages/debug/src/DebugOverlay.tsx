@@ -22,8 +22,15 @@ export const DebugOverlay: React.FC = () => {
   useEffect(() => {
     if (!isDebugMode || !isActive) {
       setHoveredElement(null);
+      // Clear all highlights
+      const highlighted = document.querySelectorAll<HTMLElement>('[data-file-path]');
+      highlighted.forEach(el => {
+        el.style.outline = '';
+        el.style.outlineOffset = '';
+      });
       return;
     }
+
 
     const handleMouseMove = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -170,28 +177,6 @@ export const DebugOverlay: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Индикатор режима */}
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '80px',
-          right: '20px',
-          backgroundColor: isGroupMode ? '#4ECDC4' : '#1A73E8',
-          color: 'white',
-          padding: '12px 16px',
-          borderRadius: '8px',
-          fontSize: '14px',
-          fontWeight: 'bold',
-          zIndex: 999999,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-        }}
-      >
-        {isGroupMode ? `🎯 Group Mode (${copiedElements.length})` : '🐛 Debug Mode Active'}
-        <div style={{ fontSize: '11px', marginTop: '4px', opacity: 0.9 }}>
-          {isGroupMode ? 'Ctrl+Shift to add, release to copy' : 'Ctrl to activate, click to copy'}
-        </div>
-      </div>
     </>
   );
 };

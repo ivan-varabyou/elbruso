@@ -27,13 +27,13 @@ export const ProductsShowcase = () => {
   const currentUSP = USPs.find(u => u.id === activeTab) || USPs[0];
 
   return (
-    <section className="py-96 bg-white overflow-hidden">
+    <section className="pt-12 bg-white overflow-hidden">
       <div className="container">
-        <div className="text-center mb-64">
+        <div className="text-center mb-8">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-[32px] md:text-[48px] font-bold text-elbruso-text mb-24"
+            className="text-[32px] md:text-[48px] font-bold text-elbruso-text mb-2"
           >
             {productsShowcase.title}
           </motion.h2>
@@ -43,7 +43,7 @@ export const ProductsShowcase = () => {
         </div>
 
         {/* Categories Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-64">
+        <div className="flex flex-wrap justify-center gap-4 mb-4">
           {USPs.map((usp) => {
             const Icon = usp.icon;
             const isActive = activeTab === usp.id;

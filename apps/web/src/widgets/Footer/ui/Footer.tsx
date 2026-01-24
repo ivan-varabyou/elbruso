@@ -13,7 +13,7 @@ export const Footer = () => {
   if (!footer) return null;
 
   return (
-    <footer className="bg-elbruso-bg-subtle border-t border-elbruso-border py-64">
+    <footer className="bg-elbruso-bg-subtle border-t border-elbruso-border py-8">
       <div className="container">
         {isFullFooter && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 lg:gap-32">

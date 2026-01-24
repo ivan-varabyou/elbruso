@@ -8,7 +8,7 @@ import {
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SportsService } from './sports.service';
 
-@Controller('sports')
+@Controller('reference/sports')
 @ApiTags('Sports')
 export class SportsController {
   constructor(private sportsService: SportsService) {}

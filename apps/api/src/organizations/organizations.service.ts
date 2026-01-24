@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { Organizations } from '@elbruso/database';
 import { OrganizationFiltersDto } from './dto/organization-filters.dto';
+import { sql } from 'kysely';
 
 @Injectable()
 export class OrganizationsService {
@@ -59,5 +60,54 @@ export class OrganizationsService {
       .selectAll()
       .where('is_active', '=', true)
       .execute() as unknown as Organizations[];
+  }
+
+  async getHierarchy(orgId: number): Promise<Organizations[]> {
+    const result = await sql`
+      WITH RECURSIVE org_hierarchy AS (
+        SELECT * FROM organizations WHERE id = ${orgId}
+        UNION ALL
+        SELECT o.* FROM organizations o
+        JOIN org_hierarchy oh ON o.parent_id = oh.id
+      )
+      SELECT * FROM org_hierarchy WHERE is_active = true
+    `.execute(this.db.client);
+
+    return result.rows as unknown as Organizations[];
+  }
+
+  async getTree(orgId: number): Promise<any> {
+    const flat = await this.getHierarchy(orgId);
+    
+    const buildTree = (parentId: number | null) => {
+      return flat
+        .filter(org => (org as any).parent_id === parentId)
+        .map(org => ({
+          ...org,
+          children: buildTree((org as any).id)
+        }));
+    };
+
+    const root = flat.find(o => (o as any).id === orgId);
+    if (!root) return null;
+
+    return {
+      ...root,
+      children: buildTree(orgId)
+    };
+  }
+
+  async getAncestors(orgId: number): Promise<Organizations[]> {
+    const result = await sql`
+      WITH RECURSIVE org_ancestors AS (
+        SELECT * FROM organizations WHERE id = ${orgId}
+        UNION ALL
+        SELECT o.* FROM organizations o
+        JOIN org_ancestors oa ON oa.parent_id = o.id
+      )
+      SELECT * FROM org_ancestors WHERE is_active = true
+    `.execute(this.db.client);
+
+    return result.rows as unknown as Organizations[];
   }
 }

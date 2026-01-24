@@ -8,7 +8,12 @@ import type { LoginDto, RegisterDto, AuthResponse } from '@/shared/api';
 export interface User {
     id: string;
     email: string;
-    name: string;
+    first_name?: string;
+    last_name?: string;
+    middle_name?: string;
+    role?: string;
+    organization_id?: number | null;
+    name?: string; // Legacy field, might still be in JWT or returned by old endpoints
 }
 
 export interface AuthState {
@@ -23,6 +28,7 @@ interface AuthContextValue extends AuthState {
     register: (userData: RegisterDto) => Promise<void>;
     logout: () => void;
     clearError: () => void;
+    setUser: (user: User | null) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -169,6 +175,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setState((prev) => ({ ...prev, error: null }));
     }, []);
 
+    const setUser = useCallback((user: User | null) => {
+        setState((prev) => ({ ...prev, user }));
+    }, []);
+
     return (
         <AuthContext.Provider
             value={{
@@ -177,6 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 register,
                 logout,
                 clearError,
+                setUser,
             }}
         >
             {children}

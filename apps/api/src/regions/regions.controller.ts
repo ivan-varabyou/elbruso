@@ -10,7 +10,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RegionsService } from './regions.service';
 import { RegionFiltersDto } from './dto/region-filters.dto';
 
-@Controller('regions')
+@Controller('reference/regions')
 @ApiTags('Regions')
 export class RegionsController {
   constructor(private regionsService: RegionsService) {}

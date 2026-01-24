@@ -10,6 +10,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
     "prettier": "latest",
     "turbo": "latest",
     "typescript": "latest"
@@ -18,7 +19,13 @@
   "dependencies": {
     "@types/d3-sankey": "^0.12.5",
     "@types/nodemailer": "^7.0.5",
+    "ag-grid-community": "^35.0.1",
+    "ag-grid-react": "^35.0.1",
     "d3-sankey": "^0.12.3",
-    "nodemailer": "^7.0.12"
+    "date-fns": "^4.1.0",
+    "hyperformula": "^3.1.1",
+    "lodash-es": "^4.17.23",
+    "nodemailer": "^7.0.12",
+    "zustand": "^5.0.10"
   }
 }

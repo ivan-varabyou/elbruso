@@ -10,7 +10,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationFiltersDto } from './dto/organization-filters.dto';
 
-@Controller('organizations')
+@Controller('reference/organizations')
 @ApiTags('Organizations')
 export class OrganizationsController {
   constructor(private organizationsService: OrganizationsService) {}
@@ -27,6 +27,18 @@ export class OrganizationsController {
   @ApiResponse({ status: 200, description: 'Returns list of federations' })
   async findFederations(@Query() filters: OrganizationFiltersDto) {
     return this.organizationsService.findFederations(filters);
+  }
+
+  @Get(':id/tree')
+  @ApiOperation({ summary: 'Get organization tree' })
+  async getTree(@Param('id', ParseIntPipe) id: number) {
+    return this.organizationsService.getTree(id);
+  }
+
+  @Get(':id/hierarchy')
+  @ApiOperation({ summary: 'Get organization hierarchy (flat list)' })
+  async getHierarchy(@Param('id', ParseIntPipe) id: number) {
+    return this.organizationsService.getHierarchy(id);
   }
 
   @Get(':id')

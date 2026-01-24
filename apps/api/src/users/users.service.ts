@@ -164,6 +164,46 @@ export class UsersService {
     return { apiKey, name };
   }
 
+  async updateProfile(userId: string, dto: any) {
+    const user = await this.db.client
+      .updateTable('users')
+      .set({
+        ...dto,
+        updated_at: new Date(),
+      })
+      .where('id', '=', userId)
+      .returningAll()
+      .executeTakeFirst();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return this.sanitizeUser(user as any);
+  }
+
+  async findAll() {
+    return this.db.client.selectFrom('users').selectAll().where('is_active', '=', true).execute();
+  }
+
+  async updateUserAdmin(userId: string, dto: any) {
+    const user = await this.db.client
+      .updateTable('users')
+      .set({
+        ...dto,
+        updated_at: new Date(),
+      })
+      .where('id', '=', userId)
+      .returningAll()
+      .executeTakeFirst();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return this.sanitizeUser(user as any);
+  }
+
   private sanitizeUser(user: any) {
     if (!user) return null;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

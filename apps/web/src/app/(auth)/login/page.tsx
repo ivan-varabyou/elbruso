@@ -19,9 +19,10 @@ export default function LoginPage() {
     const dictionary = useI18n() as Dictionary;
     const { header } = dictionary;
 
+    // TODO: remove this
     const [formData, setFormData] = useState({
-        email: '',
-        password: '',
+        email: 'user@example.com',
+        password: 'Password123!',
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});

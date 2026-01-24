@@ -89,4 +89,12 @@ export class AuthController {
   async getMe(@Req() req: any) {
     return this.authService.getMe(req.user.sub);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Change current user password' })
+  async changePassword(@Req() req: any, @Body() dto: any) {
+    return this.authService.changePassword(req.user.sub, dto);
+  }
 }

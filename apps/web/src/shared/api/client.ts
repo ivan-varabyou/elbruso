@@ -16,11 +16,17 @@ apiClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
         const token = getAccessToken();
         if (token && config.headers) {
-            config.headers.Authorization = `Bearer ${token}`;
+            config.headers.set('Authorization', `Bearer ${token}`);
+            console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url} - Token applied`);
+        } else {
+            console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url} - No token found`);
         }
         return config;
     },
-    (error) => Promise.reject(error)
+    (error: AxiosError) => {
+        console.error('[API Request Error]', error);
+        return Promise.reject(error);
+    }
 );
 
 // Response interceptor - handle token refresh
@@ -40,7 +46,7 @@ const processQueue = (error: any, token: string | null = null) => {
 };
 
 apiClient.interceptors.response.use(
-    (response) => response,
+    (response: any) => response,
     async (error: AxiosError) => {
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 

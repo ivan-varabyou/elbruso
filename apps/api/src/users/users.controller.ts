@@ -6,6 +6,8 @@ import {
   Param,
   UseGuards,
   Request,
+  Patch,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateApiKeyDto } from './dto';
+import { UpdateProfileDto, AdminUpdateUserDto } from './dto/user-settings.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Users')
@@ -26,18 +29,50 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get current user profile' })
-  @ApiResponse({ status: 200, description: 'User profile' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getProfile(@Request() req) {
     return this.usersService.findById(req.user.sub);
+  }
+
+  @Patch('profile')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Update current user profile' })
+  async updateProfile(@Request() req, @Body() dto: UpdateProfileDto) {
+    return this.usersService.updateProfile(req.user.sub, dto);
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'List all users (Admin only)' })
+  async findAll(@Request() req) {
+    const user = await this.usersService.findById(req.user.sub);
+    if (user.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+    return this.usersService.findAll();
+  }
+
+  @Patch(':id/admin')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Update user by admin' })
+  async updateUserAdmin(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() dto: AdminUpdateUserDto,
+  ) {
+    const currentUser = await this.usersService.findById(req.user.sub);
+    if (currentUser.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+    return this.usersService.updateUserAdmin(id, dto);
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get user by ID' })
-  @ApiResponse({ status: 200, description: 'User found' })
-  @ApiResponse({ status: 404, description: 'User not found' })
   async findOne(@Param('id') id: string) {
     return this.usersService.findById(id);
   }

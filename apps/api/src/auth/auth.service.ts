@@ -269,4 +269,31 @@ export class AuthService {
 
     return { valid: !!tokenRecord };
   }
+
+  async changePassword(userId: string, dto: any): Promise<void> {
+    const user = await this.usersService.findByEmailWithPassword((await this.usersService.findById(userId)).email);
+    
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      dto.currentPassword,
+      (user as any).password,
+    );
+    
+    if (!isPasswordValid) {
+      throw new BadRequestException('Incorrect current password');
+    }
+
+    const hashedPassword = await bcrypt.hash(dto.newPassword, 10);
+
+    await this.db.client
+      .updateTable('users')
+      .set({ password: hashedPassword })
+      .where('id', '=', userId)
+      .execute();
+      
+    // Optionally revoke all sessions here 
+  }
 }

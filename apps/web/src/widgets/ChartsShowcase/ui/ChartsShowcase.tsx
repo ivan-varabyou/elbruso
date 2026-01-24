@@ -137,7 +137,7 @@ export const ChartsShowcase = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-64">
+        <div className="flex flex-wrap justify-center gap-4 mb-4">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;

@@ -27,7 +27,7 @@ export const Hero = () => {
             className="flex flex-col"
           >
             <div className="space-y-8">
-              <div className="flex flex-col gap-12">
+              <div className="flex flex-col gap-2">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -38,13 +38,13 @@ export const Hero = () => {
                   {hero.badge}
                 </motion.div>
                 <h1
-                  className="text-[32px] md:text-[48px] lg:text-[56px] font-bold text-elbruso-text leading-[1.1] mb-12"
+                  className="text-[32px] md:text-[48px] lg:text-[56px] font-bold text-elbruso-text leading-[1.1] mb-6"
                   dangerouslySetInnerHTML={{ __html: hero.title }}
                 />
-                <p className="hero-subheadline mt-8">{hero.subtitle}</p>
+                <p className="hero-subheadline">{hero.subtitle}</p>
               </div>
 
-              <div className="flex items-center gap-12 pt-24">
+              <div className="flex items-center gap-12">
                 <Button variant="primary" className="px-24 h-[44px] text-base" onClick={() => console.log('case')}>
                   {hero.button.case}
                 </Button>

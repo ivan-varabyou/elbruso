@@ -1,14 +1,19 @@
 import {
   Controller,
   Get,
+  Post,
+  Patch,
+  Delete,
   Param,
+  Body,
   ParseIntPipe,
   NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SeasonsService } from './seasons.service';
+import { GenerateSeasonsDto } from './dto/generate-seasons.dto';
 
-@Controller('seasons')
+@Controller('reference/seasons')
 @ApiTags('Seasons')
 export class SeasonsController {
   constructor(private seasonsService: SeasonsService) {}
@@ -18,6 +23,35 @@ export class SeasonsController {
   @ApiResponse({ status: 200, description: 'Returns list of seasons' })
   async findAll() {
     return this.seasonsService.findAll();
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Create a new season' })
+  @ApiResponse({ status: 201, description: 'Season created' })
+  async create(@Body() data: any) {
+    return this.seasonsService.create(data);
+  }
+
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update an existing season' })
+  @ApiResponse({ status: 200, description: 'Season updated' })
+  async update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+    return this.seasonsService.update(id, data);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a season' })
+  @ApiResponse({ status: 200, description: 'Season deleted' })
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.seasonsService.delete(id);
+  }
+
+  @Post('generate')
+  @ApiOperation({ summary: 'Autogenerate seasons based on logic' })
+  @ApiResponse({ status: 200, description: 'Seasons generated' })
+  async generate(@Body() data: GenerateSeasonsDto) {
+    return this.seasonsService.generate(data.startYear, data.endYear, data.sportId);
   }
 
   @Get('current')
@@ -44,3 +78,4 @@ export class SeasonsController {
     return season;
   }
 }
+

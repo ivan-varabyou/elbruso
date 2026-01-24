@@ -25,4 +25,23 @@ export class IndicatorFiltersDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @ApiPropertyOptional({ description: 'Scope filters (global, sport, federation, personal)' })
+  @IsOptional()
+  @IsString()
+  scope?: string; // Comma-separated or single
+
+  @ApiPropertyOptional({ description: 'Multiple scopes' })
+  @IsOptional()
+  @IsString({ each: true })
+  scopes?: string[];
+
+
+  // INTERNAL use (from controller)
+  userId?: string;
+  userOrganizationId?: number;
+  userSportId?: number;
+  ancestorOrgIds?: number[];
+  userRole?: string;
 }
+

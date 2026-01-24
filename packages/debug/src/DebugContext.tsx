@@ -7,9 +7,10 @@ interface DebugContextType {
   toggleDebugMode: () => void;
   isActive: boolean;
   copiedElements: InternalElementInfo[];
-  addElement: (element: InternalElementInfo) => void;
+  addElement: (element: any) => void;
   clearElements: () => void;
 }
+
 
 export interface ElementInfo {
   filePath: string;
@@ -39,7 +40,7 @@ interface DebugProviderProps {
 }
 
 export const DebugProvider: React.FC<DebugProviderProps> = ({ children }) => {
-  const [isDebugMode, setIsDebugMode] = useState(false);
+  const [isDebugMode, setIsDebugMode] = useState(true);
   const [isActive, setIsActive] = useState(false);
   const [copiedElements, setCopiedElements] = useState<InternalElementInfo[]>([]);
 
@@ -61,9 +62,10 @@ export const DebugProvider: React.FC<DebugProviderProps> = ({ children }) => {
     }
   };
 
-  const addElement = (element: ElementInfo) => {
+  const addElement = (element: any) => {
     setCopiedElements(prev => [...prev, element]);
   };
+
 
   const clearElements = () => {
     setCopiedElements([]);
@@ -74,6 +76,8 @@ export const DebugProvider: React.FC<DebugProviderProps> = ({ children }) => {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Control') {
+        e.preventDefault();
+        e.stopPropagation();
         setIsActive(true);
       }
       if (e.key === 'Escape') {
@@ -84,9 +88,13 @@ export const DebugProvider: React.FC<DebugProviderProps> = ({ children }) => {
 
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.key === 'Control' && !e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
         setIsActive(false);
       }
       if (e.key === 'Shift' && !e.ctrlKey) {
+        e.preventDefault();
+        e.stopPropagation();
         setIsActive(false);
       }
     };

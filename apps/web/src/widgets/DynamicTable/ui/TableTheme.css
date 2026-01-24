@@ -1,0 +1,151 @@
+/* AG Grid Theme - Google Sheets Style */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+.ag-theme-quartz {
+  /* Typography - Google Sheets uses Roboto/Arial */
+  --ag-font-family: 'Roboto', 'Arial', sans-serif;
+  --ag-font-size: 13px;
+  
+  /* Cell spacing - Google Sheets is compact */
+  --ag-cell-horizontal-padding: 8px;
+  --ag-row-height: 28px;
+  
+  /* Borders - very thin gray like Google Sheets */
+  --ag-borders: solid 1px;
+  --ag-border-color: #e2e2e2;
+  --ag-row-border-color: #e2e2e2;
+  --ag-row-border-width: 1px;
+  
+  /* Header - light gray background */
+  --ag-header-background-color: #f8f9fa;
+  --ag-header-foreground-color: #5f6368;
+  --ag-header-height: 28px;
+  
+  /* Hover effects */
+  --ag-row-hover-color: transparent;
+  
+  /* Selection - Google blue */
+  --ag-selected-row-background-color: transparent;
+  --ag-range-selection-border-color: #1a73e8;
+  --ag-range-selection-background-color: rgba(26, 115, 232, 0.1);
+  
+  /* Container styling - no rounded corners */
+  border-radius: 0;
+  border: 1px solid #e2e2e2;
+  overflow: hidden;
+}
+
+/* Cell alignment */
+.ag-theme-quartz .ag-cell {
+  border-right: 1px solid #e2e2e2 !important;
+  display: flex;
+  align-items: center;
+  line-height: normal;
+}
+
+/* Header cells - centered like Google Sheets */
+.ag-theme-quartz .ag-header-cell {
+  background-color: #f8f9fa;
+  border-right: 1px solid #e2e2e2 !important;
+  border-bottom: 1px solid #c1c1c1 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.ag-theme-quartz .ag-header-cell-label {
+  justify-content: center;
+  font-weight: 500;
+  font-size: 12px;
+  color: #5f6368;
+}
+
+/* Row numbers - clickable and center aligned */
+.ag-theme-quartz .ag-cell[col-id="rowNumber"] {
+  background-color: #f8f9fa;
+  font-size: 11px;
+  color: #5f6368;
+  justify-content: center !important;
+  border-right: 1px solid #c1c1c1 !important;
+  font-weight: 400;
+}
+
+/* Hover effects - subtle gray like Google Sheets */
+.ag-theme-quartz .ag-row:hover {
+  background-color: #f8f9fa !important;
+}
+
+.ag-theme-quartz .ag-cell:hover {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
+
+/* Row number hover */
+.ag-theme-quartz .ag-row:hover .ag-cell[col-id="rowNumber"] {
+  background-color: #e8eaed !important;
+}
+
+/* Header hover */
+.ag-theme-quartz .ag-header-cell:hover {
+  background-color: #e8eaed !important;
+}
+
+/* Active cell - blue border like Google Sheets */
+.ag-theme-quartz .ag-cell.active-cell {
+  background-color: #fff !important;
+  border: 2px solid #1a73e8 !important;
+  box-shadow: inset 0 0 0 1px #fff;
+  z-index: 10;
+}
+
+/* Active header highlighting - subtle yellow */
+.ag-theme-quartz .ag-cell.active-header {
+  background-color: #fef7cd !important;
+  font-weight: 500 !important;
+}
+
+.ag-theme-quartz .ag-header-cell.active-header {
+  background-color: #fef7cd !important;
+  font-weight: 600 !important;
+}
+
+/* Add column button (+) */
+.ag-theme-quartz .ag-cell[col-id="addColumn"] {
+  background-color: #f8f9fa !important;
+  color: #dadce0 !important;
+  font-size: 18px;
+  font-weight: 300;
+  justify-content: center !important;
+}
+
+.ag-theme-quartz .ag-cell[col-id="addColumn"]:hover {
+  background-color: #e8f0fe !important;
+  color: #1a73e8 !important;
+  cursor: pointer;
+}
+
+/* Add row at the bottom */
+.ag-theme-quartz .ag-row:last-child .ag-cell {
+  background-color: #f8f9fa !important;
+  color: #dadce0 !important;
+}
+
+.ag-theme-quartz .ag-row:last-child:hover .ag-cell {
+  background-color: #e8f0fe !important;
+  color: #1a73e8 !important;
+  cursor: pointer;
+}
+
+.ag-theme-quartz .ag-row:last-child .ag-cell[col-id="rowNumber"] {
+  color: #1a73e8 !important;
+  font-weight: 600 !important;
+  font-size: 16px;
+}
+
+/* Selection range styling */
+.ag-theme-quartz .ag-cell-range-selected:not(.ag-cell-focus) {
+  background-color: rgba(26, 115, 232, 0.08) !important;
+}
+
+.ag-theme-quartz .ag-cell-range-selected-1:not(.ag-cell-focus) {
+  background-color: rgba(26, 115, 232, 0.12) !important;
+}

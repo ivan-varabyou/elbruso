@@ -12,7 +12,7 @@ export const Brands = () => {
   const duplicatedBrands = [...brands.names, ...brands.names, ...brands.names];
 
   return (
-    <section className="mt-[120px] bg-white overflow-hidden">
+    <section className="mt-8 bg-white overflow-hidden">
       <div>
         <p className="text-center text-[14px] font-medium text-elbruso-text-muted mb-12">
           {brands.title}

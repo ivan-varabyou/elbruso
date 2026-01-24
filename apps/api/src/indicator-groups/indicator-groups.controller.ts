@@ -10,7 +10,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { IndicatorGroupsService } from './indicator-groups.service';
 import { IndicatorGroupFiltersDto } from './dto/indicator-group-filters.dto';
 
-@Controller('indicator-groups')
+@Controller('reference/indicator-groups')
 @ApiTags('Indicator Groups')
 export class IndicatorGroupsController {
   constructor(private indicatorGroupsService: IndicatorGroupsService) {}
