@@ -27,6 +27,40 @@ export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export interface AdminAuditLogs {
+  action: string;
+  created_at: Generated<Timestamp | null>;
+  details: Json | null;
+  entity_id: string | null;
+  entity_type: string | null;
+  id: Generated<string>;
+  ip_address: string | null;
+  user_agent: string | null;
+  user_id: string | null;
+}
+
+export interface AdminSessions {
+  created_at: Generated<Timestamp | null>;
+  expires_at: Timestamp;
+  id: Generated<string>;
+  ip_address: string | null;
+  refresh_token: string;
+  user_agent: string | null;
+  user_id: string;
+}
+
+export interface AdminUsers {
+  created_at: Generated<Timestamp | null>;
+  email: string;
+  id: Generated<string>;
+  is_active: Generated<boolean | null>;
+  last_login_at: Timestamp | null;
+  name: string;
+  password_hash: string;
+  role: Generated<string>;
+  updated_at: Generated<Timestamp | null>;
+}
+
 export interface AgeGroups {
   code: string;
   created_at: Generated<Timestamp | null>;
@@ -455,18 +489,21 @@ export interface IndicatorCatalog {
   category_id: number | null;
   code: string;
   created_at: Generated<Timestamp | null>;
+  created_by: string | null;
   default_weight: Generated<Numeric | null>;
   description: string | null;
   discipline_id: number | null;
   gender_id: number | null;
   id: Generated<number>;
   is_active: Generated<boolean | null>;
+  is_system: Generated<boolean | null>;
   /**
    * Единица измерения (ссылка на справочник)
    */
   measurement_unit_id: number | null;
   metadata: Generated<Json | null>;
   name_ru: string;
+  organization_id: number | null;
   source_hint: string | null;
   /**
    * NULL = применимо ко всем видам спорта
@@ -825,8 +862,15 @@ export interface Seasons {
   id: Generated<number>;
   is_active: Generated<boolean | null>;
   name_ru: string;
+  season_type: string | null;
+  season_year: number | null;
   start_date: Timestamp;
   updated_at: Generated<Timestamp | null>;
+}
+
+export interface SeasonSports {
+  season_id: number;
+  sport_id: number;
 }
 
 export interface Sessions {
@@ -993,11 +1037,14 @@ export interface Users {
   country_id: Generated<number | null>;
   created_at: Generated<Timestamp | null>;
   email: string;
+  first_name: string | null;
   id: Generated<string>;
   is_active: Generated<boolean | null>;
-  name: string;
+  last_name: string | null;
+  middle_name: string | null;
   organization_id: number | null;
   password: Generated<string>;
+  role: Generated<string | null>;
   updated_at: Generated<Timestamp | null>;
 }
 
@@ -1231,6 +1278,9 @@ export interface Workspaces {
 }
 
 export interface DB {
+  admin_audit_logs: AdminAuditLogs;
+  admin_sessions: AdminSessions;
+  admin_users: AdminUsers;
   age_groups: AgeGroups;
   api_keys: ApiKeys;
   audit_logs: AuditLogs;
@@ -1288,6 +1338,7 @@ export interface DB {
   regions: Regions;
   roles: Roles;
   saved_queries: SavedQueries;
+  season_sports: SeasonSports;
   seasons: Seasons;
   sessions: Sessions;
   sport_types: SportTypes;

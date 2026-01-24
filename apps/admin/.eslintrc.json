@@ -1,0 +1,86 @@
+{
+  "extends": ["../../.eslintrc.js", "next/core-web-vitals"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      }
+    },
+    "boundaries/elements": [
+      {
+        "type": "app",
+        "pattern": "src/app/**/*",
+        "description": "App Layer: Оркестрация и конфигурация админки."
+      },
+      {
+        "type": "pages",
+        "pattern": "src/pages/**/*",
+        "description": "Pages Layer: Сборка страниц административной панели."
+      },
+      {
+        "type": "modules",
+        "pattern": ["../../packages/shared/src/modules/**/*", "src/modules/**/*"],
+        "description": "Modules Layer (Fractal): Переиспользуемые доменные модули."
+      },
+      {
+        "type": "common",
+        "pattern": ["../../packages/shared/src/common/**/*", "src/shared/**/*"],
+        "description": "Common Layer: Общие утилиты и типы."
+      },
+      {
+        "type": "ui-kit",
+        "pattern": ["../../packages/ui-kit/src/**/*", "src/shared/ui/**/*"],
+        "description": "UI-Kit Layer: Библиотека компонентов."
+      }
+    ]
+  },
+  "rules": {
+    "boundaries/no-private": "error",
+    "boundaries/entry-point": [
+      "error",
+      {
+        "default": "disallow",
+        "rules": [
+          {
+            "target": "modules",
+            "allow": "**/index.ts"
+          }
+        ]
+      }
+    ],
+    "boundaries/element-types": [
+      "error",
+      {
+        "default": "disallow",
+        "rules": [
+          {
+            "from": "app",
+            "allow": ["app"],
+            "description": "App Layer изолирован."
+          },
+          {
+            "from": "pages",
+            "allow": ["app", "pages", "modules", "common", "ui-kit"],
+            "description": "Pages - слой композиции."
+          },
+          {
+            "from": "modules",
+            "allow": ["app", "modules", "common"],
+            "description": "Modules зависят от инфраструктуры."
+          },
+          {
+            "from": "common",
+            "allow": ["app", "common"],
+            "description": "Common может зависеть только от базовой конфигурации."
+          },
+          {
+            "from": "ui-kit",
+            "allow": ["app", "ui-kit"],
+            "description": "UI-Kit полностью агностичен."
+          }
+        ]
+      }
+    ]
+  }
+}
