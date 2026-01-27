@@ -26,6 +26,9 @@ import { CountriesModule } from './countries/countries.module';
 // Infrastructure Modules
 import { EmailModule } from './email/email.module';
 
+// Admin Module
+import { AdminModule } from './admin/admin.module';
+
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
@@ -43,6 +46,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     ]),
     DatabaseModule,
     AuthModule,
+    AdminModule,
     UsersModule,
     WorkspacesModule,
     PagesModule,
@@ -70,4 +74,4 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}
