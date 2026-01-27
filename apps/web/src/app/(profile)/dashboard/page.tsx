@@ -1,5 +1,5 @@
 import { LayoutDashboard } from 'lucide-react';
-import { PageLayout } from '@/shared/ui/PageLayout';
+import { PageLayout } from '@/shared/ui';
 
 export default function DashboardPage() {
     return (

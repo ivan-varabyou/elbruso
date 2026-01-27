@@ -1,9 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { authConfig } from './auth.config';
-import { RussiaMapViz } from './RussiaMapViz';
 import './auth-layout.css';
-import './RussiaMapViz.css';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
     return (

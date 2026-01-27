@@ -4,14 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/shared/lib/auth';
-import { useToast } from '@/shared/ui/Toast';
-import { Input } from '@/shared/ui/Input';
-import { Button } from '@/shared/ui/Button';
-import { Select } from '@/shared/ui/Select';
-import { PasswordStrength } from '@/shared/ui/PasswordStrength';
+import { useToast, Input, Button, Select, PasswordStrength, Logo } from '@/shared/ui';
 import '../login/login.css';
 import './register.css';
-import { Logo } from '@/shared/ui/Logo';
 
 interface Country {
     id: number;

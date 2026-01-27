@@ -8,7 +8,7 @@ import {
     AlertCircle,
     Trophy
 } from 'lucide-react';
-import { Button } from '@/shared/ui/Button/Button';
+import { Button } from '@/shared/ui';
 import { referencesApi } from '@/shared/api/references';
 import type { IndicatorGroup, Sport } from '@/shared/types';
 import { cn } from '@/shared/lib/utils';

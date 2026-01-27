@@ -13,7 +13,7 @@ import {
     Filter,
     Check
 } from 'lucide-react';
-import { Button } from '@/shared/ui/Button/Button';
+import { Button } from '@/shared/ui';
 import { referencesApi } from '@/shared/api/references';
 import { cn } from '@/shared/lib/utils';
 import type { Sport } from '@/shared/types';

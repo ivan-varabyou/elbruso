@@ -3,11 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useToast } from '@/shared/ui/Toast';
-import { Input } from '@/shared/ui/Input';
-import { Button } from '@/shared/ui/Button';
-import { PasswordStrength } from '@/shared/ui/PasswordStrength';
-import { Logo } from '@/shared/ui/Logo';
+import { useToast, Input, Button, PasswordStrength, Logo } from '@/shared/ui';
 import '../login/login.css';
 
 function ResetPasswordForm() {

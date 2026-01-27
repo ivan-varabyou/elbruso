@@ -5,7 +5,7 @@ import { useAuth } from '@/shared/lib/auth';
 import { apiClient } from '@/shared/api/client';
 import { Building2, ChevronRight, ChevronDown, Shield, Users, Trophy } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
-import { Button } from '@/shared/ui/Button/Button';
+import { Button } from '@/shared/ui';
 
 interface OrgNode {
     id: number;

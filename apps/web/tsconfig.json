@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,18 +22,47 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@/app/*": ["./src/app/*"],
-      "@/views/*": ["./src/views/*"],
-      "@/widgets/*": ["./src/widgets/*"],
-      "@/features/*": ["./src/features/*"],
-      "@/entities/*": ["./src/entities/*"],
-      "@/shared/*": ["./src/shared/*"],
-      "@/types": ["./src/types"],
-      "@path-copier/*": ["../../packages/path-copier/src/*"],
-      "@elbruso/*": ["../../packages/*/src"]
-    }
+      "@/*": [
+        "./src/*"
+      ],
+      "@/app/*": [
+        "./src/app/*"
+      ],
+      "@/views/*": [
+        "./src/views/*"
+      ],
+      "@/widgets/*": [
+        "./src/widgets/*"
+      ],
+      "@/features/*": [
+        "./src/features/*"
+      ],
+      "@/entities/*": [
+        "./src/entities/*"
+      ],
+      "@/shared/*": [
+        "../../packages/shared/src/*"
+      ],
+      "@/types": [
+        "./src/types"
+      ],
+      "@path-copier/*": [
+        "../../packages/path-copier/src/*"
+      ],
+      "@elbruso/*": [
+        "../../packages/*/src"
+      ]
+    },
+    "target": "ES2017"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

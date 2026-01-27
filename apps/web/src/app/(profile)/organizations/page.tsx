@@ -1,5 +1,5 @@
 import { Building2 } from 'lucide-react';
-import { PageLayout } from '@/shared/ui/PageLayout';
+import { PageLayout } from '@/shared/ui';
 
 export default function OrganizationsPage() {
     return (

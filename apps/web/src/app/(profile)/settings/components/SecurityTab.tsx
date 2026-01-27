@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/shared/ui/Button/Button';
+import { Button } from '@/shared/ui';
 import { apiClient } from '@/shared/api/client';
 
 export function SecurityTab() {

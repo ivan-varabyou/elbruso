@@ -11,7 +11,7 @@
     "@elbruso/debug": "workspace:^",
     "@elbruso/path-copier": "workspace:^",
     "@elbruso/types": "workspace:*",
-    "@elbruso/ui": "workspace:*",
+    "@elbruso/shared": "workspace:*",
     "@formatjs/intl-localematcher": "^0.8.0",
     "@nextui-org/react": "^2.6.11",
     "@types/d3": "^7.4.3",

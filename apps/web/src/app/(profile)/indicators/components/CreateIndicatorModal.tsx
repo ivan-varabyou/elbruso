@@ -2,9 +2,7 @@
 
 import { useState } from 'react';
 import { X, Save, AlertCircle } from 'lucide-react';
-import { Button } from '@/shared/ui/Button/Button';
-import { Input } from '@/shared/ui/Input/Input';
-import { Select } from '@/shared/ui/Select/Select';
+import { Button, Input, Select } from '@/shared/ui';
 import { referencesApi } from '@/shared/api/references';
 import type { Indicator } from '@/shared/types';
 

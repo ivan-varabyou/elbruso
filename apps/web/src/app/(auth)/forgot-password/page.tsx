@@ -2,10 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useToast } from '@/shared/ui/Toast';
-import { Input } from '@/shared/ui/Input';
-import { Button } from '@/shared/ui/Button';
-import { Logo } from '@/shared/ui/Logo';
+import { useToast, Input, Button, Logo } from '@/shared/ui';
 import '../login/login.css';
 
 export default function ForgotPasswordPage() {

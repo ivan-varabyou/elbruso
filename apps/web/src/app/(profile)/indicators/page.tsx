@@ -18,8 +18,7 @@ import {
     Users,
     Activity
 } from 'lucide-react';
-import { PageLayout } from '@/shared/ui/PageLayout';
-import { Button } from '@/shared/ui/Button/Button';
+import { PageLayout, Button } from '@/shared/ui';
 import { referencesApi } from '@/shared/api/references';
 import { useAuth } from '@/shared/lib/auth';
 import type { Indicator } from '@/shared/types';

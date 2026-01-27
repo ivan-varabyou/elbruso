@@ -1,9 +1,5 @@
 'use client'
-import { Header } from "@/widgets/Header";
-import { Hero } from "@/widgets/Hero";
-import { Brands } from "@/widgets/Brands";
-import { ProductsShowcase } from "@/widgets/ProductsShowcase";
-import { Footer } from "@/widgets/Footer";
+import { Header, Hero, Brands, ProductsShowcase, Footer } from "@/shared/ui";
 
 export const HomePage = () => {
   return (

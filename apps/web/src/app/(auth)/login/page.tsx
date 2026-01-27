@@ -4,13 +4,10 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/shared/lib/auth';
-import { useToast } from '@/shared/ui/Toast';
-import { Input } from '@/shared/ui/Input';
-import { Button } from '@/shared/ui/Button';
+import { useToast, Input, Button, Logo } from '@/shared/ui';
 import { useI18n } from '@/shared/lib/i18n';
 import { Dictionary } from '@/types';
 import './login.css';
-import { Logo } from "@/shared/ui/Logo";
 
 export default function LoginPage() {
     const router = useRouter();

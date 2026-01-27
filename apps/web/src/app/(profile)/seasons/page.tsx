@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Calendar, Plus, Edit2, Trash2, Loader2, Trophy, Sparkles } from 'lucide-react';
-import { PageLayout } from '@/shared/ui/PageLayout';
+import { PageLayout, SeasonModal, AutogenerateModal } from '@/shared/ui';
 import { useReferenceStore } from '@/shared/stores';
-import { SeasonModal, AutogenerateModal } from '@/widgets/Seasons';
 import type { Season } from '@/shared/types';
 
 export default function SeasonsPage() {

@@ -1,7 +1,7 @@
 'use client';
 
 import { ProtectedRoute } from '@/shared/lib/auth';
-import { ProfileLayout } from '@/widgets/ProfileLayout';
+import { ProfileLayout } from '@/shared/ui';
 
 export default function ProfileLayoutWrapper({ children }: { children: React.ReactNode }) {
     return (

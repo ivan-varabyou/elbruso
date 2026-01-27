@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { DynamicTable } from '@/widgets/DynamicTable';
+import { DynamicTable } from '@/shared/ui';
 
 export default function TablesTestPage() {
   const [tableId] = useState('test-table-123');

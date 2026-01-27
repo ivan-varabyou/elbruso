@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PageLayout } from '@/shared/ui/PageLayout';
+import { PageLayout } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
 import { User, Shield, Building2, ChevronRight } from 'lucide-react';
 import { ProfileTab } from './components/ProfileTab';

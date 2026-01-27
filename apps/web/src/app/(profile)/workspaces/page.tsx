@@ -1,5 +1,5 @@
 import { Briefcase } from 'lucide-react';
-import { PageLayout } from '@/shared/ui/PageLayout';
+import { PageLayout } from '@/shared/ui/layout/PageLayout';
 
 export default function WorkspacesPage() {
     return (

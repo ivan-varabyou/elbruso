@@ -1,4 +1,4 @@
-import { DynamicTable } from '@/widgets/DynamicTable';
+import { DynamicTable } from '@/shared/ui';
 
 interface PageProps {
   params: {

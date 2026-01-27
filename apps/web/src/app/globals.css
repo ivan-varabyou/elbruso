@@ -3,20 +3,20 @@
 @tailwind utilities;
 
 :root {
-    /* Auth Theme Variables */
-    --auth-primary: #4F7CFF;
-    --auth-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --auth-bg: #F8FAFC;
-    --auth-card: #FFFFFF;
-    --auth-text: #1E293B;
-    --auth-text-muted: #64748B;
+  /* Auth Theme Variables */
+  --auth-primary: #4f7cff;
+  --auth-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --auth-bg: #f8fafc;
+  --auth-card: #ffffff;
+  --auth-text: #1e293b;
+  --auth-text-muted: #64748b;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
