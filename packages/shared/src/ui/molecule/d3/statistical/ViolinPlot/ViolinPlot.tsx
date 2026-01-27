@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { ViolinPlotAdapter } from '@/shared/lib/visualization/adapters/ViolinPlotAdapter';
-import { ViolinPlotConfig } from '@/shared/lib/visualization/types';
+import { ViolinPlotConfig } from '@/shared/lib/visualization';
 
 interface ViolinPlotProps extends Omit<ViolinPlotConfig, 'dimensions'> {
     width?: number;

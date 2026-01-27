@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { WaterfallChartConfig } from '../types';
+import { WaterfallChartConfig } from '../../types/visualization';
 
 /**
  * Waterfall Chart Adapter

@@ -8,7 +8,7 @@ import {
   PieChartDataPoint,
   AreaChartSeries,
   ScatterChartDataPoint,
-} from './types';
+} from '../../types/visualization';
 
 /**
  * Generate line chart demo data - Sports performance metrics

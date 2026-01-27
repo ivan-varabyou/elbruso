@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { ViolinPlotConfig } from '../types';
+import { ViolinPlotConfig } from '../../types/visualization';
 
 /**
  * Violin Plot Adapter

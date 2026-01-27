@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { ForceDirectedGraphAdapter } from '@/shared/lib/visualization/adapters/ForceDirectedGraphAdapter';
-import { ForceDirectedGraphConfig } from '@/shared/lib/visualization/types';
+import { ForceDirectedGraphConfig } from '@/shared/lib/visualization';
 
 interface ForceDirectedGraphProps extends Omit<ForceDirectedGraphConfig, 'dimensions'> {
     width?: number;

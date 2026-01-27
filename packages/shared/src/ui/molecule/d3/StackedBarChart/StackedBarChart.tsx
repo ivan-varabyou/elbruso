@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { StackedBarChartAdapter } from '@/shared/lib/visualization/adapters/StackedBarChartAdapter';
-import { StackedBarChartConfig } from '@/shared/lib/visualization/types';
+import { StackedBarChartConfig } from '@/shared/lib/visualization';
 
 interface StackedBarChartProps extends Omit<StackedBarChartConfig, 'dimensions'> {
     width?: number;

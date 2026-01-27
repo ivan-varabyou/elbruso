@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useI18n } from "@/shared/lib/i18n";
-import { FooterColumn } from "./FooterColumn";
 import { Dictionary } from "@/shared/types"; // Keep this import as it's used for the type assertion
 
 export const Footer = () => {

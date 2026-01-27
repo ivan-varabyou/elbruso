@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { ScatterPlotAdapter } from '@/shared/lib/visualization/adapters/ScatterPlotAdapter';
-import { ScatterChartConfig } from '@/shared/lib/visualization/types';
+import { ScatterChartConfig } from '@/shared/lib/visualization';
 
 interface ScatterPlotProps extends Omit<ScatterChartConfig, 'dimensions'> {
     width?: number;

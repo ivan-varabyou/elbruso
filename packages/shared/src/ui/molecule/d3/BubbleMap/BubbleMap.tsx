@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { BubbleMapAdapter } from '@/shared/lib/visualization/adapters/BubbleMapAdapter';
-import { BubbleMapConfig } from '@/shared/lib/visualization/types';
+import { BubbleMapConfig } from '@/shared/lib/visualization';
 
 interface BubbleMapProps extends Omit<BubbleMapConfig, 'dimensions'> {
     width?: number;

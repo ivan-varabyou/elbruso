@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { CalendarHeatmapConfig } from '../types';
+import { CalendarHeatmapConfig } from '../../types/visualization';
 
 /**
  * Calendar Heatmap Adapter

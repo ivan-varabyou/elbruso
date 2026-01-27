@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { RadialBarChartAdapter } from '@/shared/lib/visualization/adapters/RadialBarChartAdapter';
-import { RadialBarChartConfig } from '@/shared/lib/visualization/types';
+import { RadialBarChartConfig } from '@/shared/lib/visualization';
 
 interface RadialBarChartProps extends Omit<RadialBarChartConfig, 'dimensions'> {
     width?: number;

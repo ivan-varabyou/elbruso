@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { SankeyAdapter } from '@/shared/lib/visualization/adapters/SankeyAdapter';
-import { SankeyConfig } from '@/shared/lib/visualization/types';
+import { SankeyConfig } from '@/shared/lib/visualization';
 
 interface SankeyProps extends Omit<SankeyConfig, 'dimensions'> {
     width?: number;

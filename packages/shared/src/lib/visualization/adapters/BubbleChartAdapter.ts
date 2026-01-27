@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { BubbleChartConfig } from '../types';
+import { BubbleChartConfig } from '../../types/visualization';
 
 /**
  * Bubble Chart Adapter

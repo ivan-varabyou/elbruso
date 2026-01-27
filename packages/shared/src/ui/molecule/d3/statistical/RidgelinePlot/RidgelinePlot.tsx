@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { RidgelinePlotAdapter } from '@/shared/lib/visualization/adapters/RidgelinePlotAdapter';
-import { RidgelinePlotConfig } from '@/shared/lib/visualization/types';
+import { RidgelinePlotConfig } from '@/shared/lib/visualization';
 
 interface RidgelinePlotProps extends Omit<RidgelinePlotConfig, 'dimensions'> {
     width?: number;

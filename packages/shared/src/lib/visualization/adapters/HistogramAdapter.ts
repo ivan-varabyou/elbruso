@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { BarChartConfig } from '../types';
+import { BarChartConfig } from '../../types/visualization';
 import { showTooltip, hideTooltip, formatNumber } from '../utils';
 
 /**

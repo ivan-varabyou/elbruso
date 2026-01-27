@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { StreamGraphAdapter } from '@/shared/lib/visualization/adapters/StreamGraphAdapter';
-import { StreamGraphConfig } from '@/shared/lib/visualization/types';
+import { StreamGraphConfig } from '@/shared/lib/visualization';
 
 interface StreamGraphProps extends Omit<StreamGraphConfig, 'dimensions'> {
     width?: number;

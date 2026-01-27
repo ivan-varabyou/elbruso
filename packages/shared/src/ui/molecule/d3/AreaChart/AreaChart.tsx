@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { AreaChartAdapter } from '@/shared/lib/visualization/adapters/AreaChartAdapter';
-import { AreaChartConfig } from '@/shared/lib/visualization/types';
+import { AreaChartConfig } from '@/shared/lib/visualization';
 
 interface AreaChartProps extends Omit<AreaChartConfig, 'dimensions'> {
   width?: number;

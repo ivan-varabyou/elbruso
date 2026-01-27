@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { HeatmapAdapter } from '@/shared/lib/visualization/adapters/HeatmapAdapter';
-import { HeatmapConfig } from '@/shared/lib/visualization/types';
+import { HeatmapConfig } from '@/shared/lib/visualization';
 
 interface HeatmapProps extends Omit<HeatmapConfig, 'dimensions'> {
     width?: number;

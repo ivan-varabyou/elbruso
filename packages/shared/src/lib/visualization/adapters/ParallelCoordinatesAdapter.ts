@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { ParallelCoordinatesConfig } from '../types';
+import { ParallelCoordinatesConfig } from '../../types/visualization';
 
 /**
  * Parallel Coordinates Adapter

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { PieChartAdapter } from '@/shared/lib/visualization/adapters/PieChartAdapter';
-import { PieChartConfig } from '@/shared/lib/visualization/types';
+import { PieChartConfig } from '@/shared/lib/visualization';
 
 interface DonutChartProps extends Omit<PieChartConfig, 'dimensions' | 'innerRadius'> {
   width?: number;

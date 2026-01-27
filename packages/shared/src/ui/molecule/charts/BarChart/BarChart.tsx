@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { BarChartAdapter } from '@/shared/lib/visualization/adapters/BarChartAdapter';
-import { BarChartConfig } from '@/shared/lib/visualization/types';
+import { BarChartConfig } from '@/shared/lib/visualization';
 
 interface BarChartProps extends Omit<BarChartConfig, 'dimensions'> {
   width?: number;

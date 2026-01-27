@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { GroupedBarChartAdapter } from '@/shared/lib/visualization/adapters/GroupedBarChartAdapter';
-import { GroupedBarChartConfig } from '@/shared/lib/visualization/types';
+import { GroupedBarChartConfig } from '@/shared/lib/visualization';
 
 interface GroupedBarChartProps extends Omit<GroupedBarChartConfig, 'dimensions'> {
     width?: number;

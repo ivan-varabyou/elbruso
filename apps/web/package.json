@@ -5,12 +5,12 @@
   "scripts": {
     "dev": "next dev -p 7200 --webpack",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@elbruso/debug": "workspace:^",
     "@elbruso/path-copier": "workspace:^",
-    "@elbruso/types": "workspace:*",
     "@elbruso/shared": "workspace:*",
     "@formatjs/intl-localematcher": "^0.8.0",
     "@nextui-org/react": "^2.6.11",

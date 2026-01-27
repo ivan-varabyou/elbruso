@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { RidgelinePlotConfig } from '../types';
+import { RidgelinePlotConfig } from '../../types/visualization';
 
 /**
  * Ridgeline Plot Adapter

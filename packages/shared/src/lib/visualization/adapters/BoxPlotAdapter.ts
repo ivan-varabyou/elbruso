@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { BoxPlotConfig } from '../types';
+import { BoxPlotConfig } from '../../types/visualization';
 
 /**
  * Box Plot Adapter

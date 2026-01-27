@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { CalendarHeatmapAdapter } from '@/shared/lib/visualization/adapters/CalendarHeatmapAdapter';
-import { CalendarHeatmapConfig } from '@/shared/lib/visualization/types';
+import { CalendarHeatmapConfig } from '@/shared/lib/visualization';
 
 interface CalendarHeatmapProps extends Omit<CalendarHeatmapConfig, 'dimensions'> {
     width?: number;

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { BubbleChartAdapter } from '@/shared/lib/visualization/adapters/BubbleChartAdapter';
-import { BubbleChartConfig } from '@/shared/lib/visualization/types';
+import { BubbleChartConfig } from '@/shared/lib/visualization';
 
 interface BubbleChartProps extends Omit<BubbleChartConfig, 'dimensions'> {
     width?: number;

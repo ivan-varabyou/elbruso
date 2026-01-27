@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { LineChartAdapter } from '@/shared/lib/visualization/adapters/LineChartAdapter';
-import { LineChartConfig } from '@/shared/lib/visualization/types';
+import { LineChartConfig } from '@/shared/lib/visualization';
 
 interface SparklineProps {
   data: number[];

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { ChoroplethMapAdapter } from '@/shared/lib/visualization/adapters/ChoroplethMapAdapter';
-import { ChoroplethMapConfig } from '@/shared/lib/visualization/types';
+import { ChoroplethMapConfig } from '@/shared/lib/visualization';
 
 interface ChoroplethMapProps extends Omit<ChoroplethMapConfig, 'dimensions'> {
     width?: number;

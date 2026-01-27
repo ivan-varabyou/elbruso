@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { ChordAdapter } from '@/shared/lib/visualization/adapters/ChordAdapter';
-import { ChordConfig } from '@/shared/lib/visualization/types';
+import { ChordConfig } from '@/shared/lib/visualization';
 
 interface ChordProps extends Omit<ChordConfig, 'dimensions'> {
     width?: number;

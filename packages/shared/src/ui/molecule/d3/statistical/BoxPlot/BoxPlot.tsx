@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { BoxPlotAdapter } from '@/shared/lib/visualization/adapters/BoxPlotAdapter';
-import { BoxPlotConfig } from '@/shared/lib/visualization/types';
+import { BoxPlotConfig } from '@/shared/lib/visualization';
 
 interface BoxPlotProps extends Omit<BoxPlotConfig, 'dimensions'> {
     width?: number;

@@ -66,7 +66,7 @@ export interface LineChartConfig extends BaseChartConfig {
   yAxisLabel?: string;
   showGrid?: boolean;
   showLegend?: boolean;
-  curve?: 'linear' | 'cardinal' | 'monotone' | 'step';
+  curve?: "linear" | "cardinal" | "monotone" | "step";
 }
 
 // Bar Chart
@@ -78,8 +78,8 @@ export interface BarChartDataPoint {
 
 export interface BarChartConfig extends BaseChartConfig {
   data: BarChartDataPoint[];
-  orientation?: 'vertical' | 'horizontal';
-  mode?: 'grouped' | 'stacked';
+  orientation?: "vertical" | "horizontal";
+  mode?: "grouped" | "stacked";
   xAxisLabel?: string;
   yAxisLabel?: string;
   showValues?: boolean;
@@ -165,7 +165,7 @@ export interface GeoMapConfig extends BaseChartConfig {
   data: GeoMapDataPoint[];
   geoJsonUrl?: string;
   colorScale?: string[];
-  projection?: 'mercator' | 'albersUsa' | 'equalEarth';
+  projection?: "mercator" | "albersUsa" | "equalEarth";
   showLabels?: boolean;
 }
 
@@ -179,7 +179,7 @@ export interface GroupedBarChartSeries {
 
 export interface GroupedBarChartConfig extends BaseChartConfig {
   series: GroupedBarChartSeries[];
-  orientation?: 'vertical' | 'horizontal';
+  orientation?: "vertical" | "horizontal";
   xAxisLabel?: string;
   yAxisLabel?: string;
   showValues?: boolean;
@@ -199,7 +199,7 @@ export interface StackedBarChartSeries {
 export interface StackedBarChartConfig extends BaseChartConfig {
   categories: string[];
   series: StackedBarChartSeries[];
-  orientation?: 'vertical' | 'horizontal';
+  orientation?: "vertical" | "horizontal";
   xAxisLabel?: string;
   yAxisLabel?: string;
   showValues?: boolean;
@@ -219,15 +219,15 @@ export interface StreamGraphConfig extends BaseChartConfig {
   series: StreamGraphSeries[];
   xAxisLabel?: string;
   yAxisLabel?: string;
-  offset?: 'wiggle' | 'silhouette' | 'expand';
-  order?: 'none' | 'ascending' | 'descending' | 'insideOut';
+  offset?: "wiggle" | "silhouette" | "expand";
+  order?: "none" | "ascending" | "descending" | "insideOut";
 }
 
 // Waterfall Chart
 export interface WaterfallDataPoint {
   label: string;
   value: number;
-  type?: 'increase' | 'decrease' | 'total';
+  type?: "increase" | "decrease" | "total";
   color?: string;
 }
 
@@ -304,7 +304,7 @@ export interface BoxPlotConfig extends BaseChartConfig {
   yAxisLabel?: string;
   showOutliers?: boolean;
   showMean?: boolean;
-  orientation?: 'vertical' | 'horizontal';
+  orientation?: "vertical" | "horizontal";
 }
 
 // Violin Plot
@@ -320,7 +320,7 @@ export interface ViolinPlotConfig extends BaseChartConfig {
   yAxisLabel?: string;
   showBox?: boolean;
   bandwidth?: number;
-  orientation?: 'vertical' | 'horizontal';
+  orientation?: "vertical" | "horizontal";
 }
 
 // Ridgeline Plot
@@ -348,7 +348,7 @@ export interface ParallelCoordinatesAxis {
   key: string;
   label: string;
   domain?: [number, number];
-  type?: 'linear' | 'categorical';
+  type?: "linear" | "categorical";
 }
 
 export interface ParallelCoordinatesConfig extends BaseChartConfig {
@@ -485,21 +485,21 @@ export interface ForceDirectedGraphConfig extends BaseChartConfig {
 
 // Choropleth Map (Universal geographic visualization)
 export interface ChoroplethDataPoint {
-  id: string; // Region ID (e.g., OKATO code for Russia, ISO code for countries)
-  name: string; // Region name
+  id: string;
+  name: string;
   value: number;
   color?: string;
 }
 
 export interface ChoroplethMapConfig extends BaseChartConfig {
   data: ChoroplethDataPoint[];
-  geoJsonUrl?: string; // URL to GeoJSON file with geographic boundaries
-  geoJson?: any; // Or direct GeoJSON object
-  projection?: 'mercator' | 'albersUsa' | 'albers' | 'equalEarth' | 'naturalEarth';
+  geoJsonUrl?: string;
+  geoJson?: any;
+  projection?: "mercator" | "albersUsa" | "albers" | "equalEarth" | "naturalEarth";
   colorScale?: string[];
   showLabels?: boolean;
   showTooltip?: boolean;
-  idProperty?: string; // Property name in GeoJSON to match with data.id (e.g., 'properties.OKATO')
+  idProperty?: string;
 }
 
 // Bubble Map (Geographic points with size)
@@ -514,9 +514,9 @@ export interface BubbleMapDataPoint {
 
 export interface BubbleMapConfig extends BaseChartConfig {
   data: BubbleMapDataPoint[];
-  geoJsonUrl?: string; // Optional background map
+  geoJsonUrl?: string;
   geoJson?: any;
-  projection?: 'mercator' | 'albersUsa' | 'albers' | 'equalEarth' | 'naturalEarth';
+  projection?: "mercator" | "albersUsa" | "albers" | "equalEarth" | "naturalEarth";
   sizeScale?: [number, number];
   showLabels?: boolean;
 }
@@ -532,25 +532,25 @@ export interface GeoHeatMapDataPoint {
 
 export interface GeoHeatMapConfig extends BaseChartConfig {
   data: GeoHeatMapDataPoint[];
-  geoJsonUrl?: string; // Optional background map
+  geoJsonUrl?: string;
   geoJson?: any;
-  projection?: 'mercator' | 'albersUsa' | 'albers' | 'equalEarth' | 'naturalEarth';
-  radius?: number; // Heat radius in pixels
-  intensity?: number; // Heat intensity multiplier
-  showMap?: boolean; // Show background map or just heatmap
+  projection?: "mercator" | "albersUsa" | "albers" | "equalEarth" | "naturalEarth";
+  radius?: number;
+  intensity?: number;
+  showMap?: boolean;
 }
 
 // Default theme based on Elbruso design system
 export const DEFAULT_THEME: ChartTheme = {
-  primaryColor: '#1A73E8',
-  secondaryColor: '#4285F4',
-  successColor: '#34A853',
-  errorColor: '#EA4335',
-  warningColor: '#FBBC05',
-  textColor: '#424242',
-  backgroundColor: '#FFFFFF',
-  gridColor: '#E0E0E0',
-  fontFamily: 'Inter, sans-serif',
+  primaryColor: "#1A73E8",
+  secondaryColor: "#4285F4",
+  successColor: "#34A853",
+  errorColor: "#EA4335",
+  warningColor: "#FBBC05",
+  textColor: "#424242",
+  backgroundColor: "#FFFFFF",
+  gridColor: "#E0E0E0",
+  fontFamily: "Inter, sans-serif",
 };
 
 export const DEFAULT_DIMENSIONS: ChartDimensions = {
@@ -567,5 +567,5 @@ export const DEFAULT_DIMENSIONS: ChartDimensions = {
 export const DEFAULT_ANIMATION: AnimationConfig = {
   enabled: true,
   duration: 500,
-  easing: 'cubic-in-out',
+  easing: "cubic-in-out",
 };

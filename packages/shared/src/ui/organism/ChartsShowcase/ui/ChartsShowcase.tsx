@@ -35,7 +35,7 @@ import {
   PieChartConfig,
   AreaChartConfig,
   ScatterChartConfig,
-} from "@/shared/lib/visualization/types";
+} from "@/shared/lib/visualization";
 
 const demoData = {
   line: [

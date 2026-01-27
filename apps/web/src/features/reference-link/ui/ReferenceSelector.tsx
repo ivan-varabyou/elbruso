@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useReferenceStore } from '@/shared/stores';
-import type { SystemEntityType } from '@/shared/types';
+import { useState, useEffect } from "react";
+import { useReferenceStore } from "@/shared/stores";
+import type { SystemEntityType } from "@/shared/types";
 
 interface ReferenceSelectorProps {
   type: SystemEntityType;
@@ -24,20 +24,20 @@ export function ReferenceSelector({ type, onSelect, multiSelect = false }: Refer
   } = useReferenceStore();
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     switch (type) {
-      case 'regions':
+      case "regions":
         fetchRegions();
         break;
-      case 'sports':
+      case "sports":
         fetchSports();
         break;
-      case 'indicators':
+      case "indicators":
         fetchIndicators();
         break;
-      case 'indicator-groups':
+      case "indicator-groups":
         fetchIndicatorGroups();
         break;
     }
@@ -45,13 +45,13 @@ export function ReferenceSelector({ type, onSelect, multiSelect = false }: Refer
 
   const getData = () => {
     switch (type) {
-      case 'regions':
+      case "regions":
         return regions;
-      case 'sports':
+      case "sports":
         return sports;
-      case 'indicators':
+      case "indicators":
         return indicators;
-      case 'indicator-groups':
+      case "indicator-groups":
         return indicatorGroups;
       default:
         return [];
@@ -60,28 +60,26 @@ export function ReferenceSelector({ type, onSelect, multiSelect = false }: Refer
 
   const data = getData();
 
-  const filteredData = data.filter((item: { name_ru?: string; code?: string }) => {
+  const filteredData = data.filter((item) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
-    return (
-      item.name_ru?.toLowerCase().includes(query) ||
-      item.code?.toLowerCase().includes(query)
-    );
+    return item.name_ru?.toLowerCase().includes(query) || item.code?.toLowerCase().includes(query);
   });
 
-  const handleToggle = (id: string) => {
+  const handleToggle = (id: string | number) => {
+    const idStr = String(id);
     const newSelected = new Set(selectedIds);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
+    if (newSelected.has(idStr)) {
+      newSelected.delete(idStr);
     } else {
       if (!multiSelect) {
         newSelected.clear();
       }
-      newSelected.add(id);
+      newSelected.add(idStr);
     }
     setSelectedIds(newSelected);
 
-    const selectedItems = data.filter((item: { id: string }) => newSelected.has(item.id));
+    const selectedItems = data.filter((item) => newSelected.has(String(item.id)));
     onSelect(selectedItems);
   };
 
@@ -109,31 +107,27 @@ export function ReferenceSelector({ type, onSelect, multiSelect = false }: Refer
       {/* List */}
       <div className="flex-1 overflow-y-auto">
         {filteredData.length === 0 ? (
-          <div className="p-8 text-center text-zinc-500">
-            Ничего не найдено
-          </div>
+          <div className="p-8 text-center text-zinc-500">Ничего не найдено</div>
         ) : (
           <div className="divide-y divide-zinc-100">
-            {filteredData.map((item: { id: string; name_ru?: string; code?: string }) => (
+            {filteredData.map((item) => (
               <div
-                key={item.id}
+                key={String(item.id)}
                 onClick={() => handleToggle(item.id)}
                 className={`p-3 cursor-pointer hover:bg-zinc-50 transition-colors ${
-                  selectedIds.has(item.id) ? 'bg-blue-50' : ''
+                  selectedIds.has(String(item.id)) ? "bg-blue-50" : ""
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <input
-                    type={multiSelect ? 'checkbox' : 'radio'}
-                    checked={selectedIds.has(item.id)}
+                    type={multiSelect ? "checkbox" : "radio"}
+                    checked={selectedIds.has(String(item.id))}
                     onChange={() => {}}
                     className="w-4 h-4"
                   />
                   <div className="flex-1">
                     <div className="font-medium text-zinc-900">{item.name_ru}</div>
-                    {item.code && (
-                      <div className="text-sm text-zinc-500">{item.code}</div>
-                    )}
+                    {item.code && <div className="text-sm text-zinc-500">{item.code}</div>}
                   </div>
                 </div>
               </div>

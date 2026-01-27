@@ -13,7 +13,6 @@
     "pg": "latest"
   },
   "devDependencies": {
-    "@elbruso/types": "workspace:*",
     "@types/node": "latest",
     "@types/pg": "latest",
     "@types/lodash": "latest",

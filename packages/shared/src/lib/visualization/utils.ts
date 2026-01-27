@@ -6,7 +6,7 @@ import {
   DEFAULT_DIMENSIONS,
   AnimationConfig,
   DEFAULT_ANIMATION,
-} from './types';
+} from '../../types/visualization';
 
 /**
  * Merge default dimensions with user-provided dimensions

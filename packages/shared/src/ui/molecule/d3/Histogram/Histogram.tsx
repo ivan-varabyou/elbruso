@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { HistogramAdapter } from '@/shared/lib/visualization/adapters/HistogramAdapter';
-import { BarChartConfig } from '@/shared/lib/visualization/types';
+import { BarChartConfig } from '@/shared/lib/visualization';
 
 interface HistogramProps extends Omit<BarChartConfig, 'dimensions'> {
   width?: number;

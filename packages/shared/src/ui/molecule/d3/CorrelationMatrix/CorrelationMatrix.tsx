@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { CorrelationMatrixAdapter } from '@/shared/lib/visualization/adapters/CorrelationMatrixAdapter';
-import { CorrelationMatrixConfig } from '@/shared/lib/visualization/types';
+import { CorrelationMatrixConfig } from '@/shared/lib/visualization';
 
 interface CorrelationMatrixProps extends Omit<CorrelationMatrixConfig, 'dimensions'> {
     width?: number;

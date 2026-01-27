@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { ScatterChartConfig } from '../types';
+import { ScatterChartConfig } from '../../types/visualization';
 
 /**
  * Scatter Plot Adapter

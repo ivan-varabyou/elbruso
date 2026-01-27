@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { GanttAdapter } from '@/shared/lib/visualization/adapters/GanttAdapter';
-import { GanttConfig } from '@/shared/lib/visualization/types';
+import { GanttConfig } from '@/shared/lib/visualization';
 
 interface GanttProps extends Omit<GanttConfig, 'dimensions'> {
     width?: number;

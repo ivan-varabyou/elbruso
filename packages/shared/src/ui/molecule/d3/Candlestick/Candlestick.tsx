@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { CandlestickAdapter } from '@/shared/lib/visualization/adapters/CandlestickAdapter';
-import { CandlestickConfig } from '@/shared/lib/visualization/types';
+import { CandlestickConfig } from '@/shared/lib/visualization';
 
 interface CandlestickProps extends Omit<CandlestickConfig, 'dimensions'> {
     width?: number;

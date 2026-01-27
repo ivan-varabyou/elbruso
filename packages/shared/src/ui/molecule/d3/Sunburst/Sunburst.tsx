@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { SunburstAdapter } from '@/shared/lib/visualization/adapters/SunburstAdapter';
-import { SunburstConfig } from '@/shared/lib/visualization/types';
+import { SunburstConfig } from '@/shared/lib/visualization';
 
 interface SunburstProps extends Omit<SunburstConfig, 'dimensions'> {
     width?: number;

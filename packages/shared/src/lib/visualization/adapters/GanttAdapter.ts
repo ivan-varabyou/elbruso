@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { GanttConfig } from '../types';
+import { GanttConfig } from '../../types/visualization';
 
 /**
  * Gantt Chart Adapter

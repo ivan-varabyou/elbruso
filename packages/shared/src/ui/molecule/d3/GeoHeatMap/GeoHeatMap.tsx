@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { GeoHeatMapAdapter } from '@/shared/lib/visualization/adapters/GeoHeatMapAdapter';
-import { GeoHeatMapConfig } from '@/shared/lib/visualization/types';
+import { GeoHeatMapConfig } from '@/shared/lib/visualization';
 
 interface GeoHeatMapProps extends Omit<GeoHeatMapConfig, 'dimensions'> {
     width?: number;

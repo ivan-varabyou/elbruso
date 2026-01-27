@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { RadialBarChartConfig } from '../types';
+import { RadialBarChartConfig } from '../../types/visualization';
 
 /**
  * Radial Bar Chart Adapter

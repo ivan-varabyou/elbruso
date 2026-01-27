@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { ParallelCoordinatesAdapter } from '@/shared/lib/visualization/adapters/ParallelCoordinatesAdapter';
-import { ParallelCoordinatesConfig } from '@/shared/lib/visualization/types';
+import { ParallelCoordinatesConfig } from '@/shared/lib/visualization';
 
 interface ParallelCoordinatesProps extends Omit<ParallelCoordinatesConfig, 'dimensions'> {
     width?: number;

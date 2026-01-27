@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { WaterfallChartAdapter } from '@/shared/lib/visualization/adapters/WaterfallChartAdapter';
-import { WaterfallChartConfig } from '@/shared/lib/visualization/types';
+import { WaterfallChartConfig } from '@/shared/lib/visualization';
 
 interface WaterfallChartProps extends Omit<WaterfallChartConfig, 'dimensions'> {
     width?: number;
