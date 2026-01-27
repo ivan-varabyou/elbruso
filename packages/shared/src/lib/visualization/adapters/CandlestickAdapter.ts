@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { CandlestickConfig } from '../../types/visualization';
+import { CandlestickConfig } from '@/shared/types/visualization';
 
 /**
  * Candlestick Chart Adapter

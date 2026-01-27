@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { GeoHeatMapConfig } from '../../types/visualization';
+import { GeoHeatMapConfig } from '@/shared/types/visualization';
 
 /**
  * Geographic Heatmap Adapter

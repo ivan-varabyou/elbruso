@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { StackedBarChartConfig } from '../../types/visualization';
+import { StackedBarChartConfig } from '@/shared/types/visualization';
 
 /**
  * Stacked Bar Chart Adapter

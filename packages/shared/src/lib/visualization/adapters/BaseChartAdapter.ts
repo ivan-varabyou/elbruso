@@ -4,7 +4,7 @@ import {
   ChartTheme,
   BaseChartConfig,
   AnimationConfig,
-} from '../../types/visualization';
+} from '@/shared/types/visualization';
 import {
   mergeDimensions,
   mergeTheme,

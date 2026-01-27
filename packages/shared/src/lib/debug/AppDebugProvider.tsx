@@ -1,18 +1,19 @@
 "use client";
 
-import React from 'react';
-import { DebugProvider, DebugOverlay, DebugTrigger } from '@elbruso/debug';
+import React from "react";
+import { DebugProvider, DebugOverlay, DebugTrigger } from "@elbruso/debug";
 
 interface AppDebugProviderProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
-export const AppDebugProvider: React.FC<AppDebugProviderProps> = ({ children }) => {
-    return (
-        <DebugProvider>
-            {children}
-            <DebugOverlay />
-            <DebugTrigger />
-        </DebugProvider>
-    );
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const AppDebugProvider: React.FC<AppDebugProviderProps> = ({ children }: any) => {
+  return (
+    <DebugProvider>
+      {children}
+      <DebugOverlay />
+      <DebugTrigger />
+    </DebugProvider>
+  );
 };

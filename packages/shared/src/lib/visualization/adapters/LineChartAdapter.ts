@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { LineChartConfig } from '../../types/visualization';
+import { LineChartConfig } from '@/shared/types/visualization';
 import {
   addGridLines,
   getCurveFunction,

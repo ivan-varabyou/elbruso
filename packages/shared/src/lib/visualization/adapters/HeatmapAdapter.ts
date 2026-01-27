@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { HeatmapConfig } from '../../types/visualization';
+import { HeatmapConfig } from '@/shared/types/visualization';
 
 /**
  * Heatmap Adapter

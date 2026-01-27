@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { ChoroplethMapConfig } from '../../types/visualization';
+import { ChoroplethMapConfig } from '@/shared/types/visualization';
 
 /**
  * Choropleth Map Adapter
