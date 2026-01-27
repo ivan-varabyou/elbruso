@@ -18,8 +18,8 @@ npm run dev
 
 - **Web App**: http://localhost:7200
 - **Admin App**: http://localhost:7201
-- **API**: http://localhost:3001
-- **Swagger Docs**: http://localhost:3001/api/docs
+- **API**: http://localhost:7100
+- **Swagger Docs**: http://localhost:7100/api/docs
 
 ## База данных
 
@@ -48,7 +48,7 @@ NODE_ENV=development
 
 ### Web (`apps/web/.env.local`)
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_API_URL=http://localhost:7100
 ```
 
 ## Команды

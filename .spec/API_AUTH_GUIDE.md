@@ -65,13 +65,13 @@
 
 ### cURL
 ```bash
-curl -X GET 'http://localhost:3001/workspaces' \
+curl -X GET 'http://localhost:7100/workspaces' \
   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
 ```
 
 ### JavaScript (Fetch API)
 ```javascript
-fetch('http://localhost:3001/workspaces', {
+fetch('http://localhost:7100/workspaces', {
   headers: {
     'Authorization': `Bearer ${accessToken}`,
     'Content-Type': 'application/json'
@@ -81,7 +81,7 @@ fetch('http://localhost:3001/workspaces', {
 
 ### Axios
 ```javascript
-axios.get('http://localhost:3001/workspaces', {
+axios.get('http://localhost:7100/workspaces', {
   headers: {
     'Authorization': `Bearer ${accessToken}`
   }

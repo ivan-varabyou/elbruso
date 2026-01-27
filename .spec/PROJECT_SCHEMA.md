@@ -38,7 +38,7 @@ We use the **7xxx** range for consistent service management:
 - **Connection String**: `postgresql://elbruso:elbruso@localhost:7900/elbruso`
 
 ## API Navigation (Swagger)
-- **URL**: [http://localhost:3001/api/docs](http://localhost:3001/api/docs)
+- **URL**: [http://localhost:7100/api/docs](http://localhost:7100/api/docs)
 - **Main Modules**:
     - `auth`: Authentication and registration.
     - `users`: User management and profiles.
