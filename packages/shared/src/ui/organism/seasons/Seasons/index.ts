@@ -1,3 +1,3 @@
-export { SeasonModal } from './ui/SeasonModal';
-export { AutogenerateModal } from './ui/AutogenerateModal';
+export { SeasonModal } from './SeasonModal';
+export { AutogenerateModal } from './AutogenerateModal';
 

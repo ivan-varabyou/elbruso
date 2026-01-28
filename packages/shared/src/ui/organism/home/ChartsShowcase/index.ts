@@ -1,1 +1,1 @@
-export { ChartsShowcase } from './ui/ChartsShowcase';
+export { ChartsShowcase } from './ChartsShowcase';

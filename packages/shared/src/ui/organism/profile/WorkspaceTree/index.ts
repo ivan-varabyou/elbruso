@@ -1,2 +1,2 @@
-export { WorkspaceTree } from './ui/WorkspaceTree';
-export { CreateWorkspaceModal } from './ui/CreateWorkspaceModal';
+export { WorkspaceTree } from './WorkspaceTree';
+export { CreateWorkspaceModal } from './CreateWorkspaceModal';
