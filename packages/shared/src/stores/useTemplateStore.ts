@@ -1,7 +1,9 @@
-import { create } from 'zustand';
-import { templatesApi } from '../api/templates';
-import { ErrorHandler } from '../lib/errors/errorHandler';
-import type { Template, AppError } from '../types';
+import { create } from "zustand";
+import { Templates } from "../api/Templates";
+import { ErrorHandler } from "../lib/errors/errorHandler";
+import type { Template, AppError } from "../types";
+
+const templatesApi = new Templates();
 
 interface TemplateStore {
   templates: Template[];
@@ -21,8 +23,8 @@ export const useTemplateStore = create<TemplateStore>((set) => ({
   fetchTemplates: async (filters) => {
     set({ isLoading: true, error: null });
     try {
-      const templates = await templatesApi.getAll(filters);
-      set({ templates, isLoading: false });
+      const response = await templatesApi.templatesControllerFindAll(filters);
+      set({ templates: response.data, isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -32,7 +34,7 @@ export const useTemplateStore = create<TemplateStore>((set) => ({
   applyTemplate: async (templateId, workspaceId) => {
     set({ isLoading: true, error: null });
     try {
-      await templatesApi.apply(templateId, workspaceId);
+      await templatesApi.templatesControllerApply(templateId, { workspace_id: workspaceId });
       set({ isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);

@@ -4,6 +4,7 @@ import { ToastProvider } from "@/shared/ui/molecule/Toast";
 import { LanguageProvider } from "@/shared/lib/language";
 import { I18nProvider } from "@/shared/lib/i18n";
 import { AppDebugProvider } from "@/shared/lib/debug";
+import { ReactQueryProvider } from "@/shared/api/hooks";
 import { getDictionary } from "../../get-dictionary";
 import "./globals.css";
 import "@/shared/ui/atom/Input/Input.css";
@@ -38,7 +39,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <LanguageProvider>
             <AppDebugProvider>
               <AuthProvider>
-                <ToastProvider>{children}</ToastProvider>
+                <ReactQueryProvider>
+                  <ToastProvider>{children}</ToastProvider>
+                </ReactQueryProvider>
               </AuthProvider>
             </AppDebugProvider>
           </LanguageProvider>

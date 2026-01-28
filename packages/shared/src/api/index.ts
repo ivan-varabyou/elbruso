@@ -1,11 +1,20 @@
-export { apiClient, setTokens, clearTokens, isAuthenticated } from './client';
-export { authApi } from './auth';
-export { workspacesApi } from './workspaces';
-export { usersApi } from './users';
-export { tablesApi } from './tables';
-export { referencesApi } from './references';
-export { templatesApi } from './templates';
+export { apiClient, setTokens, clearTokens, isAuthenticated } from "./client";
+export type {
+  LoginDto,
+  RegisterDto,
+  CreateWorkspaceDto,
+  UpdateWorkspaceDto,
+  UpdateProfileDto,
+  AdminUpdateUserDto,
+  CreateApiKeyDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from "./data-contracts";
 
-export type { LoginDto, RegisterDto, AuthResponse } from './auth';
-export type { CreateWorkspaceDto, UpdateWorkspaceDto } from './workspaces';
-
+export { Auth } from "./Auth";
+export { Workspaces } from "./Workspaces";
+export { Users } from "./Users";
+export { Tables } from "./Tables";
+export { Versions } from "./Versions";
+export { Reference } from "./Reference";
+export { Templates } from "./Templates";

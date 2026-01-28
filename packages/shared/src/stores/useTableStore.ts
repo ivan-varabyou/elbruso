@@ -1,15 +1,21 @@
-import { create } from 'zustand';
-import { tablesApi } from '../api';
-import { ErrorHandler } from '../lib/errors/errorHandler';
-import type { 
-  DynamicTable, 
-  TableCell, 
+import { create } from "zustand";
+import { Tables, Workspaces } from "../api";
+import { Versions } from "../api/Versions";
+import { ErrorHandler } from "../lib/errors/errorHandler";
+import type {
+  DynamicTable,
+  TableCell,
   CellData,
   CellUpdate,
   CreateTableDto,
   UpdateTableDto,
   AppError,
-} from '../types';
+} from "../types";
+import type { CellDataDto } from "../api/data-contracts";
+
+const tablesApi = new Tables();
+const workspacesApi = new Workspaces();
+const versionsApi = new Versions();
 
 interface TableStore {
   // State
@@ -25,18 +31,18 @@ interface TableStore {
   createTable: (workspaceId: string, dto: CreateTableDto) => Promise<DynamicTable>;
   updateTable: (id: string, dto: UpdateTableDto) => Promise<void>;
   deleteTable: (id: string) => Promise<void>;
-  
+
   // Cell operations with optimistic updates
   updateCell: (row: number, col: number, data: CellData) => Promise<void>;
   batchUpdateCells: (updates: CellUpdate[]) => Promise<void>;
   getCellValue: (row: number, col: number) => CellData | undefined;
-  
+
   // Row/Column operations
   insertRow: (index: number) => Promise<void>;
   deleteRow: (index: number) => Promise<void>;
   insertColumn: (index: number) => Promise<void>;
   deleteColumn: (index: number) => Promise<void>;
-  
+
   // Utility
   clearError: () => void;
   reset: () => void;
@@ -52,8 +58,8 @@ export const useTableStore = create<TableStore>((set, get) => ({
   fetchTables: async (workspaceId, groupId) => {
     set({ isLoading: true, error: null });
     try {
-      const tables = await tablesApi.getAll(workspaceId, groupId);
-      set({ tables, isLoading: false });
+      const response = await workspacesApi.dynamicTablesControllerFindAll(workspaceId, { groupId });
+      set({ tables: response.data as unknown as DynamicTable[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -63,24 +69,33 @@ export const useTableStore = create<TableStore>((set, get) => ({
   loadTable: async (tableId) => {
     set({ isLoading: true, error: null });
     try {
-      const table = await tablesApi.getById(tableId);
-      
-      if (!table.activeVersion) {
-        throw new Error('No active version found');
+      const table = await tablesApi.dynamicTablesControllerFindOne(tableId);
+      const tableData = table.data as unknown as DynamicTable;
+
+      if (!tableData.activeVersion) {
+        throw new Error("No active version found");
       }
 
-      const cellsData = await tablesApi.getCells(table.activeVersion.id);
-      
+      const cellsData = await versionsApi.dynamicTablesControllerGetCells(
+        tableData.activeVersion.id,
+      );
+
       const cellsMap = new Map<string, CellData>();
-      cellsData.forEach(cell => {
+      (
+        cellsData.data as unknown as Array<{
+          row_index: number;
+          col_index: number;
+          cell_data: CellData;
+        }>
+      ).forEach((cell) => {
         const key = `${cell.row_index}_${cell.col_index}`;
         cellsMap.set(key, cell.cell_data);
       });
 
-      set({ 
-        activeTable: table, 
-        cells: cellsMap, 
-        isLoading: false 
+      set({
+        activeTable: tableData,
+        cells: cellsMap,
+        isLoading: false,
       });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
@@ -91,12 +106,13 @@ export const useTableStore = create<TableStore>((set, get) => ({
   createTable: async (workspaceId, dto) => {
     set({ isLoading: true, error: null });
     try {
-      const table = await tablesApi.create(workspaceId, dto);
-      set(state => ({ 
-        tables: [...state.tables, table],
-        isLoading: false 
+      const table = await workspacesApi.dynamicTablesControllerCreate(workspaceId, dto);
+      const tableData = table.data as unknown as DynamicTable;
+      set((state) => ({
+        tables: [...state.tables, tableData],
+        isLoading: false,
       }));
-      return table;
+      return tableData;
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -107,10 +123,11 @@ export const useTableStore = create<TableStore>((set, get) => ({
   updateTable: async (id, dto) => {
     set({ isLoading: true, error: null });
     try {
-      const updated = await tablesApi.update(id, dto);
-      set(state => ({
-        tables: state.tables.map(t => t.id === id ? updated : t),
-        activeTable: state.activeTable?.id === id ? updated : state.activeTable,
+      const updated = await tablesApi.dynamicTablesControllerUpdate(id, dto);
+      const updatedData = updated.data as unknown as DynamicTable;
+      set((state) => ({
+        tables: state.tables.map((t) => (t.id === id ? updatedData : t)),
+        activeTable: state.activeTable?.id === id ? updatedData : state.activeTable,
         isLoading: false,
       }));
     } catch (error) {
@@ -122,9 +139,9 @@ export const useTableStore = create<TableStore>((set, get) => ({
   deleteTable: async (id) => {
     set({ isLoading: true, error: null });
     try {
-      await tablesApi.delete(id);
-      set(state => ({
-        tables: state.tables.filter(t => t.id !== id),
+      await tablesApi.dynamicTablesControllerDelete(id);
+      set((state) => ({
+        tables: state.tables.filter((t) => t.id !== id),
         activeTable: state.activeTable?.id === id ? null : state.activeTable,
         isLoading: false,
       }));
@@ -147,11 +164,7 @@ export const useTableStore = create<TableStore>((set, get) => ({
 
     try {
       // 2. Server update
-      await tablesApi.updateCell(activeTable.activeVersion.id, {
-        rowIndex: row,
-        colIndex: col,
-        cellData: data,
-      });
+      await versionsApi.dynamicTablesControllerUpdateCell(activeTable.activeVersion.id, row, col);
     } catch (error) {
       // 3. Rollback on error
       const rollbackCells = new Map(get().cells);
@@ -172,8 +185,8 @@ export const useTableStore = create<TableStore>((set, get) => ({
     // 1. Optimistic update
     const cells = new Map(get().cells);
     const previousValues = new Map<string, CellData | undefined>();
-    
-    updates.forEach(u => {
+
+    updates.forEach((u) => {
       const key = `${u.row}_${u.col}`;
       previousValues.set(key, cells.get(key));
       cells.set(key, u.data);
@@ -182,13 +195,13 @@ export const useTableStore = create<TableStore>((set, get) => ({
 
     try {
       // 2. Server update
-      const dtos = updates.map(u => ({
-        rowIndex: u.row,
-        colIndex: u.col,
-        cellData: u.data,
-      }));
-
-      await tablesApi.batchUpdateCells(activeTable.activeVersion.id, dtos);
+      await versionsApi.dynamicTablesControllerBatchUpdateCells(activeTable.activeVersion.id, {
+        cells: updates.map((u) => ({
+          rowIndex: u.row,
+          colIndex: u.col,
+          cellData: u.data as unknown as Record<string, unknown>,
+        })),
+      });
     } catch (error) {
       // 3. Rollback on error
       const rollbackCells = new Map(get().cells);
@@ -213,7 +226,7 @@ export const useTableStore = create<TableStore>((set, get) => ({
     if (!activeTable?.activeVersion) return;
 
     try {
-      await tablesApi.insertRow(activeTable.activeVersion.id, index);
+      await versionsApi.dynamicTablesControllerInsertRow(activeTable.activeVersion.id, index);
       await get().loadTable(activeTable.id);
     } catch (error) {
       const appError = ErrorHandler.handle(error);
@@ -226,7 +239,7 @@ export const useTableStore = create<TableStore>((set, get) => ({
     if (!activeTable?.activeVersion) return;
 
     try {
-      await tablesApi.deleteRow(activeTable.activeVersion.id, index);
+      await versionsApi.dynamicTablesControllerDeleteRow(activeTable.activeVersion.id, index);
       await get().loadTable(activeTable.id);
     } catch (error) {
       const appError = ErrorHandler.handle(error);
@@ -239,7 +252,7 @@ export const useTableStore = create<TableStore>((set, get) => ({
     if (!activeTable?.activeVersion) return;
 
     try {
-      await tablesApi.insertColumn(activeTable.activeVersion.id, index);
+      await versionsApi.dynamicTablesControllerInsertColumn(activeTable.activeVersion.id, index);
       await get().loadTable(activeTable.id);
     } catch (error) {
       const appError = ErrorHandler.handle(error);
@@ -252,7 +265,7 @@ export const useTableStore = create<TableStore>((set, get) => ({
     if (!activeTable?.activeVersion) return;
 
     try {
-      await tablesApi.deleteColumn(activeTable.activeVersion.id, index);
+      await versionsApi.dynamicTablesControllerDeleteColumn(activeTable.activeVersion.id, index);
       await get().loadTable(activeTable.id);
     } catch (error) {
       const appError = ErrorHandler.handle(error);

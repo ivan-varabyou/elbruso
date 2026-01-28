@@ -1,57 +1,56 @@
-import { create } from 'zustand';
-import { usersApi } from '../api';
+import { create } from "zustand";
+import { Users } from "../api";
+import { clearTokens } from "../api/client";
 
 export interface User {
-    id: string;
-    email: string;
-    first_name?: string;
-    last_name?: string;
-    middle_name?: string;
-    role?: string;
-    organization_id?: number | string;
-    sport_id?: string;
-    is_active: boolean;
-    name?: string;
+  id: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  middle_name?: string;
+  role?: string;
+  organization_id?: number | string;
+  sport_id?: string;
+  is_active: boolean;
+  name?: string;
 }
 
-
 interface UserStore {
-    // State
-    user: User | null;
-    isLoading: boolean;
-    error: string | null;
+  // State
+  user: User | null;
+  isLoading: boolean;
+  error: string | null;
 
-    // Actions
-    fetchUser: () => Promise<void>;
-    logout: () => Promise<void>;
+  // Actions
+  fetchUser: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
-    // Initial state
-    user: null,
-    isLoading: false,
-    error: null,
+  // Initial state
+  user: null,
+  isLoading: false,
+  error: null,
 
-    // Actions
-    fetchUser: async () => {
-        set({ isLoading: true, error: null });
-        try {
-            const user = await usersApi.getMe();
-            set({ user, isLoading: false });
-        } catch (error) {
-            set({ error: (error as Error).message, isLoading: false });
-        }
-    },
+  // Actions
+  fetchUser: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const users = new Users();
+      const { data: user } = (await users.usersControllerGetProfile()) as unknown as {
+        data: User;
+      };
+      set({ user, isLoading: false });
+    } catch (error) {
+      set({ error: (error as Error).message, isLoading: false });
+    }
+  },
 
-    logout: async () => {
-        try {
-            await usersApi.logout();
-            set({ user: null });
-            if (typeof window !== 'undefined') {
-                window.location.href = '/login';
-            }
-        } catch (error) {
-            console.error('Logout error:', error);
-        }
-    },
+  logout: async () => {
+    clearTokens();
+    set({ user: null });
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
+  },
 }));

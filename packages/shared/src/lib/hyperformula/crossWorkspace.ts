@@ -1,5 +1,6 @@
-import { tablesApi } from '../../api';
-import type { CellData } from '../../types';
+import { Workspaces } from "../../api";
+import { Versions } from "../../api/Versions";
+import type { CellData, DynamicTable, TableCell } from "../../types";
 
 interface CachedWorkspaceData {
   cells: Map<string, CellData>;
@@ -47,17 +48,23 @@ export class CrossWorkspaceResolver {
    */
   private async fetchAndCache(workspaceId: string, tableName: string): Promise<void> {
     try {
-      const tables = await tablesApi.getAll(workspaceId);
-      const table = tables.find(t => t.name === tableName);
+      const workspacesApi = new Workspaces();
+      const versionsApi = new Versions();
+      const tablesResponse = await workspacesApi.dynamicTablesControllerFindAll(workspaceId);
+      const tables = (tablesResponse.data as unknown as DynamicTable[]) || [];
+      const table = tables.find((t: DynamicTable) => t.name === tableName);
 
       if (!table?.activeVersion) {
         throw new Error(`Table ${tableName} not found in workspace ${workspaceId}`);
       }
 
-      const cellsData = await tablesApi.getCells(table.activeVersion.id);
+      const cellsResponse = await versionsApi.dynamicTablesControllerGetCells(
+        table.activeVersion.id,
+      );
+      const cellsData = (cellsResponse.data as unknown as TableCell[]) || [];
 
       const cellsMap = new Map<string, CellData>();
-      cellsData.forEach(cell => {
+      cellsData.forEach((cell: TableCell) => {
         cellsMap.set(`${cell.row_index}_${cell.col_index}`, cell.cell_data);
       });
 
@@ -80,7 +87,9 @@ export class CrossWorkspaceResolver {
     const cached = this.cache.get(cacheKey);
 
     if (!cached) {
-      console.warn(`Workspace ${workspaceId} table ${tableName} not loaded. Call loadWorkspaceData first.`);
+      console.warn(
+        `Workspace ${workspaceId} table ${tableName} not loaded. Call loadWorkspaceData first.`,
+      );
       return null;
     }
 
@@ -120,8 +129,8 @@ export class CrossWorkspaceResolver {
       this.cache.delete(`${workspaceId}_${tableName}`);
     } else {
       Array.from(this.cache.keys())
-        .filter(key => key.startsWith(`${workspaceId}_`))
-        .forEach(key => this.cache.delete(key));
+        .filter((key) => key.startsWith(`${workspaceId}_`))
+        .forEach((key) => this.cache.delete(key));
     }
   }
 

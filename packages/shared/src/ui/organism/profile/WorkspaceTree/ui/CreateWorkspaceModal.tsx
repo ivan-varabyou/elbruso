@@ -60,7 +60,6 @@ export function CreateWorkspaceModal({ isOpen, onClose }: CreateWorkspaceModalPr
     try {
       await createWorkspace({
         name,
-        season_id: seasonId || undefined,
       });
 
       onClose();

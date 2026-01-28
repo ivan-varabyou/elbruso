@@ -7,7 +7,9 @@
     "dev": "./scripts/dev-setup.sh",
     "dev:only": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "generate:api": "swagger-typescript-api -p ./swagger.json -o ./packages/shared/src/api --react-hooks --axios --modular --exportSchemas",
+    "generate:api:watch": "swagger-typescript-api -p ./swagger.json -o ./packages/shared/src/api --react-hooks --axios --modular --exportSchemas --watch"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
@@ -15,12 +17,15 @@
     "eslint-plugin-boundaries": "^5.3.1",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.5",
+    "openapi-typegen": "^2.0.1",
     "prettier": "^3.8.0",
+    "swagger-typescript-api": "^13.2.16",
     "turbo": "latest",
     "typescript": "latest"
   },
   "packageManager": "pnpm@9.0.0",
   "dependencies": {
+    "@tanstack/react-query": "^5.90.20",
     "@types/d3-sankey": "^0.12.5",
     "@types/nodemailer": "^7.0.5",
     "ag-grid-community": "^35.0.1",

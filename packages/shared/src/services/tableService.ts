@@ -1,6 +1,9 @@
-import { tableGridApi } from './tableGridApi';
-import { tablesApi } from '@/shared/api/tables';
-import type { CellData } from '@/shared/types';
+import { tableGridApi } from "./tableGridApi";
+import { Tables, Versions } from "@/shared/api";
+import type { CellData } from "@/shared/types";
+
+const tablesApi = new Tables();
+const versionsApi = new Versions();
 
 /**
  * Table Service - Business logic for table operations
@@ -8,13 +11,7 @@ import type { CellData } from '@/shared/types';
  */
 export class TableService {
   // ========== Cell Operations ==========
-  async updateCell(
-    tableId: string,
-    versionId: string,
-    row: number,
-    col: number,
-    data: CellData
-  ) {
+  async updateCell(tableId: string, versionId: string, row: number, col: number, data: CellData) {
     try {
       // 1. Быстрое обновление в гриде (Transaction) - работает как "сигнал"
       // Мы находим текущую строку и обновляем в ней только одно поле
@@ -22,43 +19,39 @@ export class TableService {
       if (rowNode) {
         const field = `col_${col}`;
         const updatedData = { ...rowNode.data, [field]: data.value };
-        
+
         // applyTransaction не вызывает ререндер React-компонента
         tableGridApi.getGridApi()?.applyTransaction({ update: [updatedData] });
       }
 
       // 2. Фоновое обновление бэкенда
-      await tablesApi.updateCell(versionId, {
-        rowIndex: row,
-        colIndex: col,
-        cellData: data,
-      });
+      await versionsApi.dynamicTablesControllerUpdateCell(versionId, row, col);
 
       return { success: true };
     } catch (error) {
       // В случае ошибки сбрасываем состояние ячейки (опционально)
-      console.error('Failed to update cell:', error);
+      console.error("Failed to update cell:", error);
       throw error;
     }
   }
 
   // ========== Row Operations ==========
   async insertRow(versionId: string, index: number) {
-    await tablesApi.insertRow(versionId, index);
+    await versionsApi.dynamicTablesControllerInsertRow(versionId, index);
     // Grid will auto-refresh via store
   }
 
   async deleteRow(versionId: string, index: number) {
-    await tablesApi.deleteRow(versionId, index);
+    await versionsApi.dynamicTablesControllerDeleteRow(versionId, index);
   }
 
   // ========== Column Operations ==========
   async insertColumn(versionId: string, index: number) {
-    await tablesApi.insertColumn(versionId, index);
+    await versionsApi.dynamicTablesControllerInsertColumn(versionId, index);
   }
 
   async deleteColumn(versionId: string, index: number) {
-    await tablesApi.deleteColumn(versionId, index);
+    await versionsApi.dynamicTablesControllerDeleteColumn(versionId, index);
   }
 
   // ========== Clipboard Operations ==========
@@ -116,7 +109,7 @@ export class TableService {
 
   // ========== Navigation ==========
   goToCell(row: number, col: string) {
-    tableGridApi.ensureIndexVisible(row, 'middle');
+    tableGridApi.ensureIndexVisible(row, "middle");
     tableGridApi.ensureColumnVisible(col);
     tableGridApi.setFocusedCell(row, col);
   }
