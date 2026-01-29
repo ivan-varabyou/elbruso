@@ -26,6 +26,7 @@ import { SheetTabs } from "./SheetTabs";
 import { ContextMenu } from "./ContextMenu";
 import { useKeyboardShortcuts } from "../model/useKeyboardShortcuts";
 import { tableGridApi, tableService, cellFormattingService } from "@/shared/services";
+import { WorkspaceTableTabs } from "@/shared/ui/organism/profile/WorkspaceTree/WorkspaceTableTabs";
 import type { CellData } from "@/shared/types";
 
 interface DynamicTableProps {
@@ -466,6 +467,9 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
         description={activeTable?.description || ""}
         workspaceId={workspaceId}
       />
+
+      {/* Workspace Table Tabs */}
+      <WorkspaceTableTabs workspaceId={workspaceId} />
 
       {/* Main Toolbar */}
       <MainToolbar
