@@ -22,7 +22,6 @@ import { TableFormulaEngine } from "@/shared/lib/hyperformula";
 import { FormulaBar } from "./FormulaBar";
 import { TableHeader } from "./TableHeader";
 import { MainToolbar } from "./MainToolbar";
-import { SheetTabs } from "./SheetTabs";
 import { ContextMenu } from "./ContextMenu";
 import { useKeyboardShortcuts } from "../model/useKeyboardShortcuts";
 import { tableGridApi, tableService, cellFormattingService } from "@/shared/services";
@@ -559,14 +558,6 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
           onRangeSelectionChanged={onRangeSelectionChanged}
         />
       </div>
-
-      {/* Sheet Tabs */}
-      <SheetTabs
-        sheets={[{ id: tableId, name: activeTable?.name || "Sheet1", order: 0 }]}
-        activeSheetId={tableId}
-        onSheetChange={(id) => console.log("Switch to sheet:", id)}
-        onAddSheet={() => console.log("Add new sheet")}
-      />
 
       {/* Custom Context Menu */}
       {contextMenu && (
