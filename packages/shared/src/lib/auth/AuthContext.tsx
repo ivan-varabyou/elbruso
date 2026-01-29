@@ -127,11 +127,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const loginResponse = (await authApi.authControllerLogin(credentials)) as unknown as {
         data: { accessToken?: string; refreshToken?: string };
       };
-      const response = await authApi.authControllerGetMe();
 
       if (loginResponse?.data?.accessToken && loginResponse?.data?.refreshToken) {
         setTokens(loginResponse.data.accessToken, loginResponse.data.refreshToken);
       }
+
+      const response = await authApi.authControllerGetMe();
 
       setState({
         user: response.data as unknown as User,
@@ -157,11 +158,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const registerResponse = (await authApi.authControllerRegister(userData)) as unknown as {
         data: { accessToken?: string; refreshToken?: string };
       };
-      const response = await authApi.authControllerGetMe();
 
       if (registerResponse?.data?.accessToken && registerResponse?.data?.refreshToken) {
         setTokens(registerResponse.data.accessToken, registerResponse.data.refreshToken);
       }
+
+      const response = await authApi.authControllerGetMe();
 
       setState({
         user: response.data as unknown as User,
