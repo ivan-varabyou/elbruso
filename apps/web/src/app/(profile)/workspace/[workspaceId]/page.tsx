@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useWorkspaceStore, useTableStore } from "@/shared/stores";
 import { Table, Plus } from "lucide-react";
@@ -9,6 +9,7 @@ import { useState } from "react";
 
 export default function WorkspaceDashboardPage() {
   const params = useParams();
+  const router = useRouter();
   const workspaceId = params?.workspaceId as string;
   const { workspaces, selectWorkspace } = useWorkspaceStore();
   const { tables, fetchTables } = useTableStore();
@@ -23,6 +24,10 @@ export default function WorkspaceDashboardPage() {
 
   const currentWorkspace = workspaces.find((w) => w.id === workspaceId);
   const workspaceTables = tables.filter((t) => t.workspace_id === workspaceId);
+
+  const handleTableClick = (tableId: string) => {
+    router.push(`/tables/${tableId}`);
+  };
 
   return (
     <div className="p-6">
@@ -50,6 +55,7 @@ export default function WorkspaceDashboardPage() {
           {workspaceTables.map((table) => (
             <div
               key={table.id}
+              onClick={() => handleTableClick(table.id)}
               className="p-4 border border-zinc-200 rounded-xl hover:border-zinc-300 transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-3 mb-2">
