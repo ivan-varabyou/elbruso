@@ -3,14 +3,14 @@
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useWorkspaceStore, useTableStore } from "@/shared/stores";
-import { FileText, Table, Plus } from "lucide-react";
-import { CreateWorkspaceModal } from "@/shared/ui/organism/profile/WorkspaceTree/CreateWorkspaceModal";
+import { Table, Plus } from "lucide-react";
+import { CreateTableModal } from "@/shared/ui/organism/profile/WorkspaceTree/CreateTableModal";
 import { useState } from "react";
 
 export default function WorkspaceDashboardPage() {
   const params = useParams();
-  const workspaceId = params.workspaceId as string;
-  const { workspaces, fetchWorkspaces, selectWorkspace, selectedWorkspaceId } = useWorkspaceStore();
+  const workspaceId = params?.workspaceId as string;
+  const { workspaces, selectWorkspace } = useWorkspaceStore();
   const { tables, fetchTables } = useTableStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -77,7 +77,11 @@ export default function WorkspaceDashboardPage() {
         </div>
       )}
 
-      <CreateWorkspaceModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <CreateTableModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        workspaceId={workspaceId}
+      />
     </div>
   );
 }
