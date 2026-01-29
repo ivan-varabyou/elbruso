@@ -12,10 +12,13 @@
 
 import { UpdateGroupDto } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { apiClient } from "./client";
 
-export class Groups<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
+export class Groups<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+  constructor() {
+    super();
+    this.instance = apiClient;
+  }
   /**
    * No description
    *

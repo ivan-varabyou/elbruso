@@ -12,10 +12,13 @@
 
 import { AnalyzeFormulaDto } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { apiClient } from "./client";
 
-export class Formulas<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
+export class Formulas<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+  constructor() {
+    super();
+    this.instance = apiClient;
+  }
   /**
    * No description
    *
@@ -25,10 +28,7 @@ export class Formulas<
    * @request POST:/formulas/analyze
    * @secure
    */
-  formulaControllerAnalyze = (
-    data: AnalyzeFormulaDto,
-    params: RequestParams = {},
-  ) =>
+  formulaControllerAnalyze = (data: AnalyzeFormulaDto, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/formulas/analyze`,
       method: "POST",

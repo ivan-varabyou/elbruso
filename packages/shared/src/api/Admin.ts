@@ -19,10 +19,13 @@ import {
   UpdateRoleDto,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { apiClient } from "./client";
 
-export class Admin<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
+export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+  constructor() {
+    super();
+    this.instance = apiClient;
+  }
   /**
    * No description
    *
@@ -31,10 +34,7 @@ export class Admin<
    * @summary Create the first SUPER_ADMIN user
    * @request POST:/admin/setup
    */
-  adminSetupControllerSetup = (
-    data: AdminSetupDto,
-    params: RequestParams = {},
-  ) =>
+  adminSetupControllerSetup = (data: AdminSetupDto, params: RequestParams = {}) =>
     this.request<void, void>({
       path: `/admin/setup`,
       method: "POST",
@@ -50,10 +50,7 @@ export class Admin<
    * @summary Admin login with email and password
    * @request POST:/admin/auth/login
    */
-  adminAuthControllerLogin = (
-    data: AdminLoginDto,
-    params: RequestParams = {},
-  ) =>
+  adminAuthControllerLogin = (data: AdminLoginDto, params: RequestParams = {}) =>
     this.request<void, void>({
       path: `/admin/auth/login`,
       method: "POST",
@@ -135,10 +132,7 @@ export class Admin<
    * @request POST:/admin/users
    * @secure
    */
-  adminUsersControllerCreate = (
-    data: CreateAdminUserDto,
-    params: RequestParams = {},
-  ) =>
+  adminUsersControllerCreate = (data: CreateAdminUserDto, params: RequestParams = {}) =>
     this.request<void, void>({
       path: `/admin/users`,
       method: "POST",
@@ -172,11 +166,7 @@ export class Admin<
    * @request PATCH:/admin/users/{id}
    * @secure
    */
-  adminUsersControllerUpdate = (
-    id: string,
-    data: UpdateAdminUserDto,
-    params: RequestParams = {},
-  ) =>
+  adminUsersControllerUpdate = (id: string, data: UpdateAdminUserDto, params: RequestParams = {}) =>
     this.request<void, void>({
       path: `/admin/users/${id}`,
       method: "PATCH",
@@ -226,10 +216,7 @@ export class Admin<
    * @request POST:/admin/roles
    * @secure
    */
-  adminRolesControllerCreate = (
-    data: CreateRoleDto,
-    params: RequestParams = {},
-  ) =>
+  adminRolesControllerCreate = (data: CreateRoleDto, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/admin/roles`,
       method: "POST",
@@ -263,11 +250,7 @@ export class Admin<
    * @request PATCH:/admin/roles/{id}
    * @secure
    */
-  adminRolesControllerUpdate = (
-    id: string,
-    data: UpdateRoleDto,
-    params: RequestParams = {},
-  ) =>
+  adminRolesControllerUpdate = (id: string, data: UpdateRoleDto, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/admin/roles/${id}`,
       method: "PATCH",

@@ -11,10 +11,13 @@
  */
 
 import { HttpClient, RequestParams } from "./http-client";
+import { apiClient } from "./client";
 
-export class Countries<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
+export class Countries<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+  constructor() {
+    super();
+    this.instance = apiClient;
+  }
   /**
    * No description
    *

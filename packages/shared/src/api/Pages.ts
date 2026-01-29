@@ -12,10 +12,13 @@
 
 import { CreateBlockDto, MovePageDto, UpdatePageDto } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { apiClient } from "./client";
 
-export class Pages<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
+export class Pages<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+  constructor() {
+    super();
+    this.instance = apiClient;
+  }
   /**
    * No description
    *
@@ -41,11 +44,7 @@ export class Pages<
    * @request PATCH:/pages/{id}
    * @secure
    */
-  pagesControllerUpdate = (
-    id: string,
-    data: UpdatePageDto,
-    params: RequestParams = {},
-  ) =>
+  pagesControllerUpdate = (id: string, data: UpdatePageDto, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/pages/${id}`,
       method: "PATCH",
@@ -79,11 +78,7 @@ export class Pages<
    * @request POST:/pages/{id}/move
    * @secure
    */
-  pagesControllerMove = (
-    id: string,
-    data: MovePageDto,
-    params: RequestParams = {},
-  ) =>
+  pagesControllerMove = (id: string, data: MovePageDto, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/pages/${id}/move`,
       method: "POST",
@@ -101,11 +96,7 @@ export class Pages<
    * @request POST:/pages/{pageId}/blocks
    * @secure
    */
-  blocksControllerCreate = (
-    pageId: string,
-    data: CreateBlockDto,
-    params: RequestParams = {},
-  ) =>
+  blocksControllerCreate = (pageId: string, data: CreateBlockDto, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/pages/${pageId}/blocks`,
       method: "POST",

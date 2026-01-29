@@ -17,4 +17,4 @@ export { Users } from "./Users";
 export { Tables } from "./Tables";
 export { Versions } from "./Versions";
 export { Reference } from "./Reference";
-export { Templates } from "./Templates";
+export { Admin } from "./Admin";

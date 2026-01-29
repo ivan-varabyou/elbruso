@@ -12,12 +12,12 @@
 
 import { BatchUpdateCellsDto } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { apiClient } from "./client";
 
 export class Versions<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   constructor() {
-    super({
-      baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:7100",
-    });
+    super();
+    this.instance = apiClient;
   }
 
   /**

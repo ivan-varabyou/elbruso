@@ -12,10 +12,13 @@
 
 import { MoveBlockDto, UpdateBlockDto } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
+import { apiClient } from "./client";
 
-export class Blocks<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
+export class Blocks<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+  constructor() {
+    super();
+    this.instance = apiClient;
+  }
   /**
    * No description
    *
@@ -25,11 +28,7 @@ export class Blocks<
    * @request PATCH:/blocks/{id}
    * @secure
    */
-  blocksControllerUpdate = (
-    id: string,
-    data: UpdateBlockDto,
-    params: RequestParams = {},
-  ) =>
+  blocksControllerUpdate = (id: string, data: UpdateBlockDto, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/blocks/${id}`,
       method: "PATCH",
@@ -63,11 +62,7 @@ export class Blocks<
    * @request POST:/blocks/{id}/move
    * @secure
    */
-  blocksControllerMove = (
-    id: string,
-    data: MoveBlockDto,
-    params: RequestParams = {},
-  ) =>
+  blocksControllerMove = (id: string, data: MoveBlockDto, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/blocks/${id}/move`,
       method: "POST",
