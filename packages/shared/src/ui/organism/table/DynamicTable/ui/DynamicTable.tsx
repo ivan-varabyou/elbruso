@@ -45,6 +45,7 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
   const activeTable = useTableStore((state) => state.activeTable);
   const cells = useTableStore((state) => state.cells);
   const isLoading = useTableStore((state) => state.isLoading);
+  const error = useTableStore((state) => state.error);
   const loadTable = useTableStore((state) => state.loadTable);
   const insertRow = useTableStore((state) => state.insertRow);
   const deleteRow = useTableStore((state) => state.deleteRow);
@@ -452,7 +453,7 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
   if (!activeTable && !isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-zinc-500">Table not found</div>
+        <div className="text-zinc-500">{error?.message || "Table not found"}</div>
       </div>
     );
   }
