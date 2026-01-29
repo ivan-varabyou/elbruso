@@ -26,7 +26,7 @@ export function WorkspaceTree() {
     }
     setExpandedWorkspaces(newExpanded);
     selectWorkspace(workspaceId);
-    router.push(`/dashboard/${workspaceId}`);
+    router.push(`/workspace/${workspaceId}`);
   };
 
   const handleTableClick = (tableId: string) => {
