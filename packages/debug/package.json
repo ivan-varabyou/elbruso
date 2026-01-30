@@ -9,7 +9,7 @@
     "react-dom": "^18.0.0"
   },
   "dependencies": {
-    "@nextui-org/react": "^2.6.11",
+    "@heroui/react": "^2.8.8",
     "axe-core": "^4.11.1",
     "framer-motion": "^12.27.0",
     "html2canvas": "^1.4.1",
