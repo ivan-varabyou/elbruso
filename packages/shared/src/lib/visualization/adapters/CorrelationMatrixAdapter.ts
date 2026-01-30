@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { CorrelationMatrixConfig } from '@/shared/types/visualization';
+import { CorrelationMatrixConfig } from '@/shared/visualization';
 
 /**
  * Correlation Matrix Adapter

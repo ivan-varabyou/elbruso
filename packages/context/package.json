@@ -1,0 +1,1 @@
+{"name": "@elbruso/context", "version": "1.0.0", "private": true, "scripts": {"dev": "python3 mcp-server/server.py", "backup": "python3 scripts/backup.py"}}

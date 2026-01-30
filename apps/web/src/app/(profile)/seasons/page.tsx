@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, Plus, Edit2, Trash2, Loader2, Trophy, Sparkles } from 'lucide-react';
 import { PageLayout, SeasonModal, AutogenerateModal } from '@/shared/ui';
 import { useReferenceStore } from '@/shared/stores';
-import type { Season } from '@/shared/types';
+import type { Season } from '@/shared';
 
 export default function SeasonsPage() {
     const { seasons, fetchSeasons, deleteSeason, isLoading } = useReferenceStore();

@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { ChordConfig } from '@/shared/types/visualization';
+import { ChordConfig } from '@/shared/visualization';
 
 /**
  * Chord Diagram Adapter

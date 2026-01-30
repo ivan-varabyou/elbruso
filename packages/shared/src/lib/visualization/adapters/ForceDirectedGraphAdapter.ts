@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { ForceDirectedGraphConfig, GraphNode, GraphLink } from '@/shared/types/visualization';
+import { ForceDirectedGraphConfig, GraphNode, GraphLink } from '@/shared/visualization';
 
 /**
  * Force-Directed Graph Adapter

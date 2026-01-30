@@ -1,4 +1,6 @@
 export * from './api';
-export * from './services';
+export * from './lib';
 export * from './stores';
 export * from './types';
+export * from './modules';
+export * from './ui';

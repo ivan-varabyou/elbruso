@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { PieChartConfig } from '@/shared/types/visualization';
+import { PieChartConfig } from '@/shared/visualization';
 import { showTooltip, hideTooltip, formatNumber, formatPercentage } from '../utils';
 
 /**

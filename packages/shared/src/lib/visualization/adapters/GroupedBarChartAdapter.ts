@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { GroupedBarChartConfig } from '@/shared/types/visualization';
+import { GroupedBarChartConfig } from '@/shared/visualization';
 
 /**
  * Grouped Bar Chart Adapter

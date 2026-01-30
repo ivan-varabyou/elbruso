@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { sankey, sankeyLinkHorizontal, SankeyGraph, SankeyNode as D3SankeyNode, SankeyLink as D3SankeyLink } from 'd3-sankey';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { SankeyConfig, SankeyNode, SankeyLink } from '@/shared/types/visualization';
+import { SankeyConfig, SankeyNode, SankeyLink } from '@/shared/visualization';
 
 /**
  * Sankey Diagram Adapter

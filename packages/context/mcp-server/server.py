@@ -1,0 +1,258 @@
+#!/usr/bin/env python3
+"""
+Elbruso Context MCP Server
+Provides tools for agent memory management via MCP protocol.
+Uses local embeddings via HuggingFace transformers.
+"""
+
+import json
+import os
+from datetime import datetime
+from typing import Optional, List
+
+import torch
+from mcp.server.fastmcp import FastMCP
+from qdrant_client import QdrantClient
+from qdrant_client.models import PointStruct, VectorParams, Distance, PointIdsList
+from transformers import AutoTokenizer, AutoModel
+
+mcp = FastMCP("elbruso-context")
+
+qdrant_url = os.getenv("QDRANT_URL", "http://localhost:7999")
+project_name = os.getenv("PROJECT_NAME", "")
+prefix = f"{project_name}_" if project_name else ""
+
+collection_core = prefix + os.getenv("AGENT_CORE_COLLECTION", "agent_core")
+collection_tasks = prefix + os.getenv("TASKS_COLLECTION", "task_summaries")
+collection_knowledge = prefix + os.getenv("KNOWLEDGE_COLLECTION", "knowledge_base")
+embedding_model_name = os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-en-v1.5")
+
+print(f"Loading embedding model: {embedding_model_name}")
+tokenizer = AutoTokenizer.from_pretrained(embedding_model_name)
+model = AutoModel.from_pretrained(embedding_model_name)
+model.eval()
+EMBEDDING_DIM = model.config.hidden_size
+print(f"Embedding dimension: {EMBEDDING_DIM}")
+
+client = QdrantClient(url=qdrant_url)
+
+
+def mean_pooling(model_output, attention_mask):
+    token_embeddings = model_output[0]
+    input_mask_expanded = (
+        attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+    )
+    return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(
+        input_mask_expanded.sum(1), min=1e-9
+    )
+
+
+def get_embedding(text: str) -> List[float]:
+    encoded = tokenizer(
+        text, return_tensors="pt", padding=True, truncation=True, max_length=512
+    )
+    with torch.no_grad():
+        output = model(**encoded)
+    embedding = mean_pooling(output, encoded["attention_mask"])
+    return embedding[0].tolist()
+
+
+def ensure_collection(name: str):
+    collections = client.get_collections().collections
+    names = [c.name for c in collections]
+    if name not in names:
+        client.create_collection(
+            collection_name=name,
+            vectors_config=VectorParams(size=EMBEDDING_DIM, distance=Distance.COSINE),
+        )
+
+
+@mcp.tool()
+async def search_context(query: str, collection: str = "core", limit: int = 5) -> str:
+    valid_collections = {
+        "core": collection_core,
+        "tasks": collection_tasks,
+        "knowledge": collection_knowledge,
+    }
+    actual_collection = valid_collections.get(collection, collection_core)
+
+    ensure_collection(actual_collection)
+
+    query_vector = get_embedding(query)
+
+    results = client.search(
+        collection_name=actual_collection,
+        query_vector=query_vector,
+        limit=limit,
+        score_threshold=0.5,
+    )
+
+    if not results:
+        return json.dumps(
+            {"status": "no_results", "message": "No relevant context found"}
+        )
+
+    output = {
+        "status": "success",
+        "query": query,
+        "collection": actual_collection,
+        "results": [
+            {
+                "id": r.id,
+                "score": r.score,
+                "content": r.payload.get("content", ""),
+                "metadata": r.payload.get("metadata", {}),
+            }
+            for r in results
+        ],
+    }
+    return json.dumps(output, indent=2)
+
+
+@mcp.tool()
+async def save_context(
+    content: str, context_type: str, metadata: Optional[dict] = None
+) -> str:
+    valid_types = {
+        "core": collection_core,
+        "task": collection_tasks,
+        "knowledge": collection_knowledge,
+    }
+    collection = valid_types.get(context_type, collection_core)
+
+    ensure_collection(collection)
+
+    vector = get_embedding(content)
+    point_id = f"{context_type}_{datetime.now().isoformat()}"
+
+    point = PointStruct(
+        id=point_id,
+        vector=vector,
+        payload={
+            "content": content,
+            "type": context_type,
+            "created_at": datetime.now().isoformat(),
+            "metadata": metadata or {},
+        },
+    )
+
+    client.upsert(collection_name=collection, points=[point])
+
+    return json.dumps(
+        {
+            "status": "success",
+            "id": point_id,
+            "collection": collection,
+            "type": context_type,
+        },
+        indent=2,
+    )
+
+
+@mcp.tool()
+async def save_task_summary(
+    task: str, summary: str, outcomes: list[str], decisions: list[str]
+) -> str:
+    content = f"Task: {task}\nSummary: {summary}\nDecisions: {'; '.join(decisions)}\nOutcomes: {'; '.join(outcomes)}"
+
+    result = await save_context(
+        content=content,
+        context_type="task",
+        metadata={"task": task, "decisions": decisions, "outcomes": outcomes},
+    )
+    return result
+
+
+@mcp.tool()
+async def save_knowledge(
+    title: str, content: str, topic: str, importance: str = "medium"
+) -> str:
+    full_content = f"# {title}\n\n{content}"
+
+    result = await save_context(
+        content=full_content,
+        context_type="knowledge",
+        metadata={"title": title, "topic": topic, "importance": importance},
+    )
+    return result
+
+
+@mcp.tool()
+async def get_core_memory() -> str:
+    ensure_collection(collection_core)
+
+    results = client.scroll(collection_name=collection_core, limit=100)[0]
+
+    if not results:
+        return json.dumps({"status": "empty", "message": "No core memory set"})
+
+    output = {
+        "status": "success",
+        "core_memory": [
+            {
+                "id": r.id,
+                "content": r.payload.get("content", ""),
+                "metadata": r.payload.get("metadata", {}),
+            }
+            for r in results
+        ],
+    }
+    return json.dumps(output, indent=2)
+
+
+@mcp.tool()
+async def set_core_memory(content: str, memory_type: str) -> str:
+    result = await save_context(
+        content=content, context_type="core", metadata={"memory_type": memory_type}
+    )
+    return result
+
+
+@mcp.tool()
+async def list_collections() -> str:
+    collections = client.get_collections().collections
+
+    output = {
+        "status": "success",
+        "collections": [
+            {"name": c.name, "vectors_count": client.count_collection(c.name).count}
+            for c in collections
+        ],
+    }
+    return json.dumps(output, indent=2)
+
+
+@mcp.tool()
+async def delete_context(ids: list[str], collection: str = "core") -> str:
+    valid_collections = {
+        "core": collection_core,
+        "tasks": collection_tasks,
+        "knowledge": collection_knowledge,
+    }
+    actual_collection = valid_collections.get(collection, collection_core)
+
+    client.delete(
+        collection_name=actual_collection,
+        points_selector=PointIdsList(points=ids),
+    )
+
+    return json.dumps(
+        {"status": "success", "deleted_ids": ids, "collection": actual_collection},
+        indent=2,
+    )
+
+
+@mcp.tool()
+async def health_check() -> str:
+    try:
+        client.get_collections()
+        return json.dumps(
+            {"status": "healthy", "qdrant": "connected", "model": embedding_model_name},
+            indent=2,
+        )
+    except Exception as e:
+        return json.dumps({"status": "unhealthy", "error": str(e)}, indent=2)
+
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")

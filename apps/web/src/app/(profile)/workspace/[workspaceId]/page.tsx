@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useWorkspaceStore, useTableStore } from "@/shared/stores";
 import { Table, Plus } from "lucide-react";
-import { CreateTableModal } from "@/shared/ui/organism/profile/WorkspaceTree/CreateTableModal";
+import { CreateTableModal } from "@/shared/ui";
 import { useState } from "react";
 
 export default function WorkspaceDashboardPage() {

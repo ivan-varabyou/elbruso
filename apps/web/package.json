@@ -9,11 +9,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@elbruso/debug": "workspace:^",
-    "@elbruso/path-copier": "workspace:^",
     "@elbruso/shared": "workspace:*",
     "@formatjs/intl-localematcher": "^0.8.0",
-    "@nextui-org/react": "^2.6.11",
+    "@heroui/react": "^2.8.8",
+    "@heroui/theme": "^2.4.26",
     "@types/d3": "^7.4.3",
     "@types/negotiator": "^0.6.4",
     "axe-core": "^4.11.1",

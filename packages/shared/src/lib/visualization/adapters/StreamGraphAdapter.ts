@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { StreamGraphConfig } from '@/shared/types/visualization';
+import { StreamGraphConfig } from '@/shared/visualization';
 
 /**
  * Stream Graph Adapter

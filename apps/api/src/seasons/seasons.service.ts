@@ -9,11 +9,10 @@ export class SeasonsService implements OnModuleInit {
 
   constructor(private readonly db: DatabaseService) {}
 
-
   async onModuleInit() {
     try {
       this.logger.log('Updating seasons schema to support multiple sports...');
-      
+
       // 1. Create join table
       await sql`
         CREATE TABLE IF NOT EXISTS season_sports (
@@ -60,80 +59,176 @@ export class SeasonsService implements OnModuleInit {
     }
   }
 
-
   async findAll(): Promise<any[]> {
-    const seasons = await this.db.client
-      .selectFrom('seasons')
-      .selectAll()
-      .orderBy('start_date', 'desc')
+    const rows = await this.db.client
+      .selectFrom('seasons as s')
+      .leftJoin('season_sports as ss', 's.id', 'ss.season_id')
+      .leftJoin('sports as sp', 'ss.sport_id', 'sp.id')
+      .select([
+        's.id',
+        's.code',
+        's.name_ru',
+        's.start_date',
+        's.end_date',
+        's.season_year',
+        's.season_type',
+        's.is_active',
+        's.created_at',
+        's.updated_at',
+        'ss.sport_id',
+        'sp.name_ru as sport_name',
+      ])
+      .orderBy('s.start_date', 'desc')
       .execute();
 
-    if (seasons.length === 0) return [];
+    if (rows.length === 0) return [];
 
-    const seasonSports = await this.db.client
-      .selectFrom('season_sports' as any)
-      .innerJoin('sports', 'sports.id', 'season_sports.sport_id')
-      .select(['season_sports.season_id', 'sports.id', 'sports.name_ru'])
-      .where('season_sports.season_id', 'in', seasons.map(s => s.id) as any)
-      .execute();
+    const seasonsMap = new Map();
 
+    for (const row of rows) {
+      if (!seasonsMap.has(row.id)) {
+        seasonsMap.set(row.id, {
+          id: row.id,
+          code: row.code,
+          name_ru: row.name_ru,
+          start_date: row.start_date,
+          end_date: row.end_date,
+          season_year: row.season_year,
+          season_type: row.season_type,
+          is_active: row.is_active,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+          sports: [],
+        });
+      }
 
+      if (row.sport_id) {
+        const season = seasonsMap.get(row.id);
+        if (!season.sports.find((s) => s.id === row.sport_id)) {
+          season.sports.push({
+            id: row.sport_id,
+            name_ru: row.sport_name,
+          });
+        }
+      }
+    }
 
-    return seasons.map(season => {
-      const sports = seasonSports
-        .filter(ss => Number(ss.season_id) === Number(season.id))
-        .map(ss => ({ id: ss.id, name_ru: ss.name_ru }));
-      
-      return {
-        ...season,
-        sports
-      };
-    });
+    return Array.from(seasonsMap.values());
   }
 
   async findById(id: number): Promise<any | undefined> {
-    const season = await this.db.client
-      .selectFrom('seasons')
-      .selectAll()
-      .where('id', '=', id)
-      .executeTakeFirst();
-
-    if (!season) return undefined;
-
-    const sports = await this.db.client
-      .selectFrom('season_sports' as any)
-      .innerJoin('sports', 'sports.id', 'season_sports.sport_id')
-      .select(['sports.id', 'sports.name_ru'])
-      .where('season_sports.season_id', '=', id as any)
+    const rows = await this.db.client
+      .selectFrom('seasons as s')
+      .leftJoin('season_sports as ss', 's.id', 'ss.season_id')
+      .leftJoin('sports as sp', 'ss.sport_id', 'sp.id')
+      .select([
+        's.id',
+        's.code',
+        's.name_ru',
+        's.start_date',
+        's.end_date',
+        's.season_year',
+        's.season_type',
+        's.is_active',
+        's.created_at',
+        's.updated_at',
+        'ss.sport_id',
+        'sp.name_ru as sport_name',
+      ])
+      .where('s.id', '=', id)
       .execute();
 
-    return { ...season, sports };
-  }
+    if (rows.length === 0) return undefined;
 
+    const firstRow = rows[0];
+
+    const season: any = {
+      id: firstRow.id,
+      code: firstRow.code,
+      name_ru: firstRow.name_ru,
+      start_date: firstRow.start_date,
+      end_date: firstRow.end_date,
+      season_year: firstRow.season_year,
+      season_type: firstRow.season_type,
+      is_active: firstRow.is_active,
+      created_at: firstRow.created_at,
+      updated_at: firstRow.updated_at,
+      sports: [],
+    };
+
+    for (const row of rows) {
+      if (row.sport_id && !season.sports.find((s) => s.id === row.sport_id)) {
+        season.sports.push({
+          id: row.sport_id,
+          name_ru: row.sport_name,
+        });
+      }
+    }
+
+    return season;
+  }
 
   async findCurrent(): Promise<any | undefined> {
     const now = new Date();
-    const season = await this.db.client
-      .selectFrom('seasons')
-      .selectAll()
-      .where('start_date', '<=', now)
-      .where('end_date', '>=', now)
-      .where('is_active', '=', true)
-      .orderBy('start_date', 'desc')
-      .executeTakeFirst();
 
-    if (!season) return undefined;
-    return this.findById(season.id);
+    const rows = await this.db.client
+      .selectFrom('seasons as s')
+      .leftJoin('season_sports as ss', 's.id', 'ss.season_id')
+      .leftJoin('sports as sp', 'ss.sport_id', 'sp.id')
+      .select([
+        's.id',
+        's.code',
+        's.name_ru',
+        's.start_date',
+        's.end_date',
+        's.season_year',
+        's.season_type',
+        's.is_active',
+        's.created_at',
+        's.updated_at',
+        'ss.sport_id',
+        'sp.name_ru as sport_name',
+      ])
+      .where('s.start_date', '<=', now)
+      .where('s.end_date', '>=', now)
+      .where('s.is_active', '=', true)
+      .orderBy('s.start_date', 'desc')
+      .limit(1)
+      .execute();
+
+    if (rows.length === 0) return undefined;
+
+    const firstRow = rows[0];
+
+    const season: any = {
+      id: firstRow.id,
+      code: firstRow.code,
+      name_ru: firstRow.name_ru,
+      start_date: firstRow.start_date,
+      end_date: firstRow.end_date,
+      season_year: firstRow.season_year,
+      season_type: firstRow.season_type,
+      is_active: firstRow.is_active,
+      created_at: firstRow.created_at,
+      updated_at: firstRow.updated_at,
+      sports: [],
+    };
+
+    for (const row of rows) {
+      if (row.sport_id && !season.sports.find((s) => s.id === row.sport_id)) {
+        season.sports.push({
+          id: row.sport_id,
+          name_ru: row.sport_name,
+        });
+      }
+    }
+
+    return season;
   }
-
-
-
-
-
 
   async create(data: any): Promise<any> {
     const { sportIds, ...seasonData } = data;
-    
+
     const season = await this.db.client
       .insertInto('seasons')
       .values(seasonData as any)
@@ -141,9 +236,9 @@ export class SeasonsService implements OnModuleInit {
       .executeTakeFirstOrThrow();
 
     if (sportIds && Array.isArray(sportIds) && sportIds.length > 0) {
-      const values = sportIds.map(sportId => ({
+      const values = sportIds.map((sportId) => ({
         season_id: season.id,
-        sport_id: sportId
+        sport_id: sportId,
       }));
       await this.db.client
         .insertInto('season_sports' as any)
@@ -151,7 +246,10 @@ export class SeasonsService implements OnModuleInit {
         .execute();
     }
 
-    return this.findById(season.id);
+    return {
+      ...season,
+      sports: sportIds?.map((id: number) => ({ id })) || [],
+    };
   }
 
   async update(id: number, data: any): Promise<any> {
@@ -172,9 +270,9 @@ export class SeasonsService implements OnModuleInit {
         .execute();
 
       if (sportIds.length > 0) {
-        const values = sportIds.map(sportId => ({
+        const values = sportIds.map((sportId) => ({
           season_id: id,
-          sport_id: sportId
+          sport_id: sportId,
         }));
         await this.db.client
           .insertInto('season_sports' as any)
@@ -183,30 +281,47 @@ export class SeasonsService implements OnModuleInit {
       }
     }
 
-    return this.findById(id);
-  }
+    const updatedSeason = await this.db.client
+      .selectFrom('seasons')
+      .selectAll()
+      .where('id', '=', id)
+      .executeTakeFirst();
 
+    return {
+      ...updatedSeason,
+      sports: sportIds?.map((sid: number) => ({ id: sid })) || [],
+    };
+  }
 
   async delete(id: number): Promise<void> {
-    await this.db.client
-      .deleteFrom('seasons')
-      .where('id', '=', id)
-      .execute();
+    await this.db.client.deleteFrom('seasons').where('id', '=', id).execute();
   }
 
-  async generate(startYear: number, endYear: number, sportId?: number): Promise<void> {
+  async generate(
+    startYear: number,
+    endYear: number,
+    sportId?: number,
+  ): Promise<void> {
     // 0. Wipe old data as requested
     this.logger.log('TRUNCATING seasons table to start fresh...');
     try {
-      await sql`TRUNCATE TABLE seasons RESTART IDENTITY CASCADE`.execute(this.db.client);
+      await sql`TRUNCATE TABLE seasons RESTART IDENTITY CASCADE`.execute(
+        this.db.client,
+      );
       this.logger.log('SUCCESS: Table seasons truncated');
     } catch (e: any) {
-      this.logger.warn('Truncate failed, attempting manual delete: ' + e.message);
-      
+      this.logger.warn(
+        'Truncate failed, attempting manual delete: ' + e.message,
+      );
+
       try {
         await this.db.client.deleteFrom('season_sports' as any).execute();
-        await sql`UPDATE workspaces SET season_id = NULL`.execute(this.db.client);
-        await sql`UPDATE event_results SET season_id = NULL`.execute(this.db.client);
+        await sql`UPDATE workspaces SET season_id = NULL`.execute(
+          this.db.client,
+        );
+        await sql`UPDATE event_results SET season_id = NULL`.execute(
+          this.db.client,
+        );
         await sql`DELETE FROM indicator_values`.execute(this.db.client);
         await sql`DELETE FROM organization_scores`.execute(this.db.client);
         await this.db.client.deleteFrom('seasons').execute();
@@ -216,11 +331,7 @@ export class SeasonsService implements OnModuleInit {
       }
     }
 
-
-
-
     // 1. Fetch relevant sports
-
 
     const allSports = await this.db.client
 
@@ -237,8 +348,12 @@ export class SeasonsService implements OnModuleInit {
     // 2. Group sports by their season pattern
     // pattern 1: Cross-year (Team or Winter)
     // pattern 2: Calendar-year (Others)
-    const crossYearSports = allSports.filter(s => s.sport_type_id === 1 || s.olympic_category_id === 2);
-    const calendarYearSports = allSports.filter(s => s.sport_type_id !== 1 && s.olympic_category_id !== 2);
+    const crossYearSports = allSports.filter(
+      (s) => s.sport_type_id === 1 || s.olympic_category_id === 2,
+    );
+    const calendarYearSports = allSports.filter(
+      (s) => s.sport_type_id !== 1 && s.olympic_category_id !== 2,
+    );
 
     for (let year = startYear; year <= endYear; year++) {
       // Handle Cross-Year Season
@@ -271,7 +386,10 @@ export class SeasonsService implements OnModuleInit {
         }
 
         // Link sports
-        const values = crossYearSports.map(s => ({ season_id: season!.id, sport_id: s.id }));
+        const values = crossYearSports.map((s) => ({
+          season_id: season!.id,
+          sport_id: s.id,
+        }));
         await this.db.client
           .insertInto('season_sports' as any)
           .values(values as any)
@@ -309,7 +427,10 @@ export class SeasonsService implements OnModuleInit {
         }
 
         // Link sports
-        const values = calendarYearSports.map(s => ({ season_id: season!.id, sport_id: s.id }));
+        const values = calendarYearSports.map((s) => ({
+          season_id: season!.id,
+          sport_id: s.id,
+        }));
         await this.db.client
           .insertInto('season_sports' as any)
           .values(values as any)
@@ -320,6 +441,4 @@ export class SeasonsService implements OnModuleInit {
 
     this.logger.log(`Generated seasons for years ${startYear}-${endYear}`);
   }
-
 }
-

@@ -18,15 +18,18 @@ import {
   Users,
   Activity,
 } from "lucide-react";
-import { PageLayout, Button } from "@/shared/ui";
-import { Reference } from "@/shared/api";
+import { 
+  PageLayout, 
+  Button, 
+  FilterDropdown, 
+  CreateIndicatorModal, 
+  GenerateIndicatorsModal, 
+  IndicatorGroupsList 
+} from "@/shared/ui";
+import { Reference } from "@/shared";
 import { useAuth } from "@/shared/lib/auth";
-import type { Indicator } from "@/shared/types";
+import type { Indicator } from "@/shared";
 import { cn } from "@/shared/lib/utils";
-import { FilterDropdown } from "@/shared/ui/organism/profile/indicators/components/FilterDropdown";
-import { CreateIndicatorModal } from "@/shared/ui/organism/profile/indicators/components/CreateIndicatorModal";
-import { GenerateIndicatorsModal } from "@/shared/ui/organism/profile/indicators/components/GenerateIndicatorsModal";
-import { IndicatorGroupsList } from "@/shared/ui/organism/profile/indicators/components/IndicatorGroupsList";
 
 export default function IndicatorsPage() {
   const { user } = useAuth();

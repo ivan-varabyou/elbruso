@@ -1,16 +1,7 @@
 import { Inter } from "next/font/google";
-import { AuthProvider } from "@/shared/lib/auth";
-import { ToastProvider } from "@/shared/ui/molecule/Toast";
-import { LanguageProvider } from "@/shared/lib/language";
-import { I18nProvider } from "@/shared/lib/i18n";
-import { AppDebugProvider } from "@/shared/lib/debug";
-import { ReactQueryProvider } from "@/shared/api/hooks";
+import { AppProviders } from "@/shared";
 import { getDictionary } from "../../get-dictionary";
 import "./globals.css";
-import "@/shared/ui/atom/Input/Input.css";
-import "@/shared/ui/molecule/Toast/Toast.css";
-import "@/shared/ui/molecule/PasswordStrength/PasswordStrength.css";
-import "@/shared/ui/molecule/LanguageSwitcher/LanguageSwitcher.css";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
@@ -29,23 +20,12 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  // Load dictionary for default locale
   const dictionary = await getDictionary("ru");
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <I18nProvider dictionary={dictionary}>
-          <LanguageProvider>
-            <AppDebugProvider>
-              <AuthProvider>
-                <ReactQueryProvider>
-                  <ToastProvider>{children}</ToastProvider>
-                </ReactQueryProvider>
-              </AuthProvider>
-            </AppDebugProvider>
-          </LanguageProvider>
-        </I18nProvider>
+        <AppProviders dictionary={dictionary}>{children}</AppProviders>
       </body>
     </html>
   );

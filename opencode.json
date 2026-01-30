@@ -6,10 +6,26 @@
       "command": ["npx", "-y", "@heroui/react-mcp@latest"],
       "enabled": true
     },
-    "TalkToFigma": {
+    "chrome-devtools": {
       "type": "local",
-      "command": ["bunx", "cursor-talk-to-figma-mcp@latest"],
+      "command": ["npx", "chrome-devtools-mcp@latest"],
       "enabled": true
+    },
+    "memory": {
+      "type": "local",
+      "command": ["python3", "/home/ivan/git/elbruso/packages/context/mcp-server/server.py"],
+      "environment": {
+        "PROJECT_NAME": "elbruso",
+        "QDRANT_URL": "http://localhost:7999"
+      },
+      "enabled": true
+    }
+  },
+  "agent": {
+    "plan": {
+      "tools": {
+        "skill": true
+      }
     }
   }
 }

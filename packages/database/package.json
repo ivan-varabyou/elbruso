@@ -9,14 +9,16 @@
     "generate-types": "kysely-codegen --dialect postgres --out-file ./src/types.ts"
   },
   "dependencies": {
+    "@heroui/react": "^2.8.8",
+    "@heroui/theme": "^2.4.26",
     "kysely": "latest",
     "pg": "latest"
   },
   "devDependencies": {
-    "@types/node": "latest",
-    "@types/pg": "latest",
     "@types/lodash": "latest",
     "@types/lodash-es": "latest",
+    "@types/node": "latest",
+    "@types/pg": "latest",
     "kysely-codegen": "^0.19.0",
     "typescript": "^5.0.0"
   }

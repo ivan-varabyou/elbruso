@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { SunburstConfig, HierarchicalNode } from '@/shared/types/visualization';
+import { SunburstConfig, HierarchicalNode } from '@/shared/visualization';
 
 // Extended interface for partition nodes with layout properties
 interface PartitionNode extends d3.HierarchyNode<HierarchicalNode> {

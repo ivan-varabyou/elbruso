@@ -41,7 +41,7 @@ import {
   UpdateRoleDto,
   UpdateTableDto,
   UpdateWorkspaceDto
-} from './definitions';
+} from './data-contracts';
 
 export enum ParameterType {
   BODY = 'body',

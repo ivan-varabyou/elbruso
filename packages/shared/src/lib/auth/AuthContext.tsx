@@ -8,8 +8,8 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { Auth, setTokens, clearTokens, isAuthenticated as checkAuth } from "@/shared/api";
-import type { LoginDto, RegisterDto } from "@/shared/api";
+import { Auth, setTokens, clearTokens, isAuthenticated as checkAuth } from "../../api";
+import type { LoginDto, RegisterDto } from "../../api";
 
 export interface AuthResponse {
   accessToken: string;
@@ -89,15 +89,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initAuth();
   }, []);
 
+  const logout = useCallback(() => {
+    clearTokens();
+    setState({
+      user: null,
+      isAuthenticated: false,
+      isLoading: false,
+      error: null,
+    });
+  }, []);
+
+  const clearError = useCallback(() => {
+    setState((prev) => ({ ...prev, error: null }));
+  }, []);
+
+  const setUser = useCallback((user: User | null) => {
+    setState((prev) => ({ ...prev, user }));
+  }, []);
+
   useEffect(() => {
     if (!state.isAuthenticated) return;
 
-    const checkAndRefresh = async () => {
-      const token = localStorage.getItem("accessToken");
-      const refreshToken = localStorage.getItem("refreshToken");
+    let isRefreshing = false;
+    let refreshTimeout: NodeJS.Timeout;
 
-      if (!token || !refreshToken) return;
-
+    const scheduleRefresh = (token: string) => {
       try {
         const payload = decodeJwt(token);
         if (!payload || !payload.exp) return;
@@ -106,19 +122,57 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const now = Date.now();
         const timeUntilExpiry = expiryTime - now;
 
-        if (timeUntilExpiry < 120000) {
-          await authApi.authControllerRefresh({ refreshToken });
+        if (timeUntilExpiry <= 0) {
+          doRefresh();
+          return;
         }
+
+        const refreshTime = Math.max(timeUntilExpiry - 5 * 60 * 1000, 30000);
+        refreshTimeout = setTimeout(() => {
+          doRefresh();
+        }, refreshTime);
       } catch (error) {
-        console.error("Silent refresh failed:", error);
+        console.error("Schedule refresh error:", error);
       }
     };
 
-    const interval = setInterval(checkAndRefresh, 60000);
-    checkAndRefresh();
+    const doRefresh = async () => {
+      if (isRefreshing) return;
+      isRefreshing = true;
 
-    return () => clearInterval(interval);
-  }, [state.isAuthenticated]);
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (!refreshToken) {
+          logout();
+          return;
+        }
+
+        const response = (await authApi.authControllerRefresh({ refreshToken })) as unknown as {
+          data: { accessToken?: string; refreshToken?: string };
+        };
+        const data = response.data;
+
+        if (data.accessToken) {
+          setTokens(data.accessToken, data.refreshToken || refreshToken);
+          scheduleRefresh(data.accessToken);
+        }
+      } catch (error) {
+        console.error("Token refresh failed:", error);
+        logout();
+      } finally {
+        isRefreshing = false;
+      }
+    };
+
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      scheduleRefresh(token);
+    }
+
+    return () => {
+      if (refreshTimeout) clearTimeout(refreshTimeout);
+    };
+  }, [state.isAuthenticated, logout]);
 
   const login = useCallback(async (credentials: LoginDto) => {
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
@@ -180,24 +234,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }));
       throw error;
     }
-  }, []);
-
-  const logout = useCallback(() => {
-    clearTokens();
-    setState({
-      user: null,
-      isAuthenticated: false,
-      isLoading: false,
-      error: null,
-    });
-  }, []);
-
-  const clearError = useCallback(() => {
-    setState((prev) => ({ ...prev, error: null }));
-  }, []);
-
-  const setUser = useCallback((user: User | null) => {
-    setState((prev) => ({ ...prev, user }));
   }, []);
 
   return (

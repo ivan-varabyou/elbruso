@@ -319,22 +319,26 @@ export class DynamicTablesService {
   }
 
   async activateVersion(versionId: string, userId: string) {
-    const version = (await this.db.client
-      .selectFrom('table_versions')
-      .selectAll()
-      .where('id', '=', versionId as any)
-      .executeTakeFirst()) as unknown as TableVersions;
-
-    if (!version) throw new NotFoundException('Version not found');
-
-    const table = await this.db.client
-      .selectFrom('dynamic_tables')
-      .select('workspace_id')
-      .where('id', '=', version.table_id as any)
+    const versionInfo = await this.db.client
+      .selectFrom('table_versions as v')
+      .innerJoin('dynamic_tables as t', 'v.table_id', 't.id')
+      .select([
+        'v.id',
+        'v.table_id',
+        'v.version_number',
+        'v.columns',
+        'v.is_active',
+        'v.created_at',
+        'v.created_by',
+        't.workspace_id',
+      ])
+      .where('v.id', '=', versionId as any)
       .executeTakeFirst();
 
+    if (!versionInfo) throw new NotFoundException('Version not found');
+
     await this.workspacesService.checkPermission(
-      (table as any).workspace_id,
+      (versionInfo as any).workspace_id,
       userId,
       WorkspaceRole.EDITOR,
     );
@@ -342,7 +346,7 @@ export class DynamicTablesService {
     await this.db.client
       .updateTable('table_versions')
       .set({ is_active: false } as any)
-      .where('table_id', '=', version.table_id as any)
+      .where('table_id', '=', (versionInfo as any).table_id)
       .execute();
 
     await this.db.client
@@ -364,25 +368,24 @@ export class DynamicTablesService {
   // ==================== Cell Operations ====================
 
   async getCells(versionId: string, query: GetCellsQueryDto, userId: string) {
-    const version = await this.db.client
-      .selectFrom('table_versions')
-      .select('table_id')
-      .where('id', '=', versionId as any)
+    const versionInfo = await this.db.client
+      .selectFrom('table_versions as v')
+      .innerJoin('dynamic_tables as t', 'v.table_id', 't.id')
+      .select(['v.table_id', 't.workspace_id', 't.row_count', 't.column_count'])
+      .where('v.id', '=', versionId as any)
       .executeTakeFirst();
 
-    if (!version) throw new NotFoundException('Version not found');
-
-    const table = await this.db.client
-      .selectFrom('dynamic_tables')
-      .select('workspace_id')
-      .where('id', '=', (version as any).table_id)
-      .executeTakeFirst();
+    if (!versionInfo) throw new NotFoundException('Version not found');
 
     await this.workspacesService.checkPermission(
-      (table as any).workspace_id,
+      (versionInfo as any).workspace_id,
       userId,
       WorkspaceRole.VIEWER,
     );
+
+    if ((versionInfo as any).row_count === 0) {
+      return [];
+    }
 
     let dbQuery = this.db.client
       .selectFrom('table_cells')
@@ -402,22 +405,17 @@ export class DynamicTablesService {
   }
 
   async updateCell(versionId: string, dto: UpdateCellDto, userId: string) {
-    const version = await this.db.client
-      .selectFrom('table_versions')
-      .select('table_id')
-      .where('id', '=', versionId as any)
+    const versionInfo = await this.db.client
+      .selectFrom('table_versions as v')
+      .innerJoin('dynamic_tables as t', 'v.table_id', 't.id')
+      .select(['v.table_id', 't.workspace_id'])
+      .where('v.id', '=', versionId as any)
       .executeTakeFirst();
 
-    if (!version) throw new NotFoundException('Version not found');
-
-    const table = await this.db.client
-      .selectFrom('dynamic_tables')
-      .select('workspace_id')
-      .where('id', '=', (version as any).table_id)
-      .executeTakeFirst();
+    if (!versionInfo) throw new NotFoundException('Version not found');
 
     await this.workspacesService.checkPermission(
-      (table as any).workspace_id,
+      (versionInfo as any).workspace_id,
       userId,
       WorkspaceRole.EDITOR,
     );
@@ -446,7 +444,7 @@ export class DynamicTablesService {
     await this.db.client
       .updateTable('dynamic_tables')
       .set({ updated_at: new Date() } as any)
-      .where('id', '=', (version as any).table_id)
+      .where('id', '=', (versionInfo as any).table_id)
       .execute();
 
     return { message: 'Cell updated' };
@@ -457,22 +455,17 @@ export class DynamicTablesService {
     dto: BatchUpdateCellsDto,
     userId: string,
   ) {
-    const version = await this.db.client
-      .selectFrom('table_versions')
-      .select(['table_id'])
-      .where('id', '=', versionId as any)
+    const versionInfo = await this.db.client
+      .selectFrom('table_versions as v')
+      .innerJoin('dynamic_tables as t', 'v.table_id', 't.id')
+      .select(['v.table_id', 't.workspace_id'])
+      .where('v.id', '=', versionId as any)
       .executeTakeFirst();
 
-    if (!version) throw new NotFoundException('Version not found');
-
-    const table = await this.db.client
-      .selectFrom('dynamic_tables')
-      .select('workspace_id')
-      .where('id', '=', (version as any).table_id)
-      .executeTakeFirst();
+    if (!versionInfo) throw new NotFoundException('Version not found');
 
     await this.workspacesService.checkPermission(
-      (table as any).workspace_id,
+      (versionInfo as any).workspace_id,
       userId,
       WorkspaceRole.EDITOR,
     );
@@ -489,22 +482,13 @@ export class DynamicTablesService {
       details: { count: dto.cells.length },
     });
 
-    // Update the table's updated_at timestamp
-    const versionLookup = await this.db.client
-      .selectFrom('table_versions')
-      .select('table_id')
-      .where('id', '=', versionId as any)
-      .executeTakeFirst();
+    await this.db.client
+      .updateTable('dynamic_tables')
+      .set({ updated_at: new Date() } as any)
+      .where('id', '=', (versionInfo as any).table_id)
+      .execute();
 
-    if (versionLookup) {
-      await this.db.client
-        .updateTable('dynamic_tables')
-        .set({ updated_at: new Date() } as any)
-        .where('id', '=', (versionLookup as any).table_id)
-        .execute();
-    }
-
-    return { updatedCount: dto.cells.length };
+    return { message: 'Cells updated' };
   }
 
   async deleteRow(versionId: string, index: number, userId: string) {
@@ -513,7 +497,7 @@ export class DynamicTablesService {
       .selectAll()
       .where('id', '=', versionId as any)
       .executeTakeFirst();
-    
+
     if (!version) throw new NotFoundException('Version not found');
 
     // 1. Delete cells at index
@@ -527,7 +511,7 @@ export class DynamicTablesService {
     await this.db.client
       .updateTable('table_cells')
       .set({
-        row_index: sql`row_index - 1`
+        row_index: sql`row_index - 1`,
       } as any)
       .where('version_id', '=', versionId as any)
       .where('row_index', '>', index)
@@ -538,7 +522,7 @@ export class DynamicTablesService {
       .updateTable('dynamic_tables')
       .set({
         row_count: sql`row_count - 1`,
-        updated_at: new Date()
+        updated_at: new Date(),
       } as any)
       .where('id', '=', (version as any).table_id)
       .execute();
@@ -556,7 +540,7 @@ export class DynamicTablesService {
       .selectAll()
       .where('id', '=', versionId as any)
       .executeTakeFirst();
-    
+
     if (!version) throw new NotFoundException('Version not found');
 
     // 1. Delete cells at index
@@ -570,7 +554,7 @@ export class DynamicTablesService {
     await this.db.client
       .updateTable('table_cells')
       .set({
-        col_index: sql`col_index - 1`
+        col_index: sql`col_index - 1`,
       } as any)
       .where('version_id', '=', versionId as any)
       .where('col_index', '>', index)
@@ -583,7 +567,7 @@ export class DynamicTablesService {
     await this.db.client
       .updateTable('table_versions')
       .set({
-        columns: JSON.stringify(newCols)
+        columns: JSON.stringify(newCols),
       } as any)
       .where('id', '=', versionId as any)
       .execute();
@@ -593,7 +577,7 @@ export class DynamicTablesService {
       .updateTable('dynamic_tables')
       .set({
         column_count: sql`column_count - 1`,
-        updated_at: new Date()
+        updated_at: new Date(),
       } as any)
       .where('id', '=', (version as any).table_id)
       .execute();
@@ -607,14 +591,14 @@ export class DynamicTablesService {
       .selectAll()
       .where('id', '=', versionId as any)
       .executeTakeFirst();
-    
+
     if (!version) throw new NotFoundException('Version not found');
 
     // 1. Shift cells down (starting from bottom to avoid conflicts if we had unique constraints on indices, but Kysely handles updates fine)
     await this.db.client
       .updateTable('table_cells')
       .set({
-        row_index: sql`row_index + 1`
+        row_index: sql`row_index + 1`,
       } as any)
       .where('version_id', '=', versionId as any)
       .where('row_index', '>=', index)
@@ -625,7 +609,7 @@ export class DynamicTablesService {
       .updateTable('dynamic_tables')
       .set({
         row_count: sql`row_count + 1`,
-        updated_at: new Date()
+        updated_at: new Date(),
       } as any)
       .where('id', '=', (version as any).table_id)
       .execute();
@@ -639,14 +623,14 @@ export class DynamicTablesService {
       .selectAll()
       .where('id', '=', versionId as any)
       .executeTakeFirst();
-    
+
     if (!version) throw new NotFoundException('Version not found');
 
     // 1. Shift cells right
     await this.db.client
       .updateTable('table_cells')
       .set({
-        col_index: sql`col_index + 1`
+        col_index: sql`col_index + 1`,
       } as any)
       .where('version_id', '=', versionId as any)
       .where('col_index', '>=', index)
@@ -660,7 +644,7 @@ export class DynamicTablesService {
     await this.db.client
       .updateTable('table_versions')
       .set({
-        columns: JSON.stringify(cols)
+        columns: JSON.stringify(cols),
       } as any)
       .where('id', '=', versionId as any)
       .execute();
@@ -670,14 +654,13 @@ export class DynamicTablesService {
       .updateTable('dynamic_tables')
       .set({
         column_count: sql`column_count + 1`,
-        updated_at: new Date()
+        updated_at: new Date(),
       } as any)
       .where('id', '=', (version as any).table_id)
       .execute();
 
     return { message: 'Column inserted and cells shifted' };
   }
-
 
   // ==================== Linking & Matrix Logic ====================
 
@@ -700,7 +683,7 @@ export class DynamicTablesService {
       .insertInto('table_links')
       .values({
         target_table_id: targetTableId as any,
-        source_table_id: dto.sourceTableId as any || null,
+        source_table_id: (dto.sourceTableId as any) || null,
         source_system_entity: dto.sourceSystemEntity || null,
         link_type: dto.linkType as any,
         link_metadata: JSON.stringify(dto.metadata || {}),
@@ -740,7 +723,7 @@ export class DynamicTablesService {
 
     const metadata = link.link_metadata as any;
     const mappings = metadata.mappings || [];
-    
+
     if (mappings.length === 0) return;
 
     // 1. Fetch data from donor
@@ -771,7 +754,11 @@ export class DynamicTablesService {
     }
 
     if (batchCells.length > 0) {
-      await this.batchUpdateCells(version.id as any, { cells: batchCells }, userId);
+      await this.batchUpdateCells(
+        version.id as any,
+        { cells: batchCells },
+        userId,
+      );
     }
 
     // 3. Update table dimensions if needed
@@ -790,7 +777,11 @@ export class DynamicTablesService {
       .execute();
   }
 
-  async updateMatrixFormulas(versionId: string, formulas: MatrixFormulaDto[], userId: string) {
+  async updateMatrixFormulas(
+    versionId: string,
+    formulas: MatrixFormulaDto[],
+    userId: string,
+  ) {
     const version = await this.db.client
       .selectFrom('table_versions')
       .select('table_id')
@@ -823,41 +814,39 @@ export class DynamicTablesService {
   }
 
   async getDonorStatus(tableId: string, userId: string) {
-    // 1. Get all links for this table
-    const links = await this.db.client
-      .selectFrom('table_links')
-      .selectAll()
-      .where('target_table_id', '=', tableId as any)
+    const linksWithDonors = await this.db.client
+      .selectFrom('table_links as l')
+      .leftJoin('dynamic_tables as d', 'l.source_table_id', 'd.id')
+      .select([
+        'l.id',
+        'l.source_table_id',
+        'l.source_system_entity',
+        'l.updated_at',
+        'd.updated_at as donor_updated_at',
+      ])
+      .where('l.target_table_id', '=', tableId as any)
       .execute();
 
-    const statuses = [];
-
-    for (const link of links) {
+    const statuses = linksWithDonors.map((link) => {
       let status = 'up_to_date';
-      
+
       if (link.source_table_id) {
-        const donor = await this.db.client
-          .selectFrom('dynamic_tables')
-          .select('updated_at')
-          .where('id', '=', (link as any).source_table_id)
-          .executeTakeFirst();
-        
-        if (donor && (donor as any).updated_at && (link as any).updated_at) {
-          if (new Date((donor as any).updated_at) > new Date((link as any).updated_at)) {
+        if (link.updated_at && link.donor_updated_at) {
+          if (new Date(link.donor_updated_at) > new Date(link.updated_at)) {
             status = 'outdated';
           }
         }
       } else if (link.source_system_entity) {
-        status = (link as any).updated_at ? 'up_to_date' : 'outdated';
+        status = link.updated_at ? 'up_to_date' : 'outdated';
       }
 
-      statuses.push({
+      return {
         linkId: link.id,
         source: link.source_system_entity || link.source_table_id,
         status,
-        lastUpdated: (link as any).updated_at,
-      });
-    }
+        lastUpdated: link.updated_at,
+      };
+    });
 
     return statuses;
   }

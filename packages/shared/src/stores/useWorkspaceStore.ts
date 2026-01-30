@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { AxiosResponse } from "axios";
-import { Workspaces, type CreateWorkspaceDto, type UpdateWorkspaceDto } from "@/shared/api";
+import { Workspaces, type CreateWorkspaceDto, type UpdateWorkspaceDto } from "@/shared";
 
 const workspacesApi = new Workspaces();
 

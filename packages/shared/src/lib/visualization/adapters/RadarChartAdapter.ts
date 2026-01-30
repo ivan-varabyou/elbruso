@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { BaseChartConfig } from '@/shared/types/visualization';
+import { BaseChartConfig } from '@/shared/visualization';
 
 export interface RadarChartDataPoint {
   axis: string;

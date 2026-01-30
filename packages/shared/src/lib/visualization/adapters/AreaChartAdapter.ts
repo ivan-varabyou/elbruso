@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { BaseChartAdapter } from './BaseChartAdapter';
-import { AreaChartConfig } from '@/shared/types/visualization';
+import { AreaChartConfig } from '@/shared/visualization';
 import {
   addGridLines,
   getCurveFunction,
