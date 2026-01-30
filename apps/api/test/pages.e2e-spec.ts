@@ -4,7 +4,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { DatabaseService } from '../src/database/database.service';
-import { WorkspaceRole } from '../src/workspaces/dto';
+import { WorkspaceRole } from '../src/modules/workspace/dto/workspace.dto';
 
 describe('Pages & Blocks E2E Tests', () => {
   let app: INestApplication;

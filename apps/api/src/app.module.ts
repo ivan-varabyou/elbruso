@@ -3,31 +3,28 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { DatabaseModule } from './database/database.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { WorkspacesModule } from './workspaces/workspaces.module';
-import { PagesModule } from './pages/pages.module';
-import { BlocksModule } from './blocks/blocks.module';
-import { WorkspaceGroupsModule } from './workspace-groups/workspace-groups.module';
-import { FormulaModule } from './formula/formula.module';
-import { DynamicTablesModule } from './dynamic-tables/dynamic-tables.module';
-import { AuditModule } from './common/audit/audit.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { WorkspaceModule } from './modules/workspace/workspace.module';
+import { PagesModule } from './modules/pages/pages.module';
+import { BlocksModule } from './modules/blocks/blocks.module';
+import { TablesModule } from './modules/tables/tables.module';
+import { AuditModule } from './modules/audit/audit.module';
 
 // Reference Data Modules
-import { RegionsModule } from './regions/regions.module';
-import { SportsModule } from './sports/sports.module';
-import { IndicatorsModule } from './indicators/indicators.module';
-import { SeasonsModule } from './seasons/seasons.module';
-import { IndicatorGroupsModule } from './indicator-groups/indicator-groups.module';
-import { EventsModule } from './events/events.module';
-import { OrganizationsModule } from './organizations/organizations.module';
-import { CountriesModule } from './countries/countries.module';
+import { RegionsModule } from './modules/regions/regions.module';
+import { SportsModule } from './modules/sports/sports.module';
+import { IndicatorsModule } from './modules/indicators/indicators.module';
+import { SeasonsModule } from './modules/seasons/seasons.module';
+import { EventsModule } from './modules/events/events.module';
+import { OrganizationsModule } from './modules/organizations/organizations.module';
+import { CountriesModule } from './modules/countries/countries.module';
 
 // Infrastructure Modules
-import { EmailModule } from './email/email.module';
+import { EmailModule } from './modules/email/email.module';
 
 // Admin Module
-import { AdminModule } from './admin/admin.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
@@ -48,12 +45,10 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     AuthModule,
     AdminModule,
     UsersModule,
-    WorkspacesModule,
+    WorkspaceModule,
     PagesModule,
     BlocksModule,
-    WorkspaceGroupsModule,
-    FormulaModule,
-    DynamicTablesModule,
+    TablesModule,
     AuditModule,
     EmailModule,
 
@@ -62,7 +57,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     SportsModule,
     IndicatorsModule,
     SeasonsModule,
-    IndicatorGroupsModule,
     EventsModule,
     OrganizationsModule,
     CountriesModule,
