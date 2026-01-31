@@ -1,9 +1,8 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+import type { TextAlign, FontWeight, FontStyle } from "../../../types/enums";
 
-export type TextAlign = "left" | "center" | "right" | "justify";
-export type FontWeight = "normal" | "bold";
-export type FontStyle = "normal" | "italic";
+export type { TextAlign, FontWeight, FontStyle };
 export type TextDecoration = "none" | "underline";
 
 export interface FormattingState {

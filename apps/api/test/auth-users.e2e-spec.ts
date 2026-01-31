@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { createRequest, postData, post, get } from './test-request.helper';
 
 describe('Auth & Users E2E Tests (Sequential)', () => {
   let app: INestApplication;
@@ -23,6 +24,7 @@ describe('Auth & Users E2E Tests (Sequential)', () => {
       }),
     );
     await app.init();
+    await app.listen(0); // Start server on random port for E2E tests
   });
 
   afterAll(async () => {
@@ -31,163 +33,130 @@ describe('Auth & Users E2E Tests (Sequential)', () => {
 
   // All tests run sequentially in one suite
   it('should complete full auth and users flow', async () => {
+    const req = createRequest(app);
+
     // 1. Test registration validation - invalid email
-    await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({
-        email: 'invalid-email',
-        name: 'Test User',
-        password: 'password123',
-      })
-      .expect(400);
+    await post(req, '/auth/register', {
+      email: 'invalid-email',
+      name: 'Test User',
+      password: 'password123',
+    }).expect(400);
 
     // 2. Test registration validation - short password
-    await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({
-        email: 'test2@example.com',
-        name: 'Test User',
-        password: '12345',
-      })
-      .expect(400);
+    await post(req, '/auth/register', {
+      email: 'test2@example.com',
+      name: 'Test User',
+      password: '12345',
+    }).expect(400);
 
     // 3. Register main test user
-    const registerResponse = await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({
-        email: 'main-test@example.com',
-        name: 'Test User',
-        password: 'password123',
-      })
-      .expect(201);
+    const registerData = await postData(req, '/auth/register', {
+      email: 'main-test@example.com',
+      name: 'Test User',
+      password: 'password123',
+    });
 
-    expect(registerResponse.body).toHaveProperty('accessToken');
-    expect(registerResponse.body).toHaveProperty('refreshToken');
-    expect(registerResponse.body).toHaveProperty('expiresIn');
+    expect(registerData).toHaveProperty('accessToken');
+    expect(registerData).toHaveProperty('refreshToken');
+    expect(registerData).toHaveProperty('expiresIn');
 
-    authToken = registerResponse.body.accessToken;
-    refreshToken = registerResponse.body.refreshToken;
+    authToken = registerData.accessToken;
+    refreshToken = registerData.refreshToken;
 
     // 4. Test duplicate email registration
-    await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({
-        email: 'main-test@example.com',
-        name: 'Test User 2',
-        password: 'password123',
-      })
-      .expect(409);
+    await post(req, '/auth/register', {
+      email: 'main-test@example.com',
+      name: 'Test User 2',
+      password: 'password123',
+    }).expect(409);
 
     // 5. Test login with wrong password
-    await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email: 'main-test@example.com',
-        password: 'wrongpassword',
-      })
-      .expect(401);
+    await post(req, '/auth/login', {
+      email: 'main-test@example.com',
+      password: 'wrongpassword',
+    }).expect(401);
 
     // 6. Test login with non-existent email
-    await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email: 'nonexistent@example.com',
-        password: 'password123',
-      })
-      .expect(401);
+    await post(req, '/auth/login', {
+      email: 'nonexistent@example.com',
+      password: 'password123',
+    }).expect(401);
 
     // 7. Login with valid credentials
-    const loginResponse = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email: 'main-test@example.com',
-        password: 'password123',
-      })
-      .expect(200);
+    const loginData = await postData(req, '/auth/login', {
+      email: 'main-test@example.com',
+      password: 'password123',
+    });
 
-    expect(loginResponse.body).toHaveProperty('accessToken');
-    expect(loginResponse.body).toHaveProperty('refreshToken');
+    expect(loginData).toHaveProperty('accessToken');
+    expect(loginData).toHaveProperty('refreshToken');
 
-    authToken = loginResponse.body.accessToken;
-    refreshToken = loginResponse.body.refreshToken;
+    authToken = loginData.accessToken;
+    refreshToken = loginData.refreshToken;
 
     // 8. Test refresh token with invalid token
-    await request(app.getHttpServer())
-      .post('/auth/refresh')
-      .send({
-        refreshToken: 'invalid-token',
-      })
-      .expect(401);
+    await post(req, '/auth/refresh', {
+      refreshToken: 'invalid-token',
+    }).expect(401);
 
     // 9. Refresh access token with valid token
-    const refreshResponse = await request(app.getHttpServer())
-      .post('/auth/refresh')
-      .send({
-        refreshToken: refreshToken,
-      })
-      .expect(200);
+    const refreshData = await postData(req, '/auth/refresh', {
+      refreshToken: refreshToken,
+    });
 
-    expect(refreshResponse.body).toHaveProperty('accessToken');
-    expect(refreshResponse.body).toHaveProperty('refreshToken');
+    expect(refreshData).toHaveProperty('accessToken');
+    expect(refreshData).toHaveProperty('refreshToken');
 
-    authToken = refreshResponse.body.accessToken;
+    authToken = refreshData.accessToken;
 
     // 10. Get current user profile without token
-    await request(app.getHttpServer()).get('/users/me').expect(401);
+    await get(req, '/users/me').expect(401);
 
     // 11. Get current user profile with invalid token
-    await request(app.getHttpServer())
-      .get('/users/me')
+    await get(req, '/users/me')
       .set('Authorization', 'Bearer invalid-token')
       .expect(401);
 
     // 12. Get current user profile with valid token
-    const profileResponse = await request(app.getHttpServer())
-      .get('/users/me')
+    const profileResponse = await get(req, '/users/me')
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200);
 
-    expect(profileResponse.body).toHaveProperty('id');
-    expect(profileResponse.body).toHaveProperty(
+    expect(profileResponse.body.data).toHaveProperty('id');
+    expect(profileResponse.body.data).toHaveProperty(
       'email',
       'main-test@example.com',
     );
-    expect(profileResponse.body).toHaveProperty('name', 'Test User');
-    expect(profileResponse.body).not.toHaveProperty('password');
+    expect(profileResponse.body.data).toHaveProperty('name', 'Test User');
+    expect(profileResponse.body.data).not.toHaveProperty('password');
 
-    userId = profileResponse.body.id;
+    userId = profileResponse.body.data.id;
 
     // 13. Get user by id
-    const userByIdResponse = await request(app.getHttpServer())
-      .get(`/users/${userId}`)
+    const userByIdResponse = await get(req, `/users/${userId}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200);
 
-    expect(userByIdResponse.body).toHaveProperty('id', userId);
-    expect(userByIdResponse.body).toHaveProperty(
+    expect(userByIdResponse.body.data).toHaveProperty('id', userId);
+    expect(userByIdResponse.body.data).toHaveProperty(
       'email',
       'main-test@example.com',
     );
-    expect(userByIdResponse.body).not.toHaveProperty('password');
+    expect(userByIdResponse.body.data).not.toHaveProperty('password');
 
     // 14. Get user with non-existent id
-    await request(app.getHttpServer())
-      .get('/users/00000000-0000-0000-0000-000000000000')
+    await get(req, '/users/00000000-0000-0000-0000-000000000000')
       .set('Authorization', `Bearer ${authToken}`)
       .expect(404);
 
     // 15. Create API key without token
-    await request(app.getHttpServer())
-      .post('/users/api-keys')
-      .send({
-        name: 'Test API Key',
-        permissions: ['read:workspaces'],
-      })
-      .expect(401);
+    await post(req, '/users/api-keys', {
+      name: 'Test API Key',
+      permissions: ['read:workspaces'],
+    }).expect(401);
 
     // 16. Create API key with valid token
-    const apiKeyResponse = await request(app.getHttpServer())
-      .post('/users/api-keys')
+    const apiKeyResponse = await post(req, '/users/api-keys')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         name: 'Test API Key',
@@ -195,8 +164,8 @@ describe('Auth & Users E2E Tests (Sequential)', () => {
       })
       .expect(201);
 
-    expect(apiKeyResponse.body).toHaveProperty('apiKey');
-    expect(apiKeyResponse.body).toHaveProperty('name', 'Test API Key');
-    expect(apiKeyResponse.body.apiKey).toMatch(/^elk_/);
+    expect(apiKeyResponse.body.data).toHaveProperty('apiKey');
+    expect(apiKeyResponse.body.data).toHaveProperty('name', 'Test API Key');
+    expect(apiKeyResponse.body.data.apiKey).toMatch(/^elk_/);
   });
 });

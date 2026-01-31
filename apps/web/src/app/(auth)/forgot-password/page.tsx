@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useForgotPassword } from "@/shared/api/hooks/useForgotPassword";
 import Link from "next/link";
 import { useToast, Input, Button, Logo } from "@/shared/ui";
 import "../login/login.css";
@@ -8,9 +9,10 @@ import "../login/login.css";
 export default function ForgotPasswordPage() {
   const { showToast } = useToast();
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState("");
+
+  const { mutate: forgotPassword, isPending } = useForgotPassword();
 
   const validateEmail = (email: string): boolean => {
     if (!email) {
@@ -24,38 +26,26 @@ export default function ForgotPasswordPage() {
     return true;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     if (!validateEmail(email)) return;
 
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("http://localhost:3001/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    forgotPassword(
+      { email, lang: "ru" },
+      {
+        onSuccess: () => {
+          setEmailSent(true);
+          showToast("success", "Ссылка для сброса пароля отправлена на email");
         },
-        body: JSON.stringify({ email, lang: "ru" }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setEmailSent(true);
-        showToast("success", "Ссылка для сброса пароля отправлена на email");
-      } else {
-        throw new Error(data.message || "Ошибка отправки");
-      }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Ошибка отправки";
-      showToast("error", message);
-      setError(message);
-    } finally {
-      setIsLoading(false);
-    }
+        onError: (error: Error) => {
+          const message = error.message || "Ошибка отправки";
+          showToast("error", message);
+          setError(message);
+        },
+      },
+    );
   };
 
   if (emailSent) {
@@ -119,12 +109,12 @@ export default function ForgotPasswordPage() {
           }}
           error={error}
           autoComplete="email"
-          disabled={isLoading}
+          disabled={isPending}
           autoFocus
         />
 
-        <Button type="submit" variant="primary" className="auth-submit-button" disabled={isLoading}>
-          {isLoading ? "Отправка..." : "Отправить ссылку"}
+        <Button type="submit" variant="primary" className="auth-submit-button" disabled={isPending}>
+          {isPending ? "Отправка..." : "Отправить ссылку"}
         </Button>
       </form>
 

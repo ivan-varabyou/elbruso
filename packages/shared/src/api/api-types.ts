@@ -23,7 +23,6 @@ import {
   GenerateIndicatorsDto,
   GenerateSeasonsDto,
   LinkFieldMapping,
-  LinkMetadata,
   LoginDto,
   MoveBlockDto,
   MovePageDto,
@@ -40,21 +39,21 @@ import {
   UpdateProfileDto,
   UpdateRoleDto,
   UpdateTableDto,
-  UpdateWorkspaceDto
-} from './data-contracts';
+  UpdateWorkspaceDto,
+} from "./data-contracts";
 
 export enum ParameterType {
-  BODY = 'body',
-  QUERY = 'query',
-  FORM_DATA = 'formData',
-  PATH = 'path',
+  BODY = "body",
+  QUERY = "query",
+  FORM_DATA = "formData",
+  PATH = "path",
 }
 
 export type ApiOperationIds = keyof ApiTypes;
 
 export interface ApiTypes {
   AuthController_register: {
-    tag: 'Authentication';
+    tag: "Authentication";
     parameters: {
       body: RegisterDto;
     };
@@ -64,7 +63,7 @@ export interface ApiTypes {
     };
   };
   AuthController_login: {
-    tag: 'Authentication';
+    tag: "Authentication";
     parameters: {
       body: LoginDto;
     };
@@ -74,7 +73,7 @@ export interface ApiTypes {
     };
   };
   AuthController_refresh: {
-    tag: 'Authentication';
+    tag: "Authentication";
     parameters: {
       body: RefreshTokenDto;
     };
@@ -84,7 +83,7 @@ export interface ApiTypes {
     };
   };
   AuthController_forgotPassword: {
-    tag: 'Authentication';
+    tag: "Authentication";
     parameters: {
       body: ForgotPasswordDto;
     };
@@ -94,7 +93,7 @@ export interface ApiTypes {
     };
   };
   AuthController_resetPassword: {
-    tag: 'Authentication';
+    tag: "Authentication";
     parameters: {
       body: ResetPasswordDto;
     };
@@ -104,7 +103,7 @@ export interface ApiTypes {
     };
   };
   AuthController_verifyResetToken: {
-    tag: 'Authentication';
+    tag: "Authentication";
     parameters: {
       path: {
         token: string;
@@ -116,7 +115,7 @@ export interface ApiTypes {
     };
   };
   AuthController_getMe: {
-    tag: 'Authentication';
+    tag: "Authentication";
     parameters: {};
     responses: {
       success: undefined;
@@ -124,7 +123,7 @@ export interface ApiTypes {
     };
   };
   AuthController_changePassword: {
-    tag: 'Authentication';
+    tag: "Authentication";
     parameters: {};
     responses: {
       success: undefined;
@@ -132,7 +131,7 @@ export interface ApiTypes {
     };
   };
   UsersController_getProfile: {
-    tag: 'Users';
+    tag: "Users";
     parameters: {};
     responses: {
       success: undefined;
@@ -140,7 +139,7 @@ export interface ApiTypes {
     };
   };
   UsersController_updateProfile: {
-    tag: 'Users';
+    tag: "Users";
     parameters: {
       body: UpdateProfileDto;
     };
@@ -150,7 +149,7 @@ export interface ApiTypes {
     };
   };
   UsersController_findAll: {
-    tag: 'Users';
+    tag: "Users";
     parameters: {};
     responses: {
       success: undefined;
@@ -158,7 +157,7 @@ export interface ApiTypes {
     };
   };
   UsersController_updateUserAdmin: {
-    tag: 'Users';
+    tag: "Users";
     parameters: {
       body: AdminUpdateUserDto;
       path: {
@@ -171,7 +170,7 @@ export interface ApiTypes {
     };
   };
   UsersController_findOne: {
-    tag: 'Users';
+    tag: "Users";
     parameters: {
       path: {
         id: string;
@@ -183,7 +182,7 @@ export interface ApiTypes {
     };
   };
   UsersController_createApiKey: {
-    tag: 'Users';
+    tag: "Users";
     parameters: {
       body: CreateApiKeyDto;
     };
@@ -193,7 +192,7 @@ export interface ApiTypes {
     };
   };
   WorkspacesController_findAll: {
-    tag: 'Workspaces';
+    tag: "Workspaces";
     parameters: {};
     responses: {
       success: undefined;
@@ -201,7 +200,7 @@ export interface ApiTypes {
     };
   };
   WorkspacesController_create: {
-    tag: 'Workspaces';
+    tag: "Workspaces";
     parameters: {
       body: CreateWorkspaceDto;
     };
@@ -211,7 +210,7 @@ export interface ApiTypes {
     };
   };
   WorkspacesController_findOne: {
-    tag: 'Workspaces';
+    tag: "Workspaces";
     parameters: {
       path: {
         id: string;
@@ -223,7 +222,7 @@ export interface ApiTypes {
     };
   };
   WorkspacesController_delete: {
-    tag: 'Workspaces';
+    tag: "Workspaces";
     parameters: {
       path: {
         id: string;
@@ -235,7 +234,7 @@ export interface ApiTypes {
     };
   };
   WorkspacesController_update: {
-    tag: 'Workspaces';
+    tag: "Workspaces";
     parameters: {
       body: UpdateWorkspaceDto;
       path: {
@@ -248,7 +247,7 @@ export interface ApiTypes {
     };
   };
   WorkspacesController_getMembers: {
-    tag: 'Workspaces';
+    tag: "Workspaces";
     parameters: {
       path: {
         id: string;
@@ -260,7 +259,7 @@ export interface ApiTypes {
     };
   };
   WorkspacesController_addMember: {
-    tag: 'Workspaces';
+    tag: "Workspaces";
     parameters: {
       body: AddMemberDto;
       path: {
@@ -273,7 +272,7 @@ export interface ApiTypes {
     };
   };
   WorkspacesController_removeMember: {
-    tag: 'Workspaces';
+    tag: "Workspaces";
     parameters: {
       path: {
         id: string;
@@ -286,7 +285,7 @@ export interface ApiTypes {
     };
   };
   WorkspacesController_updateMemberRole: {
-    tag: 'Workspaces';
+    tag: "Workspaces";
     parameters: {
       body: UpdateMemberRoleDto;
       path: {
@@ -300,7 +299,7 @@ export interface ApiTypes {
     };
   };
   AdminSetupController_setup: {
-    tag: 'Admin Setup';
+    tag: "Admin Setup";
     parameters: {
       body: AdminSetupDto;
     };
@@ -310,7 +309,7 @@ export interface ApiTypes {
     };
   };
   AdminAuthController_login: {
-    tag: 'Admin Authentication';
+    tag: "Admin Authentication";
     parameters: {
       body: AdminLoginDto;
     };
@@ -320,7 +319,7 @@ export interface ApiTypes {
     };
   };
   AdminAuthController_logout: {
-    tag: 'Admin Authentication';
+    tag: "Admin Authentication";
     parameters: {};
     responses: {
       success: undefined;
@@ -328,7 +327,7 @@ export interface ApiTypes {
     };
   };
   AdminAuthController_refresh: {
-    tag: 'Admin Authentication';
+    tag: "Admin Authentication";
     parameters: {};
     responses: {
       success: undefined;
@@ -336,7 +335,7 @@ export interface ApiTypes {
     };
   };
   AdminAuthController_getMe: {
-    tag: 'Admin Authentication';
+    tag: "Admin Authentication";
     parameters: {};
     responses: {
       success: undefined;
@@ -344,7 +343,7 @@ export interface ApiTypes {
     };
   };
   AdminUsersController_findAll: {
-    tag: 'Admin Users';
+    tag: "Admin Users";
     parameters: {
       query: {
         page: number;
@@ -357,7 +356,7 @@ export interface ApiTypes {
     };
   };
   AdminUsersController_create: {
-    tag: 'Admin Users';
+    tag: "Admin Users";
     parameters: {
       body: CreateAdminUserDto;
     };
@@ -367,7 +366,7 @@ export interface ApiTypes {
     };
   };
   AdminUsersController_findOne: {
-    tag: 'Admin Users';
+    tag: "Admin Users";
     parameters: {
       path: {
         id: string;
@@ -379,7 +378,7 @@ export interface ApiTypes {
     };
   };
   AdminUsersController_remove: {
-    tag: 'Admin Users';
+    tag: "Admin Users";
     parameters: {
       path: {
         id: string;
@@ -391,7 +390,7 @@ export interface ApiTypes {
     };
   };
   AdminUsersController_update: {
-    tag: 'Admin Users';
+    tag: "Admin Users";
     parameters: {
       body: UpdateAdminUserDto;
       path: {
@@ -404,7 +403,7 @@ export interface ApiTypes {
     };
   };
   AdminRolesController_findAll: {
-    tag: 'Admin Roles';
+    tag: "Admin Roles";
     parameters: {};
     responses: {
       success: undefined;
@@ -412,7 +411,7 @@ export interface ApiTypes {
     };
   };
   AdminRolesController_create: {
-    tag: 'Admin Roles';
+    tag: "Admin Roles";
     parameters: {
       body: CreateRoleDto;
     };
@@ -422,7 +421,7 @@ export interface ApiTypes {
     };
   };
   AdminRolesController_findOne: {
-    tag: 'Admin Roles';
+    tag: "Admin Roles";
     parameters: {
       path: {
         id: string;
@@ -434,7 +433,7 @@ export interface ApiTypes {
     };
   };
   AdminRolesController_remove: {
-    tag: 'Admin Roles';
+    tag: "Admin Roles";
     parameters: {
       path: {
         id: string;
@@ -446,7 +445,7 @@ export interface ApiTypes {
     };
   };
   AdminRolesController_update: {
-    tag: 'Admin Roles';
+    tag: "Admin Roles";
     parameters: {
       body: UpdateRoleDto;
       path: {
@@ -459,7 +458,7 @@ export interface ApiTypes {
     };
   };
   PagesController_getTree: {
-    tag: 'Pages';
+    tag: "Pages";
     parameters: {
       path: {
         workspaceId: string;
@@ -471,7 +470,7 @@ export interface ApiTypes {
     };
   };
   PagesController_create: {
-    tag: 'Pages';
+    tag: "Pages";
     parameters: {
       body: CreatePageDto;
       path: {
@@ -484,7 +483,7 @@ export interface ApiTypes {
     };
   };
   PagesController_findOne: {
-    tag: 'Pages';
+    tag: "Pages";
     parameters: {
       path: {
         id: string;
@@ -496,7 +495,7 @@ export interface ApiTypes {
     };
   };
   PagesController_delete: {
-    tag: 'Pages';
+    tag: "Pages";
     parameters: {
       path: {
         id: string;
@@ -508,7 +507,7 @@ export interface ApiTypes {
     };
   };
   PagesController_update: {
-    tag: 'Pages';
+    tag: "Pages";
     parameters: {
       body: UpdatePageDto;
       path: {
@@ -521,7 +520,7 @@ export interface ApiTypes {
     };
   };
   PagesController_move: {
-    tag: 'Pages';
+    tag: "Pages";
     parameters: {
       body: MovePageDto;
       path: {
@@ -534,7 +533,7 @@ export interface ApiTypes {
     };
   };
   BlocksController_findByPage: {
-    tag: 'Blocks';
+    tag: "Blocks";
     parameters: {
       path: {
         pageId: string;
@@ -546,7 +545,7 @@ export interface ApiTypes {
     };
   };
   BlocksController_create: {
-    tag: 'Blocks';
+    tag: "Blocks";
     parameters: {
       body: CreateBlockDto;
       path: {
@@ -559,7 +558,7 @@ export interface ApiTypes {
     };
   };
   BlocksController_delete: {
-    tag: 'Blocks';
+    tag: "Blocks";
     parameters: {
       path: {
         id: string;
@@ -571,7 +570,7 @@ export interface ApiTypes {
     };
   };
   BlocksController_update: {
-    tag: 'Blocks';
+    tag: "Blocks";
     parameters: {
       body: UpdateBlockDto;
       path: {
@@ -584,7 +583,7 @@ export interface ApiTypes {
     };
   };
   BlocksController_move: {
-    tag: 'Blocks';
+    tag: "Blocks";
     parameters: {
       body: MoveBlockDto;
       path: {
@@ -597,7 +596,7 @@ export interface ApiTypes {
     };
   };
   WorkspaceGroupsController_findAll: {
-    tag: 'Workspace Groups';
+    tag: "Workspace Groups";
     parameters: {
       path: {
         workspaceId: string;
@@ -609,7 +608,7 @@ export interface ApiTypes {
     };
   };
   WorkspaceGroupsController_create: {
-    tag: 'Workspace Groups';
+    tag: "Workspace Groups";
     parameters: {
       body: CreateGroupDto;
       path: {
@@ -622,7 +621,7 @@ export interface ApiTypes {
     };
   };
   WorkspaceGroupsController_delete: {
-    tag: 'Workspace Groups';
+    tag: "Workspace Groups";
     parameters: {
       path: {
         id: string;
@@ -634,7 +633,7 @@ export interface ApiTypes {
     };
   };
   WorkspaceGroupsController_update: {
-    tag: 'Workspace Groups';
+    tag: "Workspace Groups";
     parameters: {
       body: UpdateGroupDto;
       path: {
@@ -647,7 +646,7 @@ export interface ApiTypes {
     };
   };
   WorkspaceGroupsController_reorder: {
-    tag: 'Workspace Groups';
+    tag: "Workspace Groups";
     parameters: {
       body: ReorderGroupsDto;
       path: {
@@ -660,7 +659,7 @@ export interface ApiTypes {
     };
   };
   FormulaController_analyze: {
-    tag: 'Formulas';
+    tag: "Formulas";
     parameters: {
       body: AnalyzeFormulaDto;
     };
@@ -670,7 +669,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_findAll: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         workspaceId: string;
@@ -685,7 +684,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_create: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       body: CreateTableDto;
       path: {
@@ -698,7 +697,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_findOne: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -710,7 +709,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_delete: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -722,7 +721,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_update: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       body: UpdateTableDto;
       path: {
@@ -735,7 +734,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_getVersionHistory: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -747,7 +746,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_createVersion: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       body: CreateVersionDto;
       path: {
@@ -760,7 +759,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_activateVersion: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -772,7 +771,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_getCells: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -790,7 +789,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_updateCell: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -804,7 +803,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_batchUpdateCells: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       body: BatchUpdateCellsDto;
       path: {
@@ -817,7 +816,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_insertRow: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -830,7 +829,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_deleteRow: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -843,7 +842,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_insertColumn: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -856,7 +855,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_deleteColumn: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -869,7 +868,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_createLink: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       body: CreateLinkDto;
       path: {
@@ -882,7 +881,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_updateMatrixFormulas: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       body: string[];
       path: {
@@ -895,7 +894,7 @@ export interface ApiTypes {
     };
   };
   DynamicTablesController_getDonorStatus: {
-    tag: 'Dynamic Tables';
+    tag: "Dynamic Tables";
     parameters: {
       path: {
         id: string;
@@ -907,7 +906,7 @@ export interface ApiTypes {
     };
   };
   RegionsController_findAll: {
-    tag: 'Regions';
+    tag: "Regions";
     parameters: {
       query: {
         countryId?: number;
@@ -922,7 +921,7 @@ export interface ApiTypes {
     };
   };
   RegionsController_findById: {
-    tag: 'Regions';
+    tag: "Regions";
     parameters: {
       path: {
         id: number;
@@ -934,7 +933,7 @@ export interface ApiTypes {
     };
   };
   RegionsController_findByDistrict: {
-    tag: 'Regions';
+    tag: "Regions";
     parameters: {
       path: {
         districtId: number;
@@ -946,7 +945,7 @@ export interface ApiTypes {
     };
   };
   RegionsController_findByCountry: {
-    tag: 'Regions';
+    tag: "Regions";
     parameters: {
       path: {
         countryId: number;
@@ -958,7 +957,7 @@ export interface ApiTypes {
     };
   };
   SportsController_findAll: {
-    tag: 'Sports';
+    tag: "Sports";
     parameters: {};
     responses: {
       success: undefined;
@@ -966,7 +965,7 @@ export interface ApiTypes {
     };
   };
   SportsController_findById: {
-    tag: 'Sports';
+    tag: "Sports";
     parameters: {
       path: {
         id: number;
@@ -978,7 +977,7 @@ export interface ApiTypes {
     };
   };
   SportsController_findDisciplines: {
-    tag: 'Sports';
+    tag: "Sports";
     parameters: {
       path: {
         id: number;
@@ -990,7 +989,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_findAll: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       query: {
         sportId?: number;
@@ -1007,7 +1006,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_create: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {};
     responses: {
       success: undefined;
@@ -1015,7 +1014,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_findById: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       path: {
         id: number;
@@ -1027,7 +1026,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_delete: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       path: {
         id: number;
@@ -1039,7 +1038,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_update: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       path: {
         id: number;
@@ -1051,7 +1050,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_findBySport: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       path: {
         sportId: number;
@@ -1063,7 +1062,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_getTemplates: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {};
     responses: {
       success: undefined;
@@ -1071,7 +1070,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_generate: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       body: GenerateIndicatorsDto;
     };
@@ -1081,7 +1080,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_getGroups: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       query: {
         sportId?: number;
@@ -1093,7 +1092,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_createGroup: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       body: CreateIndicatorGroupDto;
     };
@@ -1103,7 +1102,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_getGenders: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {};
     responses: {
       success: undefined;
@@ -1111,7 +1110,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_getAgeGroups: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {};
     responses: {
       success: undefined;
@@ -1119,7 +1118,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_deleteGroup: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       path: {
         id: number;
@@ -1131,7 +1130,7 @@ export interface ApiTypes {
     };
   };
   IndicatorsController_updateGroup: {
-    tag: 'Indicators';
+    tag: "Indicators";
     parameters: {
       body: UpdateIndicatorGroupDto;
       path: {
@@ -1144,7 +1143,7 @@ export interface ApiTypes {
     };
   };
   OrganizationsController_findAll: {
-    tag: 'Organizations';
+    tag: "Organizations";
     parameters: {};
     responses: {
       success: undefined;
@@ -1152,7 +1151,7 @@ export interface ApiTypes {
     };
   };
   OrganizationsController_findFederations: {
-    tag: 'Organizations';
+    tag: "Organizations";
     parameters: {};
     responses: {
       success: undefined;
@@ -1160,7 +1159,7 @@ export interface ApiTypes {
     };
   };
   OrganizationsController_getTree: {
-    tag: 'Organizations';
+    tag: "Organizations";
     parameters: {
       path: {
         id: number;
@@ -1172,7 +1171,7 @@ export interface ApiTypes {
     };
   };
   OrganizationsController_getHierarchy: {
-    tag: 'Organizations';
+    tag: "Organizations";
     parameters: {
       path: {
         id: number;
@@ -1184,7 +1183,7 @@ export interface ApiTypes {
     };
   };
   OrganizationsController_findById: {
-    tag: 'Organizations';
+    tag: "Organizations";
     parameters: {
       path: {
         id: number;
@@ -1196,12 +1195,12 @@ export interface ApiTypes {
     };
   };
   IndicatorGroupsController_findAll: {
-    tag: 'Indicator Groups';
+    tag: "Indicator Groups";
     parameters: {
       query: {
         sportId?: number;
         regionId?: number;
-        type?: 'Unified' | 'Legacy' | 'Custom';
+        type?: "Unified" | "Legacy" | "Custom";
       };
     };
     responses: {
@@ -1210,7 +1209,7 @@ export interface ApiTypes {
     };
   };
   IndicatorGroupsController_findById: {
-    tag: 'Indicator Groups';
+    tag: "Indicator Groups";
     parameters: {
       path: {
         id: number;
@@ -1222,7 +1221,7 @@ export interface ApiTypes {
     };
   };
   IndicatorGroupsController_findIndicatorsByGroup: {
-    tag: 'Indicator Groups';
+    tag: "Indicator Groups";
     parameters: {
       path: {
         id: number;
@@ -1234,7 +1233,7 @@ export interface ApiTypes {
     };
   };
   SeasonsController_findAll: {
-    tag: 'Seasons';
+    tag: "Seasons";
     parameters: {};
     responses: {
       success: undefined;
@@ -1242,7 +1241,7 @@ export interface ApiTypes {
     };
   };
   SeasonsController_create: {
-    tag: 'Seasons';
+    tag: "Seasons";
     parameters: {};
     responses: {
       success: undefined;
@@ -1250,7 +1249,7 @@ export interface ApiTypes {
     };
   };
   SeasonsController_findById: {
-    tag: 'Seasons';
+    tag: "Seasons";
     parameters: {
       path: {
         id: number;
@@ -1262,7 +1261,7 @@ export interface ApiTypes {
     };
   };
   SeasonsController_delete: {
-    tag: 'Seasons';
+    tag: "Seasons";
     parameters: {
       path: {
         id: number;
@@ -1274,7 +1273,7 @@ export interface ApiTypes {
     };
   };
   SeasonsController_update: {
-    tag: 'Seasons';
+    tag: "Seasons";
     parameters: {
       path: {
         id: number;
@@ -1286,7 +1285,7 @@ export interface ApiTypes {
     };
   };
   SeasonsController_generate: {
-    tag: 'Seasons';
+    tag: "Seasons";
     parameters: {
       body: GenerateSeasonsDto;
     };
@@ -1296,7 +1295,7 @@ export interface ApiTypes {
     };
   };
   SeasonsController_findCurrent: {
-    tag: 'Seasons';
+    tag: "Seasons";
     parameters: {};
     responses: {
       success: undefined;
@@ -1304,12 +1303,12 @@ export interface ApiTypes {
     };
   };
   EventsController_findAll: {
-    tag: 'Events';
+    tag: "Events";
     parameters: {
       query: {
         sportId?: number;
         regionId?: number;
-        importance?: 'High' | 'Medium' | 'Low';
+        importance?: "High" | "Medium" | "Low";
       };
     };
     responses: {
@@ -1318,7 +1317,7 @@ export interface ApiTypes {
     };
   };
   EventsController_findById: {
-    tag: 'Events';
+    tag: "Events";
     parameters: {
       path: {
         id: number;

@@ -1,208 +1,291 @@
 # Структура проекта api
 
-Генерировано: Сб 31 янв 2026 01:05:24 +03
+Генерировано: Сб 31 янв 2026 15:15:03 +03
 
 /home/ivan/git/elbruso/apps/api
 ├── docs
 │   └── PROJECT_TREE.md
 ├── src
-│   ├── admin
-│   │   ├── decorators
-│   │   │   └── roles.decorator.ts
-│   │   ├── dto
-│   │   │   ├── admin-login.dto.ts
-│   │   │   └── admin-setup.dto.ts
-│   │   ├── guards
-│   │   │   └── admin-jwt-auth.guard.ts
-│   │   ├── roles
-│   │   │   ├── dto
-│   │   │   │   ├── create-role.dto.ts
-│   │   │   │   └── update-role.dto.ts
-│   │   │   ├── admin-roles.controller.ts
-│   │   │   ├── admin-roles.module.ts
-│   │   │   └── admin-roles.service.ts
-│   │   ├── strategies
-│   │   │   └── admin-jwt.strategy.ts
-│   │   ├── users
-│   │   │   ├── dto
-│   │   │   │   ├── create-admin-user.dto.ts
-│   │   │   │   └── update-admin-user.dto.ts
-│   │   │   ├── admin-users.controller.ts
-│   │   │   ├── admin-users.module.ts
-│   │   │   └── admin-users.service.ts
-│   │   ├── admin-auth.controller.ts
-│   │   ├── admin-auth.module.ts
-│   │   ├── admin-auth.service.ts
-│   │   ├── admin.module.ts
-│   │   ├── admin-setup.controller.ts
-│   │   └── admin-setup.service.ts
-│   ├── auth
-│   │   ├── dto
-│   │   │   ├── index.ts
-│   │   │   └── password-recovery.dto.ts
-│   │   ├── guards
-│   │   │   ├── admin-jwt-auth.guard.ts
-│   │   │   ├── api-key-auth.guard.ts
-│   │   │   └── jwt-auth.guard.ts
-│   │   ├── interfaces
-│   │   │   └── index.ts
-│   │   ├── strategies
-│   │   │   ├── api-key.strategy.ts
-│   │   │   ├── jwt.strategy.ts
-│   │   │   └── local.strategy.ts
-│   │   ├── auth.controller.ts
-│   │   ├── auth.module.ts
-│   │   └── auth.service.ts
-│   ├── blocks
-│   │   ├── dto
-│   │   │   └── index.ts
-│   │   ├── blocks.controller.ts
-│   │   ├── blocks.module.ts
-│   │   └── blocks.service.ts
-│   ├── common
-│   │   ├── audit
-│   │   │   ├── audit.module.ts
-│   │   │   └── audit.service.ts
-│   │   ├── decorators
-│   │   │   └── roles.decorator.ts
-│   │   ├── filters
-│   │   └── interceptors
 │   ├── config
-│   ├── countries
-│   │   ├── countries.controller.ts
-│   │   ├── countries.module.ts
-│   │   └── countries.service.ts
 │   ├── database
 │   │   ├── {repositories}
 │   │   ├── database.module.ts
 │   │   └── database.service.ts
-│   ├── dynamic-tables
-│   │   ├── dto
-│   │   │   └── index.ts
-│   │   ├── dynamic-tables.controller.ts
-│   │   ├── dynamic-tables.module.ts
-│   │   └── dynamic-tables.service.ts
-│   ├── email
-│   │   ├── interfaces
-│   │   │   └── email-provider.interface.ts
-│   │   ├── providers
-│   │   │   ├── console-email.provider.ts
-│   │   │   └── smtp-email.provider.ts
-│   │   ├── email.module.ts
-│   │   └── email.service.ts
-│   ├── events
-│   │   ├── dto
-│   │   │   └── event-filters.dto.ts
-│   │   ├── events.controller.ts
-│   │   ├── events.module.ts
-│   │   └── events.service.ts
-│   ├── formula
-│   │   ├── dto
-│   │   │   └── formula-analysis.dto.ts
-│   │   ├── formula.controller.ts
-│   │   ├── formula.module.ts
-│   │   └── formula.service.ts
 │   ├── gateway
 │   │   ├── controllers
+│   │   │   ├── health.controller.ts
+│   │   │   └── index.ts
+│   │   ├── dto
+│   │   │   ├── api-response.dto.ts
+│   │   │   └── index.ts
+│   │   ├── filters
+│   │   │   ├── http-exception.filter.ts
+│   │   │   └── index.ts
 │   │   ├── guards
-│   │   └── interceptors
-│   ├── indicator-groups
-│   │   ├── dto
-│   │   │   └── indicator-group-filters.dto.ts
-│   │   ├── indicator-groups.controller.ts
-│   │   ├── indicator-groups.module.ts
-│   │   └── indicator-groups.service.ts
-│   ├── indicators
-│   │   ├── dto
-│   │   │   ├── generate-indicators.dto.ts
-│   │   │   ├── indicator-filters.dto.ts
-│   │   │   └── indicator-group.dto.ts
-│   │   ├── indicators.controller.ts
-│   │   ├── indicators.module.ts
-│   │   └── indicators.service.ts
+│   │   ├── interceptors
+│   │   │   ├── index.ts
+│   │   │   └── transform.interceptor.ts
+│   │   ├── services
+│   │   │   ├── health.service.ts
+│   │   │   └── index.ts
+│   │   ├── gateway.module.ts
+│   │   └── index.ts
 │   ├── modules
 │   │   ├── admin
 │   │   │   ├── admin-auth
 │   │   │   │   └── dto
-│   │   │   └── admin-users
-│   │   │       └── dto
+│   │   │   ├── admin-users
+│   │   │   │   └── dto
+│   │   │   ├── controllers
+│   │   │   │   ├── admin-auth.controller.ts
+│   │   │   │   ├── admin-setup.controller.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── decorators
+│   │   │   │   ├── index.ts
+│   │   │   │   └── roles.decorator.ts
+│   │   │   ├── dto
+│   │   │   │   ├── admin-login.dto.ts
+│   │   │   │   ├── admin-setup.dto.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── guards
+│   │   │   │   ├── admin-jwt-auth.guard.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── roles
+│   │   │   │   ├── dto
+│   │   │   │   ├── admin-roles.controller.ts
+│   │   │   │   ├── admin-roles.module.ts
+│   │   │   │   └── admin-roles.service.ts
+│   │   │   ├── services
+│   │   │   │   ├── admin-auth.service.ts
+│   │   │   │   ├── admin-setup.service.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── strategies
+│   │   │   │   ├── admin-jwt.strategy.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── users
+│   │   │   │   ├── dto
+│   │   │   │   ├── admin-users.controller.ts
+│   │   │   │   ├── admin-users.module.ts
+│   │   │   │   └── admin-users.service.ts
+│   │   │   ├── admin-auth.module.ts
+│   │   │   ├── admin.module.ts
+│   │   │   └── index.ts
+│   │   ├── audit
+│   │   │   ├── events
+│   │   │   │   └── audit.events.ts
+│   │   │   ├── services
+│   │   │   │   └── audit.service.ts
+│   │   │   ├── audit.module.ts
+│   │   │   └── index.ts
+│   │   ├── auth
+│   │   │   ├── controllers
+│   │   │   │   └── auth.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── auth.dto.ts
+│   │   │   │   ├── index.ts
+│   │   │   │   └── password-recovery.dto.ts
+│   │   │   ├── events
+│   │   │   │   └── auth.events.ts
+│   │   │   ├── guards
+│   │   │   │   ├── admin-jwt-auth.guard.ts
+│   │   │   │   ├── api-key-auth.guard.ts
+│   │   │   │   └── jwt-auth.guard.ts
+│   │   │   ├── interfaces
+│   │   │   │   ├── auth.interface.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── services
+│   │   │   │   └── auth.service.ts
+│   │   │   ├── strategies
+│   │   │   │   ├── api-key.strategy.ts
+│   │   │   │   ├── jwt.strategy.ts
+│   │   │   │   └── local.strategy.ts
+│   │   │   ├── auth.module.ts
+│   │   │   └── index.ts
+│   │   ├── blocks
+│   │   │   ├── controllers
+│   │   │   │   └── blocks.controller.ts
+│   │   │   ├── dto
+│   │   │   │   └── index.ts
+│   │   │   ├── events
+│   │   │   │   └── blocks.events.ts
+│   │   │   ├── services
+│   │   │   │   └── blocks.service.ts
+│   │   │   ├── blocks.module.ts
+│   │   │   └── index.ts
 │   │   ├── content
 │   │   │   ├── blocks
 │   │   │   │   └── dto
 │   │   │   ├── charts
 │   │   │   └── pages
 │   │   │       └── dto
-│   │   ├── core
-│   │   │   ├── auth
-│   │   │   │   ├── dto
-│   │   │   │   ├── guards
-│   │   │   │   └── strategies
-│   │   │   ├── permissions
-│   │   │   ├── users
-│   │   │   │   └── dto
-│   │   │   ├── workspace-groups
-│   │   │   │   └── dto
-│   │   │   └── workspaces
-│   │   │       └── dto
-│   │   └── reference
-│   │       ├── countries
-│   │       ├── organizations
-│   │       ├── regions
-│   │       ├── seasons
-│   │       └── sports
-│   ├── organizations
-│   │   ├── dto
-│   │   │   └── organization-filters.dto.ts
-│   │   ├── organizations.controller.ts
-│   │   ├── organizations.module.ts
-│   │   └── organizations.service.ts
-│   ├── pages
-│   │   ├── dto
+│   │   ├── countries
+│   │   │   ├── controllers
+│   │   │   │   └── countries.controller.ts
+│   │   │   ├── dto
+│   │   │   │   └── index.ts
+│   │   │   ├── events
+│   │   │   │   └── countries.events.ts
+│   │   │   ├── services
+│   │   │   │   └── countries.service.ts
+│   │   │   ├── countries.module.ts
 │   │   │   └── index.ts
-│   │   ├── pages.controller.ts
-│   │   ├── pages.module.ts
-│   │   └── pages.service.ts
-│   ├── regions
-│   │   ├── dto
-│   │   │   └── region-filters.dto.ts
-│   │   ├── regions.controller.ts
-│   │   ├── regions.module.ts
-│   │   └── regions.service.ts
-│   ├── seasons
-│   │   ├── dto
-│   │   │   └── generate-seasons.dto.ts
-│   │   ├── seasons.controller.ts
-│   │   ├── seasons.module.ts
-│   │   └── seasons.service.ts
+│   │   ├── email
+│   │   │   ├── controllers
+│   │   │   ├── dto
+│   │   │   │   └── index.ts
+│   │   │   ├── events
+│   │   │   │   └── email.events.ts
+│   │   │   ├── interfaces
+│   │   │   │   └── email-provider.interface.ts
+│   │   │   ├── providers
+│   │   │   │   ├── console-email.provider.ts
+│   │   │   │   └── smtp-email.provider.ts
+│   │   │   ├── services
+│   │   │   │   └── email.service.ts
+│   │   │   ├── email.module.ts
+│   │   │   └── index.ts
+│   │   ├── events
+│   │   │   ├── controllers
+│   │   │   │   └── events.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── event-filters.dto.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── events
+│   │   │   ├── services
+│   │   │   │   └── events.service.ts
+│   │   │   ├── events.module.ts
+│   │   │   └── index.ts
+│   │   ├── indicators
+│   │   │   ├── controllers
+│   │   │   │   ├── indicator-groups.controller.ts
+│   │   │   │   └── indicators.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── generate-indicators.dto.ts
+│   │   │   │   ├── indicator-filters.dto.ts
+│   │   │   │   ├── indicator-group.dto.ts
+│   │   │   │   └── indicator-group-filters.dto.ts
+│   │   │   ├── entities
+│   │   │   ├── interfaces
+│   │   │   ├── services
+│   │   │   │   ├── indicator-groups.service.ts
+│   │   │   │   └── indicators.service.ts
+│   │   │   ├── index.ts
+│   │   │   └── indicators.module.ts
+│   │   ├── organizations
+│   │   │   ├── controllers
+│   │   │   │   └── organizations.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── index.ts
+│   │   │   │   └── organization-filters.dto.ts
+│   │   │   ├── events
+│   │   │   │   └── organizations.events.ts
+│   │   │   ├── services
+│   │   │   │   └── organizations.service.ts
+│   │   │   ├── index.ts
+│   │   │   └── organizations.module.ts
+│   │   ├── pages
+│   │   │   ├── controllers
+│   │   │   │   └── pages.controller.ts
+│   │   │   ├── dto
+│   │   │   │   └── index.ts
+│   │   │   ├── events
+│   │   │   │   └── pages.events.ts
+│   │   │   ├── services
+│   │   │   │   └── pages.service.ts
+│   │   │   ├── index.ts
+│   │   │   └── pages.module.ts
+│   │   ├── reference
+│   │   │   ├── countries
+│   │   │   ├── organizations
+│   │   │   ├── regions
+│   │   │   ├── seasons
+│   │   │   └── sports
+│   │   ├── regions
+│   │   │   ├── controllers
+│   │   │   │   └── regions.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── index.ts
+│   │   │   │   └── region-filters.dto.ts
+│   │   │   ├── events
+│   │   │   │   └── regions.events.ts
+│   │   │   ├── services
+│   │   │   │   └── regions.service.ts
+│   │   │   ├── index.ts
+│   │   │   └── regions.module.ts
+│   │   ├── seasons
+│   │   │   ├── controllers
+│   │   │   │   └── seasons.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── generate-seasons.dto.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── events
+│   │   │   │   └── seasons.events.ts
+│   │   │   ├── services
+│   │   │   │   └── seasons.service.ts
+│   │   │   ├── index.ts
+│   │   │   └── seasons.module.ts
+│   │   ├── sports
+│   │   │   ├── controllers
+│   │   │   │   └── sports.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── index.ts
+│   │   │   │   └── sport-filters.dto.ts
+│   │   │   ├── events
+│   │   │   │   └── sports.events.ts
+│   │   │   ├── services
+│   │   │   │   └── sports.service.ts
+│   │   │   ├── index.ts
+│   │   │   └── sports.module.ts
+│   │   ├── tables
+│   │   │   ├── controllers
+│   │   │   │   ├── formula.controller.ts
+│   │   │   │   └── tables.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── formula-analysis.dto.ts
+│   │   │   │   └── tables.dto.ts
+│   │   │   ├── entities
+│   │   │   │   ├── formula.entity.ts
+│   │   │   │   └── table.entity.ts
+│   │   │   ├── events
+│   │   │   │   └── tables.events.ts
+│   │   │   ├── interfaces
+│   │   │   │   └── tables.interface.ts
+│   │   │   ├── services
+│   │   │   │   ├── formula.service.ts
+│   │   │   │   └── tables.service.ts
+│   │   │   ├── index.ts
+│   │   │   └── tables.module.ts
+│   │   ├── users
+│   │   │   ├── controllers
+│   │   │   │   └── users.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── index.ts
+│   │   │   │   └── user-settings.dto.ts
+│   │   │   ├── events
+│   │   │   ├── services
+│   │   │   │   └── users.service.ts
+│   │   │   ├── index.ts
+│   │   │   └── users.module.ts
+│   │   └── workspace
+│   │       ├── controllers
+│   │       │   ├── workspace.controller.ts
+│   │       │   └── workspace-group.controller.ts
+│   │       ├── dto
+│   │       │   ├── workspace.dto.ts
+│   │       │   └── workspace-group.dto.ts
+│   │       ├── events
+│   │       │   └── workspace.events.ts
+│   │       ├── services
+│   │       │   ├── workspace-group.service.ts
+│   │       │   └── workspace.service.ts
+│   │       ├── index.ts
+│   │       └── workspace.module.ts
 │   ├── shared
+│   │   ├── decorators
+│   │   │   └── roles.decorator.ts
 │   │   ├── dto
 │   │   ├── interfaces
 │   │   └── utils
-│   ├── sports
-│   │   ├── dto
-│   │   │   └── sport-filters.dto.ts
-│   │   ├── sports.controller.ts
-│   │   ├── sports.module.ts
-│   │   └── sports.service.ts
-│   ├── users
-│   │   ├── dto
-│   │   │   ├── index.ts
-│   │   │   └── user-settings.dto.ts
-│   │   ├── users.controller.ts
-│   │   ├── users.module.ts
-│   │   └── users.service.ts
-│   ├── workspace-groups
-│   │   ├── dto
-│   │   │   └── index.ts
-│   │   ├── workspace-groups.controller.ts
-│   │   ├── workspace-groups.module.ts
-│   │   └── workspace-groups.service.ts
-│   ├── workspaces
-│   │   ├── dto
-│   │   │   └── index.ts
-│   │   ├── workspaces.controller.ts
-│   │   ├── workspaces.module.ts
-│   │   └── workspaces.service.ts
 │   ├── app.module.ts
 │   └── main.ts
 ├── test
@@ -227,15 +310,18 @@
 │   │   ├── sort-arrow-sprite.png
 │   │   └── sorter.js
 │   ├── auth-users.e2e-spec.ts
+│   ├── custom-resolver.js
 │   ├── global-setup.js
 │   ├── jest-e2e.json
 │   ├── pages.e2e-spec.ts
 │   ├── security.e2e-spec.ts
 │   ├── setup-env.js
+│   ├── test-request.helper.ts
 │   ├── test-schema-full.sql
 │   ├── test-schema.sql
 │   └── workspaces.e2e-spec.ts
 ├── AGENT.md
+├── jest-e2e.config.js
 ├── nest-cli.json
 ├── package.json
 ├── test-advanced-e2e.ts
@@ -243,4 +329,4 @@
 ├── test-simple-security.ts
 └── tsconfig.json
 
-97 directories, 142 files
+129 directories, 196 files

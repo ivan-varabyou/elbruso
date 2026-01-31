@@ -1,72 +1,42 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Auth } from "../Auth";
-import type { LoginDto, RegisterDto, ForgotPasswordDto, ResetPasswordDto } from "../data-contracts";
+import type { LoginDto, RegisterDto } from "../data-contracts";
+import { API_VERSION } from "../config";
 
 const authApi = new Auth();
 
-// Query Keys
 export const authKeys = {
   all: ["auth"] as const,
   me: ["auth", "me"] as const,
 };
 
-// Hooks
-
-export const useGetMe = () => {
-  return useQuery({
+export const useGetMe = () =>
+  useQuery({
     queryKey: authKeys.me,
     queryFn: () => authApi.authControllerGetMe(),
     retry: false,
   });
-};
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (data: LoginDto) => authApi.authControllerLogin(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authKeys.me });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: authKeys.me }),
   });
 };
 
 export const useRegister = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (data: RegisterDto) => authApi.authControllerRegister(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authKeys.me });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: authKeys.me }),
   });
 };
 
-export const useForgotPassword = () => {
-  return useMutation({
-    mutationFn: (data: ForgotPasswordDto) => authApi.authControllerForgotPassword(data),
-  });
-};
-
-export const useResetPassword = () => {
-  return useMutation({
-    mutationFn: (data: ResetPasswordDto) => authApi.authControllerResetPassword(data),
-  });
-};
-
-export const useVerifyResetToken = (token: string) => {
-  return useQuery({
-    queryKey: ["auth", "verify-token", token],
-    queryFn: () => authApi.authControllerVerifyResetToken(token),
-    enabled: !!token,
-  });
-};
-
-export const useChangePassword = () => {
-  return useMutation({
+export const useChangePassword = () =>
+  useMutation({
     mutationFn: async (data: { currentPassword: string; newPassword: string }) => {
-      // Direct axios call since swagger doesn't define body
-      const response = await fetch("/auth/change-password", {
+      const response = await fetch(`/${API_VERSION}/auth/change-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -75,10 +45,8 @@ export const useChangePassword = () => {
       return response.json();
     },
   });
-};
 
-export const useRefreshToken = () => {
-  return useMutation({
+export const useRefreshToken = () =>
+  useMutation({
     mutationFn: (refreshToken: string) => authApi.authControllerRefresh({ refreshToken }),
   });
-};

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "../../../lib/auth";
@@ -11,6 +11,8 @@ import { Select } from "../../../ui/uikit/Select";
 import { Logo } from "../../../ui/uikit/Logo";
 import { useI18n } from "../../../lib/i18n";
 import { Dictionary } from "../../../types";
+import { useCountries } from "../../../api/hooks/useCountries";
+import { useOrganizations } from "../../../api/hooks/useOrganizations";
 import "./auth.css";
 
 interface Country {
@@ -32,57 +34,21 @@ export const RegisterForm = () => {
   const { showToast } = useToast();
   const dictionary = useI18n() as Dictionary;
 
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [organizations, setOrganizations] = useState<Organization[]>([]);
-  const [loadingData, setLoadingData] = useState(true);
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    countryId: 1, // Default to Russia
+    countryId: 1,
     organizationId: "",
     acceptTerms: false,
   });
 
+  const countries = useCountries();
+  const organizations = useOrganizations(formData.countryId);
+  const isLoadingOrganizations = organizations.length === 0 && formData.countryId > 0;
+
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/countries/active?lang=ru");
-        const data = await response.json();
-        setCountries(data);
-      } catch (error) {
-        console.error("Failed to fetch countries:", error);
-      }
-    };
-    fetchCountries();
-  }, []);
-
-  useEffect(() => {
-    const fetchOrganizations = async () => {
-      if (!formData.countryId) {
-        setOrganizations([]);
-        return;
-      }
-
-      try {
-        setLoadingData(true);
-        const response = await fetch(
-          `http://localhost:3001/organizations?countryId=${formData.countryId}`
-        );
-        const data = await response.json();
-        setOrganizations(data);
-      } catch (error) {
-        console.error("Failed to fetch organizations:", error);
-      } finally {
-        setLoadingData(false);
-      }
-    };
-    fetchOrganizations();
-  }, [formData.countryId]);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -157,8 +123,6 @@ export const RegisterForm = () => {
     }
   };
 
-  const filteredOrganizations = organizations.filter((org) => org.country_id === formData.countryId);
-
   return (
     <div className="auth-page">
       <div className="auth-logo">
@@ -206,7 +170,7 @@ export const RegisterForm = () => {
           disabled={isLoading || countries.length === 0}
           error={errors.countryId}
         >
-          {countries.map((country) => (
+          {countries.map((country: Country) => (
             <option key={country.id} value={country.id}>
               {country.flag} {country.name}
             </option>
@@ -219,11 +183,11 @@ export const RegisterForm = () => {
           label="Организация"
           value={formData.organizationId}
           onChange={handleChange}
-          disabled={isLoading || loadingData || filteredOrganizations.length === 0}
+          disabled={isLoading || isLoadingOrganizations || organizations.length === 0}
           error={errors.organizationId}
         >
           <option value="">Выберите организацию</option>
-          {filteredOrganizations.map((org) => (
+          {organizations.map((org: Organization) => (
             <option key={org.id} value={org.id}>
               {org.name_ru}
             </option>
@@ -265,19 +229,12 @@ export const RegisterForm = () => {
               onChange={handleChange}
               disabled={isLoading}
             />
-            <span>
-              Я согласен с Условиями использования и Политикой конфиденциальности
-            </span>
+            <span>Я согласен с Условиями использования и Политикой конфиденциальности</span>
           </label>
           {errors.acceptTerms && <p className="register-terms-error">{errors.acceptTerms}</p>}
         </div>
 
-        <Button
-          type="submit"
-          variant="primary"
-          className="auth-submit-button"
-          disabled={isLoading}
-        >
+        <Button type="submit" variant="primary" className="auth-submit-button" disabled={isLoading}>
           {isLoading ? "Создание аккаунта..." : "Создать аккаунт"}
         </Button>
       </form>

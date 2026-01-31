@@ -1,1 +1,1 @@
-export * from './DynamicTable';
+export { DynamicTable as DynamicTableComponent } from "./DynamicTable";

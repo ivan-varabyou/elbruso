@@ -1,7 +1,4 @@
-import type {
-  SystemEntityType,
-  ReferenceScope,
-} from './enums';
+import type { SystemEntityType, ReferenceScope } from "./enums";
 
 export interface ReferenceData {
   id: string;
@@ -39,7 +36,7 @@ export interface Indicator {
   gender_id?: string | number;
   age_group_id?: string | number;
   discipline_id?: string | number;
-  
+
   // Joined fields
   gender_name?: string;
   age_group_name?: string;
@@ -71,13 +68,17 @@ export interface Season {
   sports?: { id: string | number; name_ru: string }[];
 }
 
-
-
 export interface Organization {
   id: string;
   name_ru: string;
   parent_id?: string;
   sport_id?: string;
+}
+
+export interface ReferenceFilter {
+  sportId?: string | number;
+  organizationId?: string;
+  search?: string;
 }
 
 export interface Template {
@@ -87,4 +88,3 @@ export interface Template {
   sport_id?: string;
   organization_id?: string;
 }
-

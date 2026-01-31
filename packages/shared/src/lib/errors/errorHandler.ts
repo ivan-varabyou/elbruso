@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import type { AppError, ErrorCode } from "@/shared/enums";
+import type { AppError, ErrorCode } from "@/shared/types/enums";
 
 export class ErrorHandler {
   static handle(error: unknown): AppError {

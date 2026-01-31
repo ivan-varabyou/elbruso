@@ -14,7 +14,7 @@ export interface HistoryEntry {
   tableId: string;
 }
 
-interface HistoryStore {
+export interface HistoryStore {
   past: HistoryEntry[];
   future: HistoryEntry[];
   maxHistory: number;

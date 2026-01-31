@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { TableFormulaEngine } from "@/shared/lib/hyperformula";
+import { TableFormulaEngine } from "@/shared/modules/table/lib/engine";
 import { extractTableReferences } from "@/shared/lib/table/TableReferenceParser";
 import type { CellData } from "@/shared";
 import { ChevronDown, Link2, ExternalLink } from "lucide-react";

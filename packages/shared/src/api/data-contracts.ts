@@ -416,7 +416,7 @@ export interface LinkFieldMapping {
   targetColIndex: number;
 }
 
-export interface LinkMetadata {
+export interface LinkMetadataDto {
   /** Source column identifier (legacy) */
   sourceColumn?: string;
   /** Target column identifier (legacy) */
@@ -432,12 +432,8 @@ export interface CreateLinkDto {
   sourceTableId?: string;
   /** Donor system entity (e.g. regions) */
   sourceSystemEntity?: string;
-  linkType:
-    | "cell_reference"
-    | "lookup_reference"
-    | "aggregation"
-    | "shared_keys";
-  metadata?: LinkMetadata;
+  linkType: "cell_reference" | "lookup_reference" | "aggregation" | "shared_keys";
+  metadata?: LinkMetadataDto;
 }
 
 export interface GenerateIndicatorsDto {

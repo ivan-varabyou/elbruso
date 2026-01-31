@@ -1,8 +1,4 @@
-import type { 
-  ColumnType, 
-  ValidationRuleType, 
-  LinkType 
-} from './enums';
+import type { ColumnType, ValidationRuleType, LinkType } from "../../../types/enums";
 
 export interface DynamicTable {
   id: string;

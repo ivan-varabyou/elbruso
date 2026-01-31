@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { Tables, Workspaces, Versions } from "@/shared";
 import { ErrorHandler } from "@/shared/lib/errors/errorHandler";
+import type { DynamicTable } from "../types/table.types";
 import type {
-  DynamicTable,
   TableCell,
   CellData,
   CellUpdate,
@@ -10,7 +10,7 @@ import type {
   UpdateTableDto,
   AppError,
 } from "@/shared";
-import type { CellDataDto } from "@/shared/data-contracts";
+import type { CellDataDto } from "@/shared/api";
 
 const tablesApi = new Tables();
 const workspacesApi = new Workspaces();

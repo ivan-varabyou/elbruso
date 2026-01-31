@@ -2,10 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { TransformInterceptor } from './gateway/interceptors/transform.interceptor';
+import { HttpExceptionFilter } from './gateway/filters/http-exception.filter';
+import { HealthController } from './gateway/controllers/health.controller';
 import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.setGlobalPrefix('v1');
+
+  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // Security Headers with enhanced configuration
   app.use(

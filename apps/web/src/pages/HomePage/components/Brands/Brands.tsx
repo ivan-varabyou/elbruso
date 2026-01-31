@@ -8,7 +8,6 @@ export const Brands = () => {
   const dictionary = useI18n() as Dictionary;
   const { brands } = dictionary;
 
-  // Дублируем массив для бесконечной прокрутки
   const duplicatedBrands = [...brands.names, ...brands.names, ...brands.names];
 
   return (
@@ -19,11 +18,9 @@ export const Brands = () => {
         </p>
 
         <div className="relative">
-          {/* Градиенты по краям для плавного исчезновения */}
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-          {/* Бесконечная прокрутка */}
           <div className="flex">
             <motion.div
               className="flex gap-60 md:gap-48"
@@ -54,3 +51,5 @@ export const Brands = () => {
     </section>
   );
 };
+
+export default Brands;

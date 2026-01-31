@@ -1,10 +1,17 @@
 /* eslint-disable */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { DatabaseService } from '../src/database/database.service';
 import { WorkspaceRole } from '../src/modules/workspace/dto/workspace.dto';
+import {
+  createRequest,
+  postData,
+  post,
+  get,
+  patch,
+  del,
+} from './test-request.helper';
 
 describe('Pages & Blocks E2E Tests', () => {
   let app: INestApplication;
@@ -21,36 +28,30 @@ describe('Pages & Blocks E2E Tests', () => {
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
+    await app.listen(0);
 
     db = moduleFixture.get<DatabaseService>(DatabaseService);
 
-    // 1. Register and login
+    const req = createRequest(app);
+
     const email = `test-pages-${Date.now()}@example.com`;
-    await request(app.getHttpServer()).post('/auth/register').send({
+    await post(req, '/auth/register', {
       email,
       password: 'Password123!',
       name: 'Test User',
     });
 
-    const loginRes = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email,
-        password: 'Password123!',
-      });
+    const loginRes = await post(req, '/auth/login', {
+      email,
+      password: 'Password123!',
+    });
 
-    accessToken = loginRes.body.accessToken;
+    accessToken = loginRes.body.data.accessToken;
 
-    // 2. Create workspace
-    const wsRes = await request(app.getHttpServer())
-      .post('/workspaces')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        name: 'Test Workspace',
-      })
-      .expect(201);
-
-    workspaceId = wsRes.body.id;
+    const wsRes = await post(req, '/workspaces', {
+      name: 'Test Workspace',
+    });
+    workspaceId = wsRes.body.data.id;
   });
 
   afterAll(async () => {
@@ -59,77 +60,60 @@ describe('Pages & Blocks E2E Tests', () => {
 
   describe('Pages API', () => {
     it('should create a root page', async () => {
-      const res = await request(app.getHttpServer())
-        .post(`/workspaces/${workspaceId}/pages`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          title: 'Root Page',
-          icon: '📄',
-        })
-        .expect(201);
+      const req = createRequest(app);
+      const res = await post(req, `/workspaces/${workspaceId}/pages`, {
+        title: 'Root Page',
+        icon: '📄',
+      });
 
-      expect(res.body.title).toBe('Root Page');
-      expect(res.body.workspace_id).toBe(workspaceId);
-      expect(res.body.parent_page_id).toBeNull();
-      rootPageId = res.body.id;
+      expect(res.body.data.title).toBe('Root Page');
+      expect(res.body.data.workspace_id).toBe(workspaceId);
+      expect(res.body.data.parent_page_id).toBeNull();
+      rootPageId = res.body.data.id;
     });
 
     it('should create a child page', async () => {
-      const res = await request(app.getHttpServer())
-        .post(`/workspaces/${workspaceId}/pages`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          title: 'Child Page',
-          parentPageId: rootPageId,
-        })
-        .expect(201);
+      const req = createRequest(app);
+      const res = await post(req, `/workspaces/${workspaceId}/pages`, {
+        title: 'Child Page',
+        parentPageId: rootPageId,
+      });
 
-      expect(res.body.title).toBe('Child Page');
-      expect(res.body.parent_page_id).toBe(rootPageId);
+      expect(res.body.data.title).toBe('Child Page');
+      expect(res.body.data.parent_page_id).toBe(rootPageId);
     });
 
     it('should get page tree', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/workspaces/${workspaceId}/pages`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200);
+      const req = createRequest(app);
+      const res = await get(req, `/workspaces/${workspaceId}/pages`);
 
-      expect(Array.isArray(res.body)).toBe(true);
-      const root = res.body.find((p: any) => p.id === rootPageId);
+      expect(Array.isArray(res.body.data)).toBe(true);
+      const root = res.body.data.find((p: any) => p.id === rootPageId);
       expect(root).toBeDefined();
       expect(root.children.length).toBeGreaterThan(0);
       expect(root.children[0].title).toBe('Child Page');
     });
 
     it('should update a page', async () => {
-      const res = await request(app.getHttpServer())
-        .patch(`/pages/${rootPageId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          title: 'Updated Root Page',
-        })
-        .expect(200);
+      const req = createRequest(app);
+      const res = await patch(req, `/pages/${rootPageId}`, {
+        title: 'Updated Root Page',
+      });
 
-      expect(res.body.title).toBe('Updated Root Page');
+      expect(res.body.data.title).toBe('Updated Root Page');
     });
 
     it('should prevent moving page to its descendant', async () => {
-      const childRes = await request(app.getHttpServer())
-        .post(`/workspaces/${workspaceId}/pages`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          title: 'Another Child',
-          parentPageId: rootPageId,
-        });
-      const childId = childRes.body.id;
+      const req = createRequest(app);
+      const childRes = await post(req, `/workspaces/${workspaceId}/pages`, {
+        title: 'Another Child',
+        parentPageId: rootPageId,
+      });
+      const childId = childRes.body.data.id;
 
-      await request(app.getHttpServer())
-        .post(`/pages/${rootPageId}/move`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          parentPageId: childId,
-        })
-        .expect(400);
+      await post(req, `/pages/${rootPageId}/move`, {
+        parentPageId: childId,
+      }).expect(400);
     });
   });
 
@@ -137,97 +121,80 @@ describe('Pages & Blocks E2E Tests', () => {
     let textBlockId: string;
 
     it('should create a text block', async () => {
-      const res = await request(app.getHttpServer())
-        .post(`/pages/${rootPageId}/blocks`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          type: 'text',
-          content: {
-            text: '# Hello world',
-            format: 'markdown',
-          },
-        })
-        .expect(201);
+      const req = createRequest(app);
+      const res = await post(req, `/pages/${rootPageId}/blocks`, {
+        type: 'text',
+        content: {
+          text: '# Hello world',
+          format: 'markdown',
+        },
+      });
 
-      expect(res.body.block_type).toBe('text');
-      expect(res.body.content.text).toBe('# Hello world');
-      textBlockId = res.body.id;
+      expect(res.body.data.block_type).toBe('text');
+      expect(res.body.data.content.text).toBe('# Hello world');
+      textBlockId = res.body.data.id;
     });
 
     it('should fail creating block with invalid type', async () => {
-      await request(app.getHttpServer())
-        .post(`/pages/${rootPageId}/blocks`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          type: 'invalid-type',
-          content: {},
-        })
-        .expect(400);
+      const req = createRequest(app);
+      await post(req, `/pages/${rootPageId}/blocks`, {
+        type: 'invalid-type',
+        content: {},
+      }).expect(400);
     });
 
     it('should get all blocks for a page', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/pages/${rootPageId}/blocks`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200);
+      const req = createRequest(app);
+      const res = await get(req, `/pages/${rootPageId}/blocks`);
 
-      expect(Array.isArray(res.body)).toBe(true);
-      expect(res.body.length).toBeGreaterThan(0);
-      expect(res.body[0].id).toBe(textBlockId);
+      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(res.body.data.length).toBeGreaterThan(0);
+      expect(res.body.data[0].id).toBe(textBlockId);
     });
 
     it('should update block content', async () => {
-      const res = await request(app.getHttpServer())
-        .patch(`/blocks/${textBlockId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          content: {
-            text: '# Updated content',
-            format: 'markdown',
-          },
-        })
-        .expect(200);
+      const req = createRequest(app);
+      const res = await patch(req, `/blocks/${textBlockId}`, {
+        content: {
+          text: '# Updated content',
+          format: 'markdown',
+        },
+      });
 
-      expect(res.body.content.text).toBe('# Updated content');
+      expect(res.body.data.content.text).toBe('# Updated content');
     });
 
     it('should delete a block', async () => {
-      await request(app.getHttpServer())
-        .delete(`/blocks/${textBlockId}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200);
+      const req = createRequest(app);
+      await del(req, `/blocks/${textBlockId}`);
 
-      const res = await request(app.getHttpServer())
-        .get(`/pages/${rootPageId}/blocks`)
-        .set('Authorization', `Bearer ${accessToken}`);
+      const res = await get(req, `/pages/${rootPageId}/blocks`);
 
-      const deleted = res.body.find((b: any) => b.id === textBlockId);
+      const deleted = res.body.data.find((b: any) => b.id === textBlockId);
       expect(deleted).toBeUndefined();
     });
   });
 
   describe('Permissions', () => {
     it('should prevent other users from accessing pages', async () => {
-      // 1. Create second user
+      const req = createRequest(app);
+
       const secondUserEmail = `test-pages-other-${Date.now()}@example.com`;
-      await request(app.getHttpServer()).post('/auth/register').send({
+      await post(req, '/auth/register', {
         email: secondUserEmail,
         password: 'Password123!',
         name: 'Other User',
       });
 
-      const secondLoginRes = await request(app.getHttpServer())
-        .post('/auth/login')
-        .send({
-          email: secondUserEmail,
-          password: 'Password123!',
-        });
+      const secondLoginRes = await post(req, '/auth/login', {
+        email: secondUserEmail,
+        password: 'Password123!',
+      });
 
-      const secondAccessToken = secondLoginRes.body.accessToken;
+      const secondAccessToken = secondLoginRes.body.data.accessToken;
 
-      // 2. Try to access first user's page
-      await request(app.getHttpServer())
-        .get(`/pages/${rootPageId}`)
+      const req2 = createRequest(app);
+      await get(req2, `/pages/${rootPageId}`)
         .set('Authorization', `Bearer ${secondAccessToken}`)
         .expect(403);
     });

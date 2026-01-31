@@ -1,7 +1,7 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { apiMapping, ApiMappingItem } from './api-mapping';
-import { ApiOperationIds, ApiTypes } from './api-types';
-import { applyParametersToAxiosRequestConfig, joinUrl, keys } from './api-utils';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { apiMapping, ApiMappingItem } from "./api-mapping";
+import { ApiOperationIds, ApiTypes } from "./api-types";
+import { applyParametersToAxiosRequestConfig, joinUrl, keys } from "./api-utils";
 import {
   AddMemberDto,
   AdminLoginDto,
@@ -27,7 +27,6 @@ import {
   GenerateIndicatorsDto,
   GenerateSeasonsDto,
   LinkFieldMapping,
-  LinkMetadata,
   LoginDto,
   MoveBlockDto,
   MovePageDto,
@@ -44,21 +43,23 @@ import {
   UpdateProfileDto,
   UpdateRoleDto,
   UpdateTableDto,
-  UpdateWorkspaceDto
-} from './definitions';
+  UpdateWorkspaceDto,
+} from "./data-contracts";
 
 export function createApi(options: ApiOptions = {}): Api {
   options = Object.assign({}, defaultApiOptions, options);
-  return keys(apiMapping)
-    .reduce((api, operationId) => ({
+  return keys(apiMapping).reduce(
+    (api, operationId) => ({
       ...api,
       [operationId]: createApiFetchFunction(apiMapping[operationId], options),
-    }), {} as Api);
+    }),
+    {} as Api,
+  );
 }
 
 function createApiFetchFunction<K extends ApiOperationIds>(
   mappingItem: ApiMappingItem<K>,
-  apiOptions: ApiOptions
+  apiOptions: ApiOptions,
 ): ApiFetchFunction<K> {
   const url = joinUrl(apiOptions.baseUrl, mappingItem.url);
   return (parameters: ApiFetchParameters<K>) => {
@@ -68,38 +69,33 @@ function createApiFetchFunction<K extends ApiOperationIds>(
   };
 }
 
-export type ApiParameters<K extends ApiOperationIds> = ApiTypes[K]['parameters'];
+export type ApiParameters<K extends ApiOperationIds> = ApiTypes[K]["parameters"];
 
-export type ApiResponses<K extends ApiOperationIds> = ApiTypes[K]['responses'];
+export type ApiResponses<K extends ApiOperationIds> = ApiTypes[K]["responses"];
 
 export type ApiFetchParameters<K extends ApiOperationIds> = {
-  [parameterType in keyof ApiParameters<K>]: ApiParameters<K>[parameterType]
+  [parameterType in keyof ApiParameters<K>]: ApiParameters<K>[parameterType];
 };
 
-export type ApiFetchFunction<K extends ApiOperationIds> =
-  (parameters: ApiParameters<K>) => Promise<AxiosResponse<ApiResponses<K>['success']>>;
+export type ApiFetchFunction<K extends ApiOperationIds> = (
+  parameters: ApiParameters<K>,
+) => Promise<AxiosResponse<ApiResponses<K>["success"]>>;
 
 export interface ApiOptions {
   baseUrl?: string;
 }
 
-const defaultApiOptions: ApiOptions = {
-
-};
+const defaultApiOptions: ApiOptions = {};
 
 export interface Api {
   /**
    * Register a new user
    */
-  AuthController_register: (parameters: {
-    body: RegisterDto;
-  }) => Promise<AxiosResponse<undefined>>;
+  AuthController_register: (parameters: { body: RegisterDto }) => Promise<AxiosResponse<undefined>>;
   /**
    * Login with email and password
    */
-  AuthController_login: (parameters: {
-    body: LoginDto;
-  }) => Promise<AxiosResponse<undefined>>;
+  AuthController_login: (parameters: { body: LoginDto }) => Promise<AxiosResponse<undefined>>;
   /**
    * Refresh access token
    */
@@ -841,7 +837,7 @@ export interface Api {
     query: {
       sportId?: number;
       regionId?: number;
-      type?: 'Unified' | 'Legacy' | 'Custom';
+      type?: "Unified" | "Legacy" | "Custom";
     };
   }) => Promise<AxiosResponse<undefined>>;
   /**
@@ -909,7 +905,7 @@ export interface Api {
     query: {
       sportId?: number;
       regionId?: number;
-      importance?: 'High' | 'Medium' | 'Low';
+      importance?: "High" | "Medium" | "Low";
     };
   }) => Promise<AxiosResponse<undefined>>;
   /**

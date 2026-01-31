@@ -1,5 +1,5 @@
 import { HyperFormula, ConfigParams, CellValue } from "hyperformula";
-import type { CellData, FormulaAST, FormulaState } from "../../types";
+import type { CellData } from "../types/cell.types";
 import {
   extractTableReferences,
   parseCellAddress,

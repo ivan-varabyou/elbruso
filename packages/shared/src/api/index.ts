@@ -1,5 +1,46 @@
-export * from "./client";
-export * from "./data-contracts";
+export type {
+  RegisterDto,
+  LoginDto,
+  RefreshTokenDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+  UpdateProfileDto,
+  AdminUpdateUserDto,
+  CreateApiKeyDto,
+  CreateWorkspaceDto,
+  UpdateWorkspaceDto,
+  AddMemberDto,
+  UpdateMemberRoleDto,
+  AdminSetupDto,
+  AdminLoginDto,
+  CreateAdminUserDto,
+  UpdateAdminUserDto,
+  CreateRoleDto,
+  UpdateRoleDto,
+  CreatePageDto,
+  UpdatePageDto,
+  MovePageDto,
+  CreateBlockDto,
+  UpdateBlockDto,
+  MoveBlockDto,
+  CreateGroupDto,
+  UpdateGroupDto,
+  ReorderGroupsDto,
+  AnalyzeFormulaDto,
+  CreateTableDto,
+  UpdateTableDto,
+  CellDataDto,
+  BatchCellUpdate,
+  BatchUpdateCellsDto,
+  LinkFieldMapping,
+  LinkMetadataDto,
+  CreateLinkDto,
+  GenerateIndicatorsDto,
+  CreateIndicatorGroupDto,
+  UpdateIndicatorGroupDto,
+  GenerateSeasonsDto,
+  CreateVersionDto,
+} from "./data-contracts";
 
 export { Auth } from "./Auth";
 export { Workspaces } from "./Workspaces";
@@ -14,4 +55,5 @@ export { Events } from "./Events";
 export { Formulas } from "./Formulas";
 export { Groups } from "./Groups";
 export { Pages } from "./Pages";
-export * from './hooks/ReactQueryProvider';
+export * from "./hooks/ReactQueryProvider";
+export { apiClient, setTokens, clearTokens, isAuthenticated } from "./client";

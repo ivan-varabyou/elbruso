@@ -1,10 +1,10 @@
-import * as d3 from 'd3';
+import * as d3 from "d3";
 import {
   ChartDimensions,
   ChartTheme,
   BaseChartConfig,
   AnimationConfig,
-} from '@/shared/visualization';
+} from "@/shared/visualization";
 import {
   mergeDimensions,
   mergeTheme,
@@ -13,7 +13,7 @@ import {
   createResponsiveSVG,
   createTooltip,
   hideTooltip,
-} from '../utils';
+} from "../utils";
 
 /**
  * Base adapter class for all D3 charts
@@ -22,14 +22,17 @@ import {
 export abstract class BaseChartAdapter<TConfig extends BaseChartConfig> {
   protected svg: d3.Selection<SVGSVGElement, unknown, null, undefined> | null = null;
   protected g: d3.Selection<SVGGElement, unknown, null, undefined> | null = null;
-  protected tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any> | null = null;
+  protected tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, unknown> | null = null;
   protected dimensions: ChartDimensions;
   protected theme: ChartTheme;
   protected animation: AnimationConfig;
   protected config: TConfig;
   protected resizeObserver: ResizeObserver | null = null;
 
-  constructor(protected container: SVGSVGElement, config: TConfig) {
+  constructor(
+    protected container: SVGSVGElement,
+    config: TConfig,
+  ) {
     this.config = config;
     this.dimensions = mergeDimensions(config.dimensions);
     this.theme = mergeTheme(config.theme);
@@ -44,7 +47,7 @@ export abstract class BaseChartAdapter<TConfig extends BaseChartConfig> {
     this.setupSVG();
     this.setupTooltip();
     this.render();
-    
+
     if (this.config.responsive !== false) {
       this.setupResponsive();
     }
@@ -55,14 +58,11 @@ export abstract class BaseChartAdapter<TConfig extends BaseChartConfig> {
    */
   protected setupSVG(): void {
     this.svg = createResponsiveSVG(this.container, this.dimensions);
-    
+
     // Create main group with margins
     this.g = this.svg
-      .append('g')
-      .attr(
-        'transform',
-        `translate(${this.dimensions.margin.left},${this.dimensions.margin.top})`
-      );
+      .append("g")
+      .attr("transform", `translate(${this.dimensions.margin.left},${this.dimensions.margin.top})`);
   }
 
   /**
@@ -111,15 +111,14 @@ export abstract class BaseChartAdapter<TConfig extends BaseChartConfig> {
   /**
    * Get transition for animations
    */
-  protected getTransition(): d3.Transition<any, any, any, any> | d3.Selection<any, any, any, any> {
+  protected getTransition():
+    | d3.Transition<SVGSVGElement, unknown, SVGSVGElement, unknown>
+    | d3.Selection<SVGSVGElement, unknown, SVGSVGElement, unknown> {
     if (!this.animation.enabled || !this.svg) {
-      return this.svg as any;
+      return this.svg as unknown as d3.Selection<SVGSVGElement, unknown, SVGSVGElement, unknown>;
     }
 
-    return this.svg
-      .transition()
-      .duration(this.animation.duration)
-      .ease(d3.easeCubicInOut);
+    return this.svg.transition().duration(this.animation.duration).ease(d3.easeCubicInOut);
   }
 
   /**
@@ -127,9 +126,9 @@ export abstract class BaseChartAdapter<TConfig extends BaseChartConfig> {
    */
   public cleanup(): void {
     if (this.svg) {
-      this.svg.selectAll('*').remove();
+      this.svg.selectAll("*").remove();
     }
-    
+
     if (this.tooltip) {
       hideTooltip(this.tooltip);
       this.tooltip.remove();

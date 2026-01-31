@@ -1,1 +1,2 @@
-export { ChartsShowcase } from './ChartsShowcase';
+export { default } from "./ChartsShowcase";
+export { ChartsShowcase } from "./ChartsShowcase";

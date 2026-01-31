@@ -1,6 +1,6 @@
 # Структура проекта web
 
-Генерировано: Сб 31 янв 2026 01:05:24 +03
+Генерировано: Сб 31 янв 2026 15:15:03 +03
 
 /home/ivan/git/elbruso/apps/web
 ├── assets
@@ -67,20 +67,17 @@
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   └── page.tsx
-│   └── pages
-│       └── HomePage
-│           ├── components
-│           │   ├── Brands
-│           │   ├── ChartsShowcase
-│           │   ├── DataWavesBackground
-│           │   ├── Footer
-│           │   ├── Header
-│           │   ├── Hero
-│           │   ├── InteractiveGrid
-│           │   ├── ProductsShowcase
-│           │   └── index.ts
-│           ├── HomePage.tsx
-│           └── index.ts
+│   ├── pages
+│   │   └── HomePage
+│   │       └── components
+│   │           ├── Brands
+│   │           ├── ChartsShowcase
+│   │           ├── Footer
+│   │           ├── Header
+│   │           ├── Hero
+│   │           └── ProductsShowcase
+│   └── types
+│       └── next-shim.d.ts
 ├── AGENT.md
 ├── get-dictionary.ts
 ├── i18n-config.ts
@@ -93,4 +90,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-38 directories, 51 files
+37 directories, 49 files

@@ -6,11 +6,11 @@
 }
 
 .auth-layout-left {
-  flex: 0 0 450px;
+  flex: 0 0 40%;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 8rem 2rem;
+  padding: 1rem 2rem;
   background: var(--auth-card, #ffffff);
   box-shadow: 10px 0 50px rgba(0, 0, 0, 0.05);
   z-index: 20;
@@ -19,7 +19,7 @@
 
 .auth-layout-content {
   width: 100%;
-  max-width: 380px;
+  max-width: 500px;
 }
 
 .auth-layout-right {

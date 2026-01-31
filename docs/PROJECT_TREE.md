@@ -1,6 +1,6 @@
 # Структура проекта
 
-Генерировано: Сб 31 янв 2026 01:05:24 +03
+Генерировано: Сб 31 янв 2026 15:15:03 +03
 
 /home/ivan/git/elbruso
 ├── apps
@@ -8,129 +8,44 @@
 │   │   ├── docs
 │   │   │   └── PROJECT_TREE.md
 │   │   ├── src
-│   │   │   ├── admin
-│   │   │   │   ├── decorators
-│   │   │   │   ├── dto
-│   │   │   │   ├── guards
-│   │   │   │   ├── roles
-│   │   │   │   ├── strategies
-│   │   │   │   ├── users
-│   │   │   │   ├── admin-auth.controller.ts
-│   │   │   │   ├── admin-auth.module.ts
-│   │   │   │   ├── admin-auth.service.ts
-│   │   │   │   ├── admin.module.ts
-│   │   │   │   ├── admin-setup.controller.ts
-│   │   │   │   └── admin-setup.service.ts
-│   │   │   ├── auth
-│   │   │   │   ├── dto
-│   │   │   │   ├── guards
-│   │   │   │   ├── interfaces
-│   │   │   │   ├── strategies
-│   │   │   │   ├── auth.controller.ts
-│   │   │   │   ├── auth.module.ts
-│   │   │   │   └── auth.service.ts
-│   │   │   ├── blocks
-│   │   │   │   ├── dto
-│   │   │   │   ├── blocks.controller.ts
-│   │   │   │   ├── blocks.module.ts
-│   │   │   │   └── blocks.service.ts
-│   │   │   ├── common
-│   │   │   │   ├── audit
-│   │   │   │   ├── decorators
-│   │   │   │   ├── filters
-│   │   │   │   └── interceptors
 │   │   │   ├── config
-│   │   │   ├── countries
-│   │   │   │   ├── countries.controller.ts
-│   │   │   │   ├── countries.module.ts
-│   │   │   │   └── countries.service.ts
 │   │   │   ├── database
 │   │   │   │   ├── {repositories}
 │   │   │   │   ├── database.module.ts
 │   │   │   │   └── database.service.ts
-│   │   │   ├── dynamic-tables
-│   │   │   │   ├── dto
-│   │   │   │   ├── dynamic-tables.controller.ts
-│   │   │   │   ├── dynamic-tables.module.ts
-│   │   │   │   └── dynamic-tables.service.ts
-│   │   │   ├── email
-│   │   │   │   ├── interfaces
-│   │   │   │   ├── providers
-│   │   │   │   ├── email.module.ts
-│   │   │   │   └── email.service.ts
-│   │   │   ├── events
-│   │   │   │   ├── dto
-│   │   │   │   ├── events.controller.ts
-│   │   │   │   ├── events.module.ts
-│   │   │   │   └── events.service.ts
-│   │   │   ├── formula
-│   │   │   │   ├── dto
-│   │   │   │   ├── formula.controller.ts
-│   │   │   │   ├── formula.module.ts
-│   │   │   │   └── formula.service.ts
 │   │   │   ├── gateway
 │   │   │   │   ├── controllers
+│   │   │   │   ├── dto
+│   │   │   │   ├── filters
 │   │   │   │   ├── guards
-│   │   │   │   └── interceptors
-│   │   │   ├── indicator-groups
-│   │   │   │   ├── dto
-│   │   │   │   ├── indicator-groups.controller.ts
-│   │   │   │   ├── indicator-groups.module.ts
-│   │   │   │   └── indicator-groups.service.ts
-│   │   │   ├── indicators
-│   │   │   │   ├── dto
-│   │   │   │   ├── indicators.controller.ts
-│   │   │   │   ├── indicators.module.ts
-│   │   │   │   └── indicators.service.ts
+│   │   │   │   ├── interceptors
+│   │   │   │   ├── services
+│   │   │   │   ├── gateway.module.ts
+│   │   │   │   └── index.ts
 │   │   │   ├── modules
 │   │   │   │   ├── admin
+│   │   │   │   ├── audit
+│   │   │   │   ├── auth
+│   │   │   │   ├── blocks
 │   │   │   │   ├── content
-│   │   │   │   ├── core
-│   │   │   │   └── reference
-│   │   │   ├── organizations
-│   │   │   │   ├── dto
-│   │   │   │   ├── organizations.controller.ts
-│   │   │   │   ├── organizations.module.ts
-│   │   │   │   └── organizations.service.ts
-│   │   │   ├── pages
-│   │   │   │   ├── dto
-│   │   │   │   ├── pages.controller.ts
-│   │   │   │   ├── pages.module.ts
-│   │   │   │   └── pages.service.ts
-│   │   │   ├── regions
-│   │   │   │   ├── dto
-│   │   │   │   ├── regions.controller.ts
-│   │   │   │   ├── regions.module.ts
-│   │   │   │   └── regions.service.ts
-│   │   │   ├── seasons
-│   │   │   │   ├── dto
-│   │   │   │   ├── seasons.controller.ts
-│   │   │   │   ├── seasons.module.ts
-│   │   │   │   └── seasons.service.ts
+│   │   │   │   ├── countries
+│   │   │   │   ├── email
+│   │   │   │   ├── events
+│   │   │   │   ├── indicators
+│   │   │   │   ├── organizations
+│   │   │   │   ├── pages
+│   │   │   │   ├── reference
+│   │   │   │   ├── regions
+│   │   │   │   ├── seasons
+│   │   │   │   ├── sports
+│   │   │   │   ├── tables
+│   │   │   │   ├── users
+│   │   │   │   └── workspace
 │   │   │   ├── shared
+│   │   │   │   ├── decorators
 │   │   │   │   ├── dto
 │   │   │   │   ├── interfaces
 │   │   │   │   └── utils
-│   │   │   ├── sports
-│   │   │   │   ├── dto
-│   │   │   │   ├── sports.controller.ts
-│   │   │   │   ├── sports.module.ts
-│   │   │   │   └── sports.service.ts
-│   │   │   ├── users
-│   │   │   │   ├── dto
-│   │   │   │   ├── users.controller.ts
-│   │   │   │   ├── users.module.ts
-│   │   │   │   └── users.service.ts
-│   │   │   ├── workspace-groups
-│   │   │   │   ├── dto
-│   │   │   │   ├── workspace-groups.controller.ts
-│   │   │   │   ├── workspace-groups.module.ts
-│   │   │   │   └── workspace-groups.service.ts
-│   │   │   ├── workspaces
-│   │   │   │   ├── dto
-│   │   │   │   ├── workspaces.controller.ts
-│   │   │   │   ├── workspaces.module.ts
-│   │   │   │   └── workspaces.service.ts
 │   │   │   ├── app.module.ts
 │   │   │   └── main.ts
 │   │   ├── test
@@ -147,15 +62,18 @@
 │   │   │   │   ├── sort-arrow-sprite.png
 │   │   │   │   └── sorter.js
 │   │   │   ├── auth-users.e2e-spec.ts
+│   │   │   ├── custom-resolver.js
 │   │   │   ├── global-setup.js
 │   │   │   ├── jest-e2e.json
 │   │   │   ├── pages.e2e-spec.ts
 │   │   │   ├── security.e2e-spec.ts
 │   │   │   ├── setup-env.js
+│   │   │   ├── test-request.helper.ts
 │   │   │   ├── test-schema-full.sql
 │   │   │   ├── test-schema.sql
 │   │   │   └── workspaces.e2e-spec.ts
 │   │   ├── AGENT.md
+│   │   ├── jest-e2e.config.js
 │   │   ├── nest-cli.json
 │   │   ├── package.json
 │   │   ├── test-advanced-e2e.ts
@@ -192,8 +110,10 @@
 │       │   │   ├── globals.css
 │       │   │   ├── layout.tsx
 │       │   │   └── page.tsx
-│       │   └── pages
-│       │       └── HomePage
+│       │   ├── pages
+│       │   │   └── HomePage
+│       │   └── types
+│       │       └── next-shim.d.ts
 │       ├── AGENT.md
 │       ├── get-dictionary.ts
 │       ├── i18n-config.ts
@@ -437,9 +357,11 @@
 │       │   │   ├── Auth.ts
 │       │   │   ├── Blocks.ts
 │       │   │   ├── client.ts
+│       │   │   ├── config.ts
 │       │   │   ├── Countries.ts
 │       │   │   ├── create-api.ts
 │       │   │   ├── data-contracts.ts
+│       │   │   ├── definitions.ts
 │       │   │   ├── endpoints.ts
 │       │   │   ├── Events.ts
 │       │   │   ├── Formulas.ts
@@ -454,6 +376,11 @@
 │       │   │   └── Workspaces.ts
 │       │   ├── app
 │       │   │   └── providers
+│       │   ├── charts
+│       │   │   └── index.ts
+│       │   ├── d3
+│       │   │   ├── statistical
+│       │   │   └── index.ts
 │       │   ├── docs
 │       │   ├── lib
 │       │   │   ├── auth
@@ -487,13 +414,19 @@
 │       │   │   ├── enums.ts
 │       │   │   ├── index.ts
 │       │   │   ├── link.types.ts
+│       │   │   ├── next-shim.d.ts
 │       │   │   ├── reference.types.ts
 │       │   │   └── visualization.ts
 │       │   ├── ui
 │       │   │   ├── layout
 │       │   │   ├── uikit
+│       │   │   ├── index.ts
+│       │   │   └── PasswordStrength.ts
+│       │   ├── visualization
 │       │   │   └── index.ts
-│       │   └── index.ts
+│       │   ├── Button.ts
+│       │   ├── index.ts
+│       │   └── Logo.ts
 │       ├── AGENT.md
 │       ├── package.json
 │       ├── tsconfig.json
@@ -503,6 +436,7 @@
 │   └── generate_tree.sh
 ├── AGENT.md
 ├── docker-compose.yml
+├── jest.config.js
 ├── opencode.json
 ├── package.json
 ├── package-lock.json
@@ -514,4 +448,4 @@
 ├── tsconfig.json
 └── turbo.json
 
-145 directories, 365 files
+119 directories, 325 files

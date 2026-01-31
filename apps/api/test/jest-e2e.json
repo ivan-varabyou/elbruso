@@ -1,15 +1,12 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "..",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testRegex": "test/.e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": ["ts-jest", { "tsconfig": "tsconfig.json" }]
   },
-  "globalSetup": "<rootDir>/global-setup.js",
-  "setupFiles": ["<rootDir>/setup-env.js"],
-  "moduleNameMapper": {
-    "^@elbruso/database$": "/home/ivan/Projects/src/sba/packages/database/src/index.ts",
-    "^@elbruso/types$": "/home/ivan/Projects/src/sba/packages/types/src/index.ts"
-  }
+  "globalSetup": "<rootDir>/apps/api/test/global-setup.js",
+  "setupFiles": ["<rootDir>/apps/api/test/setup-env.js"],
+  "moduleDirectories": ["node_modules", "<rootDir>/apps/api/src", "<rootDir>/packages/database/src", "<rootDir>/packages/types/src"]
 }

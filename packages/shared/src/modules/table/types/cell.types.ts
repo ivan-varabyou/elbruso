@@ -1,9 +1,4 @@
-import type {
-  CellFormatType,
-  FontWeight,
-  FontStyle,
-  TextAlign,
-} from './enums';
+import type { CellFormatType, FontWeight, FontStyle, TextAlign } from "../../../types/enums";
 
 export interface CellData {
   value?: unknown;
@@ -71,4 +66,10 @@ export interface MergedCell {
   end_col: number;
   cell_data: CellData;
   created_at: string;
+}
+
+export interface CellUpdate {
+  row: number;
+  col: number;
+  data: CellData;
 }
