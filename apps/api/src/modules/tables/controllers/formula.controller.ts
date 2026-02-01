@@ -1,15 +1,15 @@
 import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { FormulaService } from '../services/formula.service';
-import { TablesService } from '../services/tables.service';
-import { WorkspaceService } from '../../workspace/services/workspace.service';
-import { WorkspaceRole } from '../../workspace/dto/workspace.dto';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { WorkspaceRole } from '@modules/workspace/dto/workspace.dto';
+import { WorkspaceService } from '@modules/workspace/services/workspace.service';
 import {
   AnalyzeFormulaDto,
   FormulaAnalysisResponse,
   ExternalRefResponse,
 } from '../dto/formula-analysis.dto';
+import { FormulaService } from '../services/formula.service';
+import { TablesService } from '../services/tables.service';
 
 @ApiTags('Formulas')
 @Controller('formulas')

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Button, Input } from "@/shared/ui";
-import { apiClient } from "@/shared";
+import { apiClient } from "@elbruso/api";
+import { Button, Input } from "@elbruso/ui";
 import { Lock } from "lucide-react";
+import { useState } from "react";
 
 export function SecurityForm() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -51,7 +51,9 @@ export function SecurityForm() {
             label="Текущий пароль"
             type="password"
             value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCurrentPassword(e.target.value)
+            }
             leftIcon={<Lock className="h-4 w-4 text-zinc-400" />}
             required
           />
@@ -60,7 +62,7 @@ export function SecurityForm() {
             label="Новый пароль"
             type="password"
             value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
             leftIcon={<Lock className="h-4 w-4 text-zinc-400" />}
             required
             minLength={6}
@@ -70,7 +72,9 @@ export function SecurityForm() {
             label="Подтвердите новый пароль"
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setConfirmPassword(e.target.value)
+            }
             leftIcon={<Lock className="h-4 w-4 text-zinc-400" />}
             required
           />

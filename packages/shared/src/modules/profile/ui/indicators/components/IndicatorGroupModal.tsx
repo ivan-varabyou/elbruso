@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { X, Layers, Check, AlertCircle, Trophy } from "lucide-react";
-import { Button } from "@/shared/ui";
-import { Reference } from "@/shared";
-import type { IndicatorGroup, Sport } from "@/shared";
-import { cn } from "@/shared/lib/utils";
+import { Reference } from "@elbruso/api";
+import type { IndicatorGroup, Sport } from "@elbruso/types/reference.types";
+import { Button } from "@elbruso/ui";
+import { AlertCircle, Layers, Trophy, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface Props {
   group: IndicatorGroup | null;
@@ -30,8 +29,8 @@ export function IndicatorGroupModal({ group, onClose, onSuccess }: Props) {
   useEffect(() => {
     const fetchSports = async () => {
       try {
-        const sportsResponse = (await referenceApi.sportsControllerFindAll()) as any;
-        setSports(sportsResponse.data);
+        const sportsResponse = await referenceApi.sportsControllerFindAll();
+        setSports((sportsResponse as { data?: Sport[] })?.data || []);
       } catch (err) {
         console.error("Failed to fetch sports:", err);
       }

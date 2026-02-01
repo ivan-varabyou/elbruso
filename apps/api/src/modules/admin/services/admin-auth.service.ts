@@ -3,10 +3,10 @@ import {
   UnauthorizedException,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { DatabaseService } from '../../../database/database.service';
+import { DatabaseService } from '@database/database.service';
 import { AdminLoginDto } from '../dto/admin-login.dto';
 import { AdminJwtPayload } from '../strategies/admin-jwt.strategy';
 

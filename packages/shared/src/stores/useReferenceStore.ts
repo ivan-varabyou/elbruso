@@ -1,16 +1,17 @@
 import { create } from "zustand";
+
 import { Reference } from "../api";
-import { ErrorHandler } from "../lib/errors/errorHandler";
+import { ErrorHandler } from "../api/error";
 import type {
-  Region,
-  Sport,
+  AppError,
   Indicator,
   IndicatorGroup,
+  Organization,
   ReferenceData,
   ReferenceFilter,
-  AppError,
+  Region,
   Season,
-  Organization,
+  Sport,
 } from "../types";
 
 const referencesApi = new Reference();

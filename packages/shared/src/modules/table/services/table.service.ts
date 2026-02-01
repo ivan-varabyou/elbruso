@@ -1,9 +1,10 @@
 export { tableGridApi } from "./table-grid-api.service";
-import { tableGridApi } from "./table-grid-api.service";
-import { Tables, Versions } from "@/shared";
-import type { CellData } from "../types/cell.types";
+import { Tables, Versions } from "@elbruso/api";
 
-export { cellFormattingService } from './cell-formatting.service';
+import type { CellData } from "../types/cell.types";
+import { tableGridApi } from "./table-grid-api.service";
+
+export { cellFormattingService } from "./cell-formatting.service";
 
 const tablesApi = new Tables();
 const versionsApi = new Versions();

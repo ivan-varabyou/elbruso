@@ -10,8 +10,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SeasonsService } from '../services/seasons.service';
 import { GenerateSeasonsDto } from '../dto';
+import { SeasonsService } from '../services/seasons.service';
 
 @Controller('reference/seasons')
 @ApiTags('Seasons')

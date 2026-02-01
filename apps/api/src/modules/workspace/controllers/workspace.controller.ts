@@ -16,15 +16,15 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { WorkspaceService } from '../services/workspace.service';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RequestWithUser } from '@modules/auth/interfaces';
 import {
   CreateWorkspaceDto,
   UpdateWorkspaceDto,
   AddMemberDto,
   UpdateMemberRoleDto,
 } from '../dto/workspace.dto';
-import { RequestWithUser } from '../../auth/interfaces';
+import { WorkspaceService } from '../services/workspace.service';
 
 @ApiTags('Workspaces')
 @ApiBearerAuth('JWT-auth')

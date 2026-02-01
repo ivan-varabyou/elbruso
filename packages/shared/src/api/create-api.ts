@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+
 import { apiMapping, ApiMappingItem } from "./api-mapping";
 import { ApiOperationIds, ApiTypes } from "./api-types";
 import { applyParametersToAxiosRequestConfig, joinUrl, keys } from "./api-utils";
@@ -8,10 +9,7 @@ import {
   AdminSetupDto,
   AdminUpdateUserDto,
   AnalyzeFormulaDto,
-  BatchCellUpdate,
   BatchUpdateCellsDto,
-  CellDataDto,
-  ColumnDefinition,
   CreateAdminUserDto,
   CreateApiKeyDto,
   CreateBlockDto,
@@ -26,7 +24,6 @@ import {
   ForgotPasswordDto,
   GenerateIndicatorsDto,
   GenerateSeasonsDto,
-  LinkFieldMapping,
   LoginDto,
   MoveBlockDto,
   MovePageDto,

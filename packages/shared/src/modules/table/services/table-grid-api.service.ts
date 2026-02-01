@@ -1,9 +1,6 @@
-import { GridApi } from 'ag-grid-community';
+import type { RowNode } from "ag-grid-community";
+import { GridApi } from "ag-grid-community";
 
-/**
- * Service wrapper for AG Grid API
- * Provides typed methods for all grid operations
- */
 export class TableGridApiService {
   private gridApi: GridApi | null = null;
 
@@ -62,11 +59,11 @@ export class TableGridApiService {
   }
 
   // ========== Refresh ==========
-  refreshCells(params?: { force?: boolean; rowNodes?: any[] }) {
+  refreshCells(params?: { force?: boolean; rowNodes?: RowNode[] }) {
     this.gridApi?.refreshCells(params);
   }
 
-  redrawRows(params?: { rowNodes?: any[] }) {
+  redrawRows(params?: { rowNodes?: RowNode[] }) {
     this.gridApi?.redrawRows(params);
   }
 
@@ -93,7 +90,7 @@ export class TableGridApiService {
   }
 
   // ========== Scrolling ==========
-  ensureIndexVisible(index: number, position?: 'top' | 'bottom' | 'middle') {
+  ensureIndexVisible(index: number, position?: "top" | "bottom" | "middle") {
     this.gridApi?.ensureIndexVisible(index, position);
   }
 
@@ -102,7 +99,7 @@ export class TableGridApiService {
   }
 
   // ========== Row/Column Operations ==========
-  applyTransaction(transaction: { add?: any[]; remove?: any[]; update?: any[] }) {
+  applyTransaction(transaction: { add?: unknown[]; remove?: unknown[]; update?: unknown[] }) {
     return this.gridApi?.applyTransaction(transaction);
   }
 
@@ -114,8 +111,13 @@ export class TableGridApiService {
     return this.gridApi?.getRowNode(id);
   }
 
-  forEachNode(callback: (node: any) => void) {
-    this.gridApi?.forEachNode(callback);
+  forEachNode(callback: (node: RowNode<unknown>) => void) {
+    this.gridApi?.forEachNode(
+      callback as unknown as (
+        rowNode: import("ag-grid-community").IRowNode<unknown>,
+        index: number,
+      ) => void,
+    );
   }
 
   // ========== Size ==========

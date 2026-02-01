@@ -1,13 +1,47 @@
 "use client";
 
+import { useI18n } from "@elbruso/modules/i18n/lib";
+// Keep this import as it's used for the type assertion
 import Link from "next/link";
-import { useI18n } from "@/shared/lib/i18n";
-import { Dictionary } from "@/shared"; // Keep this import as it's used for the type assertion
+
+interface FooterLink {
+  href: string;
+  label: string;
+}
+
+interface FooterColumn {
+  title: string;
+  links: FooterLink[];
+}
+
+interface FooterColumns {
+  products: FooterColumn;
+  company: FooterColumn;
+  resources: FooterColumn;
+  legal: FooterColumn;
+}
+
+interface FooterData {
+  description: string;
+  columns: FooterColumns;
+  copyright: string;
+}
+
+interface HeaderData {
+  logo: { elbruso: string };
+}
+
+interface DictionaryData {
+  footer?: FooterData;
+  header?: HeaderData;
+}
 
 export const Footer = () => {
-  const dictionary = useI18n() as Dictionary;
-  const { footer, header } = dictionary;
+  const dictionary = useI18n() as DictionaryData;
+  const footer = dictionary.footer;
+  const header = dictionary.header;
   const isFullFooter = false;
+  const headerLogo = header?.logo?.elbruso || "Elbruso";
 
   if (!footer) return null;
 
@@ -23,7 +57,7 @@ export const Footer = () => {
                   <div className="w-16 h-16 border-2 border-white rounded-full opacity-80" />
                 </div>
                 <span className="text-[18px] font-bold text-elbruso-text tracking-tight">
-                  {header.logo.elbruso}
+                  {header?.logo?.elbruso || "Elbruso"}
                 </span>
               </Link>
               <p className="text-elbruso-text-muted max-w-[320px] leading-relaxed">
@@ -38,7 +72,7 @@ export const Footer = () => {
                   {footer.columns.products.title}
                 </h4>
                 <ul className="space-y-12">
-                  {footer.columns.products.links.map((link: any, i: number) => (
+                  {footer.columns.products.links.map((link: FooterLink, i: number) => (
                     <li key={i}>
                       <Link
                         href={link.href}
@@ -56,7 +90,7 @@ export const Footer = () => {
                   {footer.columns.company.title}
                 </h4>
                 <ul className="space-y-12">
-                  {footer.columns.company.links.map((link: any, i: number) => (
+                  {footer.columns.company.links.map((link: FooterLink, i: number) => (
                     <li key={i}>
                       <Link
                         href={link.href}
@@ -74,7 +108,7 @@ export const Footer = () => {
                   {footer.columns.resources.title}
                 </h4>
                 <ul className="space-y-12">
-                  {footer.columns.resources.links.map((link: any, i: number) => (
+                  {footer.columns.resources.links.map((link: FooterLink, i: number) => (
                     <li key={i}>
                       <Link
                         href={link.href}
@@ -90,7 +124,7 @@ export const Footer = () => {
               <div>
                 <h4 className="font-bold text-elbruso-text mb-24">{footer.columns.legal.title}</h4>
                 <ul className="space-y-12">
-                  {footer.columns.legal.links.map((link: any, i: number) => (
+                  {footer.columns.legal.links.map((link: FooterLink, i: number) => (
                     <li key={i}>
                       <Link
                         href={link.href}

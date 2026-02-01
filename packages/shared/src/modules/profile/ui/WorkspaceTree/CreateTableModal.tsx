@@ -1,9 +1,9 @@
 "use client";
 
+import { useTableStore } from "@elbruso/stores";
+import { AnimatePresence,motion } from "framer-motion";
+import { Loader2, Table,X } from "lucide-react";
 import { useState } from "react";
-import { X, Loader2, Table } from "lucide-react";
-import { useTableStore } from "@/shared/stores";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface CreateTableModalProps {
   isOpen: boolean;
@@ -37,8 +37,9 @@ export function CreateTableModal({ isOpen, onClose, workspaceId }: CreateTableMo
       });
       onClose();
       resetForm();
-    } catch (err: any) {
-      setError(err?.message || "Ошибка при создании");
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setError(error?.message || "Ошибка при создании");
     }
   };
 

@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from "axios";
+import axios, { AxiosError,AxiosInstance, InternalAxiosRequestConfig } from "axios";
+
 import { API_URL, API_VERSION } from "./config";
 
 export const apiClient: AxiosInstance = axios.create({

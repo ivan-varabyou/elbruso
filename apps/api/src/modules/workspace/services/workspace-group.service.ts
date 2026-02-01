@@ -4,29 +4,29 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { DatabaseService } from '@database/database.service';
-import { WorkspaceService } from './workspace.service';
-import { WorkspaceRole } from '../dto/workspace.dto';
 import {
   CreateGroupDto,
   UpdateGroupDto,
   ReorderGroupsDto,
 } from '../dto/workspace-group.dto';
+import { WorkspaceRole } from '../dto/workspace.dto';
+import { WorkspaceService } from './workspace.service';
 
 @Injectable()
 export class WorkspaceGroupService {
   constructor(
-    private readonly db: DatabaseService,
-    private readonly workspaceService: WorkspaceService,
+    private readonly _db: DatabaseService,
+    private readonly _workspaceService: WorkspaceService,
   ) {}
 
   async create(workspaceId: string, dto: CreateGroupDto, userId: string) {
-    await this.workspaceService.checkPermission(
+    await this._workspaceService.checkPermission(
       workspaceId,
       userId,
       WorkspaceRole.EDITOR,
     );
 
-    const maxOrder = await this.db.client
+    const maxOrder = await this._db.client
       .selectFrom('workspace_groups')
       .select((eb) =>
         eb.fn.coalesce(eb.fn.max('sort_order'), eb.lit(-1)).as('max_order'),
@@ -34,7 +34,7 @@ export class WorkspaceGroupService {
       .where('workspace_id', '=', workspaceId)
       .executeTakeFirst();
 
-    const group = await this.db.client
+    const group = await this._db.client
       .insertInto('workspace_groups')
       .values({
         workspace_id: workspaceId,
@@ -53,13 +53,13 @@ export class WorkspaceGroupService {
   }
 
   async findAll(workspaceId: string, userId: string) {
-    await this.workspaceService.checkPermission(
+    await this._workspaceService.checkPermission(
       workspaceId,
       userId,
       WorkspaceRole.VIEWER,
     );
 
-    return this.db.client
+    return this._db.client
       .selectFrom('workspace_groups')
       .selectAll()
       .where('workspace_id', '=', workspaceId)
@@ -68,7 +68,7 @@ export class WorkspaceGroupService {
   }
 
   async findById(groupId: string, userId: string) {
-    const group = await this.db.client
+    const group = await this._db.client
       .selectFrom('workspace_groups')
       .selectAll()
       .where('id', '=', groupId)
@@ -78,7 +78,7 @@ export class WorkspaceGroupService {
       throw new NotFoundException('Group not found');
     }
 
-    await this.workspaceService.checkPermission(
+    await this._workspaceService.checkPermission(
       group.workspace_id,
       userId,
       WorkspaceRole.VIEWER,
@@ -90,13 +90,13 @@ export class WorkspaceGroupService {
   async update(groupId: string, dto: UpdateGroupDto, userId: string) {
     const group = await this.findById(groupId, userId);
 
-    await this.workspaceService.checkPermission(
+    await this._workspaceService.checkPermission(
       group.workspace_id,
       userId,
       WorkspaceRole.EDITOR,
     );
 
-    const updated = await this.db.client
+    const updated = await this._db.client
       .updateTable('workspace_groups')
       .set({
         name: dto.name ?? group.name,
@@ -112,19 +112,19 @@ export class WorkspaceGroupService {
   async delete(groupId: string, userId: string) {
     const group = await this.findById(groupId, userId);
 
-    await this.workspaceService.checkPermission(
+    await this._workspaceService.checkPermission(
       group.workspace_id,
       userId,
       WorkspaceRole.EDITOR,
     );
 
-    await this.db.client
+    await this._db.client
       .updateTable('dynamic_tables')
       .set({ group_id: null })
       .where('group_id', '=', groupId)
       .execute();
 
-    await this.db.client
+    await this._db.client
       .deleteFrom('workspace_groups')
       .where('id', '=', groupId)
       .execute();
@@ -133,14 +133,14 @@ export class WorkspaceGroupService {
   }
 
   async reorder(workspaceId: string, dto: ReorderGroupsDto, userId: string) {
-    await this.workspaceService.checkPermission(
+    await this._workspaceService.checkPermission(
       workspaceId,
       userId,
       WorkspaceRole.EDITOR,
     );
 
     for (let i = 0; i < dto.groupIds.length; i++) {
-      await this.db.client
+      await this._db.client
         .updateTable('workspace_groups')
         .set({ sort_order: i })
         .where('id', '=', dto.groupIds[i])

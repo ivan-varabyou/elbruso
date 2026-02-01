@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import { useForgotPassword } from "@/shared/api/hooks/useForgotPassword";
-import Link from "next/link";
-import { useToast, Input, Button, Logo } from "@/shared/ui";
 import "../login/login.css";
+
+import { useForgotPassword } from "@elbruso/hooks";
+import { Button, Input, Logo } from "@elbruso/ui";
+import { useToast } from "@elbruso/modules/notifications/hooks";
+import Link from "next/link";
+import React, { useState } from "react";
 
 export default function ForgotPasswordPage() {
   const { showToast } = useToast();
@@ -103,7 +105,7 @@ export default function ForgotPasswordPage() {
           label="Email"
           placeholder="your@email.com"
           value={email}
-          onChange={(e) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setEmail(e.target.value);
             setError("");
           }}

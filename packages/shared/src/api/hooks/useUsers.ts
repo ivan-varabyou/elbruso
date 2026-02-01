@@ -1,6 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import type { AdminUpdateUserDto, CreateApiKeyDto,UpdateProfileDto } from "../data-contracts";
 import { Users } from "../Users";
-import type { UpdateProfileDto, AdminUpdateUserDto, CreateApiKeyDto } from "../data-contracts";
 
 const usersApi = new Users();
 

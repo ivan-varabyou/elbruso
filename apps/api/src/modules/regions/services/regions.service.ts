@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '@database/database.service';
 import { Regions } from '@elbruso/database';
+import { DatabaseService } from '@database/database.service';
 import { RegionFiltersDto } from '../dto/region-filters.dto';
 
 @Injectable()

@@ -18,8 +18,7 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { TablesService } from '../services/tables.service';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import {
   CreateTableDto,
   UpdateTableDto,
@@ -29,6 +28,7 @@ import {
   CreateLinkDto,
   MatrixFormulaDto,
 } from '../dto/tables.dto';
+import { TablesService } from '../services/tables.service';
 
 @ApiTags('Tables')
 @Controller('tables')

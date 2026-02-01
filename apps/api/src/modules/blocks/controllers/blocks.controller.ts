@@ -16,9 +16,9 @@ import {
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { BlocksService } from '../services/blocks.service';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { CreateBlockDto, UpdateBlockDto, MoveBlockDto } from '../dto';
+import { BlocksService } from '../services/blocks.service';
 
 @ApiTags('Blocks')
 @ApiBearerAuth('JWT-auth')

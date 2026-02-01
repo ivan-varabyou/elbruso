@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '@database/database.service';
-import { Organizations } from '@elbruso/database';
-import { OrganizationFiltersDto } from '../dto/organization-filters.dto';
 import { sql } from 'kysely';
+import { Organizations } from '@elbruso/database';
+import { DatabaseService } from '@database/database.service';
+import { OrganizationFiltersDto } from '../dto/organization-filters.dto';
 
 @Injectable()
 export class OrganizationsService {

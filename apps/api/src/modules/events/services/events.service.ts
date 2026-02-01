@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '../../../database/database.service';
 import { EventsCatalog } from '@elbruso/database';
+import { DatabaseService } from '@database/database.service';
 import { EventFiltersDto } from '../dto';
 
 @Injectable()

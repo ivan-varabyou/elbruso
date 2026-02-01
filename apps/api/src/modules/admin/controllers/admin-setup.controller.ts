@@ -7,8 +7,8 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AdminSetupService } from '../services/admin-setup.service';
 import { AdminSetupDto } from '../dto/admin-setup.dto';
+import { AdminSetupService } from '../services/admin-setup.service';
 
 @ApiTags('Admin Setup')
 @Controller('admin')

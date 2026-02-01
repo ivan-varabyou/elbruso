@@ -1,6 +1,6 @@
 # Структура проекта web
 
-Генерировано: Сб 31 янв 2026 15:15:03 +03
+Генерировано: Вс 01 фев 2026 15:41:43 +03
 
 /home/ivan/git/elbruso/apps/web
 ├── assets
@@ -67,15 +67,40 @@
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   └── page.tsx
+│   ├── components
+│   │   └── home
+│   │       ├── Brands
+│   │       │   ├── Brands.tsx
+│   │       │   └── index.ts
+│   │       ├── ChartsShowcase
+│   │       │   ├── ChartsShowcase.tsx
+│   │       │   └── index.ts
+│   │       ├── DataWavesBackground
+│   │       │   ├── DataWavesBackground.tsx
+│   │       │   └── index.ts
+│   │       ├── Footer
+│   │       │   ├── Footer.tsx
+│   │       │   └── index.ts
+│   │       ├── Header
+│   │       │   ├── Header.tsx
+│   │       │   └── index.ts
+│   │       ├── Hero
+│   │       │   ├── Hero.tsx
+│   │       │   └── index.ts
+│   │       ├── HomePage
+│   │       │   ├── HomePage.tsx
+│   │       │   └── index.ts
+│   │       ├── InteractiveGrid
+│   │       │   ├── index.ts
+│   │       │   └── InteractiveGrid.tsx
+│   │       ├── LiveSportsChart
+│   │       │   ├── chartConfig.ts
+│   │       │   ├── index.ts
+│   │       │   └── LiveSportsChart.tsx
+│   │       └── ProductsShowcase
+│   │           ├── index.ts
+│   │           └── ProductsShowcase.tsx
 │   ├── pages
-│   │   └── HomePage
-│   │       └── components
-│   │           ├── Brands
-│   │           ├── ChartsShowcase
-│   │           ├── Footer
-│   │           ├── Header
-│   │           ├── Hero
-│   │           └── ProductsShowcase
 │   └── types
 │       └── next-shim.d.ts
 ├── AGENT.md
@@ -90,4 +115,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-37 directories, 49 files
+41 directories, 70 files

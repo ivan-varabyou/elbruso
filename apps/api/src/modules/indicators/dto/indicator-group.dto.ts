@@ -8,6 +8,8 @@ import {
 } from 'class-validator';
 
 export class CreateIndicatorGroupDto {
+  [key: string]: unknown;
+
   @ApiProperty({ description: 'Group name in Russian' })
   @IsNotEmpty()
   @IsString()
@@ -40,6 +42,8 @@ export class CreateIndicatorGroupDto {
 }
 
 export class UpdateIndicatorGroupDto {
+  [key: string]: unknown;
+
   @ApiPropertyOptional({ description: 'Group name in Russian' })
   @IsOptional()
   @IsString()

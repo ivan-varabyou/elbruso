@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useTableStore,useWorkspaceStore } from "@elbruso/stores";
+import { ChevronDown, ChevronRight, FileText, Loader2, Table } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { FileText, Loader2, ChevronRight, ChevronDown, Table } from "lucide-react";
-import { useWorkspaceStore, useTableStore } from "@/shared/stores";
+import { useEffect, useState } from "react";
 
 export function WorkspaceTree() {
   const router = useRouter();
@@ -49,14 +49,18 @@ export function WorkspaceTree() {
     );
   }
 
-  const workspaceTables = tables.filter((t) => t.workspace_id === selectedWorkspaceId);
+  const workspaceTables = tables.filter(
+    (t: { workspace_id: string }) => t.workspace_id === selectedWorkspaceId,
+  );
 
   return (
     <div className="space-y-px">
-      {workspaces.map((workspace) => {
+      {workspaces.map((workspace: { id: string; name: string }) => {
         const isExpanded = expandedWorkspaces.has(workspace.id);
         const isActive = selectedWorkspaceId === workspace.id;
-        const workspaceTables = tables.filter((t) => t.workspace_id === workspace.id);
+        const workspaceTables = tables.filter(
+          (t: { workspace_id: string }) => t.workspace_id === workspace.id,
+        );
 
         return (
           <div key={workspace.id}>
@@ -80,7 +84,7 @@ export function WorkspaceTree() {
             {/* Tables under workspace */}
             {isExpanded && workspaceTables.length > 0 && (
               <div className="ml-6 mt-px space-y-px">
-                {workspaceTables.map((table) => (
+                {workspaceTables.map((table: { id: string; name: string }) => (
                   <div
                     key={table.id}
                     onClick={(e) => {

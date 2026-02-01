@@ -1,11 +1,11 @@
-import { Module, forwardRef } from '@nestjs/common';
-import { DatabaseModule } from '../../database/database.module';
-import { WorkspaceController } from './controllers/workspace.controller';
-import { WorkspaceService } from './services/workspace.service';
+import { Module } from '@nestjs/common';
+import { AuditModule } from '@modules/audit';
+import { UsersModule } from '@modules/users';
+import { DatabaseModule } from '@database/database.module';
 import { WorkspaceGroupController } from './controllers/workspace-group.controller';
+import { WorkspaceController } from './controllers/workspace.controller';
 import { WorkspaceGroupService } from './services/workspace-group.service';
-import { UsersModule } from '../users/users.module';
-import { AuditModule } from '../audit/audit.module';
+import { WorkspaceService } from './services/workspace.service';
 
 @Module({
   imports: [DatabaseModule, UsersModule, AuditModule],

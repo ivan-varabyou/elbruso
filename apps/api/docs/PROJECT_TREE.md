@@ -1,6 +1,6 @@
 # Структура проекта api
 
-Генерировано: Сб 31 янв 2026 15:15:03 +03
+Генерировано: Вс 01 фев 2026 15:41:43 +03
 
 /home/ivan/git/elbruso/apps/api
 ├── docs
@@ -28,6 +28,10 @@
 │   │   ├── services
 │   │   │   ├── health.service.ts
 │   │   │   └── index.ts
+│   │   ├── websocket
+│   │   │   ├── bootstrap.ts
+│   │   │   ├── index.ts
+│   │   │   └── profile.gateway.ts
 │   │   ├── gateway.module.ts
 │   │   └── index.ts
 │   ├── modules
@@ -287,6 +291,8 @@
 │   │   ├── interfaces
 │   │   └── utils
 │   ├── app.module.ts
+│   ├── bootstrap.ts
+│   ├── config.ts
 │   └── main.ts
 ├── test
 │   ├── coverage
@@ -329,4 +335,4 @@
 ├── test-simple-security.ts
 └── tsconfig.json
 
-129 directories, 196 files
+130 directories, 201 files

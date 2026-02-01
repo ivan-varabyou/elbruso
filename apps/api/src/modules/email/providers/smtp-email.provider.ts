@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EmailProvider } from '../interfaces/email-provider.interface';
 import * as nodemailer from 'nodemailer';
+import { EmailProvider } from '../interfaces/email-provider.interface';
 
 @Injectable()
 export class SmtpEmailProvider implements EmailProvider {

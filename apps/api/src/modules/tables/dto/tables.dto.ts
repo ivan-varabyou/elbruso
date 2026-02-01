@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
@@ -12,7 +13,6 @@ import {
   Min,
   IsIn,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
 export class CreateTableDto {
   @ApiProperty({
@@ -252,7 +252,10 @@ export class LinkMetadata {
   @IsOptional()
   targetColumn?: string;
 
-  @ApiPropertyOptional({ type: [LinkFieldMapping], description: 'Field to column mappings' })
+  @ApiPropertyOptional({
+    type: [LinkFieldMapping],
+    description: 'Field to column mappings',
+  })
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => LinkFieldMapping)
@@ -274,7 +277,9 @@ export class CreateLinkDto {
   @IsOptional()
   sourceSystemEntity?: string;
 
-  @ApiProperty({ enum: ['cell_reference', 'lookup_reference', 'aggregation', 'shared_keys'] })
+  @ApiProperty({
+    enum: ['cell_reference', 'lookup_reference', 'aggregation', 'shared_keys'],
+  })
   @IsString()
   linkType: string;
 
@@ -294,7 +299,10 @@ export class MatrixFormulaDto {
   @IsString()
   formula: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'Step for formula replication' })
+  @ApiPropertyOptional({
+    example: 1,
+    description: 'Step for formula replication',
+  })
   @IsNumber()
   @IsOptional()
   step?: number;

@@ -6,15 +6,37 @@ Uses local embeddings via HuggingFace transformers.
 """
 
 import json
+import logging
 import os
+import sys
 from datetime import datetime
 from typing import Optional, List
+
+# Silence transformers and torch logging
+os.environ["TRANSFORMERS_VERBOSITY"] = "error"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
 from mcp.server.fastmcp import FastMCP
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance, PointIdsList
 from transformers import AutoTokenizer, AutoModel
+from transformers import logging as transformers_logging
+
+from logging_config import setup_logging
+
+# Настройка логирования
+logger = setup_logging()
+transformers_logging.set_verbosity_error()
+
+# Убрать шумные логи torch и transformers
+logging.getLogger("transformers").setLevel(logging.WARNING)
+logging.getLogger("torch").setLevel(logging.WARNING)
+logging.getLogger("accelerate").setLevel(logging.WARNING)
 
 mcp = FastMCP("elbruso-context")
 
@@ -27,12 +49,12 @@ collection_tasks = prefix + os.getenv("TASKS_COLLECTION", "task_summaries")
 collection_knowledge = prefix + os.getenv("KNOWLEDGE_COLLECTION", "knowledge_base")
 embedding_model_name = os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-en-v1.5")
 
-print(f"Loading embedding model: {embedding_model_name}")
+logger.info(f"Loading model: {embedding_model_name}")
 tokenizer = AutoTokenizer.from_pretrained(embedding_model_name)
 model = AutoModel.from_pretrained(embedding_model_name)
 model.eval()
 EMBEDDING_DIM = model.config.hidden_size
-print(f"Embedding dimension: {EMBEDDING_DIM}")
+logger.info(f"Model loaded: {embedding_model_name} (dim: {EMBEDDING_DIM})")
 
 client = QdrantClient(url=qdrant_url)
 

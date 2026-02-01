@@ -7,8 +7,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { OrganizationsService } from '../services/organizations.service';
 import { OrganizationFiltersDto } from '../dto/organization-filters.dto';
+import { OrganizationsService } from '../services/organizations.service';
 
 @Controller('reference/organizations')
 @ApiTags('Organizations')

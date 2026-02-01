@@ -1,9 +1,10 @@
 "use client";
 
-import { useRouter, useParams } from "next/navigation";
-import { Table, Plus } from "lucide-react";
-import { useTableStore } from "@/shared/stores";
+import { useTableStore } from "@elbruso/stores";
+import { Plus,Table } from "lucide-react";
+import { useParams,useRouter } from "next/navigation";
 import { useState } from "react";
+
 import { CreateTableModal } from "../WorkspaceTree/CreateTableModal";
 
 interface WorkspaceTableTabsProps {
@@ -17,7 +18,9 @@ export function WorkspaceTableTabs({ workspaceId }: WorkspaceTableTabsProps) {
   const { tables, fetchTables } = useTableStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const workspaceTables = tables.filter((t) => t.workspace_id === workspaceId);
+  const workspaceTables = tables.filter(
+    (t: { workspace_id: string; id: string; name: string }) => t.workspace_id === workspaceId,
+  );
 
   const handleTableClick = (tableId: string) => {
     router.push(`/tables/${tableId}`);
@@ -26,7 +29,7 @@ export function WorkspaceTableTabs({ workspaceId }: WorkspaceTableTabsProps) {
   return (
     <>
       <div className="border-b border-[#e2e2e2] bg-white px-2 py-1.5 flex items-center gap-1 overflow-x-auto">
-        {workspaceTables.map((table) => (
+        {workspaceTables.map((table: { id: string; name: string }) => (
           <button
             key={table.id}
             onClick={() => handleTableClick(table.id)}

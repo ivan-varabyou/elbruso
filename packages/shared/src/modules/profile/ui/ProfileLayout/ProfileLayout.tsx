@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import { LeftPanel } from './LeftPanel';
 import { RightPanel } from './RightPanel';
 

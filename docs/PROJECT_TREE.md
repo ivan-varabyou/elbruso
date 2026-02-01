@@ -1,6 +1,6 @@
 # Структура проекта
 
-Генерировано: Сб 31 янв 2026 15:15:03 +03
+Генерировано: Вс 01 фев 2026 15:41:43 +03
 
 /home/ivan/git/elbruso
 ├── apps
@@ -20,6 +20,7 @@
 │   │   │   │   ├── guards
 │   │   │   │   ├── interceptors
 │   │   │   │   ├── services
+│   │   │   │   ├── websocket
 │   │   │   │   ├── gateway.module.ts
 │   │   │   │   └── index.ts
 │   │   │   ├── modules
@@ -47,6 +48,8 @@
 │   │   │   │   ├── interfaces
 │   │   │   │   └── utils
 │   │   │   ├── app.module.ts
+│   │   │   ├── bootstrap.ts
+│   │   │   ├── config.ts
 │   │   │   └── main.ts
 │   │   ├── test
 │   │   │   ├── coverage
@@ -110,8 +113,9 @@
 │       │   │   ├── globals.css
 │       │   │   ├── layout.tsx
 │       │   │   └── page.tsx
+│       │   ├── components
+│       │   │   └── home
 │       │   ├── pages
-│       │   │   └── HomePage
 │       │   └── types
 │       │       └── next-shim.d.ts
 │       ├── AGENT.md
@@ -125,6 +129,77 @@
 │       ├── tailwind.config.ts
 │       ├── tsconfig.json
 │       └── tsconfig.tsbuildinfo
+├── dist
+│   ├── apps
+│   │   ├── api
+│   │   │   ├── src
+│   │   │   │   ├── database
+│   │   │   │   ├── gateway
+│   │   │   │   ├── modules
+│   │   │   │   ├── shared
+│   │   │   │   ├── app.module.d.ts
+│   │   │   │   ├── app.module.js
+│   │   │   │   ├── bootstrap.d.ts
+│   │   │   │   ├── bootstrap.js
+│   │   │   │   ├── config.d.ts
+│   │   │   │   ├── config.js
+│   │   │   │   ├── main.d.ts
+│   │   │   │   └── main.js
+│   │   │   ├── test
+│   │   │   │   ├── auth-users.e2e-spec.d.ts
+│   │   │   │   ├── auth-users.e2e-spec.js
+│   │   │   │   ├── pages.e2e-spec.d.ts
+│   │   │   │   ├── pages.e2e-spec.js
+│   │   │   │   ├── security.e2e-spec.d.ts
+│   │   │   │   ├── security.e2e-spec.js
+│   │   │   │   ├── test-request.helper.d.ts
+│   │   │   │   ├── test-request.helper.js
+│   │   │   │   ├── workspaces.e2e-spec.d.ts
+│   │   │   │   └── workspaces.e2e-spec.js
+│   │   │   ├── test-advanced-e2e.d.ts
+│   │   │   ├── test-advanced-e2e.js
+│   │   │   ├── test-security-e2e.d.ts
+│   │   │   ├── test-security-e2e.js
+│   │   │   ├── test-simple-security.d.ts
+│   │   │   └── test-simple-security.js
+│   │   └── web
+│   │       ├── src
+│   │       │   ├── app
+│   │       │   └── pages
+│   │       ├── get-dictionary.d.ts
+│   │       ├── get-dictionary.js
+│   │       ├── i18n-config.d.ts
+│   │       ├── i18n-config.js
+│   │       ├── middleware.d.ts
+│   │       ├── middleware.js
+│   │       ├── tailwind.config.d.ts
+│   │       └── tailwind.config.js
+│   └── packages
+│       ├── database
+│       │   └── src
+│       │       ├── db.d.ts
+│       │       ├── db.js
+│       │       ├── index.d.ts
+│       │       ├── index.js
+│       │       ├── types.d.ts
+│       │       └── types.js
+│       ├── devtools
+│       │   └── src
+│       │       ├── compiler
+│       │       ├── ui
+│       │       ├── index.d.ts
+│       │       └── index.js
+│       └── shared
+│           └── src
+│               ├── api
+│               ├── app
+│               ├── lib
+│               ├── modules
+│               ├── stores
+│               ├── types
+│               ├── ui
+│               ├── index.d.ts
+│               └── index.js
 ├── docs
 │   ├── data
 │   │   ├── API_AUTH_GUIDE.md
@@ -251,6 +326,8 @@
 │   │   ├── uml.md
 │   │   └── useCase.md
 │   ├── DESIGN_SYSTEM.md
+│   ├── IMPORT_STYLE_GUIDE.md
+│   ├── PRODUCTION_SETUP.md
 │   └── PROJECT_TREE.md
 ├── packages
 │   ├── context
@@ -258,6 +335,8 @@
 │   │   │   ├── __pycache__
 │   │   │   │   └── server.cpython-310.pyc
 │   │   │   └── server.py
+│   │   ├── __pycache__
+│   │   │   └── logging_config.cpython-310.pyc
 │   │   ├── scripts
 │   │   │   ├── backup.py
 │   │   │   └── embed.py
@@ -265,6 +344,7 @@
 │   │   ├── CONFIG.md
 │   │   ├── docker-compose.yml
 │   │   ├── INSTALL.sh
+│   │   ├── logging_config.py
 │   │   ├── package.json
 │   │   ├── README.md
 │   │   ├── requirements.txt
@@ -289,64 +369,38 @@
 │   │   │   └── types.ts
 │   │   ├── package.json
 │   │   └── tsconfig.json
-│   ├── debug
-│   │   ├── src
-│   │   │   ├── action-registry.ts
-│   │   │   ├── ContrastDetector.tsx
-│   │   │   ├── DebugConsole.tsx
-│   │   │   ├── DebugContext.tsx
-│   │   │   ├── DebugOverlay.tsx
-│   │   │   ├── DebugTrigger.tsx
-│   │   │   ├── index.ts
-│   │   │   ├── PathCopier.tsx
-│   │   │   └── ui-events.ts
-│   │   ├── package.json
-│   │   ├── README.md
-│   │   └── tsconfig.json
-│   ├── dev-tools
+│   ├── devtools
 │   │   ├── dist
-│   │   │   ├── debug
-│   │   │   │   ├── action-registry.d.ts
-│   │   │   │   ├── action-registry.js
-│   │   │   │   ├── ContrastDetector.d.ts
-│   │   │   │   ├── ContrastDetector.js
-│   │   │   │   ├── DebugConsole.d.ts
-│   │   │   │   ├── DebugConsole.js
-│   │   │   │   ├── DebugContext.d.ts
-│   │   │   │   ├── DebugContext.js
-│   │   │   │   ├── DebugOverlay.d.ts
-│   │   │   │   ├── DebugOverlay.js
-│   │   │   │   ├── DebugTrigger.d.ts
-│   │   │   │   ├── DebugTrigger.js
-│   │   │   │   ├── PathCopier.d.ts
-│   │   │   │   ├── PathCopier.js
-│   │   │   │   ├── ui-events.d.ts
-│   │   │   │   └── ui-events.js
-│   │   │   ├── path-copier
-│   │   │   │   ├── loader.d.ts
-│   │   │   │   ├── loader.js
-│   │   │   │   ├── swc-plugin.d.ts
-│   │   │   │   └── swc-plugin.js
+│   │   │   ├── builder
+│   │   │   │   ├── rollup
+│   │   │   │   ├── swc
+│   │   │   │   ├── vite
+│   │   │   │   └── webpack
+│   │   │   ├── ui
+│   │   │   │   ├── lib
+│   │   │   │   ├── index.d.ts
+│   │   │   │   ├── index.js
+│   │   │   │   ├── mount.d.ts
+│   │   │   │   └── mount.js
 │   │   │   ├── index.d.ts
 │   │   │   └── index.js
-│   │   └── src
-│   │       ├── debug
-│   │       └── path-copier
-│   ├── path-copier
-│   │   ├── dist
-│   │   │   ├── index.d.ts
-│   │   │   ├── index.js
-│   │   │   ├── loader.d.ts
-│   │   │   ├── loader.js
-│   │   │   ├── swc-plugin.d.ts
-│   │   │   └── swc-plugin.js
 │   │   ├── src
-│   │   │   ├── index.ts
-│   │   │   ├── loader.ts
-│   │   │   └── swc-plugin.ts
+│   │   │   ├── builder
+│   │   │   │   ├── rollup
+│   │   │   │   ├── swc
+│   │   │   │   ├── vite
+│   │   │   │   └── webpack
+│   │   │   ├── ui
+│   │   │   │   ├── lib
+│   │   │   │   ├── index.ts
+│   │   │   │   └── mount.ts
+│   │   │   └── index.ts
+│   │   ├── next.config.js
 │   │   ├── package.json
 │   │   └── tsconfig.json
 │   └── shared
+│       ├── docs
+│       │   └── PROJECT_TREE.md
 │       ├── src
 │       │   ├── api
 │       │   │   ├── hooks
@@ -363,6 +417,7 @@
 │       │   │   ├── data-contracts.ts
 │       │   │   ├── definitions.ts
 │       │   │   ├── endpoints.ts
+│       │   │   ├── error.ts
 │       │   │   ├── Events.ts
 │       │   │   ├── Formulas.ts
 │       │   │   ├── Groups.ts
@@ -373,40 +428,39 @@
 │       │   │   ├── Tables.ts
 │       │   │   ├── Users.ts
 │       │   │   ├── Versions.ts
+│       │   │   ├── websocket.ts
 │       │   │   └── Workspaces.ts
 │       │   ├── app
 │       │   │   └── providers
-│       │   ├── charts
-│       │   │   └── index.ts
-│       │   ├── d3
-│       │   │   ├── statistical
-│       │   │   └── index.ts
-│       │   ├── docs
 │       │   ├── lib
-│       │   │   ├── auth
-│       │   │   ├── debug
-│       │   │   ├── errors
-│       │   │   ├── i18n
-│       │   │   ├── language
-│       │   │   ├── table
-│       │   │   ├── utils
-│       │   │   ├── visualization
-│       │   │   ├── index.ts
-│       │   │   └── utils.ts
+│       │   │   ├── cn.ts
+│       │   │   └── index.ts
 │       │   ├── modules
+│       │   │   ├── admin
 │       │   │   ├── auth
-│       │   │   ├── home
-│       │   │   ├── notification
+│       │   │   ├── dashboard
+│       │   │   ├── events
+│       │   │   ├── i18n
+│       │   │   ├── indicators
+│       │   │   ├── notifications
+│       │   │   ├── pages
 │       │   │   ├── profile
 │       │   │   ├── reference
 │       │   │   ├── seasons
+│       │   │   ├── sports
 │       │   │   ├── table
 │       │   │   ├── visualization
+│       │   │   ├── workspaces
 │       │   │   └── index.ts
 │       │   ├── stores
 │       │   │   ├── index.ts
+│       │   │   ├── useFormattingStore.ts
+│       │   │   ├── useFormulaStore.ts
+│       │   │   ├── useHistoryStore.ts
 │       │   │   ├── useReferenceStore.ts
+│       │   │   ├── useSelectionStore.ts
 │       │   │   ├── useTableReferenceStore.ts
+│       │   │   ├── useTableStore.ts
 │       │   │   ├── useUserStore.ts
 │       │   │   └── useWorkspaceStore.ts
 │       │   ├── types
@@ -419,23 +473,23 @@
 │       │   │   └── visualization.ts
 │       │   ├── ui
 │       │   │   ├── layout
-│       │   │   ├── uikit
-│       │   │   ├── index.ts
-│       │   │   └── PasswordStrength.ts
-│       │   ├── visualization
+│       │   │   ├── primitives
 │       │   │   └── index.ts
-│       │   ├── Button.ts
-│       │   ├── index.ts
-│       │   └── Logo.ts
+│       │   └── index.ts
 │       ├── AGENT.md
 │       ├── package.json
 │       ├── tsconfig.json
 │       └── tsconfig.tsbuildinfo
 ├── scripts
 │   ├── dev-setup.sh
-│   └── generate_tree.sh
+│   ├── fix-imports.py
+│   ├── fix-imports.sh
+│   ├── generate-secrets.sh
+│   ├── generate_tree.sh
+│   └── production-setup.sh
 ├── AGENT.md
 ├── docker-compose.yml
+├── eslint.config.mjs
 ├── jest.config.js
 ├── opencode.json
 ├── package.json
@@ -445,7 +499,8 @@
 ├── project_tree.md
 ├── swagger.json
 ├── TEST_CREDENTIALS.md
+├── tsconfig.base.json
 ├── tsconfig.json
 └── turbo.json
 
-119 directories, 325 files
+151 directories, 348 files

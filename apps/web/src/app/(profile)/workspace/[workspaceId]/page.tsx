@@ -1,10 +1,10 @@
 "use client";
 
+import { CreateTableModal } from "@elbruso/modules/profile/ui/WorkspaceTree";
+import { useTableStore, useWorkspaceStore } from "@elbruso/stores";
+import { Plus, Table } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useWorkspaceStore, useTableStore } from "@/shared/stores";
-import { Table, Plus } from "lucide-react";
-import { CreateTableModal } from "@/shared/ui";
 import { useState } from "react";
 
 export default function WorkspaceDashboardPage() {
@@ -22,8 +22,10 @@ export default function WorkspaceDashboardPage() {
     }
   }, [workspaceId, selectWorkspace, fetchTables]);
 
-  const currentWorkspace = workspaces.find((w) => w.id === workspaceId);
-  const workspaceTables = tables.filter((t) => t.workspace_id === workspaceId);
+  const currentWorkspace = workspaces.find((w: { id: string }) => w.id === workspaceId);
+  const workspaceTables = tables.filter(
+    (t: { workspace_id: string }) => t.workspace_id === workspaceId,
+  );
 
   const handleTableClick = (tableId: string) => {
     router.push(`/tables/${tableId}`);
@@ -52,7 +54,7 @@ export default function WorkspaceDashboardPage() {
       {/* Tables Grid */}
       {workspaceTables.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {workspaceTables.map((table) => (
+          {workspaceTables.map((table: { id: string; name: string }) => (
             <div
               key={table.id}
               onClick={() => handleTableClick(table.id)}

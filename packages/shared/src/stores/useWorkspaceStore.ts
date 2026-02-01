@@ -1,6 +1,7 @@
-import { create } from "zustand";
+import type { CreateWorkspaceDto, UpdateWorkspaceDto } from "@elbruso/api";
+import { Workspaces } from "@elbruso/api";
 import type { AxiosResponse } from "axios";
-import { Workspaces, type CreateWorkspaceDto, type UpdateWorkspaceDto } from "@/shared";
+import { create } from "zustand";
 
 const workspacesApi = new Workspaces();
 

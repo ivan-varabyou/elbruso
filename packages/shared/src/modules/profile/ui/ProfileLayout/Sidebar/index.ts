@@ -1,17 +1,16 @@
-export {
-    Sidebar,
-    SidebarHeader,
-    SidebarContent,
-    SidebarFooter,
-    SidebarSection,
-    SidebarItem,
-} from './Sidebar';
-
 export type {
-    SidebarProps,
-    SidebarHeaderProps,
     SidebarContentProps,
     SidebarFooterProps,
-    SidebarSectionProps,
+    SidebarHeaderProps,
     SidebarItemProps,
+    SidebarProps,
+    SidebarSectionProps,
+} from './Sidebar';
+export {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarItem,
+    SidebarSection,
 } from './Sidebar';

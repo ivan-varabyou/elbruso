@@ -1,13 +1,10 @@
+export type { FormattingState, TextDecoration } from "./useFormattingStore";
+export * from "./useFormattingStore";
+export { type FormulaState,useFormulaStore } from "./useFormulaStore";
+export { type HistoryStore,useHistoryStore } from "./useHistoryStore";
 export * from "./useReferenceStore";
+export { type SelectionState,useSelectionStore } from "./useSelectionStore";
 export * from "./useTableReferenceStore";
+export { useTableStore } from "./useTableStore";
 export * from "./useUserStore";
 export * from "./useWorkspaceStore";
-export {
-  useFormattingStore,
-  type FormattingState,
-  type TextDecoration,
-} from "../modules/table/model/useFormattingStore";
-export { useHistoryStore, type HistoryStore } from "../modules/table/model/useHistoryStore";
-export { useSelectionStore, type SelectionState } from "../modules/table/model/useSelectionStore";
-export { useFormulaStore, type FormulaState } from "../modules/table/model/useFormulaStore";
-export { useTableStore } from "../modules/table/model/useTableStore";

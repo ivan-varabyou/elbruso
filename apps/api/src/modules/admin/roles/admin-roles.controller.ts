@@ -14,11 +14,11 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+import { Roles } from '../decorators/roles.decorator';
+import { AdminJwtAuthGuard } from '../guards/admin-jwt-auth.guard';
 import { AdminRolesService } from './admin-roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { AdminJwtAuthGuard } from '../guards/admin-jwt-auth.guard';
-import { Roles } from '../decorators/roles.decorator';
 
 @ApiTags('Admin Roles')
 @Controller('admin/roles')

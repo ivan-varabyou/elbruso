@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { Auth } from "../Auth";
-import type { LoginDto, RegisterDto } from "../data-contracts";
 import { API_VERSION } from "../config";
+import type { LoginDto, RegisterDto } from "../data-contracts";
 
 const authApi = new Auth();
 

@@ -1,4 +1,4 @@
-import type { SystemEntityType, ReferenceScope } from "./enums";
+import type { ReferenceScope,SystemEntityType } from "./enums";
 
 export interface ReferenceData {
   id: string;

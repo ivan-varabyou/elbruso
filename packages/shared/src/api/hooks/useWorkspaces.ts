@@ -1,15 +1,16 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Workspaces } from "../Workspaces";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import type {
-  CreateWorkspaceDto,
-  UpdateWorkspaceDto,
   AddMemberDto,
-  UpdateMemberRoleDto,
-  CreatePageDto,
   CreateGroupDto,
-  ReorderGroupsDto,
+  CreatePageDto,
   CreateTableDto,
+  CreateWorkspaceDto,
+  ReorderGroupsDto,
+  UpdateMemberRoleDto,
+  UpdateWorkspaceDto,
 } from "../data-contracts";
+import { Workspaces } from "../Workspaces";
 
 const workspacesApi = new Workspaces();
 

@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsInt, Min } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsOptional, IsInt, Min } from 'class-validator';
 
 export class RegionFiltersDto {
   @ApiPropertyOptional({ description: 'Filter by country ID' })

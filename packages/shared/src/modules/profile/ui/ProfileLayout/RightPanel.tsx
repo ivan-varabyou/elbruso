@@ -1,7 +1,7 @@
 'use client';
 
-import { X, Send, Sparkles, GripVertical } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { GripVertical,Send, Sparkles, X } from 'lucide-react';
+import { useEffect,useRef, useState } from 'react';
 
 interface RightPanelProps {
     isCollapsed: boolean;

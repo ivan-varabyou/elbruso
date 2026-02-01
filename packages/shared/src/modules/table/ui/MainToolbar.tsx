@@ -1,23 +1,23 @@
 "use client";
 
 import {
-  Printer,
-  Undo2,
-  Redo2,
-  ZoomIn,
-  DollarSign,
-  Percent,
-  Bold,
-  Italic,
-  Underline,
-  Link2,
-  AlignLeft,
   AlignCenter,
+  AlignLeft,
   AlignRight,
+  Bold,
   ChevronDown,
-  Palette,
+  DollarSign,
   Grid3x3,
+  Italic,
+  Link2,
+  LucideIcon,
   Merge,
+  Palette,
+  Percent,
+  Printer,
+  Redo2,
+  Underline,
+  Undo2,
 } from "lucide-react";
 
 interface MainToolbarProps {
@@ -58,7 +58,7 @@ export function MainToolbar({
     active = false,
     disabled = false,
   }: {
-    icon: any;
+    icon: LucideIcon;
     onClick?: () => void;
     title: string;
     active?: boolean;

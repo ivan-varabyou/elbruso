@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AdminAuthService } from './services/admin-auth.service';
+import { DatabaseModule } from '@database/database.module';
 import { AdminAuthController } from './controllers/admin-auth.controller';
+import { AdminAuthService } from './services/admin-auth.service';
 import { AdminJwtStrategy } from './strategies/admin-jwt.strategy';
-import { DatabaseModule } from '../../database/database.module';
 
 @Module({
   imports: [

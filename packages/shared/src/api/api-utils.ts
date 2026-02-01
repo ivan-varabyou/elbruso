@@ -1,7 +1,8 @@
 import { AxiosRequestConfig } from "axios";
+
 import { ParameterType } from "./api-types";
 
-type AddPayloadFunction = (config: AxiosRequestConfig, payload: object) => void;
+type AddPayloadFunction = (config: AxiosRequestConfig, payload: unknown) => void;
 
 export function keys<T extends Record<string, unknown>>(object: T): (keyof T)[] {
   return Object.keys(object) as (keyof T)[];
@@ -9,28 +10,37 @@ export function keys<T extends Record<string, unknown>>(object: T): (keyof T)[] 
 
 const addPayloadFor: Record<ParameterType, AddPayloadFunction> = {
   body: (config, body) => (config.data = body),
-  query: (config, query) => (config.params = query),
+  query: (config, query) => (config.params = query as Record<string, string>),
   formData: (config, formData) =>
-    (config.data = formData instanceof FormData ? formData : mapObjectToFromData(formData)),
-  path: (config, path) => (config.url = replacePathParameterInUrl(config.url!, path)),
+    (config.data =
+      formData instanceof FormData
+        ? formData
+        : mapObjectToFromData(formData as Record<string, unknown>)),
+  path: (config, path) =>
+    (config.url = replacePathParameterInUrl(config.url!, path as Record<string, string>)),
 };
 
-function replacePathParameterInUrl(baseUrl: string, pathParameter: Record<string, any>): string {
+function replacePathParameterInUrl(baseUrl: string, pathParameter: Record<string, string>): string {
   return Object.keys(pathParameter).reduce(
     (url, name) => url.replace(`{${name}}`, encodeURIComponent(pathParameter[name])),
     baseUrl,
   );
 }
 
-function mapObjectToFromData(object: Record<string, any>): FormData {
+function mapObjectToFromData(object: Record<string, unknown>): FormData {
   return Object.keys(object).reduce((formData, key) => {
-    formData.append(key, object[key]);
+    const value = object[key];
+    if (value instanceof File) {
+      formData.append(key, value);
+    } else {
+      formData.append(key, String(value));
+    }
     return formData;
   }, new FormData());
 }
 
 export type AbstractApiFetchParameters = {
-  [parameterType in ParameterType]?: any;
+  [parameterType in ParameterType]?: unknown;
 };
 
 export function applyParametersToAxiosRequestConfig(

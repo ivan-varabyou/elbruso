@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useReferenceStore } from "@/shared/stores";
-import type { SystemEntityType } from "@/shared";
+import { useReferenceStore } from "@elbruso/stores";
+import type { SystemEntityType } from "@elbruso/types/enums";
+import { useEffect, useState } from "react";
 
 interface ReferenceSelectorProps {
   type: SystemEntityType;
@@ -60,7 +60,7 @@ export function ReferenceSelector({ type, onSelect, multiSelect = false }: Refer
 
   const data = getData();
 
-  const filteredData = data.filter((item) => {
+  const filteredData = data.filter((item: { name_ru?: string; code?: string }) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return item.name_ru?.toLowerCase().includes(query) || item.code?.toLowerCase().includes(query);
@@ -79,7 +79,9 @@ export function ReferenceSelector({ type, onSelect, multiSelect = false }: Refer
     }
     setSelectedIds(newSelected);
 
-    const selectedItems = data.filter((item) => newSelected.has(String(item.id)));
+    const selectedItems = data.filter((item: { id: string | number }) =>
+      newSelected.has(String(item.id)),
+    );
     onSelect(selectedItems);
   };
 
@@ -110,7 +112,7 @@ export function ReferenceSelector({ type, onSelect, multiSelect = false }: Refer
           <div className="p-8 text-center text-zinc-500">Ничего не найдено</div>
         ) : (
           <div className="divide-y divide-zinc-100">
-            {filteredData.map((item) => (
+            {filteredData.map((item: { id: string | number; name_ru?: string; code?: string }) => (
               <div
                 key={String(item.id)}
                 onClick={() => handleToggle(item.id)}

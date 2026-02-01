@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as crypto from 'crypto';
 import {
   Injectable,
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
+import { Users } from '@elbruso/database';
 import { DatabaseService } from '@database/database.service';
 import { CreateUserDto } from '../dto';
-import * as crypto from 'crypto';
+import { UpdateProfileDto, AdminUpdateUserDto } from '../dto/user-settings.dto';
 
 @Injectable()
 export class UsersService {
@@ -28,7 +29,8 @@ export class UsersService {
       }
     }
 
-    const countryId = (dto as any).countryId || 1; // Default to Russia (id=1)
+    const countryId =
+      (dto as CreateUserDto & { countryId?: number }).countryId || 1;
 
     const user = await this.db.client
       .insertInto('users')
@@ -46,7 +48,7 @@ export class UsersService {
       throw new ConflictException('Failed to create user');
     }
 
-    return this.sanitizeUser(user as any);
+    return this.sanitizeUser(user as unknown as Users);
   }
 
   async findByEmail(email: string) {
@@ -57,7 +59,7 @@ export class UsersService {
       .where('is_active', '=', true)
       .executeTakeFirst();
 
-    return user ? this.sanitizeUser(user as any) : null;
+    return user ? this.sanitizeUser(user as unknown as Users) : null;
   }
 
   async findByEmailWithPassword(email: string) {
@@ -68,7 +70,7 @@ export class UsersService {
       .where('is_active', '=', true)
       .executeTakeFirst();
 
-    return (user as any) || null;
+    return (user as unknown as Users) || null;
   }
 
   async findById(id: string) {
@@ -83,7 +85,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return this.sanitizeUser(user as any);
+    return this.sanitizeUser(user as unknown as Users);
   }
 
   async findByApiKey(apiKey: string) {
@@ -105,10 +107,10 @@ export class UsersService {
     await this.db.client
       .updateTable('api_keys')
       .set({ last_used_at: new Date() })
-      .where('id', '=', (apiKeyRecord as any).id)
+      .where('id', '=', apiKeyRecord.id)
       .execute();
 
-    return this.findById((apiKeyRecord as any).user_id);
+    return this.findById(apiKeyRecord.user_id);
   }
 
   async saveRefreshToken(userId: string, refreshToken: string) {
@@ -164,7 +166,7 @@ export class UsersService {
     return { apiKey, name };
   }
 
-  async updateProfile(userId: string, dto: any) {
+  async updateProfile(userId: string, dto: UpdateProfileDto) {
     const user = await this.db.client
       .updateTable('users')
       .set({
@@ -179,7 +181,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return this.sanitizeUser(user as any);
+    return this.sanitizeUser(user as unknown as Users);
   }
 
   async findAll() {
@@ -190,7 +192,7 @@ export class UsersService {
       .execute();
   }
 
-  async updateUserAdmin(userId: string, dto: any) {
+  async updateUserAdmin(userId: string, dto: AdminUpdateUserDto) {
     const user = await this.db.client
       .updateTable('users')
       .set({
@@ -205,10 +207,10 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return this.sanitizeUser(user as any);
+    return this.sanitizeUser(user as unknown as Users);
   }
 
-  private sanitizeUser(user: any) {
+  private sanitizeUser(user: Users | null) {
     if (!user) return null;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _password, ...sanitized } = user;

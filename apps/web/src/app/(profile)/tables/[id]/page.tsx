@@ -1,9 +1,9 @@
 "use client";
 
+import { DynamicTableComponent as DynamicTable } from "@elbruso/modules/table/ui";
+import { useTableStore, useWorkspaceStore } from "@elbruso/stores";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
-import { useTableStore, useWorkspaceStore } from "@/shared/stores";
-import { DynamicTable } from "@/shared/ui";
 
 export default function TablePage() {
   const params = useParams();

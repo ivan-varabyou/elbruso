@@ -15,10 +15,11 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { UsersService } from '../services/users.service';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RequestWithUser } from '@modules/auth/interfaces/auth.interface';
 import { CreateApiKeyDto } from '../dto';
 import { UpdateProfileDto, AdminUpdateUserDto } from '../dto/user-settings.dto';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { UsersService } from '../services/users.service';
 
 @ApiTags('Users')
 @Controller('users')
@@ -29,7 +30,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get current user profile' })
-  async getProfile(@Request() req) {
+  async getProfile(@Request() req: RequestWithUser) {
     return this.usersService.findById(req.user.sub);
   }
 
@@ -37,7 +38,10 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update current user profile' })
-  async updateProfile(@Request() req, @Body() dto: UpdateProfileDto) {
+  async updateProfile(
+    @Request() req: RequestWithUser,
+    @Body() dto: UpdateProfileDto,
+  ) {
     return this.usersService.updateProfile(req.user.sub, dto);
   }
 
@@ -45,9 +49,9 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'List all users (Admin only)' })
-  async findAll(@Request() req) {
+  async findAll(@Request() req: RequestWithUser) {
     const user = await this.usersService.findById(req.user.sub);
-    if (user.role !== 'ADMIN') {
+    if (String(user.role) !== 'ADMIN') {
       throw new ForbiddenException('Admin access required');
     }
     return this.usersService.findAll();
@@ -58,12 +62,12 @@ export class UsersController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update user by admin' })
   async updateUserAdmin(
-    @Request() req,
+    @Request() req: RequestWithUser,
     @Param('id') id: string,
     @Body() dto: AdminUpdateUserDto,
   ) {
     const currentUser = await this.usersService.findById(req.user.sub);
-    if (currentUser.role !== 'ADMIN') {
+    if (String(currentUser.role) !== 'ADMIN') {
       throw new ForbiddenException('Admin access required');
     }
     return this.usersService.updateUserAdmin(id, dto);
@@ -82,7 +86,10 @@ export class UsersController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Create API key for current user' })
   @ApiResponse({ status: 201, description: 'API key created' })
-  async createApiKey(@Request() req, @Body() dto: CreateApiKeyDto) {
+  async createApiKey(
+    @Request() req: RequestWithUser,
+    @Body() dto: CreateApiKeyDto,
+  ) {
     return this.usersService.createApiKey(
       req.user.sub,
       dto.name,

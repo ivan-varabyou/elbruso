@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint", "boundaries", "import", "prettier"],
+  plugins: ["@typescript-eslint", "import", "prettier"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -19,8 +19,7 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "error",
 
-    // Базовые архитектурные правила
-    "boundaries/no-private": "error",
+    // Архитектурные правила - используем только import/no-unresolved
     "import/no-unresolved": "error",
 
     // Глобальный порядок импортов (наследуется всеми)

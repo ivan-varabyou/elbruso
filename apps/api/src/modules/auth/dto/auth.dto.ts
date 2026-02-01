@@ -38,6 +38,11 @@ export class RegisterDto {
   @IsOptional()
   @IsNumber()
   countryId?: number;
+
+  @ApiProperty({ required: false, example: 'ru' })
+  @IsOptional()
+  @IsString()
+  lang?: string;
 }
 
 export class LoginDto {
@@ -89,4 +94,22 @@ export class VerifyTokenDto {
   @ApiProperty()
   @IsString()
   token: string;
+}
+
+export class ChangePasswordDto {
+  @ApiProperty()
+  @IsString()
+  currentPassword: string;
+
+  @ApiProperty({ example: 'NewPassword123!', minLength: 8 })
+  @IsString()
+  @MinLength(8)
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    {
+      message:
+        'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character',
+    },
+  )
+  newPassword: string;
 }

@@ -4,10 +4,10 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { DatabaseService } from '@database/database.service';
 import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
-import * as bcrypt from 'bcrypt';
 
 interface PaginationParams {
   page?: number;

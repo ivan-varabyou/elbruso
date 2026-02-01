@@ -7,8 +7,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { RegionsService } from '../services/regions.service';
 import { RegionFiltersDto } from '../dto/region-filters.dto';
+import { RegionsService } from '../services/regions.service';
 
 @Controller('reference/regions')
 @ApiTags('Regions')

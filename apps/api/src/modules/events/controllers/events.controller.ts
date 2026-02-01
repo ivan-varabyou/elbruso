@@ -7,8 +7,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { EventsService } from '../services/events.service';
 import { EventFiltersDto } from '../dto';
+import { EventsService } from '../services/events.service';
 
 @Controller('events')
 @ApiTags('Events')

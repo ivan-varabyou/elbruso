@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { X, Loader2, Calendar, Layout, Building2, ChevronDown } from "lucide-react";
-
-import { useWorkspaceStore, useReferenceStore, useUserStore } from "@/shared/stores";
-
-import { motion, AnimatePresence } from "framer-motion";
+import { useReferenceStore, useUserStore, useWorkspaceStore } from "@elbruso/stores";
+import type { Season } from "@elbruso/types/reference.types";
+import { AnimatePresence, motion } from "framer-motion";
+import { Calendar, ChevronDown, Layout, Loader2, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface CreateWorkspaceModalProps {
   isOpen: boolean;
@@ -43,8 +42,9 @@ export function CreateWorkspaceModal({ isOpen, onClose }: CreateWorkspaceModalPr
 
       onClose();
       resetForm();
-    } catch (err: any) {
-      setError(err?.message || "Ошибка при создании");
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setError(error?.message || "Ошибка при создании");
     }
   };
 
@@ -113,7 +113,7 @@ export function CreateWorkspaceModal({ isOpen, onClose }: CreateWorkspaceModalPr
                       className="w-full appearance-none rounded-lg border border-zinc-200 bg-white pl-9 pr-8 py-2 text-sm focus:border-zinc-900 focus:outline-none focus:ring-4 focus:ring-zinc-900/[0.03] transition-all"
                     >
                       <option value="">Выберите сезон...</option>
-                      {seasons.map((s) => (
+                      {seasons.map((s: Season) => (
                         <option key={s.id} value={s.id}>
                           {s.name_ru}
                         </option>

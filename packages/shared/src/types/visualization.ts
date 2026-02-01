@@ -27,7 +27,7 @@ export interface ChartTheme {
 
 export interface TooltipConfig {
   enabled: boolean;
-  formatter?: (data: any) => string;
+  formatter?: (data: unknown) => string;
   className?: string;
 }
 
@@ -494,7 +494,7 @@ export interface ChoroplethDataPoint {
 export interface ChoroplethMapConfig extends BaseChartConfig {
   data: ChoroplethDataPoint[];
   geoJsonUrl?: string;
-  geoJson?: any;
+  geoJson?: GeoJSON.GeoJSON;
   projection?: "mercator" | "albersUsa" | "albers" | "equalEarth" | "naturalEarth";
   colorScale?: string[];
   showLabels?: boolean;
@@ -515,7 +515,7 @@ export interface BubbleMapDataPoint {
 export interface BubbleMapConfig extends BaseChartConfig {
   data: BubbleMapDataPoint[];
   geoJsonUrl?: string;
-  geoJson?: any;
+  geoJson?: GeoJSON.GeoJSON;
   projection?: "mercator" | "albersUsa" | "albers" | "equalEarth" | "naturalEarth";
   sizeScale?: [number, number];
   showLabels?: boolean;
@@ -533,7 +533,7 @@ export interface GeoHeatMapDataPoint {
 export interface GeoHeatMapConfig extends BaseChartConfig {
   data: GeoHeatMapDataPoint[];
   geoJsonUrl?: string;
-  geoJson?: any;
+  geoJson?: GeoJSON.GeoJSON;
   projection?: "mercator" | "albersUsa" | "albers" | "equalEarth" | "naturalEarth";
   radius?: number;
   intensity?: number;

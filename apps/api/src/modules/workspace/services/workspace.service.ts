@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Injectable,
   NotFoundException,
@@ -6,8 +5,12 @@ import {
   ConflictException,
   BadRequestException,
 } from '@nestjs/common';
+import {
+  AuditService,
+  AuditAction,
+} from '@modules/audit/services/audit.service';
+import { UsersService } from '@modules/users/services/users.service';
 import { DatabaseService } from '@database/database.service';
-import { UsersService } from '../../users/services/users.service';
 import {
   CreateWorkspaceDto,
   UpdateWorkspaceDto,
@@ -15,18 +18,17 @@ import {
   UpdateMemberRoleDto,
   WorkspaceRole,
 } from '../dto/workspace.dto';
-import { AuditService, AuditAction } from '../../audit/services/audit.service';
 
 @Injectable()
 export class WorkspaceService {
   constructor(
-    private readonly db: DatabaseService,
-    private readonly usersService: UsersService,
-    private readonly auditService: AuditService,
+    private readonly _db: DatabaseService,
+    private readonly _usersService: UsersService,
+    private readonly _auditService: AuditService,
   ) {}
 
   async create(userId: string, dto: CreateWorkspaceDto) {
-    const workspace = await this.db.client
+    const workspace = await this._db.client
       .insertInto('workspaces')
       .values({
         name: dto.name,
@@ -40,7 +42,7 @@ export class WorkspaceService {
       throw new Error('Failed to create workspace');
     }
 
-    await this.db.client
+    await this._db.client
       .insertInto('workspace_permissions')
       .values({
         workspace_id: workspace.id,
@@ -49,7 +51,7 @@ export class WorkspaceService {
       })
       .execute();
 
-    await this.auditService.log({
+    await this._auditService.log({
       userId,
       action: AuditAction.WORKSPACE_CREATE,
       entityType: 'Workspace',
@@ -64,7 +66,7 @@ export class WorkspaceService {
   }
 
   async findAll(userId: string) {
-    const workspaces = await this.db.client
+    const workspaces = await this._db.client
       .selectFrom('workspaces as w')
       .innerJoin('workspace_permissions as wp', 'w.id', 'wp.workspace_id')
       .select([
@@ -84,7 +86,7 @@ export class WorkspaceService {
   }
 
   async findOne(id: string, userId: string) {
-    const workspace = await this.db.client
+    const workspace = await this._db.client
       .selectFrom('workspaces as w')
       .innerJoin('workspace_permissions as wp', 'w.id', 'wp.workspace_id')
       .select([
@@ -101,7 +103,7 @@ export class WorkspaceService {
       .executeTakeFirst();
 
     if (!workspace) {
-      const exists = await this.db.client
+      const exists = await this._db.client
         .selectFrom('workspaces')
         .select('id')
         .where('id', '=', id)
@@ -131,7 +133,7 @@ export class WorkspaceService {
       updateData.description = dto.description || null;
     }
 
-    const workspace = await this.db.client
+    const workspace = await this._db.client
       .updateTable('workspaces')
       .set(updateData)
       .where('id', '=', id)
@@ -145,7 +147,7 @@ export class WorkspaceService {
 
     const userRole = await this.getUserRole(id, userId);
 
-    await this.auditService.log({
+    await this._auditService.log({
       userId,
       action: AuditAction.WORKSPACE_UPDATE,
       entityType: 'Workspace',
@@ -162,7 +164,7 @@ export class WorkspaceService {
   async delete(id: string, userId: string) {
     await this.checkPermission(id, userId, WorkspaceRole.OWNER);
 
-    const workspace = await this.db.client
+    const workspace = await this._db.client
       .updateTable('workspaces')
       .set({
         is_active: false,
@@ -177,7 +179,7 @@ export class WorkspaceService {
       throw new NotFoundException('Workspace not found');
     }
 
-    await this.auditService.log({
+    await this._auditService.log({
       userId,
       action: AuditAction.WORKSPACE_DELETE,
       entityType: 'Workspace',
@@ -194,43 +196,43 @@ export class WorkspaceService {
 
     await this.checkPermission(id, userId, WorkspaceRole.EDITOR);
 
-    const member = await this.usersService.findByEmail(dto.email);
+    const member = await this._usersService.findByEmail(dto.email);
     if (!member) {
       throw new NotFoundException('User not found');
     }
 
-    const existing = await this.db.client
+    const existing = await this._db.client
       .selectFrom('workspace_permissions')
       .selectAll()
       .where('workspace_id', '=', id)
-      .where('user_id', '=', member.id)
+      .where('user_id', '=', String(member.id))
       .executeTakeFirst();
 
     if (existing) {
       throw new ConflictException('User is already a member');
     }
 
-    await this.db.client
+    await this._db.client
       .insertInto('workspace_permissions')
       .values({
         workspace_id: id,
-        user_id: member.id,
+        user_id: String(member.id),
         permission_level: dto.role,
       })
       .execute();
 
-    await this.auditService.log({
+    await this._auditService.log({
       userId,
       action: AuditAction.MEMBER_ADD,
       entityType: 'Workspace',
       entityId: id,
-      details: { memberId: member.id, role: dto.role },
+      details: { memberId: String(member.id), role: dto.role },
     });
 
     return {
-      id: member.id,
-      email: member.email,
-      name: member.name,
+      id: String(member.id),
+      email: String(member.email),
+      name: String(member.first_name ?? member.last_name ?? ''),
       role: dto.role,
     };
   }
@@ -238,7 +240,7 @@ export class WorkspaceService {
   async getMembers(id: string, userId: string) {
     await this.checkPermission(id, userId, WorkspaceRole.VIEWER);
 
-    const members = await this.db.client
+    const members = await this._db.client
       .selectFrom('workspace_permissions as wp')
       .innerJoin('users as u', 'wp.user_id', 'u.id')
       .select([
@@ -265,7 +267,7 @@ export class WorkspaceService {
   ) {
     await this.checkPermission(id, userId, WorkspaceRole.EDITOR);
 
-    const member = await this.db.client
+    const member = await this._db.client
       .selectFrom('workspace_permissions')
       .selectAll()
       .where('workspace_id', '=', id)
@@ -284,14 +286,14 @@ export class WorkspaceService {
       throw new BadRequestException('Cannot assign owner role');
     }
 
-    await this.db.client
+    await this._db.client
       .updateTable('workspace_permissions')
       .set({ permission_level: dto.role })
       .where('workspace_id', '=', id)
       .where('user_id', '=', memberId)
       .execute();
 
-    await this.auditService.log({
+    await this._auditService.log({
       userId,
       action: AuditAction.MEMBER_ROLE_UPDATE,
       entityType: 'Workspace',
@@ -305,7 +307,7 @@ export class WorkspaceService {
   async removeMember(id: string, userId: string, memberId: string) {
     await this.checkPermission(id, userId, WorkspaceRole.EDITOR);
 
-    const member = await this.db.client
+    const member = await this._db.client
       .selectFrom('workspace_permissions')
       .selectAll()
       .where('workspace_id', '=', id)
@@ -320,13 +322,13 @@ export class WorkspaceService {
       throw new BadRequestException('Cannot remove workspace owner');
     }
 
-    await this.db.client
+    await this._db.client
       .deleteFrom('workspace_permissions')
       .where('workspace_id', '=', id)
       .where('user_id', '=', memberId)
       .execute();
 
-    await this.auditService.log({
+    await this._auditService.log({
       userId,
       action: AuditAction.MEMBER_REMOVE,
       entityType: 'Workspace',
@@ -342,7 +344,7 @@ export class WorkspaceService {
     userId: string,
     requiredRole: WorkspaceRole,
   ): Promise<void> {
-    const permission = await this.db.client
+    const permission = await this._db.client
       .selectFrom('workspace_permissions')
       .select(['permission_level'])
       .where('workspace_id', '=', workspaceId)
@@ -370,7 +372,7 @@ export class WorkspaceService {
     workspaceId: string,
     userId: string,
   ): Promise<WorkspaceRole> {
-    const permission = await this.db.client
+    const permission = await this._db.client
       .selectFrom('workspace_permissions')
       .select(['permission_level'])
       .where('workspace_id', '=', workspaceId)

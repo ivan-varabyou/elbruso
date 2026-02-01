@@ -1,4 +1,5 @@
 import { Method } from 'axios';
+
 import { ApiOperationIds, ApiTypes } from './api-types';
 
 export interface ApiMappingItem<key extends ApiOperationIds> {

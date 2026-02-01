@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Search, Plus, Trash2, Edit2, Layers, MoreHorizontal, Trophy } from "lucide-react";
-import { Button } from "@/shared/ui";
-import { Reference } from "@/shared";
-import { cn } from "@/shared/lib/utils";
-import type { IndicatorGroup } from "@/shared";
+import { Reference } from "@elbruso/api";
+import type { IndicatorGroup } from "@elbruso/types/reference.types";
+import { Button } from "@elbruso/ui";
+import { Edit2, Layers, Plus, Search, Trash2, Trophy } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import { IndicatorGroupModal } from "./IndicatorGroupModal";
 
 export function IndicatorGroupsList() {
@@ -19,8 +19,8 @@ export function IndicatorGroupsList() {
   const fetchGroups = async () => {
     setLoading(true);
     try {
-      const groupsResponse = (await referenceApi.indicatorsControllerGetGroups()) as any;
-      setGroups(groupsResponse.data);
+      const groupsResponse = await referenceApi.indicatorsControllerGetGroups();
+      setGroups((groupsResponse as { data?: IndicatorGroup[] })?.data || []);
     } catch (error) {
       console.error("Failed to fetch groups:", error);
     } finally {

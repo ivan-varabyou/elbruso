@@ -4,12 +4,12 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { DatabaseService } from '@database/database.service';
-import { WorkspaceService } from '../../workspace/services/workspace.service';
-import { AuditService, AuditAction } from '../../audit/services/audit.service';
-import { CreatePageDto, UpdatePageDto, MovePageDto } from '../dto';
-import { WorkspaceRole } from '../../workspace/dto/workspace.dto';
 import { sql } from 'kysely';
+import { AuditService, AuditAction } from '@modules/audit/services/audit.service';
+import { WorkspaceRole } from '@modules/workspace/dto/workspace.dto';
+import { WorkspaceService } from '@modules/workspace/services/workspace.service';
+import { DatabaseService } from '@database/database.service';
+import { CreatePageDto, UpdatePageDto, MovePageDto } from '../dto';
 
 export interface PageTreeNode {
   id: string;

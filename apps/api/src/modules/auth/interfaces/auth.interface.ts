@@ -14,3 +14,10 @@ export interface AuthResponse {
 export interface RequestWithUser extends Request {
   user: JwtPayload;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  password?: string;
+}

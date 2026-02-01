@@ -1,15 +1,15 @@
 // TableReferenceStore - кэширует данные связанных таблиц для формул
 // Поддерживает ленивую загрузку и автоматическое обновление при изменении данных
 
+import { Tables, Versions } from "@elbruso/api";
+import type { TableReference } from "@elbruso/modules/table/lib/TableReferenceParser";
 import { create } from "zustand";
-import { Tables, Versions } from "@/shared";
-import type { TableReference } from "../lib/table/TableReferenceParser";
 
 interface CachedTableData {
   tableId: string;
   tableName: string;
   workspaceId: string;
-  cells: Map<string, any>; // key: "row_col" -> value
+  cells: Map<string, unknown>;
   rowCount: number;
   colCount: number;
   lastUpdated: number;
@@ -27,8 +27,8 @@ interface TableReferenceStore {
 
   // Actions
   getTableData: (ref: TableReference) => Promise<CachedTableData | null>;
-  getCellValue: (ref: TableReference, row: number, col: number) => Promise<any>;
-  getRangeValues: (ref: TableReference) => Promise<any[][]>;
+  getCellValue: (ref: TableReference, row: number, col: number) => Promise<unknown>;
+  getRangeValues: (ref: TableReference) => Promise<unknown[][]>;
   invalidateTable: (tableId: string) => void;
   clearCache: () => void;
 
@@ -56,7 +56,7 @@ export const useTableReferenceStore = create<TableReferenceStore>((set, get) => 
     }
 
     // Находим tableId по имени, если нужно
-    let tableId = ref.tableId;
+    const tableId = ref.tableId;
     if (!tableId && ref.tableName) {
       // TODO: Загрузить список таблиц и найти по имени
       // Пока возвращаем null
@@ -97,7 +97,11 @@ export const useTableReferenceStore = create<TableReferenceStore>((set, get) => 
     try {
       // Загружаем данные таблицы
       const response = await tablesApi.dynamicTablesControllerFindOne(tableId);
-      const table = response.data as any;
+      const table = response.data as unknown as {
+        activeVersion?: { id: string };
+        row_count?: number;
+        column_count?: number;
+      };
 
       // Загружаем ячейки активной версии
       if (table.activeVersion) {
@@ -105,10 +109,15 @@ export const useTableReferenceStore = create<TableReferenceStore>((set, get) => 
           table.activeVersion.id,
         );
 
-        const cells = new Map<string, any>();
-        const cellsData = (cellsResponse.data as any)?.data || [];
+        const cells = new Map<string, unknown>();
+        const cellsData =
+          (
+            cellsResponse.data as unknown as {
+              data?: Array<{ row_index: number; col_index: number; cell_data: unknown }>;
+            }
+          )?.data || [];
 
-        cellsData.forEach((cell: any) => {
+        cellsData.forEach((cell) => {
           const key = `${cell.row_index}_${cell.col_index}`;
           cells.set(key, cell.cell_data);
         });
@@ -130,7 +139,7 @@ export const useTableReferenceStore = create<TableReferenceStore>((set, get) => 
       }
 
       return null;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(`Failed to load table ${tableId}:`, error);
 
       // Обновляем с ошибкой
@@ -138,7 +147,7 @@ export const useTableReferenceStore = create<TableReferenceStore>((set, get) => 
       const entry = updated.get(`id:${tableId}`);
       if (entry) {
         entry.isLoading = false;
-        entry.error = error.message || "Failed to load table";
+        entry.error = error instanceof Error ? error.message : "Failed to load table";
       }
       set({ cache: updated });
 
@@ -166,10 +175,10 @@ export const useTableReferenceStore = create<TableReferenceStore>((set, get) => 
 
     if (!start || !end) return [];
 
-    const values: any[][] = [];
+    const values: unknown[][] = [];
 
     for (let row = start.row; row <= end.row; row++) {
-      const rowData: any[] = [];
+      const rowData: unknown[] = [];
       for (let col = start.col; col <= end.col; col++) {
         const key = get().buildCellKey(row, col);
         rowData.push(tableData.cells.get(key) || null);

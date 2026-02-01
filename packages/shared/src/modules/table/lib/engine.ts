@@ -1,11 +1,10 @@
-import { HyperFormula, ConfigParams, CellValue } from "hyperformula";
+import { CellValue, ConfigParams, HyperFormula, SimpleCellAddress } from "hyperformula";
+
 import type { CellData } from "../types/cell.types";
 import {
   extractTableReferences,
-  parseCellAddress,
-  formatCellAddress,
   type TableReference,
-} from "../../../lib/table/TableReferenceParser";
+} from "./TableReferenceParser";
 
 interface CellAddress {
   sheet: number;
@@ -83,7 +82,7 @@ export class TableFormulaEngine {
     if (cell.formula) {
       this.hf.setCellContents(address, [[cell.formula]]);
     } else if (cell.value !== undefined && cell.value !== null) {
-      this.hf.setCellContents(address, [[cell.value as any]]);
+      this.hf.setCellContents(address, [[cell.value as string | number | boolean]]);
     } else {
       this.hf.setCellContents(address, [[null]]);
     }
@@ -145,17 +144,19 @@ export class TableFormulaEngine {
     if (sheetId === undefined) return [];
     const deps = this.hf.getCellDependents({ sheet: sheetId, row, col });
 
-    return deps.map((dep: any) => {
-      const depTableId = Array.from(this.sheetMap.entries()).find(
-        ([, id]) => id === dep.sheet,
-      )?.[0];
+    return deps
+      .filter((dep): dep is SimpleCellAddress => "sheet" in dep && "row" in dep && "col" in dep)
+      .map((dep) => {
+        const depTableId = Array.from(this.sheetMap.entries()).find(
+          ([, id]) => id === dep.sheet,
+        )?.[0];
 
-      return {
-        tableId: depTableId || "",
-        row: dep.row,
-        col: dep.col,
-      };
-    });
+        return {
+          tableId: depTableId || "",
+          row: dep.row,
+          col: dep.col,
+        };
+      });
   }
 
   /**
@@ -295,7 +296,7 @@ export class TableFormulaEngine {
           this.hf.setCellContents({ sheet: sheetId!, row: rowIdx, col: colIdx }, [[cell.formula]]);
         } else if (cell.value !== undefined && cell.value !== null) {
           // Преобразуем unknown в примитив для HyperFormula
-          const cellValue = cell.value as string | number | boolean;
+          const cellValue = cell.value as string | number | boolean | null;
           this.hf.setCellContents({ sheet: sheetId!, row: rowIdx, col: colIdx }, [[cellValue]]);
         } else {
           this.hf.setCellContents({ sheet: sheetId!, row: rowIdx, col: colIdx }, [[""]]);

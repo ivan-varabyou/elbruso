@@ -1,6 +1,6 @@
 import type {
-  SystemEntityType,
   LinkType,
+  SystemEntityType,
 } from './enums';
 
 export interface TableLink {

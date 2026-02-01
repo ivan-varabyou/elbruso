@@ -1,19 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { useAuth } from "../../../lib/auth";
-import { useToast } from "../../../ui/uikit/Toast";
-import { Input } from "../../../ui/uikit/Input";
-import { Button } from "../../../ui/uikit/Button";
-import { Select } from "../../../ui/uikit/Select";
-import { Logo } from "../../../ui/uikit/Logo";
-import { useI18n } from "../../../lib/i18n";
-import { Dictionary } from "../../../types";
-import { useCountries } from "../../../api/hooks/useCountries";
-import { useOrganizations } from "../../../api/hooks/useOrganizations";
 import "./auth.css";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+
+import { useCountries, useOrganizations } from "../../../api/hooks";
+import type { Dictionary } from "../../../types";
+import { Button } from "@elbruso/ui/primitives/Button";
+import { Input } from "@elbruso/ui/primitives/Input";
+import { Logo } from "@elbruso/ui/primitives/Logo";
+import { Select } from "@elbruso/ui/primitives/Select";
+import { useToast } from "../../../modules/notifications/hooks";
+import { useI18n } from "../../i18n/lib";
+import { useAuth } from "../lib";
 
 interface Country {
   id: number;

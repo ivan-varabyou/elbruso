@@ -10,16 +10,17 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthService } from '../services/auth.service';
 import {
   LoginDto,
   RegisterDto,
   RefreshTokenDto,
   ForgotPasswordDto,
   ResetPasswordDto,
+  ChangePasswordDto,
 } from '../dto';
-import { AuthResponse } from '../interfaces';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { AuthResponse, RequestWithUser } from '../interfaces';
+import { AuthService } from '../services/auth.service';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -108,7 +109,7 @@ export class AuthController {
     description: 'Current user profile',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getMe(@Req() req: any) {
+  async getMe(@Req() req: RequestWithUser) {
     return this.authService.getMe(req.user.sub);
   }
 
@@ -116,7 +117,10 @@ export class AuthController {
   @Post('change-password')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Change current user password' })
-  async changePassword(@Req() req: any, @Body() dto: any) {
+  async changePassword(
+    @Req() req: RequestWithUser,
+    @Body() dto: ChangePasswordDto,
+  ) {
     return this.authService.changePassword(req.user.sub, dto);
   }
 }

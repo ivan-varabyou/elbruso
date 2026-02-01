@@ -43,7 +43,7 @@ export class FormulaService {
         ? formula.substring(1)
         : formula;
 
-      // Pre-process: Replace [Something]! or [Ws]![Table]! with EXT! 
+      // Pre-process: Replace [Something]! or [Ws]![Table]! with EXT!
       // so HyperFormula thinks it's a normal sheet reference for validation purposes.
       const normalizedFormula = cleanFormula.replace(
         /\[[^\]]+\]!(\[[^\]]+\]!)?/g,
@@ -54,7 +54,7 @@ export class FormulaService {
       // to avoid circular dependencies if someone writes something like =temp!A1
       const extSheetName = this.engine.addSheet('EXT');
       const extSheetId = this.engine.getSheetId(extSheetName);
-      
+
       const sheetName = this.engine.addSheet('temp');
       const sheetId = this.engine.getSheetId(sheetName);
 
@@ -170,7 +170,7 @@ export class FormulaService {
       }
 
       return result as string | number | boolean | null;
-    } catch (error) {
+    } catch (_error) {
       return '#ERROR';
     }
   }
@@ -203,17 +203,19 @@ export class FormulaService {
    */
   getExternalDependencies(formula: string): ExternalDependency[] {
     const externals: ExternalDependency[] = [];
-    
+
     // Pattern 1: [Workspace]![Table]!Range
-    const crossWorkspacePattern = /\[([^\]]+)\]!\[([^\]]+)\]!(\$?[A-Z]+\$?(\d+)?(?::\$?[A-Z]+\$?(\d+)?)?)/g;
-    
+    const crossWorkspacePattern =
+      /\[([^\]]+)\]!\[([^\]]+)\]!(\$?[A-Z]+\$?(\d+)?(?::\$?[A-Z]+\$?(\d+)?)?)/g;
+
     // Pattern 2: [Table]!Range
-    const localTablePattern = /\[([^\]]+)\]!(\$?[A-Z]+\$?(\d+)?(?::\$?[A-Z]+\$?(\d+)?)?)/g;
+    const localTablePattern =
+      /\[([^\]]+)\]!(\$?[A-Z]+\$?(\d+)?(?::\$?[A-Z]+\$?(\d+)?)?)/g;
 
     const cleanFormula = formula.startsWith('=') ? formula : `=${formula}`;
 
     let match;
-    
+
     // Check cross-workspace first to avoid partial matches by local pattern
     while ((match = crossWorkspacePattern.exec(cleanFormula)) !== null) {
       externals.push({
@@ -227,7 +229,9 @@ export class FormulaService {
     // Check local tables, making sure we don't duplicate cross-workspace ones
     while ((match = localTablePattern.exec(cleanFormula)) !== null) {
       // If the match is already part of a cross-workspace reference, skip it
-      const isCross = externals.some(e => e.fullReference.includes(match![0]));
+      const isCross = externals.some((e) =>
+        e.fullReference.includes(match![0]),
+      );
       if (!isCross) {
         externals.push({
           fullReference: match[0],

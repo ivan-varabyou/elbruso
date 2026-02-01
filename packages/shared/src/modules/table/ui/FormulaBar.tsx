@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { TableFormulaEngine } from "@/shared/modules/table/lib/engine";
-import { extractTableReferences } from "@/shared/lib/table/TableReferenceParser";
-import type { CellData } from "@/shared";
-import { ChevronDown, Link2, ExternalLink } from "lucide-react";
+import { TableFormulaEngine } from "@elbruso/modules/table/lib/engine";
+import { extractTableReferences } from "@elbruso/modules/table/lib/TableReferenceParser";
+import type { CellData } from "@elbruso/modules/table/types/cell.types";
+import { ChevronDown, ExternalLink, Link2 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface FormulaBarProps {
   tableId: string;
@@ -45,14 +45,22 @@ export function FormulaBar({
       // Extract cross-table references for highlighting
       const refs = extractTableReferences(formula);
       setCrossTableRefs(
-        refs.map((ref) => {
-          if (ref.isCrossWorkspace && ref.tableName) {
-            return `${ref.workspaceId || ""}:${ref.tableName}!${ref.startCell}`;
-          } else if (ref.isCrossTable && ref.tableName) {
-            return `${ref.tableName}!${ref.startCell}`;
-          }
-          return ref.startCell;
-        }),
+        refs.map(
+          (ref: {
+            isCrossWorkspace?: boolean;
+            isCrossTable?: boolean;
+            tableName?: string;
+            workspaceId?: string;
+            startCell: string;
+          }) => {
+            if (ref.isCrossWorkspace && ref.tableName) {
+              return `${ref.workspaceId || ""}:${ref.tableName}!${ref.startCell}`;
+            } else if (ref.isCrossTable && ref.tableName) {
+              return `${ref.tableName}!${ref.startCell}`;
+            }
+            return ref.startCell;
+          },
+        ),
       );
     } else {
       setValue(cellValue?.toString() || "");
@@ -74,14 +82,22 @@ export function FormulaBar({
         // Extract cross-table references for highlighting
         const refs = extractTableReferences(newValue);
         setCrossTableRefs(
-          refs.map((ref) => {
-            if (ref.isCrossWorkspace && ref.tableName) {
-              return `${ref.workspaceId || ""}:${ref.tableName}!${ref.startCell}`;
-            } else if (ref.isCrossTable && ref.tableName) {
-              return `${ref.tableName}!${ref.startCell}`;
-            }
-            return ref.startCell;
-          }),
+          refs.map(
+            (ref: {
+              isCrossWorkspace?: boolean;
+              isCrossTable?: boolean;
+              tableName?: string;
+              workspaceId?: string;
+              startCell: string;
+            }) => {
+              if (ref.isCrossWorkspace && ref.tableName) {
+                return `${ref.workspaceId || ""}:${ref.tableName}!${ref.startCell}`;
+              } else if (ref.isCrossTable && ref.tableName) {
+                return `${ref.tableName}!${ref.startCell}`;
+              }
+              return ref.startCell;
+            },
+          ),
         );
       }
     } else {

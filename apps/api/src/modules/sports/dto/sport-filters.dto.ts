@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsInt, IsBoolean } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
+import { IsOptional, IsInt, IsBoolean } from 'class-validator';
 
 export class SportFiltersDto {
   @ApiPropertyOptional({ description: 'Filter by olympic category ID' })

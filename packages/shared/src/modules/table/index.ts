@@ -1,11 +1,6 @@
-export * from "./ui";
-export * from "./model/useTableStore";
-export * from "./model/useSelectionStore";
-export * from "./model/useFormattingStore";
-export * from "./model/useFormulaStore";
-export * from "./model/useHistoryStore";
+export * from "./services/cell-formatting.service";
 export * from "./services/table.service";
 export * from "./services/table-grid-api.service";
-export * from "./services/cell-formatting.service";
-export type { TableVersion, ValidationRule, MatrixFormula, CellRange } from "./types/table.types";
 export * from "./types/cell.types";
+export type { CellRange,MatrixFormula, TableVersion, ValidationRule } from "./types/table.types";
+export * from "./ui";

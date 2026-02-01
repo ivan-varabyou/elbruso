@@ -6,15 +6,18 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { sql } from 'kysely';
+import { DynamicTables, TableVersions, TableCells } from '@elbruso/database';
+import {
+  AuditService,
+  AuditAction,
+} from '@modules/audit/services/audit.service';
+import { IndicatorGroupsService } from '@modules/indicators/services/indicator-groups.service';
+import { IndicatorsService } from '@modules/indicators/services/indicators.service';
+import { RegionsService } from '@modules/regions/services/regions.service';
+import { SportsService } from '@modules/sports/services/sports.service';
+import { WorkspaceRole } from '@modules/workspace/dto/workspace.dto';
+import { WorkspaceService } from '@modules/workspace/services/workspace.service';
 import { DatabaseService } from '@database/database.service';
-import { WorkspaceService } from '../../workspace/services/workspace.service';
-import { AuditService, AuditAction } from '../../audit/services/audit.service';
-import { FormulaService } from './formula.service';
-import { WorkspaceRole } from '../../workspace/dto/workspace.dto';
-import { RegionsService } from '../../regions/services/regions.service';
-import { SportsService } from '../../sports/services/sports.service';
-import { IndicatorsService } from '../../indicators/services/indicators.service';
-import { IndicatorGroupsService } from '../../indicators/services/indicator-groups.service';
 import {
   CreateTableDto,
   UpdateTableDto,
@@ -25,7 +28,7 @@ import {
   CreateLinkDto,
   MatrixFormulaDto,
 } from '../dto/tables.dto';
-import { DynamicTables, TableVersions, TableCells } from '@elbruso/database';
+import { FormulaService } from './formula.service';
 
 @Injectable()
 export class TablesService {
@@ -491,7 +494,7 @@ export class TablesService {
     return { message: 'Cells updated' };
   }
 
-  async deleteRow(versionId: string, index: number, userId: string) {
+  async deleteRow(versionId: string, index: number, _userId: string) {
     const version = await this.db.client
       .selectFrom('table_versions')
       .selectAll()
@@ -534,7 +537,7 @@ export class TablesService {
     return { message: 'Row deleted and cells shifted' };
   }
 
-  async deleteColumn(versionId: string, index: number, userId: string) {
+  async deleteColumn(versionId: string, index: number, _userId: string) {
     const version = await this.db.client
       .selectFrom('table_versions')
       .selectAll()
@@ -585,7 +588,7 @@ export class TablesService {
     return { message: 'Column deleted and cells shifted' };
   }
 
-  async insertRow(versionId: string, index: number, userId: string) {
+  async insertRow(versionId: string, index: number, _userId: string) {
     const version = await this.db.client
       .selectFrom('table_versions')
       .selectAll()
@@ -617,7 +620,7 @@ export class TablesService {
     return { message: 'Row inserted and cells shifted' };
   }
 
-  async insertColumn(versionId: string, index: number, userId: string) {
+  async insertColumn(versionId: string, index: number, _userId: string) {
     const version = await this.db.client
       .selectFrom('table_versions')
       .selectAll()
@@ -813,7 +816,7 @@ export class TablesService {
     return { message: 'Matrix formulas updated' };
   }
 
-  async getDonorStatus(tableId: string, userId: string) {
+  async getDonorStatus(tableId: string, _userId: string) {
     const linksWithDonors = await this.db.client
       .selectFrom('table_links as l')
       .leftJoin('dynamic_tables as d', 'l.source_table_id', 'd.id')

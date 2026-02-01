@@ -1,8 +1,8 @@
 "use client";
 
-import { useI18n } from "@/shared/lib/i18n";
-import { Logo } from "@/shared/ui/uikit/Logo";
-import { Dictionary } from "@/shared";
+import { useI18n } from "@elbruso/modules/i18n/lib";
+import type { Dictionary } from "@elbruso/types/dictionary";
+import { Logo } from "@elbruso/ui/primitives/Logo";
 import Link from "next/link";
 
 export const Header = () => {

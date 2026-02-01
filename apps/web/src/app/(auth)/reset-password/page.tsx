@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { useToast, Input, Button, PasswordStrength, Logo } from "@/shared/ui";
-import { useVerifyResetToken, useResetPassword } from "@/shared/api/hooks/";
 import "../login/login.css";
+
+import { useResetPassword, useVerifyResetToken } from "@elbruso/hooks";
+import { PasswordStrength } from "@elbruso/modules/profile/ui/Settings/PasswordStrength";
+import { Button, Input, Logo } from "@elbruso/ui";
+import { useToast } from "@elbruso/modules/notifications/hooks";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -127,7 +130,7 @@ function ResetPasswordForm() {
             label="Новый пароль"
             placeholder="Создайте надёжный пароль"
             value={password}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setPassword(e.target.value);
               if (errors.password) {
                 setErrors((prev) => ({ ...prev, password: "" }));

@@ -1,13 +1,12 @@
-import { Building2 } from 'lucide-react';
-import { PageLayout } from '@/shared/ui';
+import { PageLayout } from "@elbruso/ui";
+import { Building2 } from "lucide-react";
 
 export default function OrganizationsPage() {
-    return (
-        <PageLayout 
-            title="Организации" 
-            icon={Building2}
-            description="Список организаций в подчинении с привязкой к субъектам РФ."
-        />
-    );
+  return (
+    <PageLayout
+      title="Организации"
+      icon={Building2}
+      description="Список организаций в подчинении с привязкой к субъектам РФ."
+    />
+  );
 }
-

@@ -1,10 +1,10 @@
 "use client";
 
+import { Reference } from "@elbruso/api";
+import type { Indicator } from "@elbruso/types/reference.types";
+import { Button, Input, Select } from "@elbruso/ui";
+import { AlertCircle, Save, X } from "lucide-react";
 import { useState } from "react";
-import { X, Save, AlertCircle } from "lucide-react";
-import { Button, Input, Select } from "@/shared/ui";
-import { Reference } from "@/shared";
-import type { Indicator } from "@/shared";
 
 interface CreateIndicatorModalProps {
   onClose: () => void;

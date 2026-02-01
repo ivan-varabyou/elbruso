@@ -16,13 +16,13 @@ import {
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { WorkspaceGroupService } from '../services/workspace-group.service';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import {
   CreateGroupDto,
   UpdateGroupDto,
   ReorderGroupsDto,
 } from '../dto/workspace-group.dto';
+import { WorkspaceGroupService } from '../services/workspace-group.service';
 
 @ApiTags('Workspace Groups')
 @ApiBearerAuth('JWT-auth')

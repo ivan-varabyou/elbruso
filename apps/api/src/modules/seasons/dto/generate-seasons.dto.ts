@@ -1,5 +1,5 @@
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
 export class GenerateSeasonsDto {
   @ApiProperty({ description: 'Start year for generation', example: 2024 })

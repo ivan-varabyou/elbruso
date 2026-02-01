@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AdminAuthModule } from './admin-auth.module';
-import { AdminUsersModule } from './users/admin-users.module';
-import { AdminRolesModule } from './roles/admin-roles.module';
-import { AdminSetupController } from './controllers/admin-setup.controller';
-import { AdminSetupService } from './services/admin-setup.service';
 import { DatabaseModule } from '@database/database.module';
+import { AdminAuthModule } from './admin-auth.module';
+import { AdminSetupController } from './controllers/admin-setup.controller';
+import { AdminRolesModule } from './roles/admin-roles.module';
+import { AdminSetupService } from './services/admin-setup.service';
+import { AdminUsersModule } from './users/admin-users.module';
 
 @Module({
   imports: [

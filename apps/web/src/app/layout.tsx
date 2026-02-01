@@ -1,7 +1,9 @@
-import { Inter } from "next/font/google";
-import { AppProviders } from "@/shared";
-import { getDictionary } from "../../get-dictionary";
 import "./globals.css";
+
+import { AppProviders } from "@elbruso/shared";
+import { Inter } from "next/font/google";
+
+import { getDictionary } from "../../get-dictionary";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 

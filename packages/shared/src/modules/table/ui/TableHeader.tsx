@@ -1,7 +1,7 @@
 'use client';
 
-import { FileText, ChevronRight, Share2, History, MoreHorizontal } from 'lucide-react';
-import { useWorkspaceStore } from '@/shared/stores';
+import { useWorkspaceStore } from '@elbruso/stores';
+import { ChevronRight, FileText, History, MoreHorizontal,Share2 } from 'lucide-react';
 
 interface TableHeaderProps {
     tableName: string;

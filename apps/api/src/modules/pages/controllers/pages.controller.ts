@@ -16,9 +16,9 @@ import {
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { PagesService } from '../services/pages.service';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { CreatePageDto, UpdatePageDto, MovePageDto } from '../dto';
+import { PagesService } from '../services/pages.service';
 
 @ApiTags('Pages')
 @ApiBearerAuth('JWT-auth')

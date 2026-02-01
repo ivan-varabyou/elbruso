@@ -21,10 +21,15 @@
     "paths": {
       "@/*": ["./*"],
       "@modules/*": ["modules/*"],
+      "@modules/auth/*": ["modules/auth/*"],
+      "@modules/users/*": ["modules/users/*"],
+      "@modules/workspace/*": ["modules/workspace/*"],
+      "@modules/tables/*": ["modules/tables/*"],
+      "@modules/reference/*": ["modules/reference/*"],
       "@gateway/*": ["gateway/*"],
-      "@common/*": ["common/*"],
-      "@config/*": ["config/*"],
-      "@database/*": ["database/*"],
+      "@shared/*": ["shared/*"],
+      "@config": ["./config"],
+      "@database/*": ["database/*"]
     }
   },
   "include": ["src", "test"],

@@ -1,10 +1,10 @@
 "use client";
 
+import { cn } from "@elbruso/lib";
+import { OrganizationTree, ProfileForm, SecurityForm } from "@elbruso/modules/profile/ui";
+import { PageLayout } from "@elbruso/ui";
+import { Building2, Shield, User } from "lucide-react";
 import { useState } from "react";
-import { PageLayout } from "@/shared/ui";
-import { cn } from "@/shared/lib/utils";
-import { User, Shield, Building2, ChevronRight } from "lucide-react";
-import { ProfileForm, SecurityForm, OrganizationTree } from "@/shared/ui";
 
 type TabType = "profile" | "security" | "organization";
 

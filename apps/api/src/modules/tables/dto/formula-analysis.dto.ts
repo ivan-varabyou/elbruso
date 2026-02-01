@@ -2,7 +2,10 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsUUID, IsOptional } from 'class-validator';
 
 export class AnalyzeFormulaDto {
-  @ApiProperty({ description: 'Formula to analyze', example: '=SUM([Revenue]!A1:A10)' })
+  @ApiProperty({
+    description: 'Formula to analyze',
+    example: '=SUM([Revenue]!A1:A10)',
+  })
   @IsString()
   formula: string;
 
@@ -26,7 +29,7 @@ export class ExternalRefResponse {
 
   @ApiProperty()
   range: string;
-  
+
   @ApiProperty()
   hasAccess: boolean;
 }

@@ -1,8 +1,8 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { DatabaseService } from '@database/database.service';
-import { Sports, Disciplines } from '@elbruso/database';
-import { SportFiltersDto } from '../dto/sport-filters.dto';
 import { sql } from 'kysely';
+import { Sports, Disciplines } from '@elbruso/database';
+import { DatabaseService } from '@database/database.service';
+import { SportFiltersDto } from '../dto/sport-filters.dto';
 
 @Injectable()
 export class SportsService implements OnModuleInit {

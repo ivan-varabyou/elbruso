@@ -1,10 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Reference } from "../Reference";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import type {
   CreateIndicatorGroupDto,
   GenerateIndicatorsDto,
   UpdateIndicatorGroupDto,
 } from "../data-contracts";
+import { Reference } from "../Reference";
 
 const referenceApi = new Reference();
 

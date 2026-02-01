@@ -4,11 +4,11 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { DatabaseService } from '@database/database.service';
-import { PagesService } from '../../pages/services/pages.service';
-import { AuditService, AuditAction } from '../../audit/services/audit.service';
-import { CreateBlockDto, UpdateBlockDto, MoveBlockDto } from '../dto';
 import { Blocks } from '@elbruso/database';
+import { AuditService, AuditAction } from '@modules/audit/services/audit.service';
+import { PagesService } from '@modules/pages/services/pages.service';
+import { DatabaseService } from '@database/database.service';
+import { CreateBlockDto, UpdateBlockDto, MoveBlockDto } from '../dto';
 
 @Injectable()
 export class BlocksService {

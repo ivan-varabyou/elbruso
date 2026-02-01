@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { useToast } from "../../../ui/uikit/Toast";
-import { Input } from "../../../ui/uikit/Input";
-import { Button } from "../../../ui/uikit/Button";
-import { Logo } from "../../../ui/uikit/Logo";
-import { PasswordStrength } from "../../profile/ui/Settings/PasswordStrength/PasswordStrength";
-import { useVerifyResetToken, useResetPassword } from "../../../api/hooks";
 import "./auth.css";
+
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect,useState } from "react";
+
+import { useResetPassword,useVerifyResetToken } from "../../../api/hooks";
+import { Button } from "@elbruso/ui/primitives/Button";
+import { Input } from "@elbruso/ui/primitives/Input";
+import { Logo } from "@elbruso/ui/primitives/Logo";
+import { useToast } from "@elbruso/modules/notifications/hooks";
+import { PasswordStrength } from "../../profile/ui/Settings/PasswordStrength/PasswordStrength";
 
 export const ResetPasswordForm = () => {
   const router = useRouter();

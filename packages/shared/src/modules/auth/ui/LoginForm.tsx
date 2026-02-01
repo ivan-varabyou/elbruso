@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { useAuth } from "../../../lib/auth";
-import { useToast } from "../../../ui/uikit/Toast";
-import { Input } from "../../../ui/uikit/Input";
-import { Button } from "../../../ui/uikit/Button";
-import { Logo } from "../../../ui/uikit/Logo";
-import { useI18n } from "../../../lib/i18n";
-import { Dictionary } from "../../../types";
 import "./auth.css";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+
+import { Dictionary } from "../../../types";
+import { Button } from "@elbruso/ui/primitives/Button";
+import { Input } from "@elbruso/ui/primitives/Input";
+import { Logo } from "@elbruso/ui/primitives/Logo";
+import { useToast } from "../../../modules/notifications/hooks";
+import { useI18n } from "../../i18n/lib";
+import { useAuth } from "../lib";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -27,7 +29,7 @@ export const LoginForm = () => {
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
-    const error = typeof window !== 'undefined' ? window.localStorage.getItem("auth_error") : null;
+    const error = typeof window !== "undefined" ? window.localStorage.getItem("auth_error") : null;
     if (error) {
       setAuthError(error);
       window.localStorage.removeItem("auth_error");

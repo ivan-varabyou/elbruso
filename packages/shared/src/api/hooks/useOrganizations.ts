@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+
 import { Reference } from "../Reference";
 
 interface Organization {
@@ -22,9 +23,7 @@ export const useOrganizations = (countryId?: number): Organization[] => {
       ? organizationKeys.organizationsByCountry(countryId)
       : organizationKeys.organizations(),
     queryFn: async () => {
-      const response = await referenceApi.organizationsControllerFindAll({
-        query: countryId ? { countryId } : undefined,
-      } as any);
+      const response = await referenceApi.organizationsControllerFindAll();
       const data = response.data as unknown as Organization[] | undefined;
       return data || [];
     },

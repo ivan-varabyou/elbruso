@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@elbruso/shared": ["./src/index.ts"],
+      "@elbruso/shared/*": ["./src/*"],
+      "@elbruso/api": ["./src/api/index.ts"],
+      "@elbruso/api/*": ["./src/api/*"],
+      "@elbruso/hooks": ["./src/api/hooks/index.ts"],
+      "@elbruso/hooks/*": ["./src/api/hooks/*"],
+      "@elbruso/stores": ["./src/stores/index.ts"],
+      "@elbruso/stores/*": ["./src/stores/*"],
+      "@elbruso/types": ["./src/types/index.ts"],
+      "@elbruso/types/*": ["./src/types/*"],
+      "@elbruso/lib": ["./src/lib/index.ts"],
+      "@elbruso/lib/*": ["./src/lib/*"],
+      "@elbruso/modules/*": ["./src/modules/*"],
+      "@elbruso/ui": ["./src/ui/index.ts"],
+      "@elbruso/ui/*": ["./src/ui/*"],
+      "@elbruso/debug": ["./src/modules/debug/lib/index.ts"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

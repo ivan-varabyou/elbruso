@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseService } from '../../../database/database.service';
+import { DatabaseService } from '@database/database.service';
 import { EmailProvider } from '../interfaces/email-provider.interface';
 import { ConsoleEmailProvider } from '../providers/console-email.provider';
 import { SmtpEmailProvider } from '../providers/smtp-email.provider';

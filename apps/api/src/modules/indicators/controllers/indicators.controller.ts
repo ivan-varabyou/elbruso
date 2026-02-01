@@ -12,25 +12,24 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { IndicatorsService } from '../services/indicators.service';
-import { IndicatorFiltersDto } from '../dto/indicator-filters.dto';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { OrganizationsService } from '@modules/organizations/services/organizations.service';
+import { UsersService } from '@modules/users/services/users.service';
+import { DatabaseService } from '@database/database.service';
 import { GenerateIndicatorsDto } from '../dto/generate-indicators.dto';
+import { IndicatorFiltersDto } from '../dto/indicator-filters.dto';
 import {
   CreateIndicatorGroupDto,
   UpdateIndicatorGroupDto,
   GetIndicatorGroupsDto,
 } from '../dto/indicator-group.dto';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { UsersService } from '../../users/services/users.service';
-import { DatabaseService } from '@database/database.service';
-import { OrganizationsService } from '../../organizations/services/organizations.service';
+import { IndicatorsService } from '../services/indicators.service';
 
 @Controller('reference/indicators')
 @ApiTags('Indicators')
@@ -50,9 +49,9 @@ export class IndicatorsController {
   async findAll(@Request() req, @Query() filters: IndicatorFiltersDto) {
     const user = await this.usersService.findById(req.user.sub);
     if (user) {
-      filters.userId = user.id;
-      filters.userOrganizationId = (user as any).organization_id;
-      filters.userRole = (user as any).role;
+      filters.userId = String(user.id);
+      filters.userOrganizationId = user.organization_id ?? undefined;
+      filters.userRole = String(user.role ?? '');
 
       if (filters.userOrganizationId) {
         const ancestors = await this.organizationsService.getAncestors(

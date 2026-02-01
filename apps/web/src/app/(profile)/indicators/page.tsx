@@ -1,35 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Reference } from "@elbruso/api";
+import { cn } from "@elbruso/lib";
+import { useAuth } from "@elbruso/modules/auth/lib";
 import {
-  TrendingUp,
-  Search,
-  Globe,
-  Trophy,
+  CreateIndicatorModal,
+  FilterDropdown,
+  GenerateIndicatorsModal,
+  IndicatorGroupsList,
+} from "@elbruso/modules/profile/ui/indicators/components";
+import type { Indicator } from "@elbruso/types";
+import { Button } from "@elbruso/ui";
+import { PageLayout } from "@elbruso/ui/layout";
+import {
+  Activity,
   Building2,
-  Plus,
-  Trash2,
   Edit2,
   Filter,
-  Shield,
-  Wand2,
+  Globe,
   MoreHorizontal,
+  Plus,
+  Search,
+  Shield,
+  Trash2,
+  TrendingUp,
+  Trophy,
   User,
   Users,
-  Activity,
+  Wand2,
 } from "lucide-react";
-import { 
-  PageLayout, 
-  Button, 
-  FilterDropdown, 
-  CreateIndicatorModal, 
-  GenerateIndicatorsModal, 
-  IndicatorGroupsList 
-} from "@/shared/ui";
-import { Reference } from "@/shared";
-import { useAuth } from "@/shared/lib/auth";
-import type { Indicator } from "@/shared";
-import { cn } from "@/shared/lib/utils";
+import { useEffect, useState } from "react";
 
 export default function IndicatorsPage() {
   const { user } = useAuth();
@@ -46,11 +46,11 @@ export default function IndicatorsPage() {
   const fetchIndicators = async () => {
     setLoading(true);
     try {
-      const indicatorsResponse = (await referenceApi.indicatorsControllerFindAll({
+      const indicatorsResponse = await referenceApi.indicatorsControllerFindAll({
         search: searchQuery,
         scopes: selectedScopes.length > 0 ? selectedScopes : undefined,
-      })) as any;
-      setIndicators(indicatorsResponse.data);
+      });
+      setIndicators((indicatorsResponse as { data?: Indicator[] })?.data || []);
     } catch (error) {
       console.error("Failed to fetch indicators:", error);
     } finally {
@@ -347,7 +347,7 @@ export default function IndicatorsPage() {
       {showCreateModal && (
         <CreateIndicatorModal
           onClose={() => setShowCreateModal(false)}
-          onSuccess={(newIndicator) => {
+          onSuccess={(newIndicator: Indicator) => {
             setIndicators((prev) => [newIndicator, ...prev]);
             fetchIndicators();
           }}

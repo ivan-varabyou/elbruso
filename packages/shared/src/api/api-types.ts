@@ -1,13 +1,11 @@
+// This file is auto-generated from Swagger/OpenAPI spec - DO NOT EDIT
 import {
   AddMemberDto,
   AdminLoginDto,
   AdminSetupDto,
   AdminUpdateUserDto,
   AnalyzeFormulaDto,
-  BatchCellUpdate,
   BatchUpdateCellsDto,
-  CellDataDto,
-  ColumnDefinition,
   CreateAdminUserDto,
   CreateApiKeyDto,
   CreateBlockDto,
@@ -22,7 +20,6 @@ import {
   ForgotPasswordDto,
   GenerateIndicatorsDto,
   GenerateSeasonsDto,
-  LinkFieldMapping,
   LoginDto,
   MoveBlockDto,
   MovePageDto,

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { X, Loader2, Calendar, Trophy } from "lucide-react";
-import { useReferenceStore } from "@/shared/stores";
-import { motion, AnimatePresence } from "framer-motion";
-import type { Season } from "@/shared";
+import { useReferenceStore } from "@elbruso/stores";
+import type { Season } from "@elbruso/types/reference.types";
+import { AnimatePresence, motion } from "framer-motion";
+import { Loader2, Trophy, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface SeasonModalProps {
   isOpen: boolean;
@@ -62,8 +62,9 @@ export function SeasonModal({ isOpen, onClose, season }: SeasonModalProps) {
         await createSeason(data);
       }
       onClose();
-    } catch (err: any) {
-      setError(err?.message || "Ошибка при сохранении");
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setError(error?.message || "Ошибка при сохранении");
     }
   };
 
@@ -140,7 +141,7 @@ export function SeasonModal({ isOpen, onClose, season }: SeasonModalProps) {
                     className="w-full appearance-none rounded-lg border border-zinc-200 bg-white pl-9 pr-4 py-2 text-sm focus:border-zinc-900 focus:outline-none transition-all"
                   >
                     <option value="">Глобальный (все виды)</option>
-                    {sports.map((s) => (
+                    {sports.map((s: { id: string | number; name_ru: string }) => (
                       <option key={s.id} value={s.id}>
                         {s.name_ru}
                       </option>

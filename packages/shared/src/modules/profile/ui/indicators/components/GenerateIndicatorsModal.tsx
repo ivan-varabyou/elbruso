@@ -1,22 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Reference } from "@elbruso/api";
+import { cn } from "@elbruso/lib";
+import type { Sport } from "@elbruso/types/reference.types";
+import { Button } from "@elbruso/ui";
 import {
-  X,
-  PlayCircle,
-  Loader2,
-  CheckCircle2,
   AlertCircle,
-  Trophy,
-  ChevronRight,
-  ChevronLeft,
-  Filter,
   Check,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  Loader2,
+  PlayCircle,
+  Trophy,
+  X,
 } from "lucide-react";
-import { Button } from "@/shared/ui";
-import { Reference } from "@/shared";
-import { cn } from "@/shared/lib/utils";
-import type { Sport } from "@/shared";
+import { useEffect, useState } from "react";
 
 interface GenerateIndicatorsModalProps {
   onClose: () => void;
@@ -37,15 +37,17 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
   const [sports, setSports] = useState<Sport[]>([]);
 
   // Template states
-  const [templates, setTemplates] = useState<any[]>([]);
+  const [templates, setTemplates] = useState<
+    Array<{ id: number; name_ru?: string; name?: string; code_pattern?: string; sport_id: number }>
+  >([]);
   const [selectedTemplateIds, setSelectedTemplateIds] = useState<number[]>([]);
   const [fetchingTemplates, setFetchingTemplates] = useState(false);
 
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const sportsResponse = (await referenceApi.sportsControllerFindAll()) as any;
-        setSports(sportsResponse.data);
+        const sportsResponse = await referenceApi.sportsControllerFindAll();
+        setSports((sportsResponse as { data?: Sport[] })?.data || []);
         // Initial fetch
         fetchTemplates("");
       } catch (err) {
@@ -58,14 +60,25 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
   const fetchTemplates = async (sportId: string) => {
     setFetchingTemplates(true);
     try {
-      const templatesResponse = (await referenceApi.indicatorsControllerGetTemplates()) as any;
-      const allTemplates = templatesResponse.data;
+      const templatesResponse = await referenceApi.indicatorsControllerGetTemplates();
+      const allTemplates =
+        (
+          templatesResponse as {
+            data?: Array<{
+              id: number;
+              name_ru?: string;
+              name?: string;
+              code_pattern?: string;
+              sport_id: number;
+            }>;
+          }
+        )?.data || [];
       const filtered = sportId
-        ? allTemplates.filter((t: { sport_id: number }) => t.sport_id === Number(sportId))
+        ? allTemplates.filter((t) => t.sport_id === Number(sportId))
         : allTemplates;
 
       setTemplates(filtered);
-      setSelectedTemplateIds(filtered.map((t: { id: number }) => t.id));
+      setSelectedTemplateIds(filtered.map((t) => t.id));
     } catch (err) {
       console.error("Failed to fetch templates:", err);
       setError("Не удалось загрузить шаблоны");

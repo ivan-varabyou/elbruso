@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@nestjs/common';
 import { sql } from 'kysely';
-import { DatabaseService } from '@database/database.service';
 import { IndicatorGroupsCatalog, IndicatorCatalog } from '@elbruso/database';
+import { DatabaseService } from '@database/database.service';
 import { IndicatorGroupFiltersDto } from '../dto/indicator-group-filters.dto';
 
 @Injectable()
@@ -12,15 +11,15 @@ export class IndicatorGroupsService {
   async findAll(
     filters: IndicatorGroupFiltersDto,
   ): Promise<IndicatorGroupsCatalog[]> {
-    let query: any = this.db.client.selectFrom('indicator_groups_catalog');
+    let query = this.db.client.selectFrom('indicator_groups_catalog');
 
     if (filters.sportId) {
-      query = query.where('sport_id' as any, '=', filters.sportId as any);
+      query = query.where('sport_id', '=', filters.sportId);
     }
 
     return query
       .selectAll()
-      .where('is_active' as any, '=', true)
+      .where('is_active', '=', true)
       .execute() as unknown as IndicatorGroupsCatalog[];
   }
 
@@ -28,8 +27,8 @@ export class IndicatorGroupsService {
     return this.db.client
       .selectFrom('indicator_groups_catalog')
       .selectAll()
-      .where('id' as any, '=', id as any)
-      .where('is_active' as any, '=', true)
+      .where('id', '=', id)
+      .where('is_active', '=', true)
       .executeTakeFirst() as unknown as IndicatorGroupsCatalog | undefined;
   }
 

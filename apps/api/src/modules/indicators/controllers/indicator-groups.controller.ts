@@ -7,8 +7,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { IndicatorGroupsService } from '../services/indicator-groups.service';
 import { IndicatorGroupFiltersDto } from '../dto/indicator-group-filters.dto';
+import { IndicatorGroupsService } from '../services/indicator-groups.service';
 
 @Controller('reference/indicator-groups')
 @ApiTags('Indicator Groups')

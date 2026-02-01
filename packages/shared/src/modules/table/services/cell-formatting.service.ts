@@ -1,7 +1,8 @@
-import { tableGridApi } from './table-grid-api.service';
-import { useTableStore } from '../model/useTableStore';
-import type { CellStyle, CellData } from '../types/cell.types';
-import type { CellUpdate } from '@/shared';
+import type { CellUpdate } from "@elbruso/modules/table/types";
+import { useTableStore } from "@elbruso/stores";
+
+import type { CellData, CellStyle } from "../types/cell.types";
+import { tableGridApi } from "./table-grid-api.service";
 
 /**
  * Service for applying cell formatting (bold, italic, colors, alignment, etc.)
@@ -23,19 +24,19 @@ class CellFormattingService {
     selectedRanges.forEach((range) => {
       const startRow = Math.min(range.startRow?.rowIndex ?? 0, range.endRow?.rowIndex ?? 0);
       const endRow = Math.max(range.startRow?.rowIndex ?? 0, range.endRow?.rowIndex ?? 0);
-      
+
       const columns = range.columns;
-      
+
       for (let rowIndex = startRow; rowIndex <= endRow; rowIndex++) {
         columns.forEach((column) => {
           const colId = column.getColId();
-          if (colId === 'rowNumber' || colId === 'addColumn') return;
+          if (colId === "rowNumber" || colId === "addColumn") return;
 
-          const colIndex = parseInt(colId.split('_')[1]);
+          const colIndex = parseInt(colId.split("_")[1]);
           const currentData = cells.get(`${rowIndex}_${colIndex}`) || {};
-          
+
           const updatedData = formatter(currentData);
-          
+
           updates.push({
             row: rowIndex,
             col: colIndex,
@@ -58,7 +59,7 @@ class CellFormattingService {
       ...current,
       style: {
         ...(current.style || {}),
-        fontWeight: isBold ? 'bold' : 'normal',
+        fontWeight: isBold ? "bold" : "normal",
       },
     }));
   }
@@ -71,7 +72,7 @@ class CellFormattingService {
       ...current,
       style: {
         ...(current.style || {}),
-        fontStyle: isItalic ? 'italic' : 'normal',
+        fontStyle: isItalic ? "italic" : "normal",
       },
     }));
   }
@@ -84,7 +85,7 @@ class CellFormattingService {
       ...current,
       style: {
         ...(current.style || {}),
-        textDecoration: isUnderline ? 'underline' : 'none',
+        textDecoration: isUnderline ? "underline" : "none",
       },
     }));
   }
@@ -118,7 +119,7 @@ class CellFormattingService {
   /**
    * Apply text alignment to selected cells
    */
-  applyAlignment(alignment: 'left' | 'center' | 'right') {
+  applyAlignment(alignment: "left" | "center" | "right") {
     this.applyFormatting((current) => ({
       ...current,
       style: {
@@ -140,11 +141,11 @@ class CellFormattingService {
 
     const { cells } = useTableStore.getState();
     const colId = focusedCell.column.getColId();
-    if (colId === 'rowNumber' || colId === 'addColumn') return {};
+    if (colId === "rowNumber" || colId === "addColumn") return {};
 
-    const colIndex = parseInt(colId.split('_')[1]);
+    const colIndex = parseInt(colId.split("_")[1]);
     const cellData = cells.get(`${focusedCell.rowIndex}_${colIndex}`);
-    
+
     return cellData?.style || {};
   }
 }

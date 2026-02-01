@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@elbruso/*": ["./packages/*/src"]
+    }
+  },
+  "include": ["./packages/*/src"],
+  "exclude": ["node_modules"]
+}

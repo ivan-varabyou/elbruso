@@ -1,29 +1,24 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { DynamicTable } from '@/shared/ui';
+import { DynamicTableComponent as DynamicTable } from "@elbruso/modules/table/ui";
+import { useState } from "react";
 
 export default function TablesTestPage() {
-  const [tableId] = useState('test-table-123');
-  const [workspaceId] = useState('test-workspace-456');
+  const [tableId] = useState("test-table-123");
+  const [workspaceId] = useState("test-workspace-456");
 
   return (
     <div className="h-screen flex flex-col bg-zinc-50">
       {/* Header */}
       <div className="bg-white border-b border-zinc-200 px-4 py-4">
         <h1 className="text-2xl font-bold text-zinc-900">Dynamic Tables Test</h1>
-        <p className="text-sm text-zinc-500 mt-1">
-          Testing ag-Grid + HyperFormula integration
-        </p>
+        <p className="text-sm text-zinc-500 mt-1">Testing ag-Grid + HyperFormula integration</p>
       </div>
 
       {/* Table Container */}
       <div className="flex-1 p-6">
         <div className="h-full bg-white rounded-lg shadow-sm border border-zinc-200 overflow-hidden">
-          <DynamicTable 
-            tableId={tableId} 
-            workspaceId={workspaceId}
-          />
+          <DynamicTable tableId={tableId} workspaceId={workspaceId} />
         </div>
       </div>
 

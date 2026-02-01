@@ -1,35 +1,39 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import { AgGridReact } from "ag-grid-react";
-import {
-  ColDef,
-  CellValueChangedEvent,
-  CellClickedEvent,
-  GridReadyEvent,
-  ModuleRegistry,
-  AllCommunityModule,
-} from "ag-grid-community";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import "./TableTheme.css";
+
+import {
+  AllCommunityModule,
+  CellClickedEvent,
+  CellValueChangedEvent,
+  ColDef,
+  GridReadyEvent,
+  ModuleRegistry,
+} from "ag-grid-community";
+import { AgGridReact } from "ag-grid-react";
+import { useCallback,useEffect, useMemo, useRef, useState } from "react";
 
 // Register all community modules
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-import { useTableStore } from "../model/useTableStore";
-import { useSelectionStore } from "../model/useSelectionStore";
-import { useFormattingStore } from "../model/useFormattingStore";
-import { useFormulaStore } from "../model/useFormulaStore";
-import { useHistoryStore } from "../model/useHistoryStore";
+import { WorkspaceTableTabs } from "@elbruso/modules/profile/ui/WorkspaceTree/WorkspaceTableTabs";
+import {
+  useFormattingStore,
+  useFormulaStore,
+  useHistoryStore,
+  useSelectionStore,
+  useTableStore,
+} from "@elbruso/stores";
+
 import { TableFormulaEngine } from "../lib/engine";
-import { FormulaBar } from "./FormulaBar";
-import { TableHeader } from "./TableHeader";
-import { MainToolbar } from "./MainToolbar";
-import { ContextMenu } from "./ContextMenu";
-import { useKeyboardShortcuts } from "../model/useKeyboardShortcuts";
-import { tableGridApi, tableService, cellFormattingService } from "../services/table.service";
-import { WorkspaceTableTabs } from "@/shared/modules/profile/ui/WorkspaceTree/WorkspaceTableTabs";
+import { cellFormattingService,tableGridApi, tableService } from "../services/table.service";
 import type { CellData } from "../types/cell.types";
+import { ContextMenu } from "./ContextMenu";
+import { FormulaBar } from "./FormulaBar";
+import { MainToolbar } from "./MainToolbar";
+import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
+import { TableHeader } from "./TableHeader";
 
 interface DynamicTableProps {
   tableId: string;
@@ -99,8 +103,9 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const gridRef = useRef<AgGridReact<any>>(null) as React.MutableRefObject<AgGridReact<any>>;
+  const gridRef = useRef<AgGridReact<unknown>>(null) as React.MutableRefObject<
+    AgGridReact<unknown>
+  >;
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -156,26 +161,26 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
       },
     };
 
-    const dataCols: ColDef[] = columns.map((col, idx) => ({
+    const dataCols: ColDef[] = columns.map((col: { width?: number }, idx: number) => ({
       field: `col_${idx}`,
       headerName: String.fromCharCode(65 + idx), // A, B, C, D...
       width: col.width || 150,
       editable: true,
       cellEditor: "agTextCellEditor",
       cellClassRules: {
-        "range-selection-start": (params: any) => {
+        "range-selection-start": (params: { node: { rowIndex: number | null } }) => {
           if (!selectionStart || !selectionEnd) return false;
           const row = params.node.rowIndex;
           const col = idx;
           return row === selectionStart.row && col === selectionStart.col;
         },
-        "range-selection-end": (params: any) => {
+        "range-selection-end": (params: { node: { rowIndex: number | null } }) => {
           if (!selectionStart || !selectionEnd) return false;
           const row = params.node.rowIndex;
           const col = idx;
           return row === selectionEnd.row && col === selectionEnd.col;
         },
-        "range-selection-middle": (params: any) => {
+        "range-selection-middle": (params: { node: { rowIndex: number | null } }) => {
           if (!selectionStart || !selectionEnd) return false;
           const row = params.node.rowIndex;
           const col = idx;
@@ -184,6 +189,7 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
           const minCol = Math.min(selectionStart.col, selectionEnd.col);
           const maxCol = Math.max(selectionStart.col, selectionEnd.col);
           return (
+            row !== null &&
             row >= minRow &&
             row <= maxRow &&
             col >= minCol &&
@@ -193,11 +199,11 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
           );
         },
       },
-      cellStyle: (params) => {
+      cellStyle: (params: { node: { rowIndex: number | null | undefined } }) => {
         const rowIdx = params.node.rowIndex;
-        if (rowIdx === null || rowIdx === undefined) return {};
+        if (rowIdx === null || rowIdx === undefined) return null;
         const cellData = (cells as Map<string, CellData>).get(`${rowIdx}_${idx}`);
-        if (!cellData?.style) return {};
+        if (!cellData?.style) return null;
 
         const style = cellData.style;
         return {
@@ -207,7 +213,7 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
           textAlign: style.textAlign || "left",
           color: style.textColor || "inherit",
           backgroundColor: style.backgroundColor || "transparent",
-        } as any;
+        };
       },
     }));
 
@@ -271,7 +277,12 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
 
   // Handle cell mouse down - start drag selection
   const onCellMouseDown = useCallback(
-    (event: any) => {
+    (event: {
+      node?: { rowIndex: number | null | undefined };
+      colDef?: { field?: string };
+      data?: { isAddRow?: boolean };
+      shiftKey?: boolean;
+    }) => {
       const rowIndex = event.node?.rowIndex;
       const colDef = event.colDef;
       const colId = colDef?.field;
@@ -308,9 +319,12 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
     setSelectedCell({ row, col });
 
     // Start range selection if Shift is pressed
-    if ((event as any).shiftKey && selectedCell) {
-      startSelection(selectedCell);
-      updateSelection({ row, col });
+    const nativeEvent = (event as unknown as { nativeEvent?: { shiftKey?: boolean } }).nativeEvent;
+    if ((event as unknown as { shiftKey?: boolean }).shiftKey || nativeEvent?.shiftKey) {
+      if (selectedCell) {
+        startSelection(selectedCell);
+        updateSelection({ row, col });
+      }
     }
   };
 
@@ -338,7 +352,10 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
   };
 
   // Handle cell mouse enter for highlighting active cell and headers
-  const onCellMouseOver = (event: any) => {
+  const onCellMouseOver = (event: {
+    colDef?: { field?: string };
+    rowIndex: number | null | undefined;
+  }) => {
     const colId = event.colDef?.field;
     const rowIndex = event.rowIndex;
 
@@ -551,7 +568,13 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
   };
 
   // Get context menu items
-  const getContextMenuItems = () => {
+  const getContextMenuItems = (): Array<{
+    label: string;
+    action: () => void;
+    shortcut?: string;
+    separator?: boolean;
+    disabled?: boolean;
+  }> => {
     if (!contextMenu) return [];
 
     const items = [
@@ -565,7 +588,7 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
         action: () => tableService.paste(),
         shortcut: "Ctrl+V",
       },
-      { separator: true } as any,
+      { label: "", action: () => {}, separator: true },
       {
         label: "Вставить строку выше",
         action: () => {
@@ -590,7 +613,7 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
           }
         },
       },
-      { separator: true } as any,
+      { label: "", action: () => {}, separator: true },
       {
         label: "Вставить столбец слева",
         action: () => {
@@ -621,7 +644,7 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
         },
         disabled: contextMenu.colId === "rowNumber",
       },
-      { separator: true } as any,
+      { label: "", action: () => {}, separator: true },
       {
         label: "Экспорт в CSV",
         action: () => tableService.exportToCsv("table-export.csv"),
@@ -754,7 +777,10 @@ export function DynamicTable({ tableId, workspaceId }: DynamicTableProps) {
             setSelectedCell({ row, col });
           }}
           onCellMouseDown={onCellMouseDown}
-          onCellFocused={(event: any) => {
+          onCellFocused={(event: {
+            rowIndex: number | null | undefined;
+            colDef?: { field?: string };
+          }) => {
             const rowIndex = event.rowIndex;
             const colDef = event.colDef;
             if (rowIndex === null || rowIndex === undefined) return;

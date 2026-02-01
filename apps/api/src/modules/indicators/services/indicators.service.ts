@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { DatabaseService } from '@database/database.service';
-import { IndicatorCatalog } from '@elbruso/database';
-import { IndicatorFiltersDto } from '../dto/indicator-filters.dto';
-import { GenerateIndicatorsDto } from '../dto/generate-indicators.dto';
 import { sql } from 'kysely';
+import { IndicatorCatalog } from '@elbruso/database';
+import { DatabaseService } from '@database/database.service';
+import { GenerateIndicatorsDto } from '../dto/generate-indicators.dto';
+import { IndicatorFiltersDto } from '../dto/indicator-filters.dto';
 
 @Injectable()
 export class IndicatorsService implements OnModuleInit {
@@ -28,16 +27,13 @@ export class IndicatorsService implements OnModuleInit {
         ADD COLUMN IF NOT EXISTS created_by UUID;
       `.execute(this.db.client);
 
-      // Separate step for FK to handle cases where users table might have different types
       try {
         await sql`
           ALTER TABLE indicator_catalog
           ADD CONSTRAINT fk_indicator_created_by
           FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL;
         `.execute(this.db.client);
-      } catch (e) {
-        // Constraint might already exist
-      }
+      } catch (_) {}
 
       await sql`
         ALTER TABLE indicator_catalog 
@@ -51,9 +47,8 @@ export class IndicatorsService implements OnModuleInit {
   }
 
   async findAll(filters: IndicatorFiltersDto): Promise<IndicatorCatalog[]> {
-    let query: any = this.db.client.selectFrom('indicator_catalog');
+    let query = this.db.client.selectFrom('indicator_catalog');
 
-    // 1. Visibility & Inheritance Logic
     if (filters.userRole !== 'ADMIN') {
       const {
         userId,
@@ -65,8 +60,8 @@ export class IndicatorsService implements OnModuleInit {
       } = filters;
       const activeScopes = scopes || (scope ? scope.split(',') : []);
 
-      query = query.where((eb: any) => {
-        const conditions: any[] = [];
+      query = query.where((eb) => {
+        const conditions: ReturnType<typeof eb.and>[] = [];
 
         const globalCond = eb.and([
           eb('organization_id', 'is', null),
@@ -79,7 +74,6 @@ export class IndicatorsService implements OnModuleInit {
             ])
           : null;
 
-        // Federation scope now includes ancestors
         const fedOrgs = Array.from(
           new Set([
             ...(ancestorOrgIds || []),
@@ -92,7 +86,6 @@ export class IndicatorsService implements OnModuleInit {
         const personalCond = userId ? eb('created_by', '=', userId) : null;
 
         if (activeScopes.length === 0) {
-          // Default: all accessible
           conditions.push(globalCond);
           if (sportCond) conditions.push(sportCond);
           if (federationCond) conditions.push(federationCond);
@@ -111,25 +104,23 @@ export class IndicatorsService implements OnModuleInit {
       });
     }
 
-    // 2. Additional Filters
     if (filters.sportId) {
-      query = query.where('sport_id' as any, '=', filters.sportId as any);
+      query = query.where('sport_id', '=', filters.sportId);
     }
 
     if (filters.groupId) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       query = query
-        .innerJoin(
-          'indicator_catalog_groups as icg' as any,
-          'icg.indicator_id' as any,
-          'indicator_catalog.id' as any,
+        .innerJoin('indicator_catalog_groups as icg', (eb) =>
+          eb.on('indicator_catalog.id', '=', sql`icg.indicator_id`),
         )
-        .where('icg.group_catalog_id' as any, '=', filters.groupId as any);
+        .where('icg.group_catalog_id', '=', filters.groupId);
     }
 
     if (filters.search) {
       query = query.where(
-        'indicator_catalog.name_ru' as any,
-        'ilike' as any,
+        'indicator_catalog.name_ru',
+        'ilike',
         `%${filters.search}%`,
       );
     }
@@ -148,25 +139,25 @@ export class IndicatorsService implements OnModuleInit {
         'measurement_units.id',
         'indicator_catalog.measurement_unit_id',
       )
-      .selectAll('indicator_catalog' as any)
+      .selectAll('indicator_catalog')
       .select([
         'genders.name_ru as gender_name',
         'age_groups.name_ru as age_group_name',
         'disciplines.name_ru as discipline_name',
         'sports.name_ru as sport_name',
         'measurement_units.name_ru as unit_name',
-      ] as any)
-      .where('indicator_catalog.is_active' as any, '=', true)
+      ])
+      .where('indicator_catalog.is_active', '=', true)
       .orderBy('indicator_catalog.name_ru', 'asc')
-      .execute() as unknown as any[];
+      .execute() as unknown as IndicatorCatalog[];
   }
 
   async findById(id: number): Promise<IndicatorCatalog | undefined> {
     return this.db.client
       .selectFrom('indicator_catalog')
       .selectAll()
-      .where('id' as any, '=', id as any)
-      .where('is_active' as any, '=', true)
+      .where('id', '=', id)
+      .where('is_active', '=', true)
       .executeTakeFirst() as unknown as IndicatorCatalog | undefined;
   }
 
@@ -174,78 +165,70 @@ export class IndicatorsService implements OnModuleInit {
     return this.db.client
       .selectFrom('indicator_catalog')
       .selectAll()
-      .where('sport_id' as any, '=', sportId as any)
-      .where('is_active' as any, '=', true)
+      .where('sport_id', '=', sportId)
+      .where('is_active', '=', true)
       .execute() as unknown as IndicatorCatalog[];
   }
 
-  async create(data: any): Promise<IndicatorCatalog> {
+  async create(data: Record<string, unknown>): Promise<IndicatorCatalog> {
     return this.db.client
-      .insertInto('indicator_catalog' as any)
+      .insertInto('indicator_catalog')
       .values({
         ...data,
         is_active: true,
-      } as any)
+      } as Record<string, unknown>)
       .returningAll()
       .executeTakeFirstOrThrow() as unknown as IndicatorCatalog;
   }
 
-  async update(id: number, data: any): Promise<IndicatorCatalog> {
+  async update(
+    id: number,
+    data: Record<string, unknown>,
+  ): Promise<IndicatorCatalog> {
     return this.db.client
-      .updateTable('indicator_catalog' as any)
+      .updateTable('indicator_catalog')
       .set(data)
-      .where('id' as any, '=', id as any)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow() as unknown as IndicatorCatalog;
   }
 
   async delete(id: number): Promise<void> {
     await this.db.client
-      .updateTable('indicator_catalog' as any)
+      .updateTable('indicator_catalog')
       .set({ is_active: false })
-      .where('id' as any, '=', id as any)
+      .where('id', '=', id)
       .execute();
   }
 
-  async getTemplates(): Promise<any[]> {
+  async getTemplates(): Promise<unknown[]> {
     return this.db.client
-      .selectFrom('indicator_generation_templates' as any)
+      .selectFrom('indicator_generation_templates')
       .selectAll()
       .where('is_active', '=', true)
       .execute();
   }
 
-  async generate(dto: GenerateIndicatorsDto): Promise<any[]> {
+  async generate(dto: GenerateIndicatorsDto): Promise<unknown[]> {
     const { templateIds, sportId, category, overwrite } = dto;
-    let templates: any[] = [];
+    let templates: { id: number }[] = [];
 
-    // 1. Fetch templates
     let templatesQuery = this.db.client
-      .selectFrom('indicator_generation_templates' as any)
-      .selectAll();
+      .selectFrom('indicator_generation_templates')
+      .select(['id']);
 
     if (templateIds && templateIds.length > 0) {
-      templatesQuery = templatesQuery.where(
-        'id' as any,
-        'in',
-        templateIds as any,
-      );
+      templatesQuery = templatesQuery.where('id', 'in', templateIds);
     } else {
       if (sportId) {
-        templatesQuery = templatesQuery.where(
-          'sport_id' as any,
-          '=',
-          sportId as any,
-        );
+        templatesQuery = templatesQuery.where('sport_id', '=', sportId);
       }
       if (category) {
-        // Need to join categories if category name/code is provided, or assume it's ID
-        // For now, assume it's category_id if numeric
         if (!isNaN(Number(category))) {
           templatesQuery = templatesQuery.where(
-            'category_id' as any,
+            'category_id',
             '=',
-            Number(category) as any,
+            Number(category),
           );
         }
       }
@@ -255,17 +238,18 @@ export class IndicatorsService implements OnModuleInit {
 
     this.logger.log(`Found ${templates.length} templates for generation`);
 
-    const results: any[] = [];
+    const results: unknown[] = [];
     for (const template of templates) {
       try {
         const result =
           await sql`SELECT * FROM generate_indicators_from_template_v5(${template.id}, ${overwrite || false})`.execute(
             this.db.client,
           );
-        results.push(...(result.rows as any[]));
-      } catch (err: any) {
+        results.push(...result.rows);
+      } catch (err: unknown) {
+        const error = err as { message?: string };
         this.logger.error(
-          `Failed to generate from template ${template.id}: ${err.message}`,
+          `Failed to generate from template ${template.id}: ${error.message}`,
         );
       }
     }
@@ -273,46 +257,46 @@ export class IndicatorsService implements OnModuleInit {
     return results;
   }
 
-  async generateAll(): Promise<any> {
+  async generateAll(): Promise<unknown> {
     const result = await sql`SELECT * FROM generate_all_indicators()`.execute(
       this.db.client,
     );
     return result.rows;
   }
 
-  async getGroups(sportId?: number): Promise<any[]> {
+  async getGroups(sportId?: number): Promise<unknown[]> {
     let query = this.db.client
-      .selectFrom('indicator_groups_catalog' as any)
+      .selectFrom('indicator_groups_catalog')
       .selectAll();
 
     if (sportId) {
-      query = query.where('sport_id' as any, '=', sportId as any);
+      query = query.where('sport_id', '=', sportId);
     }
 
     return query
       .where('is_active', '=', true)
-      .orderBy('sort_order', 'asc')
+      .orderBy(sql`sort_order`, 'asc')
       .execute();
   }
-  async getGenders(): Promise<any[]> {
+  async getGenders(): Promise<unknown[]> {
     return this.db.client
-      .selectFrom('genders' as any)
+      .selectFrom('genders')
       .selectAll()
-      .orderBy('sort_order', 'asc')
+      .orderBy(sql`sort_order`, 'asc')
       .execute();
   }
 
-  async getAgeGroups(): Promise<any[]> {
+  async getAgeGroups(): Promise<unknown[]> {
     return this.db.client
-      .selectFrom('age_groups' as any)
+      .selectFrom('age_groups')
       .selectAll()
-      .orderBy('sort_order', 'asc')
+      .orderBy(sql`sort_order`, 'asc')
       .execute();
   }
 
-  async createGroup(data: any): Promise<any> {
+  async createGroup(data: Record<string, unknown>): Promise<unknown> {
     return this.db.client
-      .insertInto('indicator_groups_catalog' as any)
+      .insertInto('indicator_groups_catalog')
       .values({
         ...data,
         is_active: true,
@@ -321,23 +305,26 @@ export class IndicatorsService implements OnModuleInit {
       .executeTakeFirstOrThrow();
   }
 
-  async updateGroup(id: number, data: any): Promise<any> {
+  async updateGroup(
+    id: number,
+    data: Record<string, unknown>,
+  ): Promise<unknown> {
     return this.db.client
-      .updateTable('indicator_groups_catalog' as any)
+      .updateTable('indicator_groups_catalog')
       .set({
         ...data,
         updated_at: new Date(),
       })
-      .where('id' as any, '=', id as any)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
   }
 
   async deleteGroup(id: number): Promise<void> {
     await this.db.client
-      .updateTable('indicator_groups_catalog' as any)
+      .updateTable('indicator_groups_catalog')
       .set({ is_active: false })
-      .where('id' as any, '=', id as any)
+      .where('id', '=', id)
       .execute();
   }
 }

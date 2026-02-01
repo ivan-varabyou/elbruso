@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { IndicatorsController } from './controllers/indicators.controller';
-import { IndicatorGroupsController } from './controllers/indicator-groups.controller';
-import { IndicatorsService } from './services/indicators.service';
-import { IndicatorGroupsService } from './services/indicator-groups.service';
 import { DatabaseModule } from '@database/database.module';
-import { UsersModule } from '../users/users.module';
 import { OrganizationsModule } from '../organizations/organizations.module';
+import { UsersModule } from '../users/users.module';
+import { IndicatorGroupsController } from './controllers/indicator-groups.controller';
+import { IndicatorsController } from './controllers/indicators.controller';
+import { IndicatorGroupsService } from './services/indicator-groups.service';
+import { IndicatorsService } from './services/indicators.service';
 
 @Module({
   imports: [DatabaseModule, UsersModule, OrganizationsModule],

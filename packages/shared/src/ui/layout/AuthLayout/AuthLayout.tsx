@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
-import { cn } from "@/shared/lib/utils";
 import "./AuthLayout.css";
+
+import { cn } from "@elbruso/lib";
+import Image from "next/image";
+import React from "react";
 
 interface AuthLayoutProps {
   children: React.ReactNode;

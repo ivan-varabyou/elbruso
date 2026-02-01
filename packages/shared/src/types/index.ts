@@ -1,18 +1,18 @@
+export * from "./dictionary";
 export type {
-  SystemEntityType,
-  LinkType,
-  FontWeight,
-  FontStyle,
-  TextAlign,
+  AppError,
   CellFormatType,
   ColumnType,
-  ValidationRuleType,
-  ReferenceScope,
-  FormulaAST,
-  AppError,
   ErrorCode,
+  FontStyle,
+  FontWeight,
+  FormulaAST,
+  LinkType,
+  ReferenceScope,
+  SystemEntityType,
+  TextAlign,
+  ValidationRuleType,
 } from "./enums";
 export * from "./link.types";
 export * from "./reference.types";
-export * from "./dictionary";
 export * from "./visualization";

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useAuth } from "@/shared/lib/auth";
-import { apiClient } from "@/shared";
-import { Building2, ChevronRight, ChevronDown } from "lucide-react";
-import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui";
+import { apiClient } from "@elbruso/api";
+import { cn } from "@elbruso/lib";
+import { useAuth } from "@elbruso/modules/auth/lib";
+import { Button } from "@elbruso/ui";
+import { Building2, ChevronDown, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface OrgNode {
   id: number;
@@ -20,7 +20,7 @@ export function OrganizationTree() {
   const { user, setUser } = useAuth();
   const [tree, setTree] = useState<OrgNode | null>(null);
   const [loading, setLoading] = useState(true);
-  const [allOrgs, setAllOrgs] = useState<any[]>([]);
+  const [allOrgs, setAllOrgs] = useState<Array<{ id: number; name_ru: string }>>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,11 +30,13 @@ export function OrganizationTree() {
       }
       try {
         const res = await apiClient.get(`/reference/organizations/${user.organization_id}/tree`);
-        setTree(res.data);
+        setTree(res.data as OrgNode);
 
         if (user.role === "ADMIN") {
           const allRes = await apiClient.get("/reference/organizations");
-          setAllOrgs(allRes.data);
+          setAllOrgs(
+            (allRes.data as { data?: Array<{ id: number; name_ru: string }> })?.data || [],
+          );
         }
       } catch (error) {
         console.error("Fetch org tree error:", error);

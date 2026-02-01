@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { DatabaseService } from '../../../database/database.service';
-import { Seasons } from '@elbruso/database';
 import { sql } from 'kysely';
+import { Seasons } from '@elbruso/database';
+import { DatabaseService } from '@database/database.service';
 
 @Injectable()
 export class SeasonsService implements OnModuleInit {

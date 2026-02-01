@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { EmailService } from './services/email.service';
+import { DatabaseModule } from '@database/database.module';
 import { ConsoleEmailProvider } from './providers/console-email.provider';
 import { SmtpEmailProvider } from './providers/smtp-email.provider';
-import { DatabaseModule } from '../../database/database.module';
+import { EmailService } from './services/email.service';
 
 @Module({
   imports: [DatabaseModule],

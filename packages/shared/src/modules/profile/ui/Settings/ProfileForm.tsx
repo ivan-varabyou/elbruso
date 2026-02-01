@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Button, Input } from "@/shared/ui";
-import { apiClient } from "@/shared";
-import { useAuth } from "@/shared/lib/auth";
+import { apiClient } from "@elbruso/api";
+import { useAuth } from "@elbruso/modules/auth/lib";
+import { Button, Input } from "@elbruso/ui";
 import { Mail } from "lucide-react";
+import { useState } from "react";
 
 export function ProfileForm() {
   const { user, setUser } = useAuth();
@@ -44,13 +44,13 @@ export function ProfileForm() {
             <Input
               label="Имя"
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
               required
             />
             <Input
               label="Фамилия"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
               required
             />
           </div>
@@ -58,7 +58,7 @@ export function ProfileForm() {
           <Input
             label="Отчество"
             value={middleName}
-            onChange={(e) => setMiddleName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMiddleName(e.target.value)}
           />
 
           <div className="relative">
