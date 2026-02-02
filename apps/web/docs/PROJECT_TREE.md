@@ -1,6 +1,6 @@
 # Структура проекта web
 
-Генерировано: Вс 01 фев 2026 15:41:43 +03
+Генерировано: Пн 02 фев 2026 20:04:58 +03
 
 /home/ivan/git/elbruso/apps/web
 ├── assets
@@ -106,6 +106,7 @@
 ├── AGENT.md
 ├── get-dictionary.ts
 ├── i18n-config.ts
+├── inject-source.cjs
 ├── middleware.ts
 ├── next.config.mjs
 ├── next-env.d.ts
@@ -115,4 +116,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-41 directories, 70 files
+41 directories, 71 files

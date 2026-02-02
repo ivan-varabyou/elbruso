@@ -1,6 +1,6 @@
 # Структура проекта api
 
-Генерировано: Вс 01 фев 2026 15:41:43 +03
+Генерировано: Пн 02 фев 2026 20:04:58 +03
 
 /home/ivan/git/elbruso/packages/shared
 ├── docs
@@ -50,6 +50,8 @@
 │   │       ├── AppProviders.tsx
 │   │       └── index.ts
 │   ├── lib
+│   │   ├── react
+│   │   │   └── SourceTracker.tsx
 │   │   ├── cn.ts
 │   │   └── index.ts
 │   ├── modules
@@ -216,4 +218,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-65 directories, 147 files
+66 directories, 148 files

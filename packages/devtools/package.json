@@ -10,22 +10,17 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./builder/swc": {
-      "types": "./dist/builder/swc/index.d.ts",
-      "import": "./dist/builder/swc/index.js"
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "import": "./dist/ui/index.js"
     }
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w"
   },
-  "dependencies": {
-    "@swc/core": "^1.15.8",
-    "vite": "^5.0.0",
-    "rollup": "^4.0.0",
-    "webpack": "^5.0.0"
-  },
   "devDependencies": {
-    "typescript": "latest"
+    "@babel/core": "^7.29.0",
+    "typescript": "^5.9.3"
   }
 }

@@ -2,6 +2,7 @@
 
 import { ReactQueryProvider } from "@elbruso/api/hooks/ReactQueryProvider";
 import { AuthProvider } from "@elbruso/modules/auth/lib";
+import { DevTools } from "@elbruso/devtools";
 import { I18nProvider, LanguageProvider } from "@elbruso/modules/i18n/lib";
 import { ToastProvider } from "@elbruso/modules/notifications";
 import { ReactNode } from "react";
@@ -19,7 +20,9 @@ export function AppProviders({ children, dictionary = defaultDictionary }: AppPr
       <LanguageProvider>
         <AuthProvider>
           <ReactQueryProvider>
-            <ToastProvider>{children}</ToastProvider>
+            <ToastProvider>
+              <DevTools>{children}</DevTools>
+            </ToastProvider>
           </ReactQueryProvider>
         </AuthProvider>
       </LanguageProvider>

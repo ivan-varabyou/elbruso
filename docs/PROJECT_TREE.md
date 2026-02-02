@@ -1,6 +1,6 @@
 # Структура проекта
 
-Генерировано: Вс 01 фев 2026 15:41:43 +03
+Генерировано: Пн 02 фев 2026 20:04:58 +03
 
 /home/ivan/git/elbruso
 ├── apps
@@ -121,6 +121,7 @@
 │       ├── AGENT.md
 │       ├── get-dictionary.ts
 │       ├── i18n-config.ts
+│       ├── inject-source.cjs
 │       ├── middleware.ts
 │       ├── next.config.mjs
 │       ├── next-env.d.ts
@@ -165,6 +166,7 @@
 │   │   └── web
 │   │       ├── src
 │   │       │   ├── app
+│   │       │   ├── components
 │   │       │   └── pages
 │   │       ├── get-dictionary.d.ts
 │   │       ├── get-dictionary.js
@@ -185,6 +187,7 @@
 │       │       └── types.js
 │       ├── devtools
 │       │   └── src
+│       │       ├── builder
 │       │       ├── compiler
 │       │       ├── ui
 │       │       ├── index.d.ts
@@ -372,11 +375,9 @@
 │   ├── devtools
 │   │   ├── dist
 │   │   │   ├── builder
-│   │   │   │   ├── rollup
-│   │   │   │   ├── swc
-│   │   │   │   ├── vite
-│   │   │   │   └── webpack
+│   │   │   │   └── babel
 │   │   │   ├── ui
+│   │   │   │   ├── components
 │   │   │   │   ├── lib
 │   │   │   │   ├── index.d.ts
 │   │   │   │   ├── index.js
@@ -386,17 +387,16 @@
 │   │   │   └── index.js
 │   │   ├── src
 │   │   │   ├── builder
-│   │   │   │   ├── rollup
-│   │   │   │   ├── swc
-│   │   │   │   ├── vite
+│   │   │   │   ├── babel
 │   │   │   │   └── webpack
 │   │   │   ├── ui
+│   │   │   │   ├── components
 │   │   │   │   ├── lib
 │   │   │   │   ├── index.ts
 │   │   │   │   └── mount.ts
 │   │   │   └── index.ts
-│   │   ├── next.config.js
 │   │   ├── package.json
+│   │   ├── package-lock.json
 │   │   └── tsconfig.json
 │   └── shared
 │       ├── docs
@@ -433,6 +433,7 @@
 │       │   ├── app
 │       │   │   └── providers
 │       │   ├── lib
+│       │   │   ├── react
 │       │   │   ├── cn.ts
 │       │   │   └── index.ts
 │       │   ├── modules
@@ -482,8 +483,6 @@
 │       └── tsconfig.tsbuildinfo
 ├── scripts
 │   ├── dev-setup.sh
-│   ├── fix-imports.py
-│   ├── fix-imports.sh
 │   ├── generate-secrets.sh
 │   ├── generate_tree.sh
 │   └── production-setup.sh
@@ -503,4 +502,4 @@
 ├── tsconfig.json
 └── turbo.json
 
-151 directories, 348 files
+151 directories, 347 files
