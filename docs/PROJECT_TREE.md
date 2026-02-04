@@ -1,6 +1,6 @@
 # Структура проекта
 
-Генерировано: Пн 02 фев 2026 20:04:58 +03
+Генерировано: Ср 04 фев 2026 09:05:28 +03
 
 /home/ivan/git/elbruso
 ├── apps
@@ -330,6 +330,8 @@
 │   │   └── useCase.md
 │   ├── DESIGN_SYSTEM.md
 │   ├── IMPORT_STYLE_GUIDE.md
+│   ├── memory-graph.html
+│   ├── memory-graph-screenshot.png
 │   ├── PRODUCTION_SETUP.md
 │   └── PROJECT_TREE.md
 ├── packages
@@ -339,6 +341,7 @@
 │   │   │   │   └── server.cpython-310.pyc
 │   │   │   └── server.py
 │   │   ├── __pycache__
+│   │   │   ├── graph_generator.cpython-310.pyc
 │   │   │   └── logging_config.cpython-310.pyc
 │   │   ├── scripts
 │   │   │   ├── backup.py
@@ -346,12 +349,14 @@
 │   │   ├── ARCHITECTURE.md
 │   │   ├── CONFIG.md
 │   │   ├── docker-compose.yml
+│   │   ├── graph_generator.py
 │   │   ├── INSTALL.sh
 │   │   ├── logging_config.py
 │   │   ├── package.json
 │   │   ├── README.md
 │   │   ├── requirements.txt
 │   │   ├── SETUP.md
+│   │   ├── test_memory.py
 │   │   ├── TOOLS.md
 │   │   ├── TROUBLESHOOTING.md
 │   │   ├── USAGE.md
@@ -383,6 +388,11 @@
 │   │   │   │   ├── index.js
 │   │   │   │   ├── mount.d.ts
 │   │   │   │   └── mount.js
+│   │   │   ├── chunk-J7H5IGZ6.js
+│   │   │   ├── chunk-KQZVHO7T.js
+│   │   │   ├── chunk-XE6CDHEX.js
+│   │   │   ├── chunk-XS22Y4FF.js
+│   │   │   ├── chunk-ZLOTF3N7.js
 │   │   │   ├── index.d.ts
 │   │   │   └── index.js
 │   │   ├── src
@@ -502,4 +512,4 @@
 ├── tsconfig.json
 └── turbo.json
 
-151 directories, 347 files
+151 directories, 357 files

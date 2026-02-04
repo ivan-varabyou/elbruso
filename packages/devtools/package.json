@@ -16,11 +16,11 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w"
+    "build": "tsup src/index.ts src/ui/index.ts --format esm --dts --external react --external react-dom",
+    "dev": "tsup src/index.ts src/ui/index.ts --format esm --dts --external react --external react-dom --watch"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   }
 }

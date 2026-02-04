@@ -1,6 +1,8 @@
 // @ts-nocheck
 "use client";
 
+console.log("[DevTools] Module loaded");
+
 import { ReactNode, useState, useEffect, useRef } from "react";
 
 interface SourceInfo {
@@ -138,51 +140,77 @@ export function DevTools({ children }: { children: ReactNode }) {
   } | null>(null);
   const [isAltPressed, setIsAltPressed] = useState(false);
   const [componentsHighlighted, setComponentsHighlighted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const isActiveRef = useRef(false);
   const modeRef = useRef<"single" | "multiple">("single");
   const selectionsRef = useRef<Selection[]>([]);
+  const componentsHighlightedRef = useRef(false);
 
   useEffect(() => {
     isActiveRef.current = isActive;
     modeRef.current = mode;
     selectionsRef.current = selections;
-  }, [isActive, mode, selections]);
+    componentsHighlightedRef.current = componentsHighlighted;
+  }, [isActive, mode, selections, componentsHighlighted]);
 
   const toggleComponentsHighlight = () => {
     if (componentsHighlighted) {
       setSelections((prev) => prev.filter((s) => !s.id.startsWith("comp:")));
       setComponentsHighlighted(false);
     } else {
-      const allElements = document.querySelectorAll("*");
+      const allElements = document.querySelectorAll("[data-path]");
       const groups: { [path: string]: HTMLElement[] } = {};
 
       allElements.forEach((el) => {
-        const dataPath = (el as HTMLElement).getAttribute("data-path");
-        const isComponent =
-          dataPath &&
-          dataPath !== "unknown" &&
-          (dataPath.includes("/ui/") ||
-            dataPath.includes("/component") ||
-            dataPath.includes("/components/"));
+        const dataPath = el.getAttribute("data-path");
+        if (!dataPath || dataPath === "unknown") return;
 
-        if (isComponent) {
-          if (!groups[dataPath]) groups[dataPath] = [];
-          groups[dataPath].push(el as HTMLElement);
+        let fileName = "";
+        
+        if (dataPath.startsWith("{") || dataPath.startsWith("%7B")) {
+          try {
+            const decoded = dataPath.startsWith("%7B") ? decodeURIComponent(dataPath) : dataPath;
+            const json = JSON.parse(decoded);
+            fileName = json.file || json.fileName || "";
+          } catch {}
+        } else {
+          fileName = dataPath.split(":")[0] || "";
         }
+
+        if (!fileName.includes("/ui/") && !dataPath.includes("/ui/")) return;
+        if (fileName.includes("/devtools/") || dataPath.includes("/devtools/")) return;
+
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+
+        if (!groups[dataPath]) groups[dataPath] = [];
+        groups[dataPath].push(el as HTMLElement);
       });
 
       const newSelections: Selection[] = [];
-      Object.entries(groups).forEach(([path, elements], index) => {
-        const color = COLORS[index % COLORS.length];
-        elements.forEach((el) => {
+      Object.entries(groups).forEach(([path, elements], groupIndex) => {
+        const color = COLORS[groupIndex % COLORS.length];
+        elements.forEach((el, elIndex) => {
           const rect = el.getBoundingClientRect();
-          const pathParts = path.split(":");
-          const fileName = pathParts[0] || "";
-          const lineNumber = parseInt(pathParts[1]) || 0;
+          let fileName = "";
+          let lineNumber = 0;
+
+          if (path.startsWith("{") || path.startsWith("%7B")) {
+            try {
+              const decoded = path.startsWith("%7B") ? decodeURIComponent(path) : path;
+              const json = JSON.parse(decoded);
+              fileName = json.file || json.fileName || "";
+              lineNumber = json.fileLine || json.lineNumber || 0;
+            } catch {}
+          } else {
+            const parts = path.split(":");
+            fileName = parts[0] || "";
+            lineNumber = parseInt(parts[1], 10) || 0;
+          }
 
           newSelections.push({
-            id: `comp:${path}:${el.offsetLeft}-${el.offsetTop}`,
+            id: `comp:${groupIndex}:${elIndex}:${fileName}:${lineNumber}`,
             rect: rect,
             info: {
               url: window.location.href,
@@ -190,7 +218,7 @@ export function DevTools({ children }: { children: ReactNode }) {
               pathLine: lineNumber,
               callPath: undefined,
               callPathLine: 0,
-              class: el.className || null,
+              class: (el as HTMLElement).className || null,
               y: rect.top,
               x: rect.left,
               text: el.textContent?.substring(0, 50).trim() || null,
@@ -201,7 +229,7 @@ export function DevTools({ children }: { children: ReactNode }) {
         });
       });
 
-      setSelections((prev) => [...prev, ...newSelections]);
+      setSelections(newSelections);
       setComponentsHighlighted(true);
     }
   };
@@ -256,6 +284,7 @@ export function DevTools({ children }: { children: ReactNode }) {
 
     // BLOCK ALL BROWSER EVENTS
     const blockEvent = (e: Event) => {
+      if (containerRef.current?.contains(e.target as Node)) return;
       if (isActiveRef.current) {
         e.preventDefault();
         e.stopPropagation();
@@ -263,6 +292,11 @@ export function DevTools({ children }: { children: ReactNode }) {
     };
 
     const handleMouseOver = (e: MouseEvent) => {
+      if (containerRef.current?.contains(e.target as Node)) return;
+      if (componentsHighlightedRef.current) {
+        setHovered(null);
+        return;
+      }
       const target = e.target as HTMLElement;
       const data = findDataSource(target, isAltPressed ? 1 : 0);
       if (data) {
@@ -277,6 +311,8 @@ export function DevTools({ children }: { children: ReactNode }) {
     };
 
     const handleClick = (e: MouseEvent) => {
+      if (containerRef.current?.contains(e.target as Node)) return;
+      if (componentsHighlightedRef.current) return;
       e.preventDefault();
       e.stopPropagation();
 
@@ -294,7 +330,7 @@ export function DevTools({ children }: { children: ReactNode }) {
         callPathLine: source.callLineNumber || 0,
         test: element.tagName.toLowerCase(),
         class: element.className || null,
-        z: e.clientY,
+        y: e.clientY,
         x: e.clientX,
         text: element.textContent?.substring(0, 50).trim() || null,
       };
@@ -408,7 +444,16 @@ export function DevTools({ children }: { children: ReactNode }) {
     <>
       {children}
       {isActive && (
-        <div style={{ position: "fixed", top: 0, left: 0, pointerEvents: "none", zIndex: 9999999 }}>
+        <div
+          ref={containerRef}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            pointerEvents: "none",
+            zIndex: 9999999,
+          }}
+        >
           {hovered && (
             <div
               style={{
@@ -450,10 +495,35 @@ export function DevTools({ children }: { children: ReactNode }) {
                   <span style={{ fontWeight: "bold", color: "#ffd700" }}>PATH:</span>{" "}
                   {hovered.info.fileName}:{hovered.info.lineNumber}
                 </div>
+                {hovered.target.getAttribute("data-path") && (
+                  <div style={{ fontSize: "9px", opacity: 0.8, marginTop: "2px" }}>
+                    {hovered.target.getAttribute("data-path")}
+                  </div>
+                )}
+                {hovered.target.getAttribute("data-call-path") && (
+                  <div style={{ fontSize: "9px", opacity: 0.8 }}>
+                    {hovered.target.getAttribute("data-call-path")}
+                  </div>
+                )}
+                <div
+                  style={{
+                    marginTop: "4px",
+                    borderTop: "1px solid rgba(255,255,255,0.3)",
+                    paddingTop: "2px",
+                  }}
+                >
+                  <span style={{ fontWeight: "bold", color: "#90ee90" }}>TAG:</span>{" "}
+                  {hovered.info.test || hovered.target.tagName.toLowerCase()}
+                </div>
+                {hovered.info.class && (
+                  <div style={{ fontSize: "9px" }}>
+                    <span style={{ fontWeight: "bold", color: "#87ceeb" }}>CLASS:</span>{" "}
+                    {hovered.info.class}
+                  </div>
+                )}
               </div>
             </div>
           )}
-
           {selections.map((s) => (
             <div
               key={s.id}
@@ -464,14 +534,15 @@ export function DevTools({ children }: { children: ReactNode }) {
                 width: s.rect.width,
                 height: s.rect.height,
                 border: `2px solid ${s.color}`,
-                background: `${s.color}22`,
+                background: `${s.color}20`,
                 boxSizing: "border-box",
+                pointerEvents: "none",
               }}
             >
               <div
                 style={{
                   position: "absolute",
-                  top: s.rect.top < 50 ? 5 : -45,
+                  top: s.rect.top < 50 ? 5 : -40,
                   left: -2,
                   background: s.color,
                   color: "#fff",
@@ -479,23 +550,19 @@ export function DevTools({ children }: { children: ReactNode }) {
                   borderRadius: "4px",
                   fontSize: "10px",
                   fontFamily: "monospace",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "2px",
-                  whiteSpace: "nowrap",
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
                   zIndex: 10000000,
+                  whiteSpace: "nowrap",
                 }}
               >
+                <div>
+                  <span style={{ fontWeight: "bold" }}>PATH:</span> {s.info.path}:{s.info.pathLine}
+                </div>
                 {s.info.callPath && (
                   <div>
                     <span style={{ fontWeight: "bold" }}>FROM:</span> {s.info.callPath}:
                     {s.info.callPathLine}
                   </div>
                 )}
-                <div>
-                  <span style={{ fontWeight: "bold" }}>PATH:</span> {s.info.path}:{s.info.pathLine}
-                </div>
                 {s.target.getAttribute("data-path") && (
                   <div style={{ fontSize: "9px", opacity: 0.8, marginTop: "2px" }}>
                     {s.target.getAttribute("data-path")}
@@ -509,23 +576,24 @@ export function DevTools({ children }: { children: ReactNode }) {
               </div>
             </div>
           ))}
-
           <div
             style={{
               position: "fixed",
-              bottom: 20,
+              bottom: 0,
               left: "50%",
               transform: "translateX(-50%)",
               background: "rgba(0,0,0,0.85)",
               color: "#fff",
-              padding: "10px 20px",
-              borderRadius: "25px",
+              padding: "8px 16px",
+              borderRadius: "0 0 8px 8px",
               fontSize: "12px",
               display: "flex",
-              gap: "16px",
               alignItems: "center",
+              gap: "12px",
+              fontFamily: "monospace",
               boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
               backdropFilter: "blur(4px)",
+              pointerEvents: "auto",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -577,6 +645,7 @@ export function DevTools({ children }: { children: ReactNode }) {
               {mode === "single" ? "Нажми Shift для множественного выбора" : "Выберите элементы"}
             </span>
             <div style={{ width: "1px", height: "14px", background: "rgba(255,255,255,0.2)" }} />
+            <span style={{ opacity: 0.7 }}>Alt: Drill-up | Escape/Release Ctrl to finish</span>
           </div>
         </div>
       )}

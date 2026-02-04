@@ -1,3 +1,3 @@
-export * from "./mount.js";
-export { stateManager, getElementInfo, copyElementInfo } from "./mount.js";
-export { DevTools } from "./components/DevTools.js";
+export * from "./mount";
+export { stateManager, getElementInfo, copyElementInfo } from "./mount";
+export { DevTools } from "./components/DevTools";
