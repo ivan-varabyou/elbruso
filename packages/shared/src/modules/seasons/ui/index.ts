@@ -1,1 +1,1 @@
-export * from './Seasons';
+export { AutogenerateModal, SeasonModal } from "./Seasons";

@@ -1,1 +1,1 @@
-export * from './event-filters.dto';
+export { EventFiltersDto } from './event-filters.dto';

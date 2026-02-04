@@ -149,4 +149,4 @@ export class TableGridApiService {
 }
 
 // Singleton instance
-export const tableGridApi = new TableGridApiService();
+export const tableGridApiService = new TableGridApiService();

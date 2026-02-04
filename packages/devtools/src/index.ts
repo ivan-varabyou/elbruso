@@ -1,13 +1,13 @@
 // UI exports
-export { mount, stateManager, getElementInfo, copyElementInfo } from "./ui/index.js";
 export { DevTools } from "./ui/components/DevTools.js";
+export { copyElementInfo,getElementInfo, mount, stateManager } from "./ui/index.js";
 
 // Types
 export type {
-  PathInfo,
-  PluginOptions,
-  TransformResult,
   ConsoleEntry,
   DebugState,
   ElementInfo,
+  PathInfo,
+  PluginOptions,
+  TransformResult,
 } from "./ui/lib/types.js";

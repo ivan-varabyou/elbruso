@@ -1,1 +1,1 @@
-export { ReferenceSelector } from './ReferenceSelector';
+export { ReferenceSelector } from "./ReferenceSelector.smart";

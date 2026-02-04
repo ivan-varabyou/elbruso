@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@elbruso/modules/auth/lib";
+import { useAuth } from "@elbruso/modules/auth";
 import React from "react";
 
 export default function DashboardPage() {

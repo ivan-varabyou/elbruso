@@ -1,9 +1,15 @@
-export { queryClient } from "./queryClient";
+export { queryClient } from "./queryClient.hook";
 export { ReactQueryProvider } from "./ReactQueryProvider";
-export { useChangePassword, useGetMe, useLogin, useRefreshToken,useRegister } from "./useAuth";
-export { useCountries } from "./useCountries";
-export { useForgotPassword } from "./useForgotPassword";
-export { useOrganizations } from "./useOrganizations";
+export {
+  useChangePassword,
+  useGetMe,
+  useLogin,
+  useRefreshToken,
+  useRegister,
+} from "./useAuth.hook";
+export { useCountries } from "./useCountries.hook";
+export { useForgotPassword } from "./useForgotPassword.hook";
+export { useOrganizations } from "./useOrganizations.hook";
 export {
   useOrganizations as useAllOrganizations,
   useIndicators,
@@ -11,8 +17,8 @@ export {
   useRegionsByDistrict,
   useSeasons,
   useSports,
-} from "./useReference";
-export { useResetPassword, useVerifyResetToken } from "./useResetPassword";
+} from "./useReference.hook";
+export { useResetPassword, useVerifyResetToken } from "./useResetPassword.hook";
 export {
   useCreateApiKey,
   useGetProfile,
@@ -20,5 +26,5 @@ export {
   useUpdateUserByAdmin,
   useUser,
   useUsers,
-} from "./useUsers";
-export { useWorkspaces } from "./useWorkspaces";
+} from "./useUsers.hook";
+export { useWorkspaces } from "./useWorkspaces.hook";

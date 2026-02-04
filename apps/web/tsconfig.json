@@ -21,26 +21,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@/app/*": ["./src/app/*"],
-      "@/pages": ["./src/pages/index.ts"],
-      "@/pages/*": ["./src/pages/*"],
-      "@elbruso/shared": ["../../packages/shared/src/index.ts"],
-      "@elbruso/shared/*": ["../../packages/shared/src/*"],
-      "@elbruso/ui": ["../../packages/shared/src/ui/index.ts"],
-      "@elbruso/ui/*": ["../../packages/shared/src/ui/*"],
-      "@elbruso/stores": ["../../packages/shared/src/stores/index.ts"],
-      "@elbruso/stores/*": ["../../packages/shared/src/stores/*"],
-      "@elbruso/lib": ["../../packages/shared/src/lib/index.ts"],
-      "@elbruso/lib/*": ["../../packages/shared/src/lib/*"],
-      "@elbruso/types": ["../../packages/shared/src/types/index.ts"],
-      "@elbruso/types/*": ["../../packages/shared/src/types/*"],
-      "@elbruso/hooks": ["../../packages/shared/src/api/hooks/index.ts"],
-      "@elbruso/hooks/*": ["../../packages/shared/src/api/hooks/*"],
-      "@elbruso/api": ["../../packages/shared/src/api/index.ts"],
-      "@elbruso/api/*": ["../../packages/shared/src/api/*"],
-      "@elbruso/modules/*": ["../../packages/shared/src/modules/*"],
-      "@elbruso/debug": ["../../packages/debug/src/index.ts"],
-      "@devtools": ["../../packages/devtools/src/index.ts"]
+      "@elbruso/*": ["../../packages/shared/src/*"]
     }
   },
   "include": [
@@ -48,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    "../../packages/*/src"
   ],
   "exclude": ["node_modules"]
 }

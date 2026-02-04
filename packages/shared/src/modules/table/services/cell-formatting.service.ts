@@ -2,7 +2,7 @@ import type { CellUpdate } from "@elbruso/modules/table/types";
 import { useTableStore } from "@elbruso/stores";
 
 import type { CellData, CellStyle } from "../types/cell.types";
-import { tableGridApi } from "./table-grid-api.service";
+import { tableGridApiService } from "./table-grid-api.service";
 
 /**
  * Service for applying cell formatting (bold, italic, colors, alignment, etc.)
@@ -12,7 +12,7 @@ class CellFormattingService {
    * Helper to apply formatting to selected ranges
    */
   private applyFormatting(formatter: (currentData: CellData) => CellData) {
-    const api = tableGridApi.getGridApi();
+    const api = tableGridApiService.getGridApi();
     if (!api) return;
 
     const selectedRanges = api.getCellRanges();
@@ -133,7 +133,7 @@ class CellFormattingService {
    * Get current formatting of selected cell
    */
   getCurrentFormatting(): Partial<CellStyle> {
-    const api = tableGridApi.getGridApi();
+    const api = tableGridApiService.getGridApi();
     if (!api) return {};
 
     const focusedCell = api.getFocusedCell();

@@ -1,6 +1,6 @@
 "use client";
 
-import { CreateTableModal } from "@elbruso/modules/profile/ui/WorkspaceTree";
+import { CreateTableModal } from "@elbruso/modules/profile";
 import { useTableStore, useWorkspaceStore } from "@elbruso/stores";
 import { Plus, Table } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";

@@ -2,10 +2,10 @@
 
 import "../login/login.css";
 
-import { useResetPassword, useVerifyResetToken } from "@elbruso/hooks";
+import { useResetPassword, useVerifyResetToken } from "@elbruso/api/hooks";
+import { useToast } from "@elbruso/modules/notifications";
 import { PasswordStrength } from "@elbruso/modules/profile/ui/Settings/PasswordStrength";
 import { Button, Input, Logo } from "@elbruso/ui";
-import { useToast } from "@elbruso/modules/notifications/hooks";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";

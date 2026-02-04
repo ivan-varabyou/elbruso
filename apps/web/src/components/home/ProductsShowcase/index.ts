@@ -1,1 +1,1 @@
-export * from './ProductsShowcase';
+export { ProductsShowcase } from "./ProductsShowcase.smart";

@@ -1,1 +1,1 @@
-export * from './Brands';
+export { Brands } from "./Brands.smart";

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsUUID, IsOptional, IsObject, IsIn } from 'class-validator';
+import { IsIn,IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateBlockDto {
   @ApiProperty({

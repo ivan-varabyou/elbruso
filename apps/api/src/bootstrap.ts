@@ -1,9 +1,10 @@
+import { UsersService } from '@modules/users';
 import { ValidationPipe } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { DocumentBuilder,SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import { UsersService } from '@modules/users/services/users.service';
+
 import { config } from './config';
 import { bootstrapWebsocket } from './gateway/websocket/bootstrap';
 

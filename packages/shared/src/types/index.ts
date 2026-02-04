@@ -1,4 +1,4 @@
-export * from "./dictionary";
+export type { Dictionary } from "./dictionary";
 export type {
   AppError,
   CellFormatType,
@@ -13,6 +13,13 @@ export type {
   TextAlign,
   ValidationRuleType,
 } from "./enums";
-export * from "./link.types";
-export * from "./reference.types";
-export * from "./visualization";
+export type {
+  Indicator,
+  IndicatorGroup,
+  Organization,
+  ReferenceData,
+  ReferenceFilter,
+  Region,
+  Season,
+  Sport,
+} from "./reference.types";

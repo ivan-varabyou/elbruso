@@ -1,1 +1,1 @@
-export * from './DataWavesBackground';
+export { DataWavesBackground } from "./DataWavesBackground.smart";

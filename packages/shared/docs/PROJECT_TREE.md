@@ -1,58 +1,61 @@
-# Структура проекта api
+# Структура проекта shared
 
-Генерировано: Ср 04 фев 2026 09:05:28 +03
+Генерировано: Чт 05 фев 2026 00:44:52 +03
 
 /home/ivan/git/elbruso/packages/shared
 ├── docs
+│   ├── COMPONENT_SYSTEM.md
+│   ├── MIGRATION_TABLE.md
 │   └── PROJECT_TREE.md
 ├── src
 │   ├── api
 │   │   ├── hooks
 │   │   │   ├── index.ts
-│   │   │   ├── queryClient.ts
+│   │   │   ├── queryClient.hook.ts
 │   │   │   ├── ReactQueryProvider.tsx
-│   │   │   ├── useAuth.ts
-│   │   │   ├── useCountries.ts
-│   │   │   ├── useForgotPassword.ts
-│   │   │   ├── useOrganizations.ts
-│   │   │   ├── useReference.ts
-│   │   │   ├── useResetPassword.ts
-│   │   │   ├── useUsers.ts
-│   │   │   └── useWorkspaces.ts
-│   │   ├── Admin.ts
+│   │   │   ├── useAuth.hook.ts
+│   │   │   ├── useCountries.hook.ts
+│   │   │   ├── useForgotPassword.hook.ts
+│   │   │   ├── useOrganizations.hook.ts
+│   │   │   ├── useReference.hook.ts
+│   │   │   ├── useResetPassword.hook.ts
+│   │   │   ├── useUsers.hook.ts
+│   │   │   └── useWorkspaces.hook.ts
+│   │   ├── admin.api.ts
 │   │   ├── api-mapping.ts
 │   │   ├── api-types.ts
 │   │   ├── api-utils.ts
-│   │   ├── Auth.ts
-│   │   ├── Blocks.ts
+│   │   ├── auth.api.ts
+│   │   ├── blocks.api.ts
 │   │   ├── client.ts
-│   │   ├── config.ts
-│   │   ├── Countries.ts
-│   │   ├── create-api.ts
+│   │   ├── config.constant.ts
+│   │   ├── countries.api.ts
+│   │   ├── create-api.service.ts
 │   │   ├── data-contracts.ts
 │   │   ├── definitions.ts
 │   │   ├── endpoints.ts
 │   │   ├── error.ts
-│   │   ├── Events.ts
-│   │   ├── Formulas.ts
-│   │   ├── Groups.ts
-│   │   ├── http-client.ts
+│   │   ├── events.api.ts
+│   │   ├── formulas.api.ts
+│   │   ├── groups.api.ts
+│   │   ├── http-client.service.ts
 │   │   ├── index.ts
-│   │   ├── Pages.ts
-│   │   ├── Reference.ts
-│   │   ├── Tables.ts
-│   │   ├── Users.ts
-│   │   ├── Versions.ts
-│   │   ├── websocket.ts
-│   │   └── Workspaces.ts
+│   │   ├── pages.api.ts
+│   │   ├── reference.api.ts
+│   │   ├── tables.api.ts
+│   │   ├── users.api.ts
+│   │   ├── versions.api.ts
+│   │   ├── websocket.ws.ts
+│   │   └── workspaces.api.ts
 │   ├── app
-│   │   └── providers
-│   │       ├── AppProviders.tsx
-│   │       └── index.ts
+│   │   ├── providers
+│   │   │   ├── AppProviders.tsx
+│   │   │   └── index.ts
+│   │   └── index.ts
 │   ├── lib
 │   │   ├── react
-│   │   │   └── SourceTracker.tsx
-│   │   ├── cn.ts
+│   │   │   └── SourceTracker.smart.tsx
+│   │   ├── cn.lib.ts
 │   │   └── index.ts
 │   ├── modules
 │   │   ├── admin
@@ -61,13 +64,13 @@
 │   │   │   ├── lib
 │   │   │   │   ├── AuthContext.tsx
 │   │   │   │   ├── index.ts
-│   │   │   │   └── ProtectedRoute.tsx
+│   │   │   │   └── ProtectedRoute.smart.tsx
 │   │   │   ├── ui
 │   │   │   │   ├── auth.css
 │   │   │   │   ├── index.ts
-│   │   │   │   ├── LoginForm.tsx
-│   │   │   │   ├── RegisterForm.tsx
-│   │   │   │   └── ResetPasswordForm.tsx
+│   │   │   │   ├── LoginForm.smart.tsx
+│   │   │   │   ├── RegisterForm.smart.tsx
+│   │   │   │   └── ResetPasswordForm.smart.tsx
 │   │   │   └── index.ts
 │   │   ├── dashboard
 │   │   │   └── index.ts
@@ -76,10 +79,15 @@
 │   │   ├── i18n
 │   │   │   ├── lib
 │   │   │   │   ├── language
-│   │   │   │   ├── i18n-provider.tsx
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── LanguageContext.tsx
+│   │   │   │   ├── I18nProvider.tsx
 │   │   │   │   └── index.ts
 │   │   │   ├── ui
 │   │   │   │   └── LanguageSwitcher
+│   │   │   │       ├── index.ts
+│   │   │   │       ├── LanguageSwitcher.css
+│   │   │   │       └── LanguageSwitcher.smart.tsx
 │   │   │   └── index.ts
 │   │   ├── indicators
 │   │   │   └── index.ts
@@ -94,33 +102,64 @@
 │   │   │   │   └── index.ts
 │   │   │   ├── ui
 │   │   │   │   ├── index.ts
-│   │   │   │   └── ToastContainer.tsx
+│   │   │   │   └── ToastContainer.smart.tsx
 │   │   │   └── index.ts
 │   │   ├── pages
 │   │   │   └── index.ts
 │   │   ├── profile
 │   │   │   ├── ui
 │   │   │   │   ├── indicators
+│   │   │   │   │   ├── components
+│   │   │   │   │   │   ├── CreateIndicatorModal.tsx
+│   │   │   │   │   │   ├── FilterDropdown.smart.tsx
+│   │   │   │   │   │   ├── GenerateIndicatorsModal.tsx
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── IndicatorGroupModal.tsx
+│   │   │   │   │   │   └── IndicatorGroupsList.smart.tsx
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── ProfileLayout
+│   │   │   │   │   ├── Sidebar
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── Sidebar.smart.tsx
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── LeftPanel.smart.tsx
+│   │   │   │   │   ├── ProfileLayout.smart.tsx
+│   │   │   │   │   └── RightPanel.smart.tsx
 │   │   │   │   ├── Settings
+│   │   │   │   │   ├── PasswordStrength
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── PasswordStrength.css
+│   │   │   │   │   │   └── PasswordStrength.dumb.tsx
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── OrganizationTree.smart.tsx
+│   │   │   │   │   ├── ProfileForm.smart.tsx
+│   │   │   │   │   └── SecurityForm.smart.tsx
 │   │   │   │   ├── WorkspaceTree
+│   │   │   │   │   ├── CreateTableModal.tsx
+│   │   │   │   │   ├── CreateWorkspaceModal.tsx
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── WorkspaceTableTabs.smart.tsx
+│   │   │   │   │   └── WorkspaceTree.smart.tsx
 │   │   │   │   └── index.ts
 │   │   │   └── index.ts
 │   │   ├── reference
 │   │   │   ├── ui
 │   │   │   │   ├── index.ts
-│   │   │   │   └── ReferenceSelector.tsx
+│   │   │   │   └── ReferenceSelector.smart.tsx
 │   │   │   └── index.ts
 │   │   ├── seasons
 │   │   │   ├── ui
 │   │   │   │   ├── Seasons
+│   │   │   │   │   ├── AutogenerateModal.tsx
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── SeasonModal.tsx
 │   │   │   │   └── index.ts
 │   │   │   └── index.ts
 │   │   ├── sports
 │   │   │   └── index.ts
 │   │   ├── table
 │   │   │   ├── hooks
-│   │   │   │   └── useKeyboardShortcuts.ts
+│   │   │   │   └── useKeyboardShortcuts.hook.ts
 │   │   │   ├── lib
 │   │   │   │   ├── cellAddressUtils.ts
 │   │   │   │   ├── crossWorkspace.ts
@@ -136,22 +175,146 @@
 │   │   │   │   ├── index.ts
 │   │   │   │   └── table.types.ts
 │   │   │   ├── ui
-│   │   │   │   ├── ContextMenu.tsx
-│   │   │   │   ├── DynamicTable.tsx
-│   │   │   │   ├── FormulaBar.tsx
+│   │   │   │   ├── ContextMenu.smart.tsx
+│   │   │   │   ├── DynamicTable.smart.tsx
+│   │   │   │   ├── FormulaBar.smart.tsx
 │   │   │   │   ├── index.ts
-│   │   │   │   ├── MainToolbar.tsx
-│   │   │   │   ├── SheetTabs.tsx
-│   │   │   │   ├── TableHeader.tsx
+│   │   │   │   ├── MainToolbar.dumb.tsx
+│   │   │   │   ├── SheetTabs.dumb.tsx
+│   │   │   │   ├── TableHeader.smart.tsx
 │   │   │   │   └── TableTheme.css
 │   │   │   └── index.ts
 │   │   ├── visualization
 │   │   │   ├── lib
 │   │   │   │   ├── adapters
+│   │   │   │   │   ├── AreaChartAdapter.ts
+│   │   │   │   │   ├── BarChartAdapter.ts
+│   │   │   │   │   ├── BoxPlotAdapter.ts
+│   │   │   │   │   ├── BubbleChartAdapter.ts
+│   │   │   │   │   ├── BubbleMapAdapter.ts
+│   │   │   │   │   ├── CalendarHeatmapAdapter.ts
+│   │   │   │   │   ├── CandlestickAdapter.ts
+│   │   │   │   │   ├── ChordAdapter.ts
+│   │   │   │   │   ├── ChoroplethMapAdapter.ts
+│   │   │   │   │   ├── CorrelationMatrixAdapter.ts
+│   │   │   │   │   ├── ForceDirectedGraphAdapter.ts
+│   │   │   │   │   ├── GanttAdapter.ts
+│   │   │   │   │   ├── GeoHeatMapAdapter.ts
+│   │   │   │   │   ├── GroupedBarChartAdapter.ts
+│   │   │   │   │   ├── HeatmapAdapter.ts
+│   │   │   │   │   ├── HistogramAdapter.ts
+│   │   │   │   │   ├── LineChartAdapter.ts
+│   │   │   │   │   ├── ParallelCoordinatesAdapter.ts
+│   │   │   │   │   ├── PieChartAdapter.ts
+│   │   │   │   │   ├── RadarChartAdapter.ts
+│   │   │   │   │   ├── RadialBarChartAdapter.ts
+│   │   │   │   │   ├── RidgelinePlotAdapter.ts
+│   │   │   │   │   ├── SankeyAdapter.ts
+│   │   │   │   │   ├── ScatterPlotAdapter.ts
+│   │   │   │   │   ├── StackedBarChartAdapter.ts
+│   │   │   │   │   ├── StreamGraphAdapter.ts
+│   │   │   │   │   ├── SunburstAdapter.ts
+│   │   │   │   │   ├── ViolinPlotAdapter.ts
+│   │   │   │   │   └── WaterfallChartAdapter.ts
 │   │   │   │   └── index.ts
 │   │   │   ├── ui
 │   │   │   │   ├── charts
+│   │   │   │   │   ├── BarChart
+│   │   │   │   │   │   ├── BarChart.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── LineChart
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── LineChart.tsx
+│   │   │   │   │   ├── PieChart
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── PieChart.tsx
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── d3
+│   │   │   │   │   ├── AreaChart
+│   │   │   │   │   │   ├── AreaChart.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── BoxPlot
+│   │   │   │   │   │   ├── BoxPlot.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── BubbleChart
+│   │   │   │   │   │   ├── BubbleChart.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── BubbleMap
+│   │   │   │   │   │   ├── BubbleMap.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── CalendarHeatmap
+│   │   │   │   │   │   ├── CalendarHeatmap.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── Candlestick
+│   │   │   │   │   │   ├── Candlestick.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── Chord
+│   │   │   │   │   │   ├── Chord.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── ChoroplethMap
+│   │   │   │   │   │   ├── ChoroplethMap.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── CorrelationMatrix
+│   │   │   │   │   │   ├── CorrelationMatrix.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── DonutChart
+│   │   │   │   │   │   ├── DonutChart.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── ForceDirectedGraph
+│   │   │   │   │   │   ├── ForceDirectedGraph.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── Gantt
+│   │   │   │   │   │   ├── Gantt.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── GeoHeatMap
+│   │   │   │   │   │   ├── GeoHeatMap.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── GroupedBarChart
+│   │   │   │   │   │   ├── GroupedBarChart.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── Heatmap
+│   │   │   │   │   │   ├── Heatmap.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── Histogram
+│   │   │   │   │   │   ├── Histogram.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── ParallelCoordinates
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── ParallelCoordinates.tsx
+│   │   │   │   │   ├── RadarChart
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── RadarChart.tsx
+│   │   │   │   │   ├── RadialBarChart
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── RadialBarChart.tsx
+│   │   │   │   │   ├── RidgelinePlot
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── RidgelinePlot.tsx
+│   │   │   │   │   ├── Sankey
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── Sankey.tsx
+│   │   │   │   │   ├── ScatterPlot
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── ScatterPlot.tsx
+│   │   │   │   │   ├── Sparkline
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── Sparkline.tsx
+│   │   │   │   │   ├── StackedBarChart
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── StackedBarChart.tsx
+│   │   │   │   │   ├── StreamGraph
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── StreamGraph.tsx
+│   │   │   │   │   ├── Sunburst
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── Sunburst.tsx
+│   │   │   │   │   ├── ViolinPlot
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── ViolinPlot.tsx
+│   │   │   │   │   ├── WaterfallChart
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── WaterfallChart.tsx
+│   │   │   │   │   └── index.ts
 │   │   │   │   └── index.ts
 │   │   │   └── index.ts
 │   │   ├── workspaces
@@ -159,15 +322,15 @@
 │   │   └── index.ts
 │   ├── stores
 │   │   ├── index.ts
-│   │   ├── useFormattingStore.ts
-│   │   ├── useFormulaStore.ts
-│   │   ├── useHistoryStore.ts
-│   │   ├── useReferenceStore.ts
-│   │   ├── useSelectionStore.ts
-│   │   ├── useTableReferenceStore.ts
-│   │   ├── useTableStore.ts
-│   │   ├── useUserStore.ts
-│   │   └── useWorkspaceStore.ts
+│   │   ├── useFormatting.store.ts
+│   │   ├── useFormula.store.ts
+│   │   ├── useHistory.store.ts
+│   │   ├── useReference.store.ts
+│   │   ├── useSelection.store.ts
+│   │   ├── useTableReference.store.ts
+│   │   ├── useTable.store.ts
+│   │   ├── useUser.store.ts
+│   │   └── useWorkspace.store.ts
 │   ├── types
 │   │   ├── dictionary.ts
 │   │   ├── enums.ts
@@ -183,10 +346,10 @@
 │   │   │   │   ├── AuthLayout.tsx
 │   │   │   │   └── index.ts
 │   │   │   ├── Footer
-│   │   │   │   ├── Footer.tsx
+│   │   │   │   ├── Footer.smart.tsx
 │   │   │   │   └── index.ts
 │   │   │   ├── Header
-│   │   │   │   ├── Header.tsx
+│   │   │   │   ├── Header.smart.tsx
 │   │   │   │   └── index.ts
 │   │   │   ├── PageLayout
 │   │   │   │   ├── index.ts
@@ -194,22 +357,22 @@
 │   │   │   └── index.ts
 │   │   ├── primitives
 │   │   │   ├── Button
-│   │   │   │   ├── Button.tsx
+│   │   │   │   ├── Button.dumb.tsx
 │   │   │   │   └── index.ts
 │   │   │   ├── IconButton
-│   │   │   │   ├── IconButton.tsx
+│   │   │   │   ├── IconButton.dumb.tsx
 │   │   │   │   └── index.ts
 │   │   │   ├── Input
 │   │   │   │   ├── index.ts
 │   │   │   │   ├── Input.css
-│   │   │   │   └── Input.tsx
+│   │   │   │   └── Input.dumb.tsx
 │   │   │   ├── Logo
 │   │   │   │   ├── index.ts
-│   │   │   │   ├── Logo.tsx
+│   │   │   │   ├── Logo.dumb.tsx
 │   │   │   │   └── LogoV2.tsx
 │   │   │   ├── Select
 │   │   │   │   ├── index.ts
-│   │   │   │   └── Select.tsx
+│   │   │   │   └── Select.dumb.tsx
 │   │   │   └── index.ts
 │   │   └── index.ts
 │   └── index.ts
@@ -218,4 +381,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-66 directories, 148 files
+100 directories, 277 files

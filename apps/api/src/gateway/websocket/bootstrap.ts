@@ -1,8 +1,9 @@
-import { createServer } from 'http';
-import { JwtService } from '@nestjs/jwt';
-import { Server } from 'socket.io';
-import { UsersService } from '@modules/users/services/users.service';
 import { config } from '@config';
+import { UsersService } from '@modules/users/services/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+
 import { ProfileGateway } from './profile.gateway';
 
 export function bootstrapWebsocket(

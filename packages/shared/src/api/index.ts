@@ -1,8 +1,8 @@
-export { Admin } from "./Admin";
-export { Auth } from "./Auth";
-export { Blocks } from "./Blocks";
-export { apiClient, clearTokens, isAuthenticated,setTokens } from "./client";
-export { Countries } from "./Countries";
+export { Admin } from "./admin.api";
+export { Auth } from "./auth.api";
+export { Blocks } from "./blocks.api";
+export { apiClient, clearTokens, isAuthenticated, setTokens } from "./client";
+export { Countries } from "./countries.api";
 export type {
   AddMemberDto,
   AdminLoginDto,
@@ -46,13 +46,12 @@ export type {
   UpdateTableDto,
   UpdateWorkspaceDto,
 } from "./data-contracts";
-export { Events } from "./Events";
-export { Formulas } from "./Formulas";
-export { Groups } from "./Groups";
-export * from "./hooks";
-export { Pages } from "./Pages";
-export { Reference } from "./Reference";
-export { Tables } from "./Tables";
-export { Users } from "./Users";
-export { Versions } from "./Versions";
-export { Workspaces } from "./Workspaces";
+export { Events } from "./events.api";
+export { Formulas } from "./formulas.api";
+export { Groups } from "./groups.api";
+export { Pages } from "./pages.api";
+export { Reference } from "./reference.api";
+export { Tables } from "./tables.api";
+export { Users } from "./users.api";
+export { Versions } from "./versions.api";
+export { Workspaces } from "./workspaces.api";

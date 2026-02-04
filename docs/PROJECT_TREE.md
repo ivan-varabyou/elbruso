@@ -1,6 +1,6 @@
 # Структура проекта
 
-Генерировано: Ср 04 фев 2026 09:05:28 +03
+Генерировано: Чт 05 фев 2026 00:44:52 +03
 
 /home/ivan/git/elbruso
 ├── apps
@@ -15,35 +15,289 @@
 │   │   │   │   └── database.service.ts
 │   │   │   ├── gateway
 │   │   │   │   ├── controllers
+│   │   │   │   │   ├── health.controller.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── dto
+│   │   │   │   │   ├── api-response.dto.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── filters
+│   │   │   │   │   ├── http-exception.filter.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── guards
 │   │   │   │   ├── interceptors
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── transform.interceptor.ts
 │   │   │   │   ├── services
+│   │   │   │   │   ├── health.service.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── websocket
+│   │   │   │   │   ├── bootstrap.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── profile.gateway.ts
 │   │   │   │   ├── gateway.module.ts
 │   │   │   │   └── index.ts
 │   │   │   ├── modules
 │   │   │   │   ├── admin
+│   │   │   │   │   ├── admin-auth
+│   │   │   │   │   │   └── dto
+│   │   │   │   │   ├── admin-users
+│   │   │   │   │   │   └── dto
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   ├── admin-auth.controller.ts
+│   │   │   │   │   │   ├── admin-setup.controller.ts
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── decorators
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── roles.decorator.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── admin-login.dto.ts
+│   │   │   │   │   │   ├── admin-setup.dto.ts
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── guards
+│   │   │   │   │   │   ├── admin-jwt-auth.guard.ts
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── roles
+│   │   │   │   │   │   ├── dto
+│   │   │   │   │   │   │   ├── create-role.dto.ts
+│   │   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   │   └── update-role.dto.ts
+│   │   │   │   │   │   ├── admin-roles.controller.ts
+│   │   │   │   │   │   ├── admin-roles.module.ts
+│   │   │   │   │   │   └── admin-roles.service.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   ├── admin-auth.service.ts
+│   │   │   │   │   │   ├── admin-setup.service.ts
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── strategies
+│   │   │   │   │   │   ├── admin-jwt.strategy.ts
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── users
+│   │   │   │   │   │   ├── dto
+│   │   │   │   │   │   │   ├── create-admin-user.dto.ts
+│   │   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   │   └── update-admin-user.dto.ts
+│   │   │   │   │   │   ├── admin-users.controller.ts
+│   │   │   │   │   │   ├── admin-users.module.ts
+│   │   │   │   │   │   └── admin-users.service.ts
+│   │   │   │   │   ├── admin-auth.module.ts
+│   │   │   │   │   ├── admin.module.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── audit
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── audit.events.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── audit.service.ts
+│   │   │   │   │   ├── audit.module.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── auth
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── auth.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── auth.dto.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── password-recovery.dto.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   ├── auth.events.ts
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── guards
+│   │   │   │   │   │   ├── admin-jwt-auth.guard.ts
+│   │   │   │   │   │   ├── api-key-auth.guard.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── jwt-auth.guard.ts
+│   │   │   │   │   ├── interfaces
+│   │   │   │   │   │   ├── auth.interface.ts
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── auth.service.ts
+│   │   │   │   │   ├── strategies
+│   │   │   │   │   │   ├── api-key.strategy.ts
+│   │   │   │   │   │   ├── jwt.strategy.ts
+│   │   │   │   │   │   └── local.strategy.ts
+│   │   │   │   │   ├── auth.module.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── blocks
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── blocks.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── blocks.events.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── blocks.service.ts
+│   │   │   │   │   ├── blocks.module.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── content
+│   │   │   │   │   ├── blocks
+│   │   │   │   │   │   └── dto
+│   │   │   │   │   ├── charts
+│   │   │   │   │   └── pages
+│   │   │   │   │       └── dto
 │   │   │   │   ├── countries
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── countries.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── countries.events.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── countries.service.ts
+│   │   │   │   │   ├── countries.module.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── email
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── email.events.ts
+│   │   │   │   │   ├── interfaces
+│   │   │   │   │   │   └── email-provider.interface.ts
+│   │   │   │   │   ├── providers
+│   │   │   │   │   │   ├── console-email.provider.ts
+│   │   │   │   │   │   └── smtp-email.provider.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── email.service.ts
+│   │   │   │   │   ├── email.module.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── events
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── events.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── event-filters.dto.ts
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── events.service.ts
+│   │   │   │   │   ├── events.module.ts
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── indicators
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   ├── indicator-groups.controller.ts
+│   │   │   │   │   │   └── indicators.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── generate-indicators.dto.ts
+│   │   │   │   │   │   ├── indicator-filters.dto.ts
+│   │   │   │   │   │   ├── indicator-group.dto.ts
+│   │   │   │   │   │   └── indicator-group-filters.dto.ts
+│   │   │   │   │   ├── entities
+│   │   │   │   │   ├── interfaces
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   ├── indicator-groups.service.ts
+│   │   │   │   │   │   └── indicators.service.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── indicators.module.ts
 │   │   │   │   ├── organizations
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── organizations.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── organization-filters.dto.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── organizations.events.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── organizations.service.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── organizations.module.ts
 │   │   │   │   ├── pages
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── pages.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── pages.events.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── pages.service.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── pages.module.ts
 │   │   │   │   ├── reference
+│   │   │   │   │   ├── countries
+│   │   │   │   │   ├── organizations
+│   │   │   │   │   ├── regions
+│   │   │   │   │   ├── seasons
+│   │   │   │   │   └── sports
 │   │   │   │   ├── regions
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── regions.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── region-filters.dto.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── regions.events.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── regions.service.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── regions.module.ts
 │   │   │   │   ├── seasons
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── seasons.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── generate-seasons.dto.ts
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── seasons.events.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── seasons.service.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── seasons.module.ts
 │   │   │   │   ├── sports
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── sports.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── sport-filters.dto.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── sports.events.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── sports.service.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── sports.module.ts
 │   │   │   │   ├── tables
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   ├── formula.controller.ts
+│   │   │   │   │   │   └── tables.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── formula-analysis.dto.ts
+│   │   │   │   │   │   └── tables.dto.ts
+│   │   │   │   │   ├── entities
+│   │   │   │   │   │   ├── formula.entity.ts
+│   │   │   │   │   │   └── table.entity.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   │   └── tables.events.ts
+│   │   │   │   │   ├── interfaces
+│   │   │   │   │   │   └── tables.interface.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   ├── formula.service.ts
+│   │   │   │   │   │   └── tables.service.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── tables.module.ts
 │   │   │   │   ├── users
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── users.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── user-settings.dto.ts
+│   │   │   │   │   ├── events
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── users.service.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── users.module.ts
 │   │   │   │   └── workspace
+│   │   │   │       ├── controllers
+│   │   │   │       │   ├── workspace.controller.ts
+│   │   │   │       │   └── workspace-group.controller.ts
+│   │   │   │       ├── dto
+│   │   │   │       │   ├── index.ts
+│   │   │   │       │   ├── workspace.dto.ts
+│   │   │   │       │   └── workspace-group.dto.ts
+│   │   │   │       ├── events
+│   │   │   │       │   └── workspace.events.ts
+│   │   │   │       ├── services
+│   │   │   │       │   ├── workspace-group.service.ts
+│   │   │   │       │   └── workspace.service.ts
+│   │   │   │       ├── index.ts
+│   │   │   │       └── workspace.module.ts
 │   │   │   ├── shared
 │   │   │   │   ├── decorators
+│   │   │   │   │   └── roles.decorator.ts
 │   │   │   │   ├── dto
 │   │   │   │   ├── interfaces
 │   │   │   │   └── utils
@@ -54,6 +308,14 @@
 │   │   ├── test
 │   │   │   ├── coverage
 │   │   │   │   ├── lcov-report
+│   │   │   │   │   ├── base.css
+│   │   │   │   │   ├── block-navigation.js
+│   │   │   │   │   ├── favicon.png
+│   │   │   │   │   ├── index.html
+│   │   │   │   │   ├── prettify.css
+│   │   │   │   │   ├── prettify.js
+│   │   │   │   │   ├── sort-arrow-sprite.png
+│   │   │   │   │   └── sorter.js
 │   │   │   │   ├── base.css
 │   │   │   │   ├── block-navigation.js
 │   │   │   │   ├── coverage-final.json
@@ -92,10 +354,13 @@
 │       │   ├── en.json
 │       │   └── ru.json
 │       ├── docs
+│       │   ├── COMPONENT_SYSTEM.md
+│       │   ├── MIGRATION_TABLE.md
 │       │   └── PROJECT_TREE.md
 │       ├── public
 │       │   ├── assets
 │       │   │   └── img
+│       │   │       └── login-bg.jpg
 │       │   ├── images
 │       │   │   └── auth-bg.jpg
 │       │   ├── apple-touch-icon.png
@@ -109,12 +374,79 @@
 │       ├── src
 │       │   ├── app
 │       │   │   ├── (auth)
+│       │   │   │   ├── forgot-password
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── login
+│       │   │   │   │   ├── login.css
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── register
+│       │   │   │   │   ├── page.tsx
+│       │   │   │   │   └── register.css
+│       │   │   │   ├── reset-password
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── AUTH_CONFIG.md
+│       │   │   │   ├── AuthStats.css
+│       │   │   │   ├── AuthStats.tsx
+│       │   │   │   └── layout.tsx
 │       │   │   ├── (profile)
+│       │   │   │   ├── dashboard
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── indicators
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── organizations
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── seasons
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── settings
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── tables
+│       │   │   │   │   └── [id]
+│       │   │   │   │       └── page.tsx
+│       │   │   │   ├── tables-test
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── workspace
+│       │   │   │   │   ├── [workspaceId]
+│       │   │   │   │   │   └── page.tsx
+│       │   │   │   │   └── page.tsx
+│       │   │   │   ├── workspaces
+│       │   │   │   │   └── page.tsx
+│       │   │   │   └── layout.tsx
 │       │   │   ├── globals.css
 │       │   │   ├── layout.tsx
 │       │   │   └── page.tsx
 │       │   ├── components
 │       │   │   └── home
+│       │   │       ├── Brands
+│       │   │       │   ├── Brands.smart.tsx
+│       │   │       │   └── index.ts
+│       │   │       ├── ChartsShowcase
+│       │   │       │   ├── ChartsShowcase.smart.tsx
+│       │   │       │   └── index.ts
+│       │   │       ├── DataWavesBackground
+│       │   │       │   ├── DataWavesBackground.smart.tsx
+│       │   │       │   └── index.ts
+│       │   │       ├── Footer
+│       │   │       │   ├── Footer.smart.tsx
+│       │   │       │   └── index.ts
+│       │   │       ├── Header
+│       │   │       │   ├── Header.smart.tsx
+│       │   │       │   └── index.ts
+│       │   │       ├── Hero
+│       │   │       │   ├── Hero.smart.tsx
+│       │   │       │   └── index.ts
+│       │   │       ├── HomePage
+│       │   │       │   ├── HomePage.tsx
+│       │   │       │   └── index.ts
+│       │   │       ├── InteractiveGrid
+│       │   │       │   ├── index.ts
+│       │   │       │   └── InteractiveGrid.smart.tsx
+│       │   │       ├── LiveSportsChart
+│       │   │       │   ├── chartConfig.constant.ts
+│       │   │       │   ├── index.ts
+│       │   │       │   └── LiveSportsChart.smart.tsx
+│       │   │       └── ProductsShowcase
+│       │   │           ├── index.ts
+│       │   │           └── ProductsShowcase.smart.tsx
 │       │   ├── pages
 │       │   └── types
 │       │       └── next-shim.d.ts
@@ -130,79 +462,6 @@
 │       ├── tailwind.config.ts
 │       ├── tsconfig.json
 │       └── tsconfig.tsbuildinfo
-├── dist
-│   ├── apps
-│   │   ├── api
-│   │   │   ├── src
-│   │   │   │   ├── database
-│   │   │   │   ├── gateway
-│   │   │   │   ├── modules
-│   │   │   │   ├── shared
-│   │   │   │   ├── app.module.d.ts
-│   │   │   │   ├── app.module.js
-│   │   │   │   ├── bootstrap.d.ts
-│   │   │   │   ├── bootstrap.js
-│   │   │   │   ├── config.d.ts
-│   │   │   │   ├── config.js
-│   │   │   │   ├── main.d.ts
-│   │   │   │   └── main.js
-│   │   │   ├── test
-│   │   │   │   ├── auth-users.e2e-spec.d.ts
-│   │   │   │   ├── auth-users.e2e-spec.js
-│   │   │   │   ├── pages.e2e-spec.d.ts
-│   │   │   │   ├── pages.e2e-spec.js
-│   │   │   │   ├── security.e2e-spec.d.ts
-│   │   │   │   ├── security.e2e-spec.js
-│   │   │   │   ├── test-request.helper.d.ts
-│   │   │   │   ├── test-request.helper.js
-│   │   │   │   ├── workspaces.e2e-spec.d.ts
-│   │   │   │   └── workspaces.e2e-spec.js
-│   │   │   ├── test-advanced-e2e.d.ts
-│   │   │   ├── test-advanced-e2e.js
-│   │   │   ├── test-security-e2e.d.ts
-│   │   │   ├── test-security-e2e.js
-│   │   │   ├── test-simple-security.d.ts
-│   │   │   └── test-simple-security.js
-│   │   └── web
-│   │       ├── src
-│   │       │   ├── app
-│   │       │   ├── components
-│   │       │   └── pages
-│   │       ├── get-dictionary.d.ts
-│   │       ├── get-dictionary.js
-│   │       ├── i18n-config.d.ts
-│   │       ├── i18n-config.js
-│   │       ├── middleware.d.ts
-│   │       ├── middleware.js
-│   │       ├── tailwind.config.d.ts
-│   │       └── tailwind.config.js
-│   └── packages
-│       ├── database
-│       │   └── src
-│       │       ├── db.d.ts
-│       │       ├── db.js
-│       │       ├── index.d.ts
-│       │       ├── index.js
-│       │       ├── types.d.ts
-│       │       └── types.js
-│       ├── devtools
-│       │   └── src
-│       │       ├── builder
-│       │       ├── compiler
-│       │       ├── ui
-│       │       ├── index.d.ts
-│       │       └── index.js
-│       └── shared
-│           └── src
-│               ├── api
-│               ├── app
-│               ├── lib
-│               ├── modules
-│               ├── stores
-│               ├── types
-│               ├── ui
-│               ├── index.d.ts
-│               └── index.js
 ├── docs
 │   ├── data
 │   │   ├── API_AUTH_GUIDE.md
@@ -328,6 +587,7 @@
 │   │   ├── test-plan.md
 │   │   ├── uml.md
 │   │   └── useCase.md
+│   ├── COMPONENT_SYSTEM_MIGRATION.md
 │   ├── DESIGN_SYSTEM.md
 │   ├── IMPORT_STYLE_GUIDE.md
 │   ├── memory-graph.html
@@ -362,13 +622,6 @@
 │   │   ├── USAGE.md
 │   │   └── USAGE_RU.md
 │   ├── database
-│   │   ├── dist
-│   │   │   ├── db.d.ts
-│   │   │   ├── db.js
-│   │   │   ├── index.d.ts
-│   │   │   ├── index.js
-│   │   │   ├── types.d.ts
-│   │   │   └── types.js
 │   │   ├── migrations
 │   │   │   └── 001_add_auth_enhancements.sql
 │   │   ├── src
@@ -378,30 +631,24 @@
 │   │   ├── package.json
 │   │   └── tsconfig.json
 │   ├── devtools
-│   │   ├── dist
-│   │   │   ├── builder
-│   │   │   │   └── babel
-│   │   │   ├── ui
-│   │   │   │   ├── components
-│   │   │   │   ├── lib
-│   │   │   │   ├── index.d.ts
-│   │   │   │   ├── index.js
-│   │   │   │   ├── mount.d.ts
-│   │   │   │   └── mount.js
-│   │   │   ├── chunk-J7H5IGZ6.js
-│   │   │   ├── chunk-KQZVHO7T.js
-│   │   │   ├── chunk-XE6CDHEX.js
-│   │   │   ├── chunk-XS22Y4FF.js
-│   │   │   ├── chunk-ZLOTF3N7.js
-│   │   │   ├── index.d.ts
-│   │   │   └── index.js
 │   │   ├── src
 │   │   │   ├── builder
 │   │   │   │   ├── babel
+│   │   │   │   │   ├── jsx-plugin.mjs
+│   │   │   │   │   ├── plugin.mjs
+│   │   │   │   │   └── turbopack-plugin.mjs
 │   │   │   │   └── webpack
+│   │   │   │       ├── jsx-source-loader.cjs
+│   │   │   │       ├── passthrough.cjs
+│   │   │   │       └── plugin.cjs
 │   │   │   ├── ui
 │   │   │   │   ├── components
+│   │   │   │   │   └── DevTools.tsx
 │   │   │   │   ├── lib
+│   │   │   │   │   ├── dom.ts
+│   │   │   │   │   ├── shadow-root.ts
+│   │   │   │   │   ├── types.ts
+│   │   │   │   │   └── utils.ts
 │   │   │   │   ├── index.ts
 │   │   │   │   └── mount.ts
 │   │   │   └── index.ts
@@ -410,70 +657,333 @@
 │   │   └── tsconfig.json
 │   └── shared
 │       ├── docs
+│       │   ├── COMPONENT_SYSTEM.md
+│       │   ├── MIGRATION_TABLE.md
 │       │   └── PROJECT_TREE.md
 │       ├── src
 │       │   ├── api
 │       │   │   ├── hooks
-│       │   │   ├── Admin.ts
+│       │   │   │   ├── index.ts
+│       │   │   │   ├── queryClient.hook.ts
+│       │   │   │   ├── ReactQueryProvider.tsx
+│       │   │   │   ├── useAuth.hook.ts
+│       │   │   │   ├── useCountries.hook.ts
+│       │   │   │   ├── useForgotPassword.hook.ts
+│       │   │   │   ├── useOrganizations.hook.ts
+│       │   │   │   ├── useReference.hook.ts
+│       │   │   │   ├── useResetPassword.hook.ts
+│       │   │   │   ├── useUsers.hook.ts
+│       │   │   │   └── useWorkspaces.hook.ts
+│       │   │   ├── admin.api.ts
 │       │   │   ├── api-mapping.ts
 │       │   │   ├── api-types.ts
 │       │   │   ├── api-utils.ts
-│       │   │   ├── Auth.ts
-│       │   │   ├── Blocks.ts
+│       │   │   ├── auth.api.ts
+│       │   │   ├── blocks.api.ts
 │       │   │   ├── client.ts
-│       │   │   ├── config.ts
-│       │   │   ├── Countries.ts
-│       │   │   ├── create-api.ts
+│       │   │   ├── config.constant.ts
+│       │   │   ├── countries.api.ts
+│       │   │   ├── create-api.service.ts
 │       │   │   ├── data-contracts.ts
 │       │   │   ├── definitions.ts
 │       │   │   ├── endpoints.ts
 │       │   │   ├── error.ts
-│       │   │   ├── Events.ts
-│       │   │   ├── Formulas.ts
-│       │   │   ├── Groups.ts
-│       │   │   ├── http-client.ts
+│       │   │   ├── events.api.ts
+│       │   │   ├── formulas.api.ts
+│       │   │   ├── groups.api.ts
+│       │   │   ├── http-client.service.ts
 │       │   │   ├── index.ts
-│       │   │   ├── Pages.ts
-│       │   │   ├── Reference.ts
-│       │   │   ├── Tables.ts
-│       │   │   ├── Users.ts
-│       │   │   ├── Versions.ts
-│       │   │   ├── websocket.ts
-│       │   │   └── Workspaces.ts
+│       │   │   ├── pages.api.ts
+│       │   │   ├── reference.api.ts
+│       │   │   ├── tables.api.ts
+│       │   │   ├── users.api.ts
+│       │   │   ├── versions.api.ts
+│       │   │   ├── websocket.ws.ts
+│       │   │   └── workspaces.api.ts
 │       │   ├── app
-│       │   │   └── providers
+│       │   │   ├── providers
+│       │   │   │   ├── AppProviders.tsx
+│       │   │   │   └── index.ts
+│       │   │   └── index.ts
 │       │   ├── lib
 │       │   │   ├── react
-│       │   │   ├── cn.ts
+│       │   │   │   └── SourceTracker.smart.tsx
+│       │   │   ├── cn.lib.ts
 │       │   │   └── index.ts
 │       │   ├── modules
 │       │   │   ├── admin
+│       │   │   │   └── index.ts
 │       │   │   ├── auth
+│       │   │   │   ├── lib
+│       │   │   │   │   ├── AuthContext.tsx
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── ProtectedRoute.smart.tsx
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── auth.css
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   ├── LoginForm.smart.tsx
+│       │   │   │   │   ├── RegisterForm.smart.tsx
+│       │   │   │   │   └── ResetPasswordForm.smart.tsx
+│       │   │   │   └── index.ts
 │       │   │   ├── dashboard
+│       │   │   │   └── index.ts
 │       │   │   ├── events
+│       │   │   │   └── index.ts
 │       │   │   ├── i18n
+│       │   │   │   ├── lib
+│       │   │   │   │   ├── language
+│       │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   └── LanguageContext.tsx
+│       │   │   │   │   ├── I18nProvider.tsx
+│       │   │   │   │   └── index.ts
+│       │   │   │   ├── ui
+│       │   │   │   │   └── LanguageSwitcher
+│       │   │   │   │       ├── index.ts
+│       │   │   │   │       ├── LanguageSwitcher.css
+│       │   │   │   │       └── LanguageSwitcher.smart.tsx
+│       │   │   │   └── index.ts
 │       │   │   ├── indicators
+│       │   │   │   └── index.ts
 │       │   │   ├── notifications
+│       │   │   │   ├── hooks
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── useToast.ts
+│       │   │   │   ├── providers
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── ToastProvider.tsx
+│       │   │   │   ├── types
+│       │   │   │   │   └── index.ts
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── ToastContainer.smart.tsx
+│       │   │   │   └── index.ts
 │       │   │   ├── pages
+│       │   │   │   └── index.ts
 │       │   │   ├── profile
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── indicators
+│       │   │   │   │   │   ├── components
+│       │   │   │   │   │   │   ├── CreateIndicatorModal.tsx
+│       │   │   │   │   │   │   ├── FilterDropdown.smart.tsx
+│       │   │   │   │   │   │   ├── GenerateIndicatorsModal.tsx
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   ├── IndicatorGroupModal.tsx
+│       │   │   │   │   │   │   └── IndicatorGroupsList.smart.tsx
+│       │   │   │   │   │   └── index.ts
+│       │   │   │   │   ├── ProfileLayout
+│       │   │   │   │   │   ├── Sidebar
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── Sidebar.smart.tsx
+│       │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   ├── LeftPanel.smart.tsx
+│       │   │   │   │   │   ├── ProfileLayout.smart.tsx
+│       │   │   │   │   │   └── RightPanel.smart.tsx
+│       │   │   │   │   ├── Settings
+│       │   │   │   │   │   ├── PasswordStrength
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   ├── PasswordStrength.css
+│       │   │   │   │   │   │   └── PasswordStrength.dumb.tsx
+│       │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   ├── OrganizationTree.smart.tsx
+│       │   │   │   │   │   ├── ProfileForm.smart.tsx
+│       │   │   │   │   │   └── SecurityForm.smart.tsx
+│       │   │   │   │   ├── WorkspaceTree
+│       │   │   │   │   │   ├── CreateTableModal.tsx
+│       │   │   │   │   │   ├── CreateWorkspaceModal.tsx
+│       │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   ├── WorkspaceTableTabs.smart.tsx
+│       │   │   │   │   │   └── WorkspaceTree.smart.tsx
+│       │   │   │   │   └── index.ts
+│       │   │   │   └── index.ts
 │       │   │   ├── reference
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── ReferenceSelector.smart.tsx
+│       │   │   │   └── index.ts
 │       │   │   ├── seasons
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── Seasons
+│       │   │   │   │   │   ├── AutogenerateModal.tsx
+│       │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   └── SeasonModal.tsx
+│       │   │   │   │   └── index.ts
+│       │   │   │   └── index.ts
 │       │   │   ├── sports
+│       │   │   │   └── index.ts
 │       │   │   ├── table
+│       │   │   │   ├── hooks
+│       │   │   │   │   └── useKeyboardShortcuts.hook.ts
+│       │   │   │   ├── lib
+│       │   │   │   │   ├── cellAddressUtils.ts
+│       │   │   │   │   ├── crossWorkspace.ts
+│       │   │   │   │   ├── engine.ts
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── TableReferenceParser.ts
+│       │   │   │   ├── services
+│       │   │   │   │   ├── cell-formatting.service.ts
+│       │   │   │   │   ├── table-grid-api.service.ts
+│       │   │   │   │   └── table.service.ts
+│       │   │   │   ├── types
+│       │   │   │   │   ├── cell.types.ts
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── table.types.ts
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── ContextMenu.smart.tsx
+│       │   │   │   │   ├── DynamicTable.smart.tsx
+│       │   │   │   │   ├── FormulaBar.smart.tsx
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   ├── MainToolbar.dumb.tsx
+│       │   │   │   │   ├── SheetTabs.dumb.tsx
+│       │   │   │   │   ├── TableHeader.smart.tsx
+│       │   │   │   │   └── TableTheme.css
+│       │   │   │   └── index.ts
 │       │   │   ├── visualization
+│       │   │   │   ├── lib
+│       │   │   │   │   ├── adapters
+│       │   │   │   │   │   ├── AreaChartAdapter.ts
+│       │   │   │   │   │   ├── BarChartAdapter.ts
+│       │   │   │   │   │   ├── BoxPlotAdapter.ts
+│       │   │   │   │   │   ├── BubbleChartAdapter.ts
+│       │   │   │   │   │   ├── BubbleMapAdapter.ts
+│       │   │   │   │   │   ├── CalendarHeatmapAdapter.ts
+│       │   │   │   │   │   ├── CandlestickAdapter.ts
+│       │   │   │   │   │   ├── ChordAdapter.ts
+│       │   │   │   │   │   ├── ChoroplethMapAdapter.ts
+│       │   │   │   │   │   ├── CorrelationMatrixAdapter.ts
+│       │   │   │   │   │   ├── ForceDirectedGraphAdapter.ts
+│       │   │   │   │   │   ├── GanttAdapter.ts
+│       │   │   │   │   │   ├── GeoHeatMapAdapter.ts
+│       │   │   │   │   │   ├── GroupedBarChartAdapter.ts
+│       │   │   │   │   │   ├── HeatmapAdapter.ts
+│       │   │   │   │   │   ├── HistogramAdapter.ts
+│       │   │   │   │   │   ├── LineChartAdapter.ts
+│       │   │   │   │   │   ├── ParallelCoordinatesAdapter.ts
+│       │   │   │   │   │   ├── PieChartAdapter.ts
+│       │   │   │   │   │   ├── RadarChartAdapter.ts
+│       │   │   │   │   │   ├── RadialBarChartAdapter.ts
+│       │   │   │   │   │   ├── RidgelinePlotAdapter.ts
+│       │   │   │   │   │   ├── SankeyAdapter.ts
+│       │   │   │   │   │   ├── ScatterPlotAdapter.ts
+│       │   │   │   │   │   ├── StackedBarChartAdapter.ts
+│       │   │   │   │   │   ├── StreamGraphAdapter.ts
+│       │   │   │   │   │   ├── SunburstAdapter.ts
+│       │   │   │   │   │   ├── ViolinPlotAdapter.ts
+│       │   │   │   │   │   └── WaterfallChartAdapter.ts
+│       │   │   │   │   └── index.ts
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── charts
+│       │   │   │   │   │   ├── BarChart
+│       │   │   │   │   │   │   ├── BarChart.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── LineChart
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── LineChart.tsx
+│       │   │   │   │   │   ├── PieChart
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── PieChart.tsx
+│       │   │   │   │   │   └── index.ts
+│       │   │   │   │   ├── d3
+│       │   │   │   │   │   ├── AreaChart
+│       │   │   │   │   │   │   ├── AreaChart.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── BoxPlot
+│       │   │   │   │   │   │   ├── BoxPlot.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── BubbleChart
+│       │   │   │   │   │   │   ├── BubbleChart.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── BubbleMap
+│       │   │   │   │   │   │   ├── BubbleMap.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── CalendarHeatmap
+│       │   │   │   │   │   │   ├── CalendarHeatmap.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── Candlestick
+│       │   │   │   │   │   │   ├── Candlestick.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── Chord
+│       │   │   │   │   │   │   ├── Chord.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── ChoroplethMap
+│       │   │   │   │   │   │   ├── ChoroplethMap.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── CorrelationMatrix
+│       │   │   │   │   │   │   ├── CorrelationMatrix.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── DonutChart
+│       │   │   │   │   │   │   ├── DonutChart.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── ForceDirectedGraph
+│       │   │   │   │   │   │   ├── ForceDirectedGraph.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── Gantt
+│       │   │   │   │   │   │   ├── Gantt.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── GeoHeatMap
+│       │   │   │   │   │   │   ├── GeoHeatMap.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── GroupedBarChart
+│       │   │   │   │   │   │   ├── GroupedBarChart.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── Heatmap
+│       │   │   │   │   │   │   ├── Heatmap.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── Histogram
+│       │   │   │   │   │   │   ├── Histogram.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── ParallelCoordinates
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── ParallelCoordinates.tsx
+│       │   │   │   │   │   ├── RadarChart
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── RadarChart.tsx
+│       │   │   │   │   │   ├── RadialBarChart
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── RadialBarChart.tsx
+│       │   │   │   │   │   ├── RidgelinePlot
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── RidgelinePlot.tsx
+│       │   │   │   │   │   ├── Sankey
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── Sankey.tsx
+│       │   │   │   │   │   ├── ScatterPlot
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── ScatterPlot.tsx
+│       │   │   │   │   │   ├── Sparkline
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── Sparkline.tsx
+│       │   │   │   │   │   ├── StackedBarChart
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── StackedBarChart.tsx
+│       │   │   │   │   │   ├── StreamGraph
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── StreamGraph.tsx
+│       │   │   │   │   │   ├── Sunburst
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── Sunburst.tsx
+│       │   │   │   │   │   ├── ViolinPlot
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── ViolinPlot.tsx
+│       │   │   │   │   │   ├── WaterfallChart
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── WaterfallChart.tsx
+│       │   │   │   │   │   └── index.ts
+│       │   │   │   │   └── index.ts
+│       │   │   │   └── index.ts
 │       │   │   ├── workspaces
+│       │   │   │   └── index.ts
 │       │   │   └── index.ts
 │       │   ├── stores
 │       │   │   ├── index.ts
-│       │   │   ├── useFormattingStore.ts
-│       │   │   ├── useFormulaStore.ts
-│       │   │   ├── useHistoryStore.ts
-│       │   │   ├── useReferenceStore.ts
-│       │   │   ├── useSelectionStore.ts
-│       │   │   ├── useTableReferenceStore.ts
-│       │   │   ├── useTableStore.ts
-│       │   │   ├── useUserStore.ts
-│       │   │   └── useWorkspaceStore.ts
+│       │   │   ├── useFormatting.store.ts
+│       │   │   ├── useFormula.store.ts
+│       │   │   ├── useHistory.store.ts
+│       │   │   ├── useReference.store.ts
+│       │   │   ├── useSelection.store.ts
+│       │   │   ├── useTableReference.store.ts
+│       │   │   ├── useTable.store.ts
+│       │   │   ├── useUser.store.ts
+│       │   │   └── useWorkspace.store.ts
 │       │   ├── types
 │       │   │   ├── dictionary.ts
 │       │   │   ├── enums.ts
@@ -484,7 +994,39 @@
 │       │   │   └── visualization.ts
 │       │   ├── ui
 │       │   │   ├── layout
+│       │   │   │   ├── AuthLayout
+│       │   │   │   │   ├── AuthLayout.css
+│       │   │   │   │   ├── AuthLayout.tsx
+│       │   │   │   │   └── index.ts
+│       │   │   │   ├── Footer
+│       │   │   │   │   ├── Footer.smart.tsx
+│       │   │   │   │   └── index.ts
+│       │   │   │   ├── Header
+│       │   │   │   │   ├── Header.smart.tsx
+│       │   │   │   │   └── index.ts
+│       │   │   │   ├── PageLayout
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── PageLayout.tsx
+│       │   │   │   └── index.ts
 │       │   │   ├── primitives
+│       │   │   │   ├── Button
+│       │   │   │   │   ├── Button.dumb.tsx
+│       │   │   │   │   └── index.ts
+│       │   │   │   ├── IconButton
+│       │   │   │   │   ├── IconButton.dumb.tsx
+│       │   │   │   │   └── index.ts
+│       │   │   │   ├── Input
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   ├── Input.css
+│       │   │   │   │   └── Input.dumb.tsx
+│       │   │   │   ├── Logo
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   ├── Logo.dumb.tsx
+│       │   │   │   │   └── LogoV2.tsx
+│       │   │   │   ├── Select
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── Select.dumb.tsx
+│       │   │   │   └── index.ts
 │       │   │   └── index.ts
 │       │   └── index.ts
 │       ├── AGENT.md
@@ -493,9 +1035,15 @@
 │       └── tsconfig.tsbuildinfo
 ├── scripts
 │   ├── dev-setup.sh
+│   ├── dry-run.sh
+│   ├── generate-project-trees.sh
 │   ├── generate-secrets.sh
-│   ├── generate_tree.sh
-│   └── production-setup.sh
+│   ├── migrate.mjs
+│   ├── production-setup.sh
+│   ├── rename-map.json
+│   ├── rollback.sh
+│   ├── update-barrel-exports.js
+│   └── update-imports.js
 ├── AGENT.md
 ├── docker-compose.yml
 ├── eslint.config.mjs
@@ -512,4 +1060,4 @@
 ├── tsconfig.json
 └── turbo.json
 
-151 directories, 357 files
+299 directories, 757 files

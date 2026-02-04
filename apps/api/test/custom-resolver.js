@@ -1,4 +1,5 @@
-module.exports = (moduleName, paths, option, config) => {
+/* eslint-disable @typescript-eslint/no-unused-vars */
+module.exports = (moduleName, _paths, _option, _config) => {
   // Handle @elbruso/database and @elbruso/types specifically
   if (moduleName === '@elbruso/database') {
     return '/home/ivan/git/elbruso/packages/database/src/index.ts';

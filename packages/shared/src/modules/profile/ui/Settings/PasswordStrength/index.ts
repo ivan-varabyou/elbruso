@@ -1,2 +1,2 @@
-export type { PasswordStrengthProps } from './PasswordStrength';
-export { PasswordStrength } from './PasswordStrength';
+export type { PasswordStrengthProps } from "./PasswordStrength.dumb";
+export { PasswordStrength } from "./PasswordStrength.dumb";

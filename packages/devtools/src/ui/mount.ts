@@ -1,5 +1,5 @@
+import { getElementPath, getElementText,getPathData } from "./lib/dom.js";
 import { createShadowRoot, injectStyles } from "./lib/shadow-root.js";
-import { getPathData, getElementPath, getElementText } from "./lib/dom.js";
 import { generateId } from "./lib/utils.js";
 
 interface ConsoleEntry {

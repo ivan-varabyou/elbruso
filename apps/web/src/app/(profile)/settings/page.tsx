@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@elbruso/lib";
-import { OrganizationTree, ProfileForm, SecurityForm } from "@elbruso/modules/profile/ui";
+import { OrganizationTree, ProfileForm, SecurityForm } from "@elbruso/modules/profile";
 import { PageLayout } from "@elbruso/ui";
 import { Building2, Shield, User } from "lucide-react";
 import { useState } from "react";

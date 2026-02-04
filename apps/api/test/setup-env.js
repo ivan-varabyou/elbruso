@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Load test environment variables before anything else
 const path = require('path');
 const dotenv = require('dotenv');

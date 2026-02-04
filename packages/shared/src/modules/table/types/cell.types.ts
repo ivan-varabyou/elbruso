@@ -1,4 +1,4 @@
-import type { CellFormatType, FontStyle, FontWeight, TextAlign } from "../../../types/enums";
+import type { CellFormatType, FontStyle, FontWeight, TextAlign } from "@elbruso/types/enums";
 
 export interface CellData {
   value?: unknown;

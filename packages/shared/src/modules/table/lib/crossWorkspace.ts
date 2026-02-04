@@ -1,5 +1,5 @@
-import { Workspaces } from "../../../api";
-import { Versions } from "../../../api/Versions";
+import { Versions, Workspaces } from "@elbruso/api";
+
 import type { CellData, TableCell } from "../types/cell.types";
 import type { DynamicTable } from "../types/table.types";
 

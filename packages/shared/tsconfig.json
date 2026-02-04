@@ -1,44 +1,28 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "ES2021",
+    "lib": ["dom", "dom.iterable", "ES2021"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "@elbruso/shared": ["./src/index.ts"],
-      "@elbruso/shared/*": ["./src/*"],
-      "@elbruso/api": ["./src/api/index.ts"],
-      "@elbruso/api/*": ["./src/api/*"],
-      "@elbruso/hooks": ["./src/api/hooks/index.ts"],
-      "@elbruso/hooks/*": ["./src/api/hooks/*"],
-      "@elbruso/stores": ["./src/stores/index.ts"],
-      "@elbruso/stores/*": ["./src/stores/*"],
-      "@elbruso/types": ["./src/types/index.ts"],
-      "@elbruso/types/*": ["./src/types/*"],
-      "@elbruso/lib": ["./src/lib/index.ts"],
-      "@elbruso/lib/*": ["./src/lib/*"],
-      "@elbruso/modules/*": ["./src/modules/*"],
-      "@elbruso/ui/primitives": ["./src/ui/primitives/index.ts"],
-      "@elbruso/ui/primitives/*": ["./src/ui/primitives/*"],
-      "@elbruso/ui/layout": ["./src/ui/layout/index.ts"],
-      "@elbruso/ui/layout/*": ["./src/ui/layout/*"],
-      "@elbruso/ui/*": ["./src/ui/*"],
-      "@elbruso/ui": ["./src/ui/index.ts"],
-      "@elbruso/app/*": ["./src/app/*"],
-      "@elbruso/app/providers": ["./src/app/providers/index.ts"],
-      "@elbruso/debug": ["../debug/src/index.ts"]
+      "@/*": ["./src/*"],
+      "@elbruso/*": ["../shared/src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["src", "src/**/*", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,5 @@
 import 'server-only';
+
 import type { Locale } from './i18n-config';
 import { i18n } from './i18n-config'; // Import i18n to get defaultLocale
 

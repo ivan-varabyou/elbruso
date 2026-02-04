@@ -1,8 +1,8 @@
-export { tableGridApi } from "./table-grid-api.service";
+export { tableGridApiService } from "./table-grid-api.service";
 import { Tables, Versions } from "@elbruso/api";
 
 import type { CellData } from "../types/cell.types";
-import { tableGridApi } from "./table-grid-api.service";
+import { tableGridApiService } from "./table-grid-api.service";
 
 export { cellFormattingService } from "./cell-formatting.service";
 
@@ -19,13 +19,13 @@ export class TableService {
     try {
       // 1. Быстрое обновление в гриде (Transaction) - работает как "сигнал"
       // Мы находим текущую строку и обновляем в ней только одно поле
-      const rowNode = tableGridApi.getRowNode((row + 1).toString());
+      const rowNode = tableGridApiService.getRowNode((row + 1).toString());
       if (rowNode) {
         const field = `col_${col}`;
         const updatedData = { ...rowNode.data, [field]: data.value };
 
         // applyTransaction не вызывает ререндер React-компонента
-        tableGridApi.getGridApi()?.applyTransaction({ update: [updatedData] });
+        tableGridApiService.getGridApi()?.applyTransaction({ update: [updatedData] });
       }
 
       // 2. Фоновое обновление бэкенда
@@ -60,84 +60,84 @@ export class TableService {
 
   // ========== Clipboard Operations ==========
   copySelection() {
-    tableGridApi.copySelectedRangeToClipboard();
+    tableGridApiService.copySelectedRangeToClipboard();
   }
 
   copyRows() {
-    tableGridApi.copySelectedRowsToClipboard();
+    tableGridApiService.copySelectedRowsToClipboard();
   }
 
   paste() {
-    tableGridApi.pasteFromClipboard();
+    tableGridApiService.pasteFromClipboard();
   }
 
   // ========== Undo/Redo ==========
   undo() {
-    tableGridApi.undoCellEditing();
+    tableGridApiService.undoCellEditing();
   }
 
   redo() {
-    tableGridApi.redoCellEditing();
+    tableGridApiService.redoCellEditing();
   }
 
   canUndo() {
-    return tableGridApi.getCurrentUndoSize() > 0;
+    return tableGridApiService.getCurrentUndoSize() > 0;
   }
 
   canRedo() {
-    return tableGridApi.getCurrentRedoSize() > 0;
+    return tableGridApiService.getCurrentRedoSize() > 0;
   }
 
   // ========== Export ==========
   exportToCsv(fileName: string) {
-    tableGridApi.exportDataAsCsv({ fileName });
+    tableGridApiService.exportDataAsCsv({ fileName });
   }
 
   // ========== Selection ==========
   getSelectedCells() {
-    return tableGridApi.getSelectedRows();
+    return tableGridApiService.getSelectedRows();
   }
 
   getSelectedRanges() {
-    return tableGridApi.getCellRanges();
+    return tableGridApiService.getCellRanges();
   }
 
   selectAll() {
-    tableGridApi.selectAll();
+    tableGridApiService.selectAll();
   }
 
   clearSelection() {
-    tableGridApi.deselectAll();
-    tableGridApi.clearRangeSelection();
+    tableGridApiService.deselectAll();
+    tableGridApiService.clearRangeSelection();
   }
 
   // ========== Navigation ==========
   goToCell(row: number, col: string) {
-    tableGridApi.ensureIndexVisible(row, "middle");
-    tableGridApi.ensureColumnVisible(col);
-    tableGridApi.setFocusedCell(row, col);
+    tableGridApiService.ensureIndexVisible(row, "middle");
+    tableGridApiService.ensureColumnVisible(col);
+    tableGridApiService.setFocusedCell(row, col);
   }
 
   startEditingCell(row: number, col: string) {
-    tableGridApi.startEditingCell(row, col);
+    tableGridApiService.startEditingCell(row, col);
   }
 
   stopEditing() {
-    tableGridApi.stopEditing();
+    tableGridApiService.stopEditing();
   }
 
   // ========== Layout ==========
   autoSizeColumns() {
-    tableGridApi.autoSizeAllColumns(false);
+    tableGridApiService.autoSizeAllColumns(false);
   }
 
   fitColumnsToWidth() {
-    tableGridApi.sizeColumnsToFit();
+    tableGridApiService.sizeColumnsToFit();
   }
 
   // ========== Refresh ==========
   refreshCells(force = false) {
-    tableGridApi.refreshCells({ force });
+    tableGridApiService.refreshCells({ force });
   }
 }
 

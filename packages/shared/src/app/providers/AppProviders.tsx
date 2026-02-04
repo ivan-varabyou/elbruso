@@ -1,8 +1,8 @@
 "use client";
 
 import { ReactQueryProvider } from "@elbruso/api/hooks/ReactQueryProvider";
-import { AuthProvider } from "@elbruso/modules/auth/lib";
 import { DevTools } from "@elbruso/devtools";
+import { AuthProvider } from "@elbruso/modules/auth/lib";
 import { I18nProvider, LanguageProvider } from "@elbruso/modules/i18n/lib";
 import { ToastProvider } from "@elbruso/modules/notifications";
 import { ReactNode } from "react";

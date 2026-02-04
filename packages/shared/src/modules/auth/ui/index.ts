@@ -1,3 +1,3 @@
-export * from './LoginForm';
-export * from './RegisterForm';
-export * from './ResetPasswordForm';
+export { LoginForm } from "./LoginForm.smart";
+export { RegisterForm } from "./RegisterForm.smart";
+export { ResetPasswordForm } from "./ResetPasswordForm.smart";

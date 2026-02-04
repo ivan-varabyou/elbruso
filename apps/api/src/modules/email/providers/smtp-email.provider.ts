@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
+
 import { EmailProvider } from '../interfaces/email-provider.interface';
 
 @Injectable()

@@ -1,2 +1,1 @@
-export * from './services/audit.service';
-export * from './audit.module';
+export { AuditModule } from './audit.module';

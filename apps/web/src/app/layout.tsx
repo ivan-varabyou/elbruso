@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import { AppProviders } from "@elbruso/shared";
+import { AppProviders } from "@elbruso/shared/app";
 import { Inter } from "next/font/google";
 
 import { getDictionary } from "../../get-dictionary";

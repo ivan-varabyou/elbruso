@@ -23,7 +23,7 @@ import {
   UpdateWorkspaceDto,
   AddMemberDto,
   UpdateMemberRoleDto,
-} from '../dto/workspace.dto';
+} from '../dto';
 import { WorkspaceService } from '../services/workspace.service';
 
 @ApiTags('Workspaces')

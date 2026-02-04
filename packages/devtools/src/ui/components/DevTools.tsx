@@ -3,7 +3,7 @@
 
 console.log("[DevTools] Module loaded");
 
-import { ReactNode, useState, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef,useState } from "react";
 
 interface SourceInfo {
   fileName: string;
@@ -47,7 +47,7 @@ function findDataSource(
   drillDepth: number = 0,
 ): { info: SourceInfo; target: HTMLElement } | null {
   let current: HTMLElement | null = element;
-  let matches: { info: SourceInfo; target: HTMLElement }[] = [];
+  const matches: { info: SourceInfo; target: HTMLElement }[] = [];
 
   while (current) {
     const dataPath = current.getAttribute("data-path");

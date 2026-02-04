@@ -1,1 +1,1 @@
-export { ChartsShowcase } from './ChartsShowcase';
+export { ChartsShowcase } from "./ChartsShowcase.smart";

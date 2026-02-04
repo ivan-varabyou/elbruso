@@ -1,11 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsNotEmpty,
+  IsOptional,
   IsString,
   IsUUID,
-  IsOptional,
-  MinLength,
   MaxLength,
-  IsNotEmpty,
+  MinLength,
 } from 'class-validator';
 
 export class CreatePageDto {

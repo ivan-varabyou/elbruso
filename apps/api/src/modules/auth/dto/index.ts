@@ -1,1 +1,9 @@
-export * from './auth.dto';
+export {
+  ChangePasswordDto,
+  ForgotPasswordDto,
+  LoginDto,
+  RefreshTokenDto,
+  RegisterDto,
+  ResetPasswordDto,
+  VerifyTokenDto,
+} from './auth.dto';

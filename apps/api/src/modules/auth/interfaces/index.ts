@@ -1,1 +1,6 @@
-export * from './auth.interface';
+export {
+  AuthResponse,
+  JwtPayload,
+  RequestWithUser,
+  User,
+} from './auth.interface';

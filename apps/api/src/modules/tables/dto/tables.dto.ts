@@ -1,17 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  IsString,
+  IsArray,
+  IsIn,
   IsNotEmpty,
-  MaxLength,
-  IsOptional,
-  IsUUID,
   IsNumber,
   IsObject,
-  IsArray,
-  ValidateNested,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MaxLength,
   Min,
-  IsIn,
+  ValidateNested,
 } from 'class-validator';
 
 export class CreateTableDto {

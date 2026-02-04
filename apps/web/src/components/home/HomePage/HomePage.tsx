@@ -1,13 +1,13 @@
 "use client";
 
-import { Header } from "../Header/Header";
-import { Hero } from "../Hero/Hero";
-import { Footer } from "../Footer/Footer";
-import { ProductsShowcase } from "../ProductsShowcase/ProductsShowcase";
-import { ChartsShowcase } from "../ChartsShowcase/ChartsShowcase";
-import { InteractiveGrid } from "../InteractiveGrid/InteractiveGrid";
-import { Brands } from "../Brands/Brands";
-import { LiveSportsChart } from "../LiveSportsChart/LiveSportsChart";
+import { Brands } from "../Brands";
+import { ChartsShowcase } from "../ChartsShowcase";
+import { Footer } from "../Footer";
+import { Header } from "../Header";
+import { Hero } from "../Hero";
+import { InteractiveGrid } from "../InteractiveGrid";
+import { LiveSportsChart } from "../LiveSportsChart";
+import { ProductsShowcase } from "../ProductsShowcase";
 
 export const HomePage = () => {
   return (

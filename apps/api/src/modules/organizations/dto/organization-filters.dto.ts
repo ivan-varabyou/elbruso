@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsOptional, IsInt } from 'class-validator';
+import { IsInt,IsOptional } from 'class-validator';
 
 export class OrganizationFiltersDto {
   @IsOptional()

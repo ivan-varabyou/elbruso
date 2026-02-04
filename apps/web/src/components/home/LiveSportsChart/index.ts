@@ -1,1 +1,1 @@
-export * from './LiveSportsChart';
+export { LiveSportsChart } from "./LiveSportsChart.smart";

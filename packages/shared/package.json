@@ -4,6 +4,28 @@
   "private": true,
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./app": "./src/app/index.ts",
+    "./hooks": {
+      "import": "./src/api/hooks/index.ts",
+      "types": "./src/api/hooks/index.ts"
+    },
+    "./api": "./src/api/index.ts",
+    "./ui": {
+      "import": "./src/ui/index.ts",
+      "types": "./src/ui/index.ts"
+    },
+    "./ui/primitives": "./src/ui/primitives/index.ts",
+    "./ui/layout": "./src/ui/layout/index.ts",
+    "./lib": "./src/lib/index.ts",
+    "./stores": "./src/stores/index.ts",
+    "./types": "./src/types/index.ts",
+    "./modules/*": {
+      "import": "./src/modules/*/index.ts",
+      "types": "./src/modules/*/index.ts"
+    }
+  },
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"

@@ -1,4 +1,16 @@
-export * from './indicators';
-export * from './ProfileLayout';
-export * from './Settings';
-export * from './WorkspaceTree';
+export {
+  CreateIndicatorModal,
+  FilterDropdown,
+  GenerateIndicatorsModal,
+  IndicatorGroupModal,
+  IndicatorGroupsList,
+} from "./indicators";
+export { LeftPanel, ProfileLayout, RightPanel } from "./ProfileLayout";
+export { Sidebar } from "./ProfileLayout/Sidebar";
+export { OrganizationTree, PasswordStrength, ProfileForm, SecurityForm } from "./Settings";
+export {
+  CreateTableModal,
+  CreateWorkspaceModal,
+  WorkspaceTableTabs,
+  WorkspaceTree,
+} from "./WorkspaceTree";

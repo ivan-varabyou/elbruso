@@ -133,34 +133,30 @@ else
     echo -e "${GREEN}✅ Web .env.local exists${NC}"
 fi
 
-# Generate project tree
-echo "# Структура проекта" > /home/ivan/git/elbruso/docs/PROJECT_TREE.md
-echo "" >> /home/ivan/git/elbruso/docs/PROJECT_TREE.md
-echo "Генерировано: $(date)" >> /home/ivan/git/elbruso/docs/PROJECT_TREE.md
-echo "" >> /home/ivan/git/elbruso/docs/PROJECT_TREE.md
-tree -L 5 --dirsfirst -I 'node_modules|.git' /home/ivan/git/elbruso >> /home/ivan/git/elbruso/docs/PROJECT_TREE.md
-echo "Готово! Файл: /home/ivan/git/elbruso/docs/PROJECT_TREE.md"
+# Function to generate project tree documentation
+generate_tree() {
+    local target_dir=$1
+    local output_file=$2
+    local title=$3
+    local depth=10
+    local excludes='node_modules|.git|dist|.turbo'
 
-echo "# Структура проекта web" > /home/ivan/git/elbruso/apps/web/docs/PROJECT_TREE.md
-echo "" >> /home/ivan/git/elbruso/apps/web/docs/PROJECT_TREE.md
-echo "Генерировано: $(date)" >> /home/ivan/git/elbruso/apps/web/docs/PROJECT_TREE.md
-echo "" >> /home/ivan/git/elbruso/apps/web/docs/PROJECT_TREE.md
-tree -L 5 --dirsfirst -I 'node_modules|.git' /home/ivan/git/elbruso/apps/web >> /home/ivan/git/elbruso/apps/web/docs/PROJECT_TREE.md
-echo "Готово! Файл: /home/ivan/git/elbruso/apps/web/docs/PROJECT_TREE.md"
+    echo -e "${YELLOW}📂 Generating tree for $title...${NC}"
+    mkdir -p "$(dirname "$output_file")"
+    echo "# $title" > "$output_file"
+    echo "" >> "$output_file"
+    echo "Генерировано: $(date)" >> "$output_file"
+    echo "" >> "$output_file"
+    tree -L $depth --dirsfirst -I "$excludes" "$target_dir" >> "$output_file"
+    echo -e "${GREEN}✅ Done! File: $output_file${NC}"
+}
 
-echo "# Структура проекта api" > /home/ivan/git/elbruso/apps/api/docs/PROJECT_TREE.md
-echo "" >> /home/ivan/git/elbruso/apps/api/docs/PROJECT_TREE.md
-echo "Генерировано: $(date)" >> /home/ivan/git/elbruso/apps/api/docs/PROJECT_TREE.md
-echo "" >> /home/ivan/git/elbruso/apps/api/docs/PROJECT_TREE.md
-tree -L 5 --dirsfirst -I 'node_modules|.git' /home/ivan/git/elbruso/apps/api >> /home/ivan/git/elbruso/apps/api/docs/PROJECT_TREE.md
-echo "Готово! Файл: /home/ivan/git/elbruso/apps/api/docs/PROJECT_TREE.md"
-
-echo "# Структура проекта api" > /home/ivan/git/elbruso/packages/shared/docs/PROJECT_TREE.md
-echo "" >> /home/ivan/git/elbruso/packages/shared/docs/PROJECT_TREE.md
-echo "Генерировано: $(date)" >> /home/ivan/git/elbruso/packages/shared/docs/PROJECT_TREE.md
-echo "" >> /home/ivan/git/elbruso/packages/shared/docs/PROJECT_TREE.md
-tree -L 5 --dirsfirst -I 'node_modules|.git' /home/ivan/git/elbruso/packages/shared >> /home/ivan/git/elbruso/packages/shared/docs/PROJECT_TREE.md
-echo "Готово! Файл: /home/ivan/git/elbruso/packages/shared/docs/PROJECT_TREE.md"
+# Generate project trees
+PROJECT_ROOT="/home/ivan/git/elbruso"
+generate_tree "$PROJECT_ROOT" "$PROJECT_ROOT/docs/PROJECT_TREE.md" "Структура проекта"
+generate_tree "$PROJECT_ROOT/apps/web" "$PROJECT_ROOT/apps/web/docs/PROJECT_TREE.md" "Структура проекта web"
+generate_tree "$PROJECT_ROOT/apps/api" "$PROJECT_ROOT/apps/api/docs/PROJECT_TREE.md" "Структура проекта api"
+generate_tree "$PROJECT_ROOT/packages/shared" "$PROJECT_ROOT/packages/shared/docs/PROJECT_TREE.md" "Структура проекта shared"
 
 # Print URLs
 echo -e "${GREEN}WEB URL: http://localhost:7200${NC}"

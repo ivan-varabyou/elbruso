@@ -1,17 +1,17 @@
+import { config } from '@config';
+import { UsersService } from '@modules/users/services/users.service';
 import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
-  WebSocketGateway,
-  WebSocketServer,
-  SubscribeMessage,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { UsersService } from '@modules/users/services/users.service';
-import { config } from '@config';
 
 
 @WebSocketGateway({

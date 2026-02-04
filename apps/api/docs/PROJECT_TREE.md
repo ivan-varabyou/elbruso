@@ -1,6 +1,6 @@
 # Структура проекта api
 
-Генерировано: Ср 04 фев 2026 09:05:28 +03
+Генерировано: Чт 05 фев 2026 00:44:52 +03
 
 /home/ivan/git/elbruso/apps/api
 ├── docs
@@ -56,6 +56,9 @@
 │   │   │   │   └── index.ts
 │   │   │   ├── roles
 │   │   │   │   ├── dto
+│   │   │   │   │   ├── create-role.dto.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── update-role.dto.ts
 │   │   │   │   ├── admin-roles.controller.ts
 │   │   │   │   ├── admin-roles.module.ts
 │   │   │   │   └── admin-roles.service.ts
@@ -68,6 +71,9 @@
 │   │   │   │   └── index.ts
 │   │   │   ├── users
 │   │   │   │   ├── dto
+│   │   │   │   │   ├── create-admin-user.dto.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── update-admin-user.dto.ts
 │   │   │   │   ├── admin-users.controller.ts
 │   │   │   │   ├── admin-users.module.ts
 │   │   │   │   └── admin-users.service.ts
@@ -89,10 +95,12 @@
 │   │   │   │   ├── index.ts
 │   │   │   │   └── password-recovery.dto.ts
 │   │   │   ├── events
-│   │   │   │   └── auth.events.ts
+│   │   │   │   ├── auth.events.ts
+│   │   │   │   └── index.ts
 │   │   │   ├── guards
 │   │   │   │   ├── admin-jwt-auth.guard.ts
 │   │   │   │   ├── api-key-auth.guard.ts
+│   │   │   │   ├── index.ts
 │   │   │   │   └── jwt-auth.guard.ts
 │   │   │   ├── interfaces
 │   │   │   │   ├── auth.interface.ts
@@ -275,6 +283,7 @@
 │   │       │   ├── workspace.controller.ts
 │   │       │   └── workspace-group.controller.ts
 │   │       ├── dto
+│   │       │   ├── index.ts
 │   │       │   ├── workspace.dto.ts
 │   │       │   └── workspace-group.dto.ts
 │   │       ├── events
@@ -335,4 +344,4 @@
 ├── test-simple-security.ts
 └── tsconfig.json
 
-130 directories, 201 files
+130 directories, 210 files

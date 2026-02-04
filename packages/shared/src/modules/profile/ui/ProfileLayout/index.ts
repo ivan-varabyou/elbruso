@@ -1,4 +1,3 @@
-export { LeftPanel } from './LeftPanel';
-export { ProfileLayout } from './ProfileLayout';
-export { RightPanel } from './RightPanel';
-
+export { LeftPanel } from "./LeftPanel.smart";
+export { ProfileLayout } from "./ProfileLayout.smart";
+export { RightPanel } from "./RightPanel.smart";

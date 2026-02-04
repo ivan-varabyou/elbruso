@@ -6,7 +6,7 @@ export { Select } from "./primitives/Select";
 
 // Layout
 export { AuthLayout } from "./layout/AuthLayout/AuthLayout";
-export { PageLayout } from "./layout/PageLayout";
+export { PageLayout } from "./layout/PageLayout/PageLayout";
 
 // App Providers
 export { AppProviders } from "../app/providers/AppProviders";

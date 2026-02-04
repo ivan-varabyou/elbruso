@@ -1,6 +1,6 @@
 # Структура проекта web
 
-Генерировано: Ср 04 фев 2026 09:05:28 +03
+Генерировано: Чт 05 фев 2026 00:44:52 +03
 
 /home/ivan/git/elbruso/apps/web
 ├── assets
@@ -11,6 +11,8 @@
 │   ├── en.json
 │   └── ru.json
 ├── docs
+│   ├── COMPONENT_SYSTEM.md
+│   ├── MIGRATION_TABLE.md
 │   └── PROJECT_TREE.md
 ├── public
 │   ├── assets
@@ -56,10 +58,12 @@
 │   │   │   │   └── page.tsx
 │   │   │   ├── tables
 │   │   │   │   └── [id]
+│   │   │   │       └── page.tsx
 │   │   │   ├── tables-test
 │   │   │   │   └── page.tsx
 │   │   │   ├── workspace
 │   │   │   │   ├── [workspaceId]
+│   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── workspaces
 │   │   │   │   └── page.tsx
@@ -70,36 +74,36 @@
 │   ├── components
 │   │   └── home
 │   │       ├── Brands
-│   │       │   ├── Brands.tsx
+│   │       │   ├── Brands.smart.tsx
 │   │       │   └── index.ts
 │   │       ├── ChartsShowcase
-│   │       │   ├── ChartsShowcase.tsx
+│   │       │   ├── ChartsShowcase.smart.tsx
 │   │       │   └── index.ts
 │   │       ├── DataWavesBackground
-│   │       │   ├── DataWavesBackground.tsx
+│   │       │   ├── DataWavesBackground.smart.tsx
 │   │       │   └── index.ts
 │   │       ├── Footer
-│   │       │   ├── Footer.tsx
+│   │       │   ├── Footer.smart.tsx
 │   │       │   └── index.ts
 │   │       ├── Header
-│   │       │   ├── Header.tsx
+│   │       │   ├── Header.smart.tsx
 │   │       │   └── index.ts
 │   │       ├── Hero
-│   │       │   ├── Hero.tsx
+│   │       │   ├── Hero.smart.tsx
 │   │       │   └── index.ts
 │   │       ├── HomePage
 │   │       │   ├── HomePage.tsx
 │   │       │   └── index.ts
 │   │       ├── InteractiveGrid
 │   │       │   ├── index.ts
-│   │       │   └── InteractiveGrid.tsx
+│   │       │   └── InteractiveGrid.smart.tsx
 │   │       ├── LiveSportsChart
-│   │       │   ├── chartConfig.ts
+│   │       │   ├── chartConfig.constant.ts
 │   │       │   ├── index.ts
-│   │       │   └── LiveSportsChart.tsx
+│   │       │   └── LiveSportsChart.smart.tsx
 │   │       └── ProductsShowcase
 │   │           ├── index.ts
-│   │           └── ProductsShowcase.tsx
+│   │           └── ProductsShowcase.smart.tsx
 │   ├── pages
 │   └── types
 │       └── next-shim.d.ts
@@ -116,4 +120,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-41 directories, 71 files
+41 directories, 75 files

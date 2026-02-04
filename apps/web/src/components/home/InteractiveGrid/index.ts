@@ -1,1 +1,1 @@
-export * from './InteractiveGrid';
+export { InteractiveGrid } from "./InteractiveGrid.smart";

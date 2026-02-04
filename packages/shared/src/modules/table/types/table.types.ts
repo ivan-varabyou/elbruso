@@ -1,4 +1,4 @@
-import type { ColumnType,ValidationRuleType } from "../../../types/enums";
+import type { ColumnType, ValidationRuleType } from "@elbruso/types/enums";
 
 export interface DynamicTable {
   id: string;

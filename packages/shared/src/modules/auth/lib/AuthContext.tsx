@@ -1,5 +1,8 @@
 "use client";
 
+import type { LoginDto, RegisterDto } from "@elbruso/api";
+import { Auth, clearTokens, isAuthenticated as checkAuth, setTokens } from "@elbruso/api";
+import { disconnectProfileSocket, getProfileSocket } from "@elbruso/api/websocket.ws";
 import React, {
   createContext,
   ReactNode,
@@ -8,10 +11,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-
-import type { LoginDto, RegisterDto } from "../../../api";
-import { Auth, clearTokens, isAuthenticated as checkAuth, setTokens } from "../../../api";
-import { disconnectProfileSocket, getProfileSocket } from "../../../api/websocket";
 
 // Feature flags - controlled via environment variables
 const CONFIG = {

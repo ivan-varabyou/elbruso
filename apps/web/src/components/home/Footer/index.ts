@@ -1,2 +1,1 @@
-export { default } from "./Footer";
-export { Footer } from "./Footer";
+export { Footer } from "./Footer.smart";

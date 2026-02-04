@@ -1,3 +1,3 @@
-export * from './BarChart';
-export * from './LineChart';
-export * from './PieChart';
+export { BarChart } from "./BarChart";
+export { LineChart } from "./LineChart";
+export { PieChart } from "./PieChart";

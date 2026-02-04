@@ -1,10 +1,10 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsArray,
+  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
-  IsArray,
-  IsBoolean,
 } from 'class-validator';
 
 export class GenerateIndicatorsDto {
