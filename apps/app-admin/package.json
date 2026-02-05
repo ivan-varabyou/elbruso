@@ -1,0 +1,39 @@
+{
+  "name": "@elbruso/app-admin",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 7201 --webpack",
+    "build": "next build --webpack",
+    "start": "next start -p 7201",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@elbruso/shared": "workspace:*",
+    "@heroui/react": "^2.8.8",
+    "@heroui/theme": "^2.4.26",
+    "@formatjs/intl-localematcher": "^0.8.0",
+    "clsx": "^2.1.1",
+    "d3": "^7.9.0",
+    "framer-motion": "^12.27.5",
+    "gsap": "^3.14.2",
+    "lucide-react": "^0.562.0",
+    "negotiator": "^1.0.0",
+    "next": "^16.1.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "socket.io-client": "^4.7.0",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.2.0",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.0.0"
+  }
+}

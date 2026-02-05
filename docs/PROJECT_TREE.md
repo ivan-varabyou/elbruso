@@ -1,10 +1,11 @@
 # Структура проекта
 
-Генерировано: Чт 05 фев 2026 00:44:52 +03
+Генерировано: Чт 05 фев 2026 21:31:23 +03
 
 /home/ivan/git/elbruso
 ├── apps
 │   ├── api
+│   ├── api-gateway
 │   │   ├── docs
 │   │   │   └── PROJECT_TREE.md
 │   │   ├── src
@@ -39,7 +40,14 @@
 │   │   │   ├── modules
 │   │   │   │   ├── admin
 │   │   │   │   │   ├── admin-auth
-│   │   │   │   │   │   └── dto
+│   │   │   │   │   │   ├── controllers
+│   │   │   │   │   │   │   └── admin-auth.controller.ts
+│   │   │   │   │   │   ├── dto
+│   │   │   │   │   │   │   └── login.dto.ts
+│   │   │   │   │   │   ├── services
+│   │   │   │   │   │   │   └── admin-auth.service.ts
+│   │   │   │   │   │   └── strategies
+│   │   │   │   │   │       └── admin-jwt.strategy.ts
 │   │   │   │   │   ├── admin-users
 │   │   │   │   │   │   └── dto
 │   │   │   │   │   ├── controllers
@@ -51,6 +59,7 @@
 │   │   │   │   │   │   └── roles.decorator.ts
 │   │   │   │   │   ├── dto
 │   │   │   │   │   │   ├── admin-login.dto.ts
+│   │   │   │   │   │   ├── admin-reset.dto.ts
 │   │   │   │   │   │   ├── admin-setup.dto.ts
 │   │   │   │   │   │   └── index.ts
 │   │   │   │   │   ├── guards
@@ -337,7 +346,7 @@
 │   │   │   ├── test-schema-full.sql
 │   │   │   ├── test-schema.sql
 │   │   │   └── workspaces.e2e-spec.ts
-│   │   ├── AGENT.md
+│   │   ├── AGENTS.md
 │   │   ├── jest-e2e.config.js
 │   │   ├── nest-cli.json
 │   │   ├── package.json
@@ -345,123 +354,175 @@
 │   │   ├── test-security-e2e.ts
 │   │   ├── test-simple-security.ts
 │   │   └── tsconfig.json
+│   ├── app-admin
+│   │   ├── dictionaries
+│   │   │   ├── en.json
+│   │   │   └── ru.json
+│   │   ├── public
+│   │   │   ├── assets
+│   │   │   │   └── img
+│   │   │   │       └── login-bg.jpg
+│   │   │   ├── images
+│   │   │   │   └── auth-bg.jpg
+│   │   │   ├── apple-touch-icon.png
+│   │   │   ├── favicon-96x96.png
+│   │   │   ├── favicon.ico
+│   │   │   ├── favicon.svg
+│   │   │   ├── russia.geojson
+│   │   │   ├── site.webmanifest
+│   │   │   ├── web-app-manifest-192x192.png
+│   │   │   └── web-app-manifest-512x512.png
+│   │   ├── src
+│   │   │   ├── app
+│   │   │   │   ├── (admin)
+│   │   │   │   │   └── layout.tsx
+│   │   │   │   ├── (auth)
+│   │   │   │   │   ├── forgot-password
+│   │   │   │   │   ├── login
+│   │   │   │   │   │   ├── login.css
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── register
+│   │   │   │   │   │   └── register.css
+│   │   │   │   │   ├── reset-password
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── AUTH_CONFIG.md
+│   │   │   │   │   ├── AuthStats.css
+│   │   │   │   │   ├── AuthStats.tsx
+│   │   │   │   │   └── layout.tsx
+│   │   │   │   ├── globals.css
+│   │   │   │   └── layout.tsx
+│   │   │   ├── components
+│   │   │   ├── dictionaries
+│   │   │   │   ├── en.json
+│   │   │   │   └── ru.json
+│   │   │   └── lib
+│   │   │       ├── get-dictionary.ts
+│   │   │       └── i18n-config.ts
+│   │   ├── next.config.mjs
+│   │   ├── next-env.d.ts
+│   │   ├── package.json
+│   │   ├── postcss.config.js
+│   │   ├── tailwind.config.ts
+│   │   └── tsconfig.json
+│   ├── app-web
+│   │   ├── assets
+│   │   │   └── img
+│   │   │       ├── login-bg.jpg
+│   │   │       └── logo.svg
+│   │   ├── dictionaries
+│   │   │   ├── en.json
+│   │   │   └── ru.json
+│   │   ├── docs
+│   │   │   ├── COMPONENT_SYSTEM.md
+│   │   │   ├── MIGRATION_TABLE.md
+│   │   │   └── PROJECT_TREE.md
+│   │   ├── public
+│   │   │   ├── assets
+│   │   │   │   └── img
+│   │   │   │       └── login-bg.jpg
+│   │   │   ├── images
+│   │   │   │   └── auth-bg.jpg
+│   │   │   ├── apple-touch-icon.png
+│   │   │   ├── favicon-96x96.png
+│   │   │   ├── favicon.ico
+│   │   │   ├── favicon.svg
+│   │   │   ├── russia.geojson
+│   │   │   ├── site.webmanifest
+│   │   │   ├── web-app-manifest-192x192.png
+│   │   │   └── web-app-manifest-512x512.png
+│   │   ├── src
+│   │   │   ├── app
+│   │   │   │   ├── (auth)
+│   │   │   │   │   ├── forgot-password
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── login
+│   │   │   │   │   │   ├── login.css
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── register
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── register.css
+│   │   │   │   │   ├── reset-password
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── AUTH_CONFIG.md
+│   │   │   │   │   ├── AuthStats.css
+│   │   │   │   │   ├── AuthStats.tsx
+│   │   │   │   │   └── layout.tsx
+│   │   │   │   ├── (profile)
+│   │   │   │   │   ├── dashboard
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── indicators
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── organizations
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── seasons
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── settings
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── tables
+│   │   │   │   │   │   └── [id]
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   ├── tables-test
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── workspace
+│   │   │   │   │   │   ├── [workspaceId]
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── workspaces
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   └── layout.tsx
+│   │   │   │   ├── globals.css
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── components
+│   │   │   │   └── home
+│   │   │   │       ├── Brands
+│   │   │   │       │   ├── Brands.smart.tsx
+│   │   │   │       │   └── index.ts
+│   │   │   │       ├── ChartsShowcase
+│   │   │   │       │   ├── ChartsShowcase.smart.tsx
+│   │   │   │       │   └── index.ts
+│   │   │   │       ├── DataWavesBackground
+│   │   │   │       │   ├── DataWavesBackground.smart.tsx
+│   │   │   │       │   └── index.ts
+│   │   │   │       ├── Footer
+│   │   │   │       │   ├── Footer.smart.tsx
+│   │   │   │       │   └── index.ts
+│   │   │   │       ├── Header
+│   │   │   │       │   ├── Header.smart.tsx
+│   │   │   │       │   └── index.ts
+│   │   │   │       ├── Hero
+│   │   │   │       │   ├── Hero.smart.tsx
+│   │   │   │       │   └── index.ts
+│   │   │   │       ├── HomePage
+│   │   │   │       │   ├── HomePage.tsx
+│   │   │   │       │   └── index.ts
+│   │   │   │       ├── InteractiveGrid
+│   │   │   │       │   ├── index.ts
+│   │   │   │       │   └── InteractiveGrid.smart.tsx
+│   │   │   │       ├── LiveSportsChart
+│   │   │   │       │   ├── chartConfig.constant.ts
+│   │   │   │       │   ├── index.ts
+│   │   │   │       │   └── LiveSportsChart.smart.tsx
+│   │   │   │       └── ProductsShowcase
+│   │   │   │           ├── index.ts
+│   │   │   │           └── ProductsShowcase.smart.tsx
+│   │   │   ├── lib
+│   │   │   │   ├── get-dictionary.ts
+│   │   │   │   ├── i18n-config.ts
+│   │   │   │   └── middleware.ts
+│   │   │   ├── pages
+│   │   │   └── types
+│   │   │       └── next-shim.d.ts
+│   │   ├── AGENTS.md
+│   │   ├── inject-source.cjs
+│   │   ├── next.config.mjs
+│   │   ├── next-env.d.ts
+│   │   ├── package.json
+│   │   ├── postcss.config.js
+│   │   ├── tailwind.config.ts
+│   │   ├── tsconfig.json
+│   │   └── tsconfig.tsbuildinfo
 │   └── web
-│       ├── assets
-│       │   └── img
-│       │       ├── login-bg.jpg
-│       │       └── logo.svg
-│       ├── dictionaries
-│       │   ├── en.json
-│       │   └── ru.json
-│       ├── docs
-│       │   ├── COMPONENT_SYSTEM.md
-│       │   ├── MIGRATION_TABLE.md
-│       │   └── PROJECT_TREE.md
-│       ├── public
-│       │   ├── assets
-│       │   │   └── img
-│       │   │       └── login-bg.jpg
-│       │   ├── images
-│       │   │   └── auth-bg.jpg
-│       │   ├── apple-touch-icon.png
-│       │   ├── favicon-96x96.png
-│       │   ├── favicon.ico
-│       │   ├── favicon.svg
-│       │   ├── russia.geojson
-│       │   ├── site.webmanifest
-│       │   ├── web-app-manifest-192x192.png
-│       │   └── web-app-manifest-512x512.png
-│       ├── src
-│       │   ├── app
-│       │   │   ├── (auth)
-│       │   │   │   ├── forgot-password
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── login
-│       │   │   │   │   ├── login.css
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── register
-│       │   │   │   │   ├── page.tsx
-│       │   │   │   │   └── register.css
-│       │   │   │   ├── reset-password
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── AUTH_CONFIG.md
-│       │   │   │   ├── AuthStats.css
-│       │   │   │   ├── AuthStats.tsx
-│       │   │   │   └── layout.tsx
-│       │   │   ├── (profile)
-│       │   │   │   ├── dashboard
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── indicators
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── organizations
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── seasons
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── settings
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── tables
-│       │   │   │   │   └── [id]
-│       │   │   │   │       └── page.tsx
-│       │   │   │   ├── tables-test
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── workspace
-│       │   │   │   │   ├── [workspaceId]
-│       │   │   │   │   │   └── page.tsx
-│       │   │   │   │   └── page.tsx
-│       │   │   │   ├── workspaces
-│       │   │   │   │   └── page.tsx
-│       │   │   │   └── layout.tsx
-│       │   │   ├── globals.css
-│       │   │   ├── layout.tsx
-│       │   │   └── page.tsx
-│       │   ├── components
-│       │   │   └── home
-│       │   │       ├── Brands
-│       │   │       │   ├── Brands.smart.tsx
-│       │   │       │   └── index.ts
-│       │   │       ├── ChartsShowcase
-│       │   │       │   ├── ChartsShowcase.smart.tsx
-│       │   │       │   └── index.ts
-│       │   │       ├── DataWavesBackground
-│       │   │       │   ├── DataWavesBackground.smart.tsx
-│       │   │       │   └── index.ts
-│       │   │       ├── Footer
-│       │   │       │   ├── Footer.smart.tsx
-│       │   │       │   └── index.ts
-│       │   │       ├── Header
-│       │   │       │   ├── Header.smart.tsx
-│       │   │       │   └── index.ts
-│       │   │       ├── Hero
-│       │   │       │   ├── Hero.smart.tsx
-│       │   │       │   └── index.ts
-│       │   │       ├── HomePage
-│       │   │       │   ├── HomePage.tsx
-│       │   │       │   └── index.ts
-│       │   │       ├── InteractiveGrid
-│       │   │       │   ├── index.ts
-│       │   │       │   └── InteractiveGrid.smart.tsx
-│       │   │       ├── LiveSportsChart
-│       │   │       │   ├── chartConfig.constant.ts
-│       │   │       │   ├── index.ts
-│       │   │       │   └── LiveSportsChart.smart.tsx
-│       │   │       └── ProductsShowcase
-│       │   │           ├── index.ts
-│       │   │           └── ProductsShowcase.smart.tsx
-│       │   ├── pages
-│       │   └── types
-│       │       └── next-shim.d.ts
-│       ├── AGENT.md
-│       ├── get-dictionary.ts
-│       ├── i18n-config.ts
-│       ├── inject-source.cjs
-│       ├── middleware.ts
-│       ├── next.config.mjs
-│       ├── next-env.d.ts
-│       ├── package.json
-│       ├── postcss.config.js
-│       ├── tailwind.config.ts
-│       ├── tsconfig.json
-│       └── tsconfig.tsbuildinfo
 ├── docs
 │   ├── data
 │   │   ├── API_AUTH_GUIDE.md
@@ -525,6 +586,7 @@
 │   │   ├── 26_dynamic_tables_permissions.sql
 │   │   ├── 27_dynamic_tables_history.sql
 │   │   ├── 28_dashboard_reports.sql
+│   │   ├── 99_admin_roles.sql
 │   │   ├── ALL_UNIFIED_DATA.sql
 │   │   ├── ALL_UNIFIED_INDICATORS.sql
 │   │   ├── AUTOGENERATION_CONCEPT.md
@@ -593,7 +655,8 @@
 │   ├── memory-graph.html
 │   ├── memory-graph-screenshot.png
 │   ├── PRODUCTION_SETUP.md
-│   └── PROJECT_TREE.md
+│   ├── PROJECT_TREE.md
+│   └── TEST_CREDENTIALS.md
 ├── packages
 │   ├── context
 │   │   ├── mcp-server
@@ -712,6 +775,14 @@
 │       │   │   └── index.ts
 │       │   ├── modules
 │       │   │   ├── admin
+│       │   │   │   └── index.ts
+│       │   │   ├── admin-auth
+│       │   │   │   ├── lib
+│       │   │   │   │   ├── AdminAuthContext.tsx
+│       │   │   │   │   └── ProtectedRoute.tsx
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── AdminLoginForm.tsx
+│       │   │   │   │   └── index.ts
 │       │   │   │   └── index.ts
 │       │   │   ├── auth
 │       │   │   │   ├── lib
@@ -1029,7 +1100,7 @@
 │       │   │   │   └── index.ts
 │       │   │   └── index.ts
 │       │   └── index.ts
-│       ├── AGENT.md
+│       ├── AGENTS.md
 │       ├── package.json
 │       ├── tsconfig.json
 │       └── tsconfig.tsbuildinfo
@@ -1044,7 +1115,7 @@
 │   ├── rollback.sh
 │   ├── update-barrel-exports.js
 │   └── update-imports.js
-├── AGENT.md
+├── AGENTS.md
 ├── docker-compose.yml
 ├── eslint.config.mjs
 ├── jest.config.js
@@ -1060,4 +1131,4 @@
 ├── tsconfig.json
 └── turbo.json
 
-299 directories, 757 files
+325 directories, 802 files

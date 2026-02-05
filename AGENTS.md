@@ -20,6 +20,7 @@
 ├── @apps/web/          → apps/web/AGENTS.md
 ├── @apps/api/          → apps/api/AGENTS.md
 ├── @packages/shared/    → packages/shared/AGENTS.md
+├── @packages/context/    → packages/context
 └── @packages/database/  → packages/database/src/
 ```
 
@@ -28,6 +29,7 @@
 | Service | Port | URL                            |
 | ------- | ---- | ------------------------------ |
 | Web     | 7200 | http://localhost:7200          |
+| Admin   | 7201 | http://localhost:7201          |
 | API     | 7100 | http://localhost:7100/api/docs |
 | WS      | 7000 | ws://localhost:7000            |
 
@@ -36,6 +38,7 @@
 | Path Pattern         | See                                 |
 | -------------------- | ----------------------------------- |
 | `@apps/api/*`        | apps/api/AGENTS.md                  |
+| `@apps/admin/*`      | apps/admin/AGENTS.md                |
 | `@apps/web/*`        | apps/web/AGENTS.md                  |
 | `@packages/shared/*` | packages/shared/AGENTS.md           |
 | Components           | @docs/COMPONENT_SYSTEM_MIGRATION.md |
@@ -44,6 +47,6 @@
 
 ```bash
 pnpm install   # All deps
-pnpm dev      # All servers
+pnpm dev      # All servers or npm run dev
 pnpm lint     # All linting
 ```

@@ -1,0 +1,241 @@
+.auth-stats {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    gap: 2rem;
+}
+
+.auth-stats-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.auth-stats-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.02em;
+}
+
+.auth-stats-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    font-weight: 500;
+}
+
+.auth-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 650px;
+    width: 100%;
+}
+
+.auth-stat-item {
+    position: relative;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.auth-stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.5) 50%,
+            rgba(255, 255, 255, 0) 100%);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.auth-stat-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.auth-stat-trend {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+.auth-stat-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    font-variant-numeric: tabular-nums;
+}
+
+.auth-stat-suffix {
+    font-size: 1.5rem;
+    margin-left: 0.25rem;
+    opacity: 0.9;
+}
+
+.auth-stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}
+
+.auth-stat-indicator {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.auth-stat-pulse {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: relative;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.auth-stat-pulse-ring {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 2px solid;
+    border-radius: 50%;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes ping {
+
+    75%,
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.auth-stats-footer {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.auth-stats-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.auth-stats-badge:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.auth-stats-badge-icon {
+    font-size: 1.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-stats {
+        display: none;
+    }
+}
+
+@media (max-width: 1200px) {
+    .auth-stats {
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    .auth-stats-title {
+        font-size: 1.5rem;
+    }
+
+    .auth-stats-subtitle {
+        font-size: 0.875rem;
+    }
+
+    .auth-stats-grid {
+        gap: 1rem;
+        max-width: 500px;
+    }
+
+    .auth-stat-item {
+        padding: 1.5rem 1rem;
+    }
+
+    .auth-stat-value {
+        font-size: 2.25rem;
+    }
+
+    .auth-stat-suffix {
+        font-size: 1.25rem;
+    }
+
+    .auth-stat-label {
+        font-size: 0.75rem;
+    }
+
+    .auth-stats-badge {
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+    }
+}

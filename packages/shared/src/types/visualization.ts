@@ -2,6 +2,8 @@
  * Core types for D3.js visualization service
  */
 
+import type { GeoJSON as GeoJSONType } from "geojson";
+
 export interface ChartDimensions {
   width: number;
   height: number;
@@ -494,7 +496,7 @@ export interface ChoroplethDataPoint {
 export interface ChoroplethMapConfig extends BaseChartConfig {
   data: ChoroplethDataPoint[];
   geoJsonUrl?: string;
-  geoJson?: GeoJSON.GeoJSON;
+  geoJson?: GeoJSONType;
   projection?: "mercator" | "albersUsa" | "albers" | "equalEarth" | "naturalEarth";
   colorScale?: string[];
   showLabels?: boolean;

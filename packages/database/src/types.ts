@@ -5,9 +5,10 @@
 
 import type { ColumnType } from "kysely";
 
-export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S, I | undefined, U>
-  : ColumnType<T, T | undefined, T>;
+export type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U>
+    ? ColumnType<S, I | undefined, U>
+    : ColumnType<T, T | undefined, T>;
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
@@ -39,6 +40,15 @@ export interface AdminAuditLogs {
   user_id: string | null;
 }
 
+export interface AdminRoles {
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<string>;
+  name: string;
+  permissions: Generated<Json | null>;
+  updated_at: Generated<Timestamp | null>;
+}
+
 export interface AdminSessions {
   created_at: Generated<Timestamp | null>;
   expires_at: Timestamp;
@@ -58,6 +68,7 @@ export interface AdminUsers {
   name: string;
   password_hash: string;
   role: Generated<string>;
+  role_id: string | null;
   updated_at: Generated<Timestamp | null>;
 }
 
@@ -1279,6 +1290,7 @@ export interface Workspaces {
 
 export interface DB {
   admin_audit_logs: AdminAuditLogs;
+  admin_roles: AdminRoles;
   admin_sessions: AdminSessions;
   admin_users: AdminUsers;
   age_groups: AgeGroups;

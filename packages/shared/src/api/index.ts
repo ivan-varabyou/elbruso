@@ -3,6 +3,12 @@ export { Auth } from "./auth.api";
 export { Blocks } from "./blocks.api";
 export { apiClient, clearTokens, isAuthenticated, setTokens } from "./client";
 export { Countries } from "./countries.api";
+export {
+  adminApiClient,
+  setAdminTokens,
+  clearAdminTokens,
+  isAdminAuthenticated,
+} from "./admin.client";
 export type {
   AddMemberDto,
   AdminLoginDto,

@@ -18,9 +18,10 @@ echo -e "${GREEN}✅ Processes cleaned${NC}"
 
 # Clear build caches
 echo -e "${YELLOW}🧹 Clearing build caches...${NC}"
-rm -rf apps/web/.next 2>/dev/null || true
+rm -rf apps/app-web/.next 2>/dev/null || true
+rm -rf apps/app-admin/.next 2>/dev/null || true
 rm -rf .turbo 2>/dev/null || true
-rm -rf apps/api/dist 2>/dev/null || true
+rm -rf apps/api-gateway/dist 2>/dev/null || true
 echo -e "${GREEN}✅ Caches cleared${NC}"
 
 # Check if Docker is running
@@ -75,12 +76,12 @@ if [ -z "$QDRANT_CONTAINER" ]; then
         echo -e "${YELLOW}📦 Creating Qdrant container...${NC}"
         docker run -d \
             --name elbruso-qdrant \
-            -p 6333:6333 \
-            -p 6334:6334 \
+            -p 7999:6333 \
+            -p 7998:6334 \
             -v elbruso-qdrant-data:/qdrant/storage \
             qdrant/qdrant:latest
     }
-    echo -e "${GREEN}✅ Qdrant started on ports 6333-6334${NC}"
+    echo -e "${GREEN}✅ Qdrant started on ports 7999-7998${NC}"
 else
     echo -e "${GREEN}✅ Qdrant already running${NC}"
 fi
@@ -100,11 +101,12 @@ echo -e "${GREEN}✅ Database package build step finished${NC}"
 echo -e "${YELLOW}📝 Checking environment files...${NC}"
 
 # Ensure directories exist
-mkdir -p apps/api apps/web
+mkdir -p apps/api-gateway apps/app-web apps/app-admin
 
-if [ ! -f "apps/api/.env" ]; then
-    echo -e "${YELLOW}📝 Creating API .env file...${NC}"
-    cat > apps/api/.env << 'EOF'
+# Create API Gateway .env
+if [ ! -f "apps/api-gateway/.env" ]; then
+    echo -e "${YELLOW}📝 Creating API Gateway .env file...${NC}"
+    cat > apps/api-gateway/.env << 'EOF'
 # Database
 DATABASE_URL=postgresql://elbruso:elbruso@localhost:7900/elbruso
 
@@ -113,24 +115,41 @@ JWT_SECRET=your-super-secret-jwt-key-change-in-production
 JWT_EXPIRES_IN=15m
 JWT_REFRESH_EXPIRES_IN=7d
 
+# Admin JWT Configuration
+ADMIN_JWT_SECRET=your-super-secret-admin-jwt-key
+ADMIN_JWT_EXPIRES_IN=1h
+
 # Server
-PORT=3001
+PORT=7100
 NODE_ENV=development
 EOF
-    echo -e "${GREEN}✅ API .env created${NC}"
+    echo -e "${GREEN}✅ API Gateway .env created${NC}"
 else
-    echo -e "${GREEN}✅ API .env exists${NC}"
+    echo -e "${GREEN}✅ API Gateway .env exists${NC}"
 fi
 
-if [ ! -f "apps/web/.env.local" ]; then
-    echo -e "${YELLOW}📝 Creating Web .env.local file...${NC}"
-    cat > apps/web/.env.local << 'EOF'
+# Create App Web .env.local
+if [ ! -f "apps/app-web/.env.local" ]; then
+    echo -e "${YELLOW}📝 Creating App Web .env.local file...${NC}"
+    cat > apps/app-web/.env.local << 'EOF'
 # API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:7200
+NEXT_PUBLIC_API_URL=http://localhost:7100
 EOF
-    echo -e "${GREEN}✅ Web .env.local created${NC}"
+    echo -e "${GREEN}✅ App Web .env.local created${NC}"
 else
-    echo -e "${GREEN}✅ Web .env.local exists${NC}"
+    echo -e "${GREEN}✅ App Web .env.local exists${NC}"
+fi
+
+# Create App Admin .env.local
+if [ ! -f "apps/app-admin/.env.local" ]; then
+    echo -e "${YELLOW}📝 Creating App Admin .env.local file...${NC}"
+    cat > apps/app-admin/.env.local << 'EOF'
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:7100
+EOF
+    echo -e "${GREEN}✅ App Admin .env.local created${NC}"
+else
+    echo -e "${GREEN}✅ App Admin .env.local exists${NC}"
 fi
 
 # Function to generate project tree documentation
@@ -154,17 +173,17 @@ generate_tree() {
 # Generate project trees
 PROJECT_ROOT="/home/ivan/git/elbruso"
 generate_tree "$PROJECT_ROOT" "$PROJECT_ROOT/docs/PROJECT_TREE.md" "Структура проекта"
-generate_tree "$PROJECT_ROOT/apps/web" "$PROJECT_ROOT/apps/web/docs/PROJECT_TREE.md" "Структура проекта web"
-generate_tree "$PROJECT_ROOT/apps/api" "$PROJECT_ROOT/apps/api/docs/PROJECT_TREE.md" "Структура проекта api"
+generate_tree "$PROJECT_ROOT/apps/app-web" "$PROJECT_ROOT/apps/app-web/docs/PROJECT_TREE.md" "Структура проекта app-web"
+generate_tree "$PROJECT_ROOT/apps/api-gateway" "$PROJECT_ROOT/apps/api-gateway/docs/PROJECT_TREE.md" "Структура проекта api-gateway"
 generate_tree "$PROJECT_ROOT/packages/shared" "$PROJECT_ROOT/packages/shared/docs/PROJECT_TREE.md" "Структура проекта shared"
 
 # Print URLs
-echo -e "${GREEN}WEB URL: http://localhost:7200${NC}"
-echo -e "${BLUE}ADMIN URL: http://localhost:7201${NC}"
-echo -e "${YELLOW}API URL: http://localhost:7100${NC}"
-echo -e "${CYAN}DATABASE URL: postgresql://elbruso:elbruso@localhost:7900/elbruso${NC}"
-echo -e "${MAGENTA}QDRANT URL: http://localhost:7999${NC}"
-echo -e "${MAGENTA}REDIS URL: http://localhost:7800${NC}"
+echo -e "${GREEN}📱 App Web: http://localhost:7200${NC}"
+echo -e "${BLUE}📱 App Admin: http://localhost:7201${NC}"
+echo -e "${YELLOW}🔌 API Gateway: http://localhost:7100${NC}"
+echo -e "${CYAN}🗄️ PostgreSQL: postgresql://elbruso:elbruso@localhost:7900/elbruso${NC}"
+echo -e "${MAGENTA}🔍 Qdrant: http://localhost:7999${NC}"
+echo -e "${MAGENTA}⚡ Redis: http://localhost:7800${NC}"
 echo -e "${GREEN}✨ Development environment ready!${NC}"
 echo -e "${GREEN}🚀 Starting development servers...${NC}"
 echo ""

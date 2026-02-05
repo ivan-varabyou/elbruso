@@ -1,6 +1,6 @@
 # Структура проекта shared
 
-Генерировано: Чт 05 фев 2026 00:44:52 +03
+Генерировано: Чт 05 фев 2026 21:31:23 +03
 
 /home/ivan/git/elbruso/packages/shared
 ├── docs
@@ -59,6 +59,14 @@
 │   │   └── index.ts
 │   ├── modules
 │   │   ├── admin
+│   │   │   └── index.ts
+│   │   ├── admin-auth
+│   │   │   ├── lib
+│   │   │   │   ├── AdminAuthContext.tsx
+│   │   │   │   └── ProtectedRoute.tsx
+│   │   │   ├── ui
+│   │   │   │   ├── AdminLoginForm.tsx
+│   │   │   │   └── index.ts
 │   │   │   └── index.ts
 │   │   ├── auth
 │   │   │   ├── lib
@@ -376,9 +384,9 @@
 │   │   │   └── index.ts
 │   │   └── index.ts
 │   └── index.ts
-├── AGENT.md
+├── AGENTS.md
 ├── package.json
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-100 directories, 277 files
+103 directories, 282 files

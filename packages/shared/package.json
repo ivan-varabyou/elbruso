@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",
+    "@types/geojson": "^7946.0.14",
     "@types/negotiator": "^0.6.4",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

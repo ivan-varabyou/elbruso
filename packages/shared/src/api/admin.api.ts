@@ -19,12 +19,12 @@ import {
   UpdateRoleDto,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client.service";
-import { apiClient } from "./client";
+import { adminApiClient } from "./admin.client";
 
 export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   constructor() {
     super();
-    this.instance = apiClient;
+    this.instance = adminApiClient;
   }
   /**
    * No description
@@ -36,7 +36,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminSetupControllerSetup = (data: AdminSetupDto, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/admin/setup`,
+      path: `/setup`,
       method: "POST",
       body: data,
       type: ContentType.Json,
@@ -52,7 +52,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminAuthControllerLogin = (data: AdminLoginDto, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/admin/auth/login`,
+      path: `/auth/login`,
       method: "POST",
       body: data,
       type: ContentType.Json,
@@ -68,7 +68,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminAuthControllerLogout = (params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/admin/auth/logout`,
+      path: `/auth/logout`,
       method: "POST",
       ...params,
     });
@@ -82,7 +82,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminAuthControllerRefresh = (params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/admin/auth/refresh`,
+      path: `/auth/refresh`,
       method: "POST",
       ...params,
     });
@@ -96,7 +96,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminAuthControllerGetMe = (params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/admin/auth/me`,
+      path: `/auth/me`,
       method: "GET",
       ...params,
     });
@@ -117,7 +117,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
     params: RequestParams = {},
   ) =>
     this.request<void, any>({
-      path: `/admin/users`,
+      path: `/users`,
       method: "GET",
       query: query,
       secure: true,
@@ -134,7 +134,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminUsersControllerCreate = (data: CreateAdminUserDto, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/admin/users`,
+      path: `/users`,
       method: "POST",
       body: data,
       secure: true,
@@ -152,7 +152,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminUsersControllerFindOne = (id: string, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/admin/users/${id}`,
+      path: `/users/${id}`,
       method: "GET",
       secure: true,
       ...params,
@@ -168,7 +168,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminUsersControllerUpdate = (id: string, data: UpdateAdminUserDto, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/admin/users/${id}`,
+      path: `/users/${id}`,
       method: "PATCH",
       body: data,
       secure: true,
@@ -186,7 +186,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminUsersControllerRemove = (id: string, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/admin/users/${id}`,
+      path: `/users/${id}`,
       method: "DELETE",
       secure: true,
       ...params,
@@ -202,7 +202,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminRolesControllerFindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/admin/roles`,
+      path: `/roles`,
       method: "GET",
       secure: true,
       ...params,
@@ -218,7 +218,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminRolesControllerCreate = (data: CreateRoleDto, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/admin/roles`,
+      path: `/roles`,
       method: "POST",
       body: data,
       secure: true,
@@ -236,7 +236,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminRolesControllerFindOne = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/admin/roles/${id}`,
+      path: `/roles/${id}`,
       method: "GET",
       secure: true,
       ...params,
@@ -252,7 +252,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminRolesControllerUpdate = (id: string, data: UpdateRoleDto, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/admin/roles/${id}`,
+      path: `/roles/${id}`,
       method: "PATCH",
       body: data,
       secure: true,
@@ -270,7 +270,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    */
   adminRolesControllerRemove = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/admin/roles/${id}`,
+      path: `/roles/${id}`,
       method: "DELETE",
       secure: true,
       ...params,
