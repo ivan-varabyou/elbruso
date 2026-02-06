@@ -1,7 +1,7 @@
 "use client";
 
-import { useI18n } from "@elbruso/modules/i18n/lib";
-import type { Dictionary } from "@elbruso/types/dictionary";
+import { useI18n } from "@frontend/modules/i18n/lib";
+import type { Dictionary } from "@frontend/types/dictionary";
 import { motion } from "framer-motion";
 
 export const Brands = () => {

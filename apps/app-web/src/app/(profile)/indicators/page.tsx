@@ -1,16 +1,16 @@
 "use client";
 
-import { Reference } from "@elbruso/api";
-import { cn } from "@elbruso/lib";
-import { useAuth } from "@elbruso/modules/auth";
+import { Reference } from "@frontend/api";
+import { cn } from "@frontend/lib";
+import { useAuth } from "@frontend/modules/auth";
 import {
   CreateIndicatorModal,
   FilterDropdown,
   GenerateIndicatorsModal,
   IndicatorGroupsList,
-} from "@elbruso/modules/profile/ui/indicators";
-import type { Indicator } from "@elbruso/types";
-import { Button, PageLayout } from "@elbruso/ui";
+} from "@frontend/modules/profile/ui/indicators";
+import type { Indicator } from "@frontend/types";
+import { Button, PageLayout } from "@frontend/ui";
 import {
   Activity,
   Building2,

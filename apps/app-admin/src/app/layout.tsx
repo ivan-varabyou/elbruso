@@ -1,10 +1,10 @@
 import "./globals.css";
 
-import { AppProviders } from "@elbruso/shared/app";
+import { AppProviders } from "@frontend/app";
 import { Inter } from "next/font/google";
 
 import { getDictionary } from "@/lib/get-dictionary";
-import { AdminAuthProvider } from "@elbruso/shared/modules/admin-auth";
+import { AdminAuthProvider } from "@frontend/modules/admin-auth";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 

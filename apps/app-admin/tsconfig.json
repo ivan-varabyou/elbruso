@@ -21,7 +21,14 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@elbruso/*": ["../../packages/shared/src/*"]
+      "@frontend": ["../../packages/frontend/src"],
+      "@frontend/*": ["../../packages/frontend/src/*"],
+      "@database": ["../../packages/database/src"],
+      "@database/*": ["../../packages/database/src/*"],
+      "@devtools": ["../../packages/devtools/src"],
+      "@appweb": ["../app-web/src"],
+      "@appadmin": ["./src"],
+      "@apigateway/*": ["../../apps/api-gateway/src/*"]
     }
   },
   "include": [
@@ -30,7 +37,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "../../packages/*/src"
+    "../../packages/frontend/src",
+    "../../packages/database/src"
   ],
   "exclude": ["node_modules"]
 }

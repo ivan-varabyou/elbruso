@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import { AppProviders } from "@elbruso/shared/app";
+import { AppProviders } from "@frontend/app";
 import { Inter } from "next/font/google";
 
 import { getDictionary } from "@/lib/get-dictionary";
@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <AppProviders dictionary={dictionary}>{children}</AppProviders>
       </body>
     </html>

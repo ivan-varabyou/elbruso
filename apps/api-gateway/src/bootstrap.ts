@@ -1,4 +1,4 @@
-import { UsersService } from '@modules/users';
+import { UsersService } from '@backend/modules/users';
 import { ValidationPipe } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -6,7 +6,7 @@ import { DocumentBuilder,SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 
 import { config } from './config';
-import { bootstrapWebsocket } from './gateway/websocket/bootstrap';
+import { bootstrapWebsocket } from './core/websocket/bootstrap';
 
 export async function bootstrap(app: NestExpressApplication): Promise<void> {
   app.setGlobalPrefix('v1');

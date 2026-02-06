@@ -1,8 +1,8 @@
-# Структура проекта web
+# Структура проекта app-web
 
-Генерировано: Чт 05 фев 2026 20:47:46 +03
+Генерировано: Пт 06 фев 2026 03:21:05 +03
 
-/home/ivan/git/elbruso/apps/web
+/home/ivan/git/elbruso/apps/app-web
 ├── assets
 │   └── img
 │       ├── login-bg.jpg
@@ -106,13 +106,13 @@
 │   │           └── ProductsShowcase.smart.tsx
 │   ├── lib
 │   │   ├── get-dictionary.ts
-│   │   └── i18n-config.ts
+│   │   ├── i18n-config.ts
+│   │   └── middleware.ts
 │   ├── pages
 │   └── types
 │       └── next-shim.d.ts
 ├── AGENTS.md
 ├── inject-source.cjs
-├── middleware.ts
 ├── next.config.mjs
 ├── next-env.d.ts
 ├── package.json

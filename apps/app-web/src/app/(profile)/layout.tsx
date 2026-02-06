@@ -1,7 +1,7 @@
 "use client";
 
-import { ProtectedRoute } from "@elbruso/modules/auth";
-import { ProfileLayout } from "@elbruso/modules/profile";
+import { ProtectedRoute } from "@frontend/modules/auth";
+import { ProfileLayout } from "@frontend/modules/profile";
 
 export default function ProfileLayoutWrapper({ children }: { children: React.ReactNode }) {
   return (

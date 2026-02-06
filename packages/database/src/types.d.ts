@@ -1,0 +1,1178 @@
+import type { ColumnType } from "kysely";
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U> ? ColumnType<S, I | undefined, U> : ColumnType<T, T | undefined, T>;
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
+export type Json = JsonValue;
+export type JsonArray = JsonValue[];
+export type JsonObject = {
+    [x: string]: JsonValue | undefined;
+};
+export type JsonPrimitive = boolean | number | string | null;
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+export type Numeric = ColumnType<string, number | string, number | string>;
+export type Timestamp = ColumnType<Date, Date | string, Date | string>;
+export interface AdminAuditLogs {
+    action: string;
+    created_at: Generated<Timestamp | null>;
+    details: Json | null;
+    entity_id: string | null;
+    entity_type: string | null;
+    id: Generated<string>;
+    ip_address: string | null;
+    user_agent: string | null;
+    user_id: string | null;
+}
+export interface AdminRoles {
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<string>;
+    name: string;
+    permissions: Generated<Json | null>;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface AdminSessions {
+    created_at: Generated<Timestamp | null>;
+    expires_at: Timestamp;
+    id: Generated<string>;
+    ip_address: string | null;
+    refresh_token: string;
+    user_agent: string | null;
+    user_id: string;
+}
+export interface AdminUsers {
+    created_at: Generated<Timestamp | null>;
+    email: string;
+    id: Generated<string>;
+    is_active: Generated<boolean | null>;
+    last_login_at: Timestamp | null;
+    name: string;
+    password_hash: string;
+    role: Generated<string>;
+    role_id: string | null;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface AgeGroups {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    max_age: number | null;
+    min_age: number | null;
+    name_ru: string;
+}
+export interface ApiKeys {
+    created_at: Generated<Timestamp | null>;
+    id: Generated<string>;
+    is_active: Generated<boolean | null>;
+    key_hash: string;
+    last_used_at: Timestamp | null;
+    name: string;
+    permissions: Generated<Json | null>;
+    user_id: string;
+}
+export interface AuditLogs {
+    action: string;
+    created_at: Generated<Timestamp | null>;
+    details: Generated<Json | null>;
+    entity_id: string | null;
+    entity_type: string;
+    id: Generated<string>;
+    ip_address: string | null;
+    user_agent: string | null;
+    user_id: string | null;
+}
+export interface BlockCharts {
+    block_id: string;
+    chart_id: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<string>;
+    override_config: Json | null;
+}
+export interface BlockComments {
+    block_id: string;
+    content: string;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    id: Generated<string>;
+    is_resolved: Generated<boolean | null>;
+    parent_comment_id: string | null;
+    resolved_at: Timestamp | null;
+    resolved_by: string | null;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface Blocks {
+    block_type: string;
+    content: Json;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    id: Generated<string>;
+    is_active: Generated<boolean | null>;
+    page_id: string;
+    parent_block_id: string | null;
+    settings: Generated<Json | null>;
+    sort_order: Generated<number | null>;
+    updated_at: Generated<Timestamp | null>;
+    updated_by: string | null;
+}
+export interface CellHistory {
+    action: string;
+    batch_id: string | null;
+    change_reason: string | null;
+    change_type: string | null;
+    changed_at: Generated<Timestamp | null>;
+    changed_by: string | null;
+    col_index: number;
+    id: Generated<string>;
+    new_value: Json | null;
+    old_value: Json | null;
+    row_index: number;
+    session_id: string | null;
+    version_id: string;
+}
+export interface CellPermissions {
+    access_condition: Json | null;
+    can_delete: Generated<boolean | null>;
+    can_read: Generated<boolean | null>;
+    can_write: Generated<boolean | null>;
+    end_col: number | null;
+    end_row: number | null;
+    expires_at: Timestamp | null;
+    granted_at: Generated<Timestamp | null>;
+    granted_by: string | null;
+    id: Generated<string>;
+    organization_id: number | null;
+    role_id: string | null;
+    start_col: number | null;
+    start_row: number | null;
+    table_id: string;
+    user_id: string | null;
+}
+export interface Charts {
+    cache_ttl: Generated<number | null>;
+    cache_updated_at: Timestamp | null;
+    cached_data: Json | null;
+    chart_type: string;
+    config: Json;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    data_source_id: string | null;
+    data_source_type: string;
+    description: string | null;
+    id: Generated<string>;
+    name: string;
+    updated_at: Generated<Timestamp | null>;
+    updated_by: string | null;
+    workspace_id: string;
+}
+export interface Countries {
+    capital_city_code: string | null;
+    code_alpha2: string;
+    code_alpha3: string;
+    created_at: Generated<Timestamp | null>;
+    currency_code: string | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_ru: string;
+    phone_code: string | null;
+}
+export interface CountryDisciplines {
+    country_id: number;
+    created_at: Generated<Timestamp | null>;
+    data_source_id: number | null;
+    discipline_id: number;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    registry_code: string | null;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface CountrySports {
+    country_id: number;
+    created_at: Generated<Timestamp | null>;
+    data_source_id: number | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    popularity_score: Generated<number | null>;
+    registry_code: string | null;
+    registry_number: number | null;
+    sport_id: number;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface DataSourceCategories {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<number>;
+    name_ru: string;
+    sort_order: Generated<number | null>;
+}
+export interface DataSources {
+    category_id: number | null;
+    code: string;
+    country_id: number | null;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    metadata: Generated<Json | null>;
+    name_ru: string;
+    url: string | null;
+}
+export interface Disciplines {
+    country_sport_id: number;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_ru: string;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface DynamicTables {
+    column_count: Generated<number | null>;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    description: string | null;
+    group_id: string | null;
+    id: Generated<string>;
+    is_active: Generated<boolean | null>;
+    is_reference: Generated<boolean | null>;
+    metadata: Generated<Json | null>;
+    name: string;
+    reference_type: string | null;
+    row_count: Generated<number | null>;
+    updated_at: Generated<Timestamp | null>;
+    workspace_id: string;
+}
+export interface EmailTemplates {
+    body_en: string;
+    body_ru: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<string>;
+    is_active: Generated<boolean | null>;
+    key: string;
+    subject_en: string;
+    subject_ru: string;
+    updated_at: Generated<Timestamp | null>;
+    variables: Generated<Json | null>;
+}
+export interface EventIndicatorMapping {
+    event_id: number;
+    id: Generated<number>;
+    indicator_catalog_id: number;
+    notes: string | null;
+    place_from: number | null;
+    place_to: number | null;
+    weight_multiplier: Generated<Numeric | null>;
+}
+export interface EventLevels {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_en: string | null;
+    name_ru: string;
+    sort_order: Generated<number | null>;
+}
+export interface EventResults {
+    created_at: Generated<Timestamp | null>;
+    event_id: number;
+    id: Generated<number>;
+    metadata: Generated<Json | null>;
+    notes: string | null;
+    organization_id: number;
+    participants_count: number | null;
+    place: number | null;
+    points: Numeric | null;
+    season_id: number | null;
+    team_count: number | null;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface EventsCatalog {
+    age_group_id: number | null;
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    discipline_id: number | null;
+    event_type_id: number | null;
+    gender_id: number | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    level_id: number | null;
+    metadata: Generated<Json | null>;
+    name_ru: string;
+    organizer_id: number | null;
+    parent_event_id: number | null;
+    short_name_ru: string | null;
+    sport_id: number | null;
+    stage_id: number | null;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface EventStages {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_en: string | null;
+    name_ru: string;
+    sort_order: Generated<number | null>;
+}
+export interface EventTypes {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_en: string | null;
+    name_ru: string;
+    sort_order: Generated<number | null>;
+}
+export interface FederalDistricts {
+    code: string;
+    country_id: number;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    name_ru: string;
+}
+export interface Federations {
+    created_at: Generated<Timestamp | null>;
+    discipline_id: number | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_ru: string | null;
+    organization_id: number;
+    region_id: number | null;
+    sport_id: number;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface FormulaCache {
+    cached_value: Json | null;
+    calculated_at: Generated<Timestamp | null>;
+    col_index: number;
+    dependencies: Json | null;
+    id: Generated<string>;
+    is_valid: Generated<boolean | null>;
+    row_index: number;
+    version_id: string;
+}
+export interface FormulaHistory {
+    action: string;
+    affected_cells_count: number | null;
+    change_reason: string | null;
+    changed_at: Generated<Timestamp | null>;
+    changed_by: string | null;
+    end_col: number;
+    end_row: number;
+    id: Generated<string>;
+    new_formula: string | null;
+    old_formula: string | null;
+    recalculation_time_ms: number | null;
+    start_col: number;
+    start_row: number;
+    template_id: string | null;
+    version_id: string;
+}
+export interface FormulaTemplates {
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    end_col: number;
+    end_row: number;
+    formula_template: string;
+    id: Generated<string>;
+    is_protected: Generated<boolean | null>;
+    priority: Generated<number | null>;
+    protection_level: Generated<string | null>;
+    start_col: number;
+    start_row: number;
+    updated_at: Generated<Timestamp | null>;
+    updated_by: string | null;
+    version_id: string;
+}
+export interface Genders {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    name_ru: string;
+}
+export interface GeneratedIndicators {
+    created_at: Generated<Timestamp | null>;
+    generation_params: Json;
+    id: Generated<number>;
+    indicator_catalog_id: number;
+    template_id: number;
+}
+export interface IndicatorCatalog {
+    age_group_id: number | null;
+    calculation_formula: string | null;
+    category_id: number | null;
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    default_weight: Generated<Numeric | null>;
+    description: string | null;
+    discipline_id: number | null;
+    gender_id: number | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    is_system: Generated<boolean | null>;
+    measurement_unit_id: number | null;
+    metadata: Generated<Json | null>;
+    name_ru: string;
+    organization_id: number | null;
+    source_hint: string | null;
+    sport_id: number | null;
+    updated_at: Generated<Timestamp | null>;
+    use_population: Generated<boolean | null>;
+    value_type: Generated<string>;
+}
+export interface IndicatorCatalogGroups {
+    group_catalog_id: number;
+    indicator_catalog_id: number;
+    sort_order: Generated<number | null>;
+}
+export interface IndicatorCategories {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_en: string | null;
+    name_ru: string;
+    sort_order: Generated<number | null>;
+}
+export interface IndicatorGenerationTemplates {
+    base_weight: Generated<Numeric | null>;
+    category_id: number | null;
+    code_pattern: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    description_pattern: string | null;
+    generated_count: Generated<number | null>;
+    generation_config: Generated<Json | null>;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    last_generated_at: Timestamp | null;
+    measurement_unit_id: number | null;
+    name_pattern: string;
+    name_ru: string;
+    sport_id: number | null;
+    updated_at: Generated<Timestamp | null>;
+    use_population: Generated<boolean | null>;
+    value_type: Generated<string>;
+}
+export interface IndicatorGroupRelationships {
+    child_group_id: number;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    parent_group_id: number;
+    sort_order: Generated<number | null>;
+}
+export interface IndicatorGroupsCatalog {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_ru: string;
+    sort_order: Generated<number | null>;
+    sport_id: number | null;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface IndicatorTemplates {
+    age_group_id: number | null;
+    base_weight: Numeric;
+    code_pattern: string;
+    created_at: Generated<Timestamp | null>;
+    description_pattern: string | null;
+    discipline_id: number | null;
+    gender_id: number | null;
+    group_id: number | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_pattern: string;
+    range_from: number;
+    range_to: number;
+    result_type: string;
+    sport_id: number | null;
+    updated_at: Generated<Timestamp | null>;
+    use_population: Generated<boolean | null>;
+}
+export interface IndicatorVersions {
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<number>;
+    indicator_id: number;
+    name_ru: string | null;
+    valid_from: Timestamp;
+    valid_to: Timestamp | null;
+    version: number;
+    weight: Numeric;
+}
+export interface Languages {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    name: string;
+}
+export interface MeasurementUnits {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_en: string | null;
+    name_ru: string;
+    short_name_en: string | null;
+    short_name_ru: string | null;
+    unit_type: string;
+}
+export interface OlympicCategories {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    name_ru: string;
+}
+export interface OrganizationIndicators {
+    created_at: Generated<Timestamp | null>;
+    custom_metadata: Generated<Json | null>;
+    custom_name_ru: string | null;
+    custom_weight: Numeric | null;
+    id: Generated<number>;
+    indicator_catalog_id: number;
+    is_enabled: Generated<boolean | null>;
+    notes: string | null;
+    organization_id: number;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface OrganizationIndicatorValues {
+    created_at: Generated<Timestamp | null>;
+    data_source_id: number | null;
+    event_result_id: number | null;
+    id: Generated<number>;
+    indicator_catalog_id: number;
+    metadata: Generated<Json | null>;
+    notes: string | null;
+    organization_id: number;
+    season_id: number;
+    updated_at: Generated<Timestamp | null>;
+    value_boolean: boolean | null;
+    value_number: Numeric | null;
+    value_text: string | null;
+}
+export interface OrganizationLevels {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_ru: string;
+    sort_order: Generated<number>;
+}
+export interface Organizations {
+    abbreviation_ru: string | null;
+    country_id: number | null;
+    created_at: Generated<Timestamp | null>;
+    founded_year: number | null;
+    id: Generated<number>;
+    internal_code: string | null;
+    is_active: Generated<boolean | null>;
+    level_id: number;
+    metadata: Generated<Json | null>;
+    name_ru: string;
+    parent_id: number | null;
+    region_id: number | null;
+    sport_id: number | null;
+    type_id: number;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface OrganizationScores {
+    calculation_date: Timestamp | null;
+    calculation_metadata: Generated<Json | null>;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    organization_id: number;
+    score_achievements: Generated<Numeric | null>;
+    score_development: Generated<Numeric | null>;
+    score_federation: Generated<Numeric | null>;
+    score_finance: Generated<Numeric | null>;
+    score_infrastructure: Generated<Numeric | null>;
+    score_marketing: Generated<Numeric | null>;
+    score_other: Generated<Numeric | null>;
+    score_personnel: Generated<Numeric | null>;
+    season_id: number;
+    total_score: Generated<Numeric | null>;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface OrganizationTypes {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<number>;
+    name_ru: string;
+    sort_order: Generated<number | null>;
+}
+export interface PagePermissions {
+    can_comment: Generated<boolean | null>;
+    can_read: Generated<boolean | null>;
+    can_share: Generated<boolean | null>;
+    can_write: Generated<boolean | null>;
+    expires_at: Timestamp | null;
+    granted_at: Generated<Timestamp | null>;
+    granted_by: string | null;
+    id: Generated<string>;
+    organization_id: number | null;
+    page_id: string;
+    role_id: string | null;
+    user_id: string | null;
+}
+export interface Pages {
+    cover_image: string | null;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    icon: string | null;
+    id: Generated<string>;
+    is_active: Generated<boolean | null>;
+    is_public: Generated<boolean | null>;
+    last_viewed_at: Timestamp | null;
+    metadata: Generated<Json | null>;
+    page_type: Generated<string | null>;
+    parent_page_id: string | null;
+    public_password: string | null;
+    public_url: string | null;
+    sort_order: Generated<number | null>;
+    title: string;
+    updated_at: Generated<Timestamp | null>;
+    updated_by: string | null;
+    view_count: Generated<number | null>;
+    workspace_id: string;
+}
+export interface PasswordResetTokens {
+    created_at: Generated<Timestamp | null>;
+    expires_at: Timestamp;
+    id: Generated<number>;
+    token: string;
+    used_at: Timestamp | null;
+    user_id: string;
+}
+export interface PermissionHistory {
+    action: string;
+    changed_at: Generated<Timestamp | null>;
+    changed_by: string | null;
+    id: Generated<string>;
+    new_permissions: Json | null;
+    object_id: string;
+    object_type: string;
+    old_permissions: Json | null;
+    subject_id: string | null;
+    subject_type: string | null;
+}
+export interface ReferenceLinks {
+    auto_sync: Generated<boolean | null>;
+    column_index: number;
+    created_at: Generated<Timestamp | null>;
+    dynamic_table_id: string;
+    id: Generated<string>;
+    last_synced_at: Timestamp | null;
+    mapping_config: Generated<Json | null>;
+    reference_table: string;
+    reference_type: string;
+}
+export interface RegionPopulation {
+    created_at: Generated<Timestamp | null>;
+    data_source_id: number;
+    id: Generated<number>;
+    population: number;
+    region_id: number;
+    updated_at: Generated<Timestamp | null>;
+    year: number;
+}
+export interface Regions {
+    code: string;
+    country_id: number;
+    created_at: Generated<Timestamp | null>;
+    federal_district_id: number | null;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_ru: string;
+    region_type_id: number | null;
+}
+export interface RegionTypes {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    name_ru: string;
+}
+export interface Roles {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<string>;
+    is_system: Generated<boolean | null>;
+    name: string;
+    permissions: Generated<Json | null>;
+}
+export interface SavedQueries {
+    cache_ttl: Generated<number | null>;
+    cache_updated_at: Timestamp | null;
+    cached_result: Json | null;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    description: string | null;
+    id: Generated<string>;
+    name: string;
+    query_config: Json;
+    query_type: string;
+    updated_at: Generated<Timestamp | null>;
+    updated_by: string | null;
+    workspace_id: string;
+}
+export interface Seasons {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    end_date: Timestamp;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_ru: string;
+    season_type: string | null;
+    season_year: number | null;
+    start_date: Timestamp;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface SeasonSports {
+    season_id: number;
+    sport_id: number;
+}
+export interface Sessions {
+    created_at: Generated<Timestamp | null>;
+    expires_at: Timestamp;
+    id: Generated<string>;
+    refresh_token: string;
+    user_id: string;
+}
+export interface Sports {
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    is_active: Generated<boolean | null>;
+    name_ru: string;
+    olympic_category_id: number | null;
+    sport_type_id: number | null;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface SportTypes {
+    code: string;
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    name_ru: string;
+}
+export interface StructureHistory {
+    change_details: Json;
+    change_type: string;
+    changed_at: Generated<Timestamp | null>;
+    changed_by: string | null;
+    id: Generated<string>;
+    new_structure: Json | null;
+    old_structure: Json | null;
+    table_id: string;
+    version_id: string | null;
+}
+export interface TableCells {
+    cell_data: Json;
+    col_index: number;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    id: Generated<string>;
+    is_locked: Generated<boolean | null>;
+    lock_reason: string | null;
+    locked_at: Timestamp | null;
+    locked_by: string | null;
+    row_index: number;
+    updated_at: Generated<Timestamp | null>;
+    updated_by: string | null;
+    version_id: string;
+}
+export interface TableLinks {
+    created_at: Generated<Timestamp | null>;
+    frozen_at_version: number | null;
+    id: Generated<string>;
+    is_frozen: Generated<boolean | null>;
+    link_metadata: Generated<Json | null>;
+    link_type: string;
+    source_system_entity: string | null;
+    source_table_id: string | null;
+    source_version_id: string | null;
+    target_table_id: string;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface TablePermissions {
+    can_delete: Generated<boolean | null>;
+    can_edit_formulas: Generated<boolean | null>;
+    can_lock_cells: Generated<boolean | null>;
+    can_read: Generated<boolean | null>;
+    can_write: Generated<boolean | null>;
+    expires_at: Timestamp | null;
+    granted_at: Generated<Timestamp | null>;
+    granted_by: string | null;
+    id: Generated<string>;
+    organization_id: number | null;
+    role_id: string | null;
+    table_id: string;
+    user_id: string | null;
+}
+export interface TableSnapshots {
+    cell_count: number | null;
+    compressed_size_bytes: number | null;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    description: string | null;
+    expires_at: Timestamp | null;
+    id: Generated<string>;
+    snapshot_data: Json | null;
+    snapshot_name: string | null;
+    snapshot_type: Generated<string | null>;
+    table_id: string;
+    version_id: string;
+}
+export interface TableVersions {
+    change_description: string | null;
+    column_definitions: Generated<Json>;
+    columns: Json;
+    created_at: Generated<Timestamp | null>;
+    created_by: string | null;
+    frozen_at: Timestamp | null;
+    id: Generated<string>;
+    is_active: Generated<boolean>;
+    is_frozen: Generated<boolean | null>;
+    matrix_formulas: Generated<Json | null>;
+    table_id: string;
+    version_number: number;
+}
+export interface TemplateGenerationParams {
+    created_at: Generated<Timestamp | null>;
+    id: Generated<number>;
+    is_required: Generated<boolean | null>;
+    param_name: string;
+    param_type: string;
+    param_values: Json;
+    sort_order: Generated<number | null>;
+    template_id: number;
+    weight_formula: Json | null;
+}
+export interface Translations {
+    created_at: Generated<Timestamp | null>;
+    entity_id: number;
+    entity_type: string;
+    field_name: string;
+    id: Generated<number>;
+    language_code: string;
+    translation: string;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface Users {
+    country_id: Generated<number | null>;
+    created_at: Generated<Timestamp | null>;
+    email: string;
+    first_name: string | null;
+    id: Generated<string>;
+    is_active: Generated<boolean | null>;
+    last_name: string | null;
+    middle_name: string | null;
+    organization_id: number | null;
+    password: Generated<string>;
+    role: Generated<string | null>;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface VEventsCatalogFull {
+    age_group_name: string | null;
+    code: string | null;
+    discipline_name: string | null;
+    event_type_code: string | null;
+    event_type_name: string | null;
+    gender_name: string | null;
+    id: number | null;
+    is_active: boolean | null;
+    level_code: string | null;
+    level_name: string | null;
+    name_ru: string | null;
+    organizer_name: string | null;
+    parent_event_name: string | null;
+    short_name_ru: string | null;
+    sport_name: string | null;
+    stage_code: string | null;
+    stage_name: string | null;
+}
+export interface VGeneratedIndicators {
+    created_at: Timestamp | null;
+    default_weight: Numeric | null;
+    generation_params: Json | null;
+    id: number | null;
+    indicator_code: string | null;
+    indicator_name: string | null;
+    template_name: string | null;
+}
+export interface VGenerationTemplates {
+    base_weight: Numeric | null;
+    category_name: string | null;
+    description: string | null;
+    generated_count: number | null;
+    id: number | null;
+    is_active: boolean | null;
+    last_generated_at: Timestamp | null;
+    name_ru: string | null;
+    params_count: Int8 | null;
+    potential_combinations: number | null;
+    sport_name: string | null;
+}
+export interface VGroupGraph {
+    from_code: string | null;
+    from_name: string | null;
+    id: number | null;
+    relationship_type: string | null;
+    sort_order: number | null;
+    to_code: string | null;
+    to_name: string | null;
+}
+export interface VGroupRelationships {
+    child_code: string | null;
+    child_id: number | null;
+    child_name: string | null;
+    id: number | null;
+    is_active: boolean | null;
+    parent_code: string | null;
+    parent_id: number | null;
+    parent_name: string | null;
+    sort_order: number | null;
+}
+export interface VIndicatorCatalogFull {
+    category_code: string | null;
+    category_name: string | null;
+    code: string | null;
+    default_weight: Numeric | null;
+    description: string | null;
+    discipline_name: string | null;
+    id: number | null;
+    is_active: boolean | null;
+    measurement_unit_code: string | null;
+    measurement_unit_name: string | null;
+    measurement_unit_short: string | null;
+    name_ru: string | null;
+    sport_name: string | null;
+    use_population: boolean | null;
+    value_type: string | null;
+}
+export interface VIndicatorsWithGroupPaths {
+    group_catalog_id: number | null;
+    group_code: string | null;
+    group_name: string | null;
+    indicator_code: string | null;
+    indicator_id: number | null;
+    indicator_name: string | null;
+    level: number | null;
+    path: string | null;
+}
+export interface VPagesWithStats {
+    block_count: Int8 | null;
+    chart_count: Int8 | null;
+    cover_image: string | null;
+    created_at: Timestamp | null;
+    created_by: string | null;
+    created_by_name: string | null;
+    icon: string | null;
+    id: string | null;
+    is_public: boolean | null;
+    last_viewed_at: Timestamp | null;
+    metadata: Json | null;
+    page_type: string | null;
+    parent_page_id: string | null;
+    public_password: string | null;
+    public_url: string | null;
+    sort_order: number | null;
+    title: string | null;
+    updated_at: Timestamp | null;
+    updated_by: string | null;
+    view_count: number | null;
+    workspace_id: string | null;
+}
+export interface VPopularCharts {
+    cache_ttl: number | null;
+    cache_updated_at: Timestamp | null;
+    cached_data: Json | null;
+    chart_type: string | null;
+    config: Json | null;
+    created_at: Timestamp | null;
+    created_by: string | null;
+    created_by_name: string | null;
+    data_source_id: string | null;
+    data_source_type: string | null;
+    description: string | null;
+    id: string | null;
+    name: string | null;
+    updated_at: Timestamp | null;
+    updated_by: string | null;
+    usage_count: Int8 | null;
+    workspace_id: string | null;
+}
+export interface VTableRecentChanges {
+    action: string | null;
+    change_type: string | null;
+    changed_at: Timestamp | null;
+    changed_by_name: string | null;
+    col_index: number | null;
+    row_index: number | null;
+    table_id: string | null;
+    table_name: string | null;
+}
+export interface VUserActivity {
+    action: string | null;
+    activity_type: string | null;
+    change_reason: string | null;
+    changed_at: Timestamp | null;
+    col_index: number | null;
+    email: string | null;
+    row_index: number | null;
+    table_name: string | null;
+    user_name: string | null;
+}
+export interface VUserPermissions {
+    can_create_tables: boolean | null;
+    can_export: boolean | null;
+    can_share: boolean | null;
+    email: string | null;
+    organization_name: string | null;
+    table_can_delete: boolean | null;
+    table_can_read: boolean | null;
+    table_can_write: boolean | null;
+    table_id: string | null;
+    table_name: string | null;
+    user_id: string | null;
+    user_name: string | null;
+    workspace_id: string | null;
+    workspace_name: string | null;
+    workspace_permission: string | null;
+}
+export interface WorkspaceGroups {
+    color: string | null;
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    icon: string | null;
+    id: Generated<string>;
+    is_active: Generated<boolean | null>;
+    name: string;
+    sort_order: Generated<number | null>;
+    workspace_id: string;
+}
+export interface WorkspacePermissions {
+    can_create_tables: Generated<boolean | null>;
+    can_export: Generated<boolean | null>;
+    can_share: Generated<boolean | null>;
+    expires_at: Timestamp | null;
+    granted_at: Generated<Timestamp | null>;
+    granted_by: string | null;
+    id: Generated<string>;
+    inherit_to_tables: Generated<boolean | null>;
+    organization_id: number | null;
+    permission_level: string;
+    role_id: string | null;
+    user_id: string | null;
+    workspace_id: string;
+}
+export interface Workspaces {
+    created_at: Generated<Timestamp | null>;
+    description: string | null;
+    id: Generated<string>;
+    is_active: Generated<boolean | null>;
+    is_template: Generated<boolean | null>;
+    metadata: Generated<Json | null>;
+    name: string;
+    organization_id: number | null;
+    owner_id: string | null;
+    season_id: number | null;
+    sport_id: number | null;
+    updated_at: Generated<Timestamp | null>;
+}
+export interface DB {
+    admin_audit_logs: AdminAuditLogs;
+    admin_roles: AdminRoles;
+    admin_sessions: AdminSessions;
+    admin_users: AdminUsers;
+    age_groups: AgeGroups;
+    api_keys: ApiKeys;
+    audit_logs: AuditLogs;
+    block_charts: BlockCharts;
+    block_comments: BlockComments;
+    blocks: Blocks;
+    cell_history: CellHistory;
+    cell_permissions: CellPermissions;
+    charts: Charts;
+    countries: Countries;
+    country_disciplines: CountryDisciplines;
+    country_sports: CountrySports;
+    data_source_categories: DataSourceCategories;
+    data_sources: DataSources;
+    disciplines: Disciplines;
+    dynamic_tables: DynamicTables;
+    email_templates: EmailTemplates;
+    event_indicator_mapping: EventIndicatorMapping;
+    event_levels: EventLevels;
+    event_results: EventResults;
+    event_stages: EventStages;
+    event_types: EventTypes;
+    events_catalog: EventsCatalog;
+    federal_districts: FederalDistricts;
+    federations: Federations;
+    formula_cache: FormulaCache;
+    formula_history: FormulaHistory;
+    formula_templates: FormulaTemplates;
+    genders: Genders;
+    generated_indicators: GeneratedIndicators;
+    indicator_catalog: IndicatorCatalog;
+    indicator_catalog_groups: IndicatorCatalogGroups;
+    indicator_categories: IndicatorCategories;
+    indicator_generation_templates: IndicatorGenerationTemplates;
+    indicator_group_relationships: IndicatorGroupRelationships;
+    indicator_groups_catalog: IndicatorGroupsCatalog;
+    indicator_templates: IndicatorTemplates;
+    indicator_versions: IndicatorVersions;
+    languages: Languages;
+    measurement_units: MeasurementUnits;
+    olympic_categories: OlympicCategories;
+    organization_indicator_values: OrganizationIndicatorValues;
+    organization_indicators: OrganizationIndicators;
+    organization_levels: OrganizationLevels;
+    organization_scores: OrganizationScores;
+    organization_types: OrganizationTypes;
+    organizations: Organizations;
+    page_permissions: PagePermissions;
+    pages: Pages;
+    password_reset_tokens: PasswordResetTokens;
+    permission_history: PermissionHistory;
+    reference_links: ReferenceLinks;
+    region_population: RegionPopulation;
+    region_types: RegionTypes;
+    regions: Regions;
+    roles: Roles;
+    saved_queries: SavedQueries;
+    season_sports: SeasonSports;
+    seasons: Seasons;
+    sessions: Sessions;
+    sport_types: SportTypes;
+    sports: Sports;
+    structure_history: StructureHistory;
+    table_cells: TableCells;
+    table_links: TableLinks;
+    table_permissions: TablePermissions;
+    table_snapshots: TableSnapshots;
+    table_versions: TableVersions;
+    template_generation_params: TemplateGenerationParams;
+    translations: Translations;
+    users: Users;
+    v_events_catalog_full: VEventsCatalogFull;
+    v_generated_indicators: VGeneratedIndicators;
+    v_generation_templates: VGenerationTemplates;
+    v_group_graph: VGroupGraph;
+    v_group_relationships: VGroupRelationships;
+    v_indicator_catalog_full: VIndicatorCatalogFull;
+    v_indicators_with_group_paths: VIndicatorsWithGroupPaths;
+    v_pages_with_stats: VPagesWithStats;
+    v_popular_charts: VPopularCharts;
+    v_table_recent_changes: VTableRecentChanges;
+    v_user_activity: VUserActivity;
+    v_user_permissions: VUserPermissions;
+    workspace_groups: WorkspaceGroups;
+    workspace_permissions: WorkspacePermissions;
+    workspaces: Workspaces;
+}

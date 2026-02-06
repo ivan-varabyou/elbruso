@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@elbruso/shared", "@elbruso/types", "@elbruso/devtools"],
-  // Отключаем Turbopack для стабильности
-  // turbo: {},
+  transpilePackages: ["@elbruso/frontend", "@elbruso/devtools"],
 };
 
 export default nextConfig;

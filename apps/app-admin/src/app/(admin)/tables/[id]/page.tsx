@@ -1,7 +1,7 @@
 "use client";
 
-import { DynamicTableComponent as DynamicTable } from "@elbruso/modules/table/ui";
-import { useTableStore, useWorkspaceStore } from "@elbruso/stores";
+import { DynamicTableComponent as DynamicTable } from "@frontend/modules/table/ui";
+import { useTableStore, useWorkspaceStore } from "@frontend/stores";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 

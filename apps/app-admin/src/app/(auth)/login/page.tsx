@@ -1,6 +1,6 @@
 "use client";
 
-import { AdminLoginForm } from "@elbruso/shared/modules/admin-auth/ui";
+import { AdminLoginForm } from "@frontend/modules/admin-auth/ui";
 
 export default function LoginPage() {
   return <AdminLoginForm />;

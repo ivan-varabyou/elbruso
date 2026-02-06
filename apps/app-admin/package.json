@@ -6,10 +6,11 @@
     "dev": "next dev -p 7201 --webpack",
     "build": "next build --webpack",
     "start": "next start -p 7201",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@elbruso/shared": "workspace:*",
+    "@elbruso/frontend": "workspace:*",
     "@heroui/react": "^2.8.8",
     "@heroui/theme": "^2.4.26",
     "@formatjs/intl-localematcher": "^0.8.0",

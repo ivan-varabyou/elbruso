@@ -1,4 +1,4 @@
-import { PageLayout } from "@elbruso/ui";
+import { PageLayout } from "@frontend/ui";
 import { Briefcase } from "lucide-react";
 
 export default function WorkspacesPage() {

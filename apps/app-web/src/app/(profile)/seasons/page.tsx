@@ -1,9 +1,9 @@
 "use client";
 
-import { AutogenerateModal, SeasonModal } from "@elbruso/modules/seasons/ui";
-import { useReferenceStore } from "@elbruso/stores";
-import type { Season } from "@elbruso/types";
-import { PageLayout } from "@elbruso/ui";
+import { AutogenerateModal, SeasonModal } from "@frontend/modules/seasons/ui";
+import { useReferenceStore } from "@frontend/stores";
+import type { Season } from "@frontend/types";
+import { PageLayout } from "@frontend/ui";
 import { Calendar, Edit2, Loader2, Plus, Sparkles, Trash2, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 

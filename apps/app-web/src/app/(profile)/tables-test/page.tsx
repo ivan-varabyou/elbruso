@@ -1,6 +1,6 @@
 "use client";
 
-import { DynamicTableComponent as DynamicTable } from "@elbruso/modules/table/ui";
+import { DynamicTableComponent as DynamicTable } from "@frontend/modules/table/ui";
 import { useState } from "react";
 
 export default function TablesTestPage() {

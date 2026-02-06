@@ -83,15 +83,15 @@ export default async function UsersPage() {
 
 ```typescript
 // Use shared components
-import { LoginForm } from "@elbruso/modules/auth";
-import { Dashboard } from "@elbruso/modules/dashboard";
+import { LoginForm } from "@frontend/modules/auth";
+import { Dashboard } from "@frontend/modules/dashboard";
 
 // Use shared hooks
-import { useAuth } from "@elbruso/modules/auth";
-import { useUsers } from "@elbruso/api/hooks";
+import { useAuth } from "@frontend/modules/auth";
+import { useUsers } from "@frontend/api/hooks";
 
 // Use shared API
-import { apiClient } from "@elbruso/api";
+import { apiClient } from "@frontend/api";
 ```
 
 ## Smart vs Dumb Components
@@ -117,5 +117,5 @@ export function UserListDumb({ users, loading }: UserListProps) {
 ## ESLint Rules
 
 - `no-logic-in-dumb` - Dumb components cannot use hooks
-- `import-aliases` - Use `@elbruso/*` aliases
+- `import-aliases` - Use `@frontend/*` aliases
 - Component suffixes validation

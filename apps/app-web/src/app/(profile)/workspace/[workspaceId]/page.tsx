@@ -1,7 +1,7 @@
 "use client";
 
-import { CreateTableModal } from "@elbruso/modules/profile";
-import { useTableStore, useWorkspaceStore } from "@elbruso/stores";
+import { CreateTableModal } from "@frontend/modules/profile";
+import { useTableStore, useWorkspaceStore } from "@frontend/stores";
 import { Plus, Table } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";

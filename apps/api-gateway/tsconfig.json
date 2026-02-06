@@ -10,28 +10,24 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src",
-    "incremental": true,
+    "baseUrl": "./",
+    "rootDir": "../../",
+    "paths": {
+      "@apigateway/*": ["src/*"],
+      "@backend/*": ["../../packages/backend/src/*"],
+      "@backend": ["../../packages/backend/src"],
+      "@database/*": ["../../packages/database/src/*"],
+      "@database": ["../../packages/database/src"],
+      "@devtools/*": ["../../packages/devtools/src/*"],
+      "@shared/*": ["../../packages/shared/src/*"]
+    },
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@/*": ["./*"],
-      "@modules/*": ["modules/*"],
-      "@modules/auth/*": ["modules/auth/*"],
-      "@modules/users/*": ["modules/users/*"],
-      "@modules/workspace/*": ["modules/workspace/*"],
-      "@modules/tables/*": ["modules/tables/*"],
-      "@modules/reference/*": ["modules/reference/*"],
-      "@gateway/*": ["gateway/*"],
-      "@shared/*": ["shared/*"],
-      "@config": ["./config"],
-      "@database/*": ["database/*"]
-    }
+    "noFallthroughCasesInSwitch": false
   },
-  "include": ["src", "test"],
+  "include": ["src/**/*", "../../packages/backend/src/**/*", "../../packages/database/src/**/*", "../../packages/shared/src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

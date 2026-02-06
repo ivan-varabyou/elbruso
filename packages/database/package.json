@@ -11,8 +11,12 @@
   "dependencies": {
     "@heroui/react": "^2.8.8",
     "@heroui/theme": "^2.4.26",
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0",
     "kysely": "latest",
-    "pg": "latest"
+    "pg": "latest",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@types/lodash": "latest",

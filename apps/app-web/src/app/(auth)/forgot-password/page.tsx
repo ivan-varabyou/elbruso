@@ -2,9 +2,9 @@
 
 import "../login/login.css";
 
-import { useForgotPassword } from "@elbruso/api/hooks";
-import { useToast } from "@elbruso/modules/notifications";
-import { Button, Input, Logo } from "@elbruso/ui";
+import { useForgotPassword } from "@frontend/api/hooks";
+import { useToast } from "@frontend/modules/notifications";
+import { Button, Input, Logo } from "@frontend/ui";
 import Link from "next/link";
 import React, { useState } from "react";
 

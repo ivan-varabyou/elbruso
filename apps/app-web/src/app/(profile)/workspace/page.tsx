@@ -1,4 +1,4 @@
-import { PageLayout } from "@elbruso/ui";
+import { PageLayout } from "@frontend/ui";
 import { LayoutDashboard } from "lucide-react";
 
 export default function DashboardPage() {

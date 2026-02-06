@@ -3,30 +3,30 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { DatabaseModule } from './database/database.module';
-import { GatewayModule } from './gateway/gateway.module';
-import { AdminModule } from './modules/admin/admin.module';
-import { AuditModule } from './modules/audit/audit.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { BlocksModule } from './modules/blocks/blocks.module';
+import { DatabaseModule } from '@database/database.module';
+import { GatewayModule } from './core/gateway.module';
+
+// Backend Modules
+import { AdminModule } from '@backend/modules/admin/admin.module';
+import { AuditModule } from '@backend/modules/audit/audit.module';
+import { AuthModule } from '@backend/modules/auth/auth.module';
+import { BlocksModule } from '@backend/modules/blocks/blocks.module';
 
 // Reference Data Modules
-import { CountriesModule } from './modules/countries/countries.module';
+import { CountriesModule } from '@backend/modules/countries/countries.module';
 
 // Infrastructure Modules
-import { EmailModule } from './modules/email/email.module';
-import { EventsModule } from './modules/events/events.module';
-import { IndicatorsModule } from './modules/indicators/indicators.module';
-import { OrganizationsModule } from './modules/organizations/organizations.module';
-import { PagesModule } from './modules/pages/pages.module';
-import { RegionsModule } from './modules/regions/regions.module';
-import { SeasonsModule } from './modules/seasons/seasons.module';
-import { SportsModule } from './modules/sports/sports.module';
-import { TablesModule } from './modules/tables/tables.module';
-import { UsersModule } from './modules/users/users.module';
-import { WorkspaceModule } from './modules/workspace/workspace.module';
-
-// Admin Module
+import { EmailModule } from '@backend/modules/email/email.module';
+import { EventsModule } from '@backend/modules/events/events.module';
+import { IndicatorsModule } from '@backend/modules/indicators/indicators.module';
+import { OrganizationsModule } from '@backend/modules/organizations/organizations.module';
+import { PagesModule } from '@backend/modules/pages/pages.module';
+import { RegionsModule } from '@backend/modules/regions/regions.module';
+import { SeasonsModule } from '@backend/modules/seasons/seasons.module';
+import { SportsModule } from '@backend/modules/sports/sports.module';
+import { TablesModule } from '@backend/modules/tables/tables.module';
+import { UsersModule } from '@backend/modules/users/users.module';
+import { WorkspaceModule } from '@backend/modules/workspace/workspace.module';
 
 @Module({
   imports: [

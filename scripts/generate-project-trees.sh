@@ -29,11 +29,11 @@ PROJECT_ROOT="/home/ivan/git/elbruso"
 # 1. Root Project
 generate_tree "$PROJECT_ROOT" "$PROJECT_ROOT/docs/PROJECT_TREE.md" "Структура проекта"
 
-# 2. apps/web
-generate_tree "$PROJECT_ROOT/apps/web" "$PROJECT_ROOT/apps/web/docs/PROJECT_TREE.md" "Структура проекта web"
+# 2. API Gateway
+generate_tree "$PROJECT_ROOT/apps/api-gateway" "$PROJECT_ROOT/apps/api-gateway/docs/PROJECT_TREE.md" "Структура проекта api-gateway"
 
-# 3. apps/api
-generate_tree "$PROJECT_ROOT/apps/api" "$PROJECT_ROOT/apps/api/docs/PROJECT_TREE.md" "Структура проекта api"
+# 3. App Web
+generate_tree "$PROJECT_ROOT/apps/app-web" "$PROJECT_ROOT/apps/app-web/docs/PROJECT_TREE.md" "Структура проекта app-web"
 
-# 4. packages/shared
-generate_tree "$PROJECT_ROOT/packages/shared" "$PROJECT_ROOT/packages/shared/docs/PROJECT_TREE.md" "Структура проекта shared"
+# 4. App Admin
+generate_tree "$PROJECT_ROOT/apps/app-admin" "$PROJECT_ROOT/apps/app-admin/docs/PROJECT_TREE.md" "Структура проекта app-admin"

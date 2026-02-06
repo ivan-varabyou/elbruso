@@ -1,14 +1,14 @@
-# AGENTS.md - API Zone
+# AGENTS.md - API Gateway Zone
 
 ## Documentation
 
 → @docs/ → @docs/
-→ PROJECT_TREE.md → @apps/api/docs/PROJECT_TREE.md
+→ PROJECT_TREE.md → @docs/PROJECT_TREE.md
 
 ## Commands
 
 ```bash
-cd apps/api
+cd apps/api-gateway
 pnpm dev                  # NestJS dev mode (port 7100)
 pnpm build                # Production build
 pnpm test                 # Run all tests
@@ -19,19 +19,74 @@ pnpm lint:fix            # Fix ESLint issues
 pnpm type-check          # TypeScript check
 ```
 
-## Architecture
+## Architecture: Monolith with Microservices-Ready Structure
+
+### Philosophy
+
+Modules are developed in `@backend` package - ready for microservice extraction.
+Currently runs as monolith for simplicity, but structured for easy separation.
 
 ```
-apps/api/src/modules/{feature}/
+@backend/                          # Development happens HERE
+└── packages/backend/src/
+    ├── modules/                  # Feature modules (auth, users, etc.)
+    │   ├── auth/
+    │   ├── users/
+    │   ├── workspace/
+    │   └── .../
+    └── shared/                   # Shared utilities (decorators, dto, interfaces)
+
+apps/api-gateway/                  # Entry point - thin layer
+└── src/
+    ├── core/                     # Gateway-specific logic
+    │   ├── controllers/         # REST controllers
+    │   ├── services/            # Gateway services
+    │   ├── guards/              # Gateway guards
+    │   ├── filters/             # Exception filters
+    │   ├── interceptors/        # Request interceptors
+    │   └── websocket/           # WebSocket handlers
+    ├── gateway/                 # Gateway modules
+    └── config/                  # Configuration
+```
+
+### Why This Structure?
+
+1. **Develop in `@backend`** - modules are independent
+2. **Import via `@backend/*`** - clean dependencies
+3. **Extract to microservice** - just copy module, change entry point
+4. **Keep monolithic for now** - easier development, same code quality
+
+## Module Structure (in @backend)
+
+```
+@backend/modules/{feature}/
 ├── controllers/          # REST endpoints
-├── services/            # Business logic
-├── dto/                 # Data transfer objects
-├── entities/            # TypeORM entities
-├── interfaces/          # TypeScript interfaces
-├── events/              # Event emitters
-├── guards/              # Auth guards
-├── strategies/          # Passport strategies
-└── {feature}.module.ts # NestJS module
+├── services/             # Business logic
+├── dto/                  # Data transfer objects
+├── entities/             # Database entities
+├── interfaces/           # TypeScript interfaces
+├── events/               # Event emitters
+├── guards/               # Auth guards
+├── strategies/           # Passport strategies
+├── decorators/           # Custom decorators
+└── {feature}.module.ts  # NestJS module
+```
+
+## Import from Backend Package
+
+```typescript
+// Use backend modules from @backend/*
+import { AuthModule } from '@backend/modules/auth/auth.module';
+import { UsersService } from '@backend/modules/users/services/users.service';
+import { RolesGuard } from '@backend/modules/admin/guards/roles.guard';
+
+// Use database from @database
+import { DatabaseModule } from '@database/database.module';
+import { DatabaseService } from '@database/database.service';
+
+// Use gateway-specific code
+import { GatewayModule } from './gateway/gateway.module';
+import { AuthGuard } from './core/guards/auth.guard';
 ```
 
 ## NestJS Patterns
@@ -88,6 +143,8 @@ export class LoginDto {
 ## Database (Kysely)
 
 ```typescript
+import { DatabaseService } from '@database/database.service';
+
 // Query example
 const activeUsers = await db
   .selectFrom('users')
@@ -130,3 +187,4 @@ async getProfile(@CurrentUser() user: User) {
 
 - `no-barrel-exports` - No `export *` in index files
 - Named exports only in modules
+- `import-aliases` - Use `@backend/*`, `@database/*`, `@apigateway/*` aliases

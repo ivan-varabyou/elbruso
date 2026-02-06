@@ -9,7 +9,21 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@frontend": ["packages/frontend/src"],
+      "@frontend/*": ["packages/frontend/src/*"],
+      "@backend": ["packages/backend/src"],
+      "@backend/*": ["packages/backend/src/*"],
+      "@database": ["packages/database/src"],
+      "@database/*": ["packages/database/src/*"],
+      "@devtools": ["packages/devtools/src"],
+      "@appweb": ["apps/app-web/src"],
+      "@appadmin": ["apps/app-admin/src"],
+      "@apigateway/*": ["apps/api-gateway/src/*"]
+    }
   },
   "exclude": ["node_modules", "dist"]
 }

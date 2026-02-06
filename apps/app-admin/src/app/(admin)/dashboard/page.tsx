@@ -1,6 +1,6 @@
 "use client";
 
-import { useAdminAuth } from "@elbruso/shared/modules/admin-auth";
+import { useAdminAuth } from "@frontend/modules/admin-auth";
 import { Users, Shield, Activity, Settings } from "lucide-react";
 
 export default function DashboardPage() {

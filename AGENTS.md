@@ -17,11 +17,26 @@
 ```
 /home/ivan/git/elbruso
 ├── @docs/              → @docs/COMPONENT_SYSTEM_MIGRATION.md
-├── @apps/web/          → apps/web/AGENTS.md
-├── @apps/api/          → apps/api/AGENTS.md
-├── @packages/shared/    → packages/shared/AGENTS.md
-├── @packages/context/    → packages/context
-└── @packages/database/  → packages/database/src/
+├── @apps/web/          → apps/app-web/AGENTS.md
+├── @apps/admin/        → apps/app-admin/AGENTS.md
+├── @apps/api/          → apps/api-gateway/AGENTS.md
+├── @frontend/          → packages/frontend/src (frontend shared)
+├── @backend/           → packages/backend/src (backend modules)
+├── @database/          → packages/database/src
+└── @devtools/          → packages/devtools/src
+```
+
+## Aliases
+
+```
+@/              → ./src/* (local imports)
+@frontend       → packages/frontend/src
+@backend        → packages/backend/src
+@database       → packages/database/src
+@devtools       → packages/devtools/src
+@appweb         → apps/app-web/src
+@appadmin       → apps/app-admin/src
+@apigateway/*   → apps/api-gateway/src/*
 ```
 
 ## Ports
@@ -35,13 +50,14 @@
 
 ## Zone Responsibilities
 
-| Path Pattern         | See                                 |
-| -------------------- | ----------------------------------- |
-| `@apps/api/*`        | apps/api/AGENTS.md                  |
-| `@apps/admin/*`      | apps/admin/AGENTS.md                |
-| `@apps/web/*`        | apps/web/AGENTS.md                  |
-| `@packages/shared/*` | packages/shared/AGENTS.md           |
-| Components           | @docs/COMPONENT_SYSTEM_MIGRATION.md |
+| Path Pattern    | See                                 |
+| --------------- | ----------------------------------- |
+| `@apps/api/*`   | apps/api-gateway/AGENTS.md          |
+| `@apps/admin/*` | apps/app-admin/AGENTS.md            |
+| `@apps/web/*`   | apps/app-web/AGENTS.md              |
+| `@frontend/*`   | packages/frontend/AGENTS.md         |
+| `@backend/*`    | packages/backend/src                |
+| Components      | @docs/COMPONENT_SYSTEM_MIGRATION.md |
 
 ## Quick Commands
 

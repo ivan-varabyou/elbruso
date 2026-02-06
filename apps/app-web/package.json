@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@elbruso/devtools": "workspace:*",
-    "@elbruso/shared": "workspace:*",
+    "@elbruso/frontend": "workspace:*",
     "@formatjs/intl-localematcher": "^0.8.0",
     "@heroui/react": "^2.8.8",
     "@heroui/theme": "^2.4.26",

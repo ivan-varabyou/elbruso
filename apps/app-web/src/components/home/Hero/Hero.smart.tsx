@@ -1,8 +1,8 @@
 "use client";
 
-import { useI18n } from "@elbruso/modules/i18n/lib";
-import type { Dictionary } from "@elbruso/types/dictionary";
-import { Button } from "@elbruso/ui/primitives/Button";
+import { useI18n } from "@frontend/modules/i18n/lib";
+import type { Dictionary } from "@frontend/types/dictionary";
+import { Button } from "@frontend/ui/primitives/Button";
 import { motion } from "framer-motion";
 import { Database } from "lucide-react";
 
