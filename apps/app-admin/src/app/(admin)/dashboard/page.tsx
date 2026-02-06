@@ -1,20 +1,18 @@
 "use client";
 
 import { useAdminAuth } from "@frontend/modules/admin-auth";
-import { Users, Shield, Activity, Settings } from "lucide-react";
+import { ProfilePageLayout } from "@frontend/ui";
+import { LayoutDashboard, Users, Shield, Activity, Settings } from "lucide-react";
 
 export default function DashboardPage() {
   const { user } = useAdminAuth();
 
   return (
-    <div>
-      <div style={{ marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "1.875rem", fontWeight: 700, marginBottom: "0.5rem" }}>Dashboard</h1>
-        <p style={{ color: "var(--auth-text-muted, #64748B)" }}>
-          Welcome back, {user?.name || "Administrator"}
-        </p>
-      </div>
-
+    <ProfilePageLayout
+      title="Dashboard"
+      icon={LayoutDashboard}
+      description="Основные показатели системы и активность администраторов."
+    >
       <div
         style={{
           display: "grid",
@@ -161,6 +159,6 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
-    </div>
+    </ProfilePageLayout>
   );
 }

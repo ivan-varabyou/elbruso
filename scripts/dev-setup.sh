@@ -175,6 +175,7 @@ PROJECT_ROOT="/home/ivan/git/elbruso"
 generate_tree "$PROJECT_ROOT" "$PROJECT_ROOT/docs/PROJECT_TREE.md" "Структура проекта"
 generate_tree "$PROJECT_ROOT/apps/app-web" "$PROJECT_ROOT/apps/app-web/docs/PROJECT_TREE.md" "Структура проекта app-web"
 generate_tree "$PROJECT_ROOT/apps/api-gateway" "$PROJECT_ROOT/apps/api-gateway/docs/PROJECT_TREE.md" "Структура проекта api-gateway"
+generate_tree "$PROJECT_ROOT/apps/app-admin" "$PROJECT_ROOT/apps/app-admin/docs/PROJECT_TREE.md" "Структура проекта app-admin"
 generate_tree "$PROJECT_ROOT/packages/shared" "$PROJECT_ROOT/packages/shared/docs/PROJECT_TREE.md" "Структура проекта shared"
 
 # Print URLs

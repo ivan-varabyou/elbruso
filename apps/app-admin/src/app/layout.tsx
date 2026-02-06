@@ -27,7 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <AdminAuthProvider>
           <AppProviders dictionary={dictionary}>{children}</AppProviders>
         </AdminAuthProvider>

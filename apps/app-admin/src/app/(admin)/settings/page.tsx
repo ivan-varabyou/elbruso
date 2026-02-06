@@ -2,7 +2,7 @@
 
 import { cn } from "@frontend/lib";
 import { OrganizationTree, ProfileForm, SecurityForm } from "@frontend/modules/profile";
-import { PageLayout } from "@frontend/ui";
+import { ProfilePageLayout } from "@frontend/ui";
 import { Building2, Shield, User } from "lucide-react";
 import { useState } from "react";
 
@@ -18,7 +18,7 @@ export default function SettingsPage() {
   ] as const;
 
   return (
-    <PageLayout title="Настройки" icon={Shield}>
+    <ProfilePageLayout title="Настройки" icon={Shield}>
       <div className=" mx-auto space-y-8">
         <div className="px-4">
           <div className="flex gap-1 border-b border-zinc-100">
@@ -50,6 +50,6 @@ export default function SettingsPage() {
           {activeTab === "organization" && <OrganizationTree />}
         </div>
       </div>
-    </PageLayout>
+    </ProfilePageLayout>
   );
 }

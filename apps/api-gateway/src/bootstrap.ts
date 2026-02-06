@@ -5,7 +5,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder,SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 
-import { config } from './config';
+import { config } from './config/config';
 import { bootstrapWebsocket } from './core/websocket/bootstrap';
 
 export async function bootstrap(app: NestExpressApplication): Promise<void> {

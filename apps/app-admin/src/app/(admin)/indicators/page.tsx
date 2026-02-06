@@ -10,7 +10,7 @@ import {
   IndicatorGroupsList,
 } from "@frontend/modules/profile/ui/indicators";
 import type { Indicator } from "@frontend/types";
-import { Button, PageLayout } from "@frontend/ui";
+import { Button, ProfilePageLayout } from "@frontend/ui";
 import {
   Activity,
   Building2,
@@ -90,7 +90,7 @@ export default function IndicatorsPage() {
   ];
 
   return (
-    <PageLayout
+    <ProfilePageLayout
       title="Индикаторы"
       icon={TrendingUp}
       description="Управление каталогом показателей и автоматическая генерация."
@@ -356,6 +356,6 @@ export default function IndicatorsPage() {
           onSuccess={() => fetchIndicators()}
         />
       )}
-    </PageLayout>
+    </ProfilePageLayout>
   );
 }

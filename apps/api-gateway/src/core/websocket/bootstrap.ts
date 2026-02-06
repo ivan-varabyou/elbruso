@@ -1,4 +1,4 @@
-import { config } from '@apigateway/config';
+import { config } from '@apigateway/config/config';
 import { UsersService } from '@backend/modules/users/services/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { createServer } from 'http';

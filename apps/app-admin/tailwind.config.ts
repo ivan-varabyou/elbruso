@@ -5,7 +5,7 @@ const config: Config = {
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
-    "../../packages/shared/src/**/*.{js,ts,jsx,tsx}",
+    "../../packages/frontend/src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     container: {

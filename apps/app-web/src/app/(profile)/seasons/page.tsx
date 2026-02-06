@@ -3,7 +3,7 @@
 import { AutogenerateModal, SeasonModal } from "@frontend/modules/seasons/ui";
 import { useReferenceStore } from "@frontend/stores";
 import type { Season } from "@frontend/types";
-import { PageLayout } from "@frontend/ui";
+import { ProfilePageLayout } from "@frontend/ui";
 import { Calendar, Edit2, Loader2, Plus, Sparkles, Trash2, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -42,7 +42,7 @@ export default function SeasonsPage() {
   };
 
   return (
-    <PageLayout
+    <ProfilePageLayout
       title="Сезоны"
       icon={Calendar}
       actions={
