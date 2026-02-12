@@ -19,7 +19,7 @@ export default function SettingsPage() {
 
   return (
     <ProfilePageLayout title="Настройки" icon={Shield}>
-      <div className=" mx-auto space-y-8">
+      <div className=" mx-auto space-y-2">
         <div className="px-4">
           <div className="flex gap-1 border-b border-zinc-100">
             {tabs.map((tab) => {

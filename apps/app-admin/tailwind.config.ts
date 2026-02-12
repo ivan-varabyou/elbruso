@@ -6,6 +6,8 @@ const config: Config = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
     "../../packages/frontend/src/**/*.{js,ts,jsx,tsx}",
+    "!../../packages/frontend/src/modules/table/**/*",
+    "!node_modules/hyperformula/**/*",
   ],
   theme: {
     container: {
@@ -46,7 +48,7 @@ const config: Config = {
           "blue-hover": "#1664C4",
           "blue-pressed": "#0F4C81",
           dark: "#424242",
-          coral: "#F26E5E", // Keep for accent if needed
+          coral: "#F26E5E",
           bg: "#FFFFFF",
           "bg-subtle": "#F5F5F5",
           border: "#E0E0E0",

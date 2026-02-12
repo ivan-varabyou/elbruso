@@ -7,9 +7,11 @@ import { WorkspaceController } from './controllers/workspace.controller';
 import { WorkspaceGroupService } from './services/workspace-group.service';
 import { WorkspaceService } from './services/workspace.service';
 
+import { WorkspaceTemplateController } from './controllers/workspace-template.controller';
+
 @Module({
   imports: [DatabaseModule, UsersModule, AuditModule],
-  controllers: [WorkspaceController, WorkspaceGroupController],
+  controllers: [WorkspaceController, WorkspaceGroupController, WorkspaceTemplateController],
   providers: [WorkspaceService, WorkspaceGroupService],
   exports: [WorkspaceService, WorkspaceGroupService],
 })

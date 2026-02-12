@@ -1,19 +1,16 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  NotFoundException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { DatabaseService } from '@database/database.service';
-import { AdminLoginDto } from '../dto/admin-login.dto';
-import { AdminJwtPayload } from '../strategies/admin-jwt.strategy';
+import { Injectable, UnauthorizedException, NotFoundException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { randomUUID } from "crypto";
+
+import { DatabaseService } from "@database/database.service";
+
+import { AdminLoginDto } from "../dto/admin-login.dto";
 
 export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
-  expiresIn: string;
   user: {
     id: string;
     email: string;
@@ -30,41 +27,30 @@ interface AdminUser {
   password_hash: string;
 }
 
-interface AdminSession {
-  id: string;
-  user_id: string;
-  refresh_token: string;
-  expires_at: Date;
-  created_at: Date;
-}
-
 @Injectable()
 export class AdminAuthService {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly db: DatabaseService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async validateAdmin(
     email: string,
     password: string,
-  ): Promise<Omit<AdminUser, 'password_hash'> | null> {
+  ): Promise<Omit<AdminUser, "password_hash"> | null> {
     const adminUser = await this.db.client
-      .selectFrom('admin_users')
+      .selectFrom("admin_users")
       .selectAll()
-      .where('email', '=', email)
-      .where('is_active', '=', true)
+      .where("email", "=", email)
+      .where("is_active", "=", true)
       .executeTakeFirst();
 
     if (!adminUser) {
       return null;
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      (adminUser as AdminUser).password_hash,
-    );
+    const isPasswordValid = await bcrypt.compare(password, (adminUser as AdminUser).password_hash);
     if (!isPasswordValid) {
       return null;
     }
@@ -73,16 +59,41 @@ export class AdminAuthService {
     return userWithoutPassword;
   }
 
-  async login(dto: AdminLoginDto): Promise<AuthResponse> {
+  async login(dto: AdminLoginDto, ip?: string, userAgent?: string): Promise<AuthResponse> {
     const adminUser = await this.validateAdmin(dto.email, dto.password);
     if (!adminUser) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Неверные учетные данные");
     }
 
-    const tokens = await this.generateTokens(adminUser);
+    const refreshToken = randomUUID();
+    const hashedToken = await bcrypt.hash(refreshToken, 10);
+
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await this.db.client
+      .insertInto("admin_sessions")
+      .values({
+        user_id: adminUser.id,
+        refresh_token: hashedToken,
+        expires_at: expiresAt,
+        ip_address: ip || null,
+        user_agent: userAgent || null,
+        created_at: new Date(),
+      })
+      .execute();
+
+    const payload = {
+      sub: adminUser.id,
+      email: adminUser.email,
+      role: adminUser.role,
+    };
+
+    const accessToken = this.jwtService.sign(payload);
 
     return {
-      ...tokens,
+      accessToken,
+      refreshToken,
       user: {
         id: adminUser.id,
         email: adminUser.email,
@@ -93,39 +104,77 @@ export class AdminAuthService {
   }
 
   async logout(refreshToken: string): Promise<void> {
-    await this.db.client
-      .deleteFrom('admin_sessions')
-      .where('refresh_token', '=', refreshToken)
-      .execute();
+    const sessions = await this.db.client.selectFrom("admin_sessions").selectAll().execute();
+
+    for (const session of sessions) {
+      const isValid = await bcrypt.compare(refreshToken, session.refresh_token);
+      if (isValid) {
+        await this.db.client.deleteFrom("admin_sessions").where("id", "=", session.id).execute();
+        break;
+      }
+    }
   }
 
-  async refresh(refreshToken: string): Promise<AuthResponse> {
-    const session = await this.validateRefreshToken(refreshToken);
-    if (!session) {
-      throw new UnauthorizedException('Invalid or expired refresh token');
+  async refresh(refreshToken: string, ip?: string, userAgent?: string): Promise<AuthResponse> {
+    const sessions = await this.db.client.selectFrom("admin_sessions").selectAll().execute();
+
+    let validSession: { id: string; user_id: string; expires_at: Date; refresh_token: string } | null = null;
+
+    for (const session of sessions) {
+      if (new Date(session.expires_at) < new Date()) continue;
+
+      const isValid = await bcrypt.compare(refreshToken, session.refresh_token);
+      if (isValid) {
+        validSession = session;
+        break;
+      }
     }
 
+    if (!validSession) {
+      throw new UnauthorizedException("Сессия недействительна");
+    }
+
+    await this.db.client.deleteFrom("admin_sessions").where("id", "=", validSession.id).execute();
+
+    const newRefreshToken = randomUUID();
+    const newHashedToken = await bcrypt.hash(newRefreshToken, 10);
+    const newExpiresAt = new Date();
+    newExpiresAt.setDate(newExpiresAt.getDate() + 7);
+
     await this.db.client
-      .deleteFrom('admin_sessions')
-      .where('id', '=', session.id)
+      .insertInto("admin_sessions")
+      .values({
+        user_id: validSession.user_id,
+        refresh_token: newHashedToken,
+        expires_at: newExpiresAt,
+        ip_address: ip || null,
+        user_agent: userAgent || null,
+        created_at: new Date(),
+      })
       .execute();
 
     const adminUser = await this.db.client
-      .selectFrom('admin_users')
+      .selectFrom("admin_users")
       .selectAll()
-      .where('id', '=', session.user_id)
-      .where('is_active', '=', true)
+      .where("id", "=", validSession.user_id)
+      .where("is_active", "=", true)
       .executeTakeFirst();
 
     if (!adminUser) {
-      throw new UnauthorizedException('Admin user not found');
+      throw new UnauthorizedException("Пользователь не найден");
     }
 
-    const { password_hash: _, ...userWithoutPassword } = adminUser as AdminUser;
-    const tokens = await this.generateTokens(userWithoutPassword);
+    const payload = {
+      sub: adminUser.id,
+      email: adminUser.email,
+      role: adminUser.role,
+    };
+
+    const accessToken = this.jwtService.sign(payload);
 
     return {
-      ...tokens,
+      accessToken,
+      refreshToken: newRefreshToken,
       user: {
         id: adminUser.id,
         email: adminUser.email,
@@ -135,75 +184,18 @@ export class AdminAuthService {
     };
   }
 
-  async validateRefreshToken(token: string): Promise<AdminSession | null> {
-    try {
-      const payload: AdminJwtPayload = this.jwtService.verify(token, {
-        secret: this.configService.get<string>('ADMIN_JWT_SECRET'),
-      });
-
-      const session = await this.db.client
-        .selectFrom('admin_sessions')
-        .selectAll()
-        .where('user_id', '=', payload.sub)
-        .where('refresh_token', '=', token)
-        .where('expires_at', '>', new Date())
-        .executeTakeFirst();
-
-      return session as AdminSession | null;
-    } catch {
-      return null;
-    }
-  }
-
   async getMe(adminUserId: string) {
     const adminUser = await this.db.client
-      .selectFrom('admin_users')
-      .select(['id', 'email', 'name', 'role', 'created_at', 'updated_at'])
-      .where('id', '=', adminUserId)
-      .where('is_active', '=', true)
+      .selectFrom("admin_users")
+      .select(["id", "email", "name", "role", "created_at", "updated_at"])
+      .where("id", "=", adminUserId)
+      .where("is_active", "=", true)
       .executeTakeFirst();
 
     if (!adminUser) {
-      throw new NotFoundException('Admin user not found');
+      throw new NotFoundException("Admin user not found");
     }
 
     return adminUser;
-  }
-
-  private async generateTokens(
-    adminUser: Omit<AdminUser, 'password_hash'>,
-  ): Promise<{ accessToken: string; refreshToken: string; expiresIn: string }> {
-    const payload: AdminJwtPayload = {
-      sub: adminUser.id,
-      email: adminUser.email,
-      role: adminUser.role,
-    };
-
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: this.configService.get<string>(
-        'ADMIN_JWT_REFRESH_EXPIRES_IN',
-        '7d',
-      ),
-    });
-
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
-
-    await this.db.client
-      .insertInto('admin_sessions')
-      .values({
-        user_id: adminUser.id,
-        refresh_token: refreshToken,
-        expires_at: expiresAt,
-        created_at: new Date(),
-      })
-      .execute();
-
-    return {
-      accessToken,
-      refreshToken,
-      expiresIn: this.configService.get<string>('ADMIN_JWT_EXPIRES_IN', '15m'),
-    };
   }
 }

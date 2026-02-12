@@ -165,6 +165,6 @@ export default function SeasonsPage() {
       />
 
       <AutogenerateModal isOpen={isAutoModalOpen} onClose={() => setIsAutoModalOpen(false)} />
-    </PageLayout>
+    </ProfilePageLayout>
   );
 }

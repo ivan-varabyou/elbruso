@@ -4,15 +4,20 @@
   "description": "BI System with dynamic tables and reports",
   "scripts": {
     "build": "turbo run build",
+    "clean": "turbo run clean && pnpm -r exec rm -rf dist .turbo .next && find . -type f \\( -name \"*.js\" -o -name \"*.js.map\" -o -name \"*.d.ts\" \\) -path \"*/src/*\" -not -path \"*/node_modules/*\" -delete",
     "dev": "./scripts/dev-setup.sh",
     "dev:only": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "generate:api": "swagger-typescript-api -p ./swagger.json -o ./packages/shared/src/api --react-hooks --axios --modular --exportSchemas",
-    "generate:api:watch": "swagger-typescript-api -p ./swagger.json -o ./packages/shared/src/api --react-hooks --axios --modular --exportSchemas --watch"
+    "generate:api": "swagger-typescript-api generate -p ./swagger.json -o ./packages/frontend/src/api --react-hooks --axios --modular --exportSchemas",
+    "generate:api:watch": "swagger-typescript-api generate -p ./swagger.json -o ./packages/frontend/src/api --react-hooks --axios --modular --exportSchemas --watch"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.29.0",
+    "@babel/preset-typescript": "^7.28.5",
     "@types/lodash-es": "^4.17.12",
+    "ai-factory": "^1.4.0",
+    "babel-loader": "^10.0.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-boundaries": "^5.3.1",
     "eslint-plugin-import": "^2.32.0",

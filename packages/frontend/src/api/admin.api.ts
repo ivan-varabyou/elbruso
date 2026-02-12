@@ -19,12 +19,12 @@ import {
   UpdateRoleDto,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client.service";
-import { adminApiClient } from "./admin.client";
+import { apiClient } from "./admin/client";
 
 export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   constructor() {
     super();
-    this.instance = adminApiClient;
+    this.instance = apiClient;
   }
   /**
    * No description
@@ -51,7 +51,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
    * @request POST:/admin/auth/login
    */
   adminAuthControllerLogin = (data: AdminLoginDto, params: RequestParams = {}) =>
-    this.request<void, void>({
+    this.request({
       path: `/auth/login`,
       method: "POST",
       body: data,

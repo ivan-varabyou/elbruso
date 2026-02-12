@@ -1,14 +1,16 @@
 import { cn } from "@frontend/lib";
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { ButtonHTMLAttributes, forwardRef, ReactNode } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "outline" | "ghost" | "coral" | "dark";
   size?: "sm" | "md" | "lg";
   loading?: boolean;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", loading, children, ...props }, ref) => {
+  ({ className, variant = "primary", loading, leftIcon, rightIcon, children, ...props }, ref) => {
     const variants = {
       primary: "btn-primary text-white bg-blue-600 hover:bg-blue-500 active:bg-blue-700",
       coral: "btn-coral",
@@ -52,7 +54,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             </svg>
           </div>
         )}
-        <span className={cn(loading && "opacity-0")}>{children}</span>
+        <span className={cn("inline-flex items-center gap-2", loading && "opacity-0")}>
+          {leftIcon && <span className="inline-flex">{leftIcon}</span>}
+          <span>{children}</span>
+          {rightIcon && <span className="inline-flex">{rightIcon}</span>}
+        </span>
       </button>
     );
   },

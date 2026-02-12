@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder,SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 
 import { config } from './config/config';
@@ -10,6 +11,7 @@ import { bootstrapWebsocket } from './core/websocket/bootstrap';
 
 export async function bootstrap(app: NestExpressApplication): Promise<void> {
   app.setGlobalPrefix('v1');
+  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({

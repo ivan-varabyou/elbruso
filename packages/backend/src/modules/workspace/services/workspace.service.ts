@@ -8,8 +8,8 @@ import {
 import {
   AuditService,
   AuditAction,
-} from '@backend/modules/audit/services/audit.service';
-import { UsersService } from '@backend/modules/users/services/users.service';
+} from '../../audit/services/audit.service';
+import { UsersService } from '../../users/services/users.service';
 import { DatabaseService } from '@database/database.service';
 import {
   CreateWorkspaceDto,
@@ -34,6 +34,7 @@ export class WorkspaceService {
         name: dto.name,
         description: dto.description || null,
         owner_id: userId,
+        is_template: dto.is_template || false,
       })
       .returningAll()
       .executeTakeFirst();
@@ -73,6 +74,7 @@ export class WorkspaceService {
         'w.id',
         'w.name',
         'w.description',
+        'w.is_template',
         'w.created_at',
         'w.updated_at',
         'wp.permission_level as userRole',
@@ -85,6 +87,68 @@ export class WorkspaceService {
     return workspaces;
   }
 
+  async findAllTemplates(filters?: {
+    organization_id?: number;
+    sport_id?: number;
+    country_id?: number;
+  }) {
+    let query = this._db.client
+      .selectFrom('workspaces')
+      .selectAll()
+      .where('is_template', '=', true)
+      .where('is_active', '=', true);
+
+    if (filters?.organization_id) {
+      query = query.where('organization_id', '=', filters.organization_id);
+    }
+
+    if (filters?.sport_id) {
+      query = query.where('sport_id', '=', filters.sport_id);
+    }
+
+    if (filters?.country_id) {
+      query = query.leftJoin('organizations', 'workspaces.organization_id', 'organizations.id')
+                   .where('organizations.country_id', '=', filters.country_id);
+    }
+
+    return query.orderBy('updated_at', 'desc').execute();
+  }
+
+  async findTemplateOne(id: string) {
+    const template = await this._db.client
+      .selectFrom('workspaces')
+      .selectAll()
+      .where('id', '=', id)
+      .where('is_template', '=', true)
+      .where('is_active', '=', true)
+      .executeTakeFirst();
+
+    if (!template) {
+      throw new NotFoundException('Template not found');
+    }
+
+    return template;
+  }
+
+  async findAllForAdmin() {
+    return this._db.client
+      .selectFrom('workspaces as w')
+      .leftJoin('users as u', 'w.owner_id', 'u.id')
+      .select([
+        'w.id',
+        'w.name',
+        'w.description',
+        'w.is_template',
+        'w.owner_id',
+        'u.email as owner_email',
+        'w.created_at',
+        'w.updated_at',
+        'w.is_active',
+      ])
+      .orderBy('w.created_at', 'desc')
+      .execute();
+  }
+
   async findOne(id: string, userId: string) {
     const workspace = await this._db.client
       .selectFrom('workspaces as w')
@@ -93,6 +157,7 @@ export class WorkspaceService {
         'w.id',
         'w.name',
         'w.description',
+        'w.is_template',
         'w.created_at',
         'w.updated_at',
         'wp.permission_level as userRole',
@@ -119,6 +184,92 @@ export class WorkspaceService {
     return workspace;
   }
 
+  async adminCreate(dto: any) {
+    const { country_id, ...rest } = dto;
+    const metadata = country_id ? { country_id } : {};
+
+    const workspace = await this._db.client
+      .insertInto('workspaces')
+      .values({
+        ...rest,
+        description: rest.description || null,
+        owner_id: 'SYSTEM_ADMIN',
+        metadata: country_id ? (JSON.stringify(metadata) as any) : (rest.metadata || null),
+      })
+      .returningAll()
+      .executeTakeFirst();
+
+    if (!workspace) {
+      throw new Error('Failed to create workspace');
+    }
+
+    return workspace;
+  }
+
+  async adminUpdate(id: string, dto: any) {
+    const { country_id, ...rest } = dto;
+    
+    let updateData: any = {
+      ...rest,
+      updated_at: new Date(),
+    };
+
+    if (country_id !== undefined) {
+      const current = await this.adminFindOne(id);
+      let metadata = current.metadata ? (typeof current.metadata === 'string' ? JSON.parse(current.metadata) : current.metadata) : {};
+      metadata = { ...metadata, country_id };
+      updateData.metadata = JSON.stringify(metadata);
+    }
+
+    const workspace = await this._db.client
+      .updateTable('workspaces')
+      .set(updateData)
+      .where('id', '=', id)
+      .where('is_active', '=', true)
+      .returningAll()
+      .executeTakeFirst();
+
+    if (!workspace) {
+      throw new NotFoundException('Workspace not found');
+    }
+
+    return workspace;
+  }
+
+  async adminFindOne(id: string) {
+    const workspace = await this._db.client
+      .selectFrom('workspaces')
+      .selectAll()
+      .where('id', '=', id)
+      .where('is_active', '=', true)
+      .executeTakeFirst();
+
+    if (!workspace) {
+      throw new NotFoundException('Workspace not found');
+    }
+
+    return workspace;
+  }
+
+  async adminDelete(id: string) {
+    const workspace = await this._db.client
+      .updateTable('workspaces')
+      .set({
+        is_active: false,
+        updated_at: new Date(),
+      })
+      .where('id', '=', id)
+      .where('is_active', '=', true)
+      .returningAll()
+      .executeTakeFirst();
+
+    if (!workspace) {
+      throw new NotFoundException('Workspace not found');
+    }
+
+    return { message: 'Workspace deleted successfully by admin' };
+  }
+
   async update(id: string, userId: string, dto: UpdateWorkspaceDto) {
     await this.checkPermission(id, userId, WorkspaceRole.EDITOR);
 
@@ -131,6 +282,9 @@ export class WorkspaceService {
     }
     if (dto.description !== undefined) {
       updateData.description = dto.description || null;
+    }
+    if (dto.is_template !== undefined) {
+      updateData.is_template = dto.is_template;
     }
 
     const workspace = await this._db.client

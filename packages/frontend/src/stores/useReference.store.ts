@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { Reference } from "../api";
+import { Countries, Reference } from "../api";
 import { ErrorHandler } from "../api/error";
 import type {
   AppError,
@@ -12,9 +12,11 @@ import type {
   Region,
   Season,
   Sport,
+  Country,
 } from "../types";
 
 const referencesApi = new Reference();
+const countriesApi = new Countries();
 
 interface ReferenceStore {
   regions: Region[];
@@ -23,6 +25,7 @@ interface ReferenceStore {
   indicatorGroups: IndicatorGroup[];
   seasons: Season[];
   organizations: Organization[];
+  countries: Country[];
   customReferences: ReferenceData[];
   isLoading: boolean;
   error: AppError | null;
@@ -41,6 +44,7 @@ interface ReferenceStore {
     sportId?: string | null;
   }) => Promise<void>;
   fetchOrganizations: (filters?: ReferenceFilter) => Promise<void>;
+  fetchCountries: () => Promise<void>;
   fetchCustomReferences: (scope: string, entityId?: string) => Promise<void>;
   clearError: () => void;
   reset: () => void;
@@ -53,6 +57,7 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
   indicatorGroups: [],
   seasons: [],
   organizations: [],
+  countries: [],
   customReferences: [],
   isLoading: false,
   error: null,
@@ -188,6 +193,17 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     }
   },
 
+  fetchCountries: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await countriesApi.countriesControllerFindActive({ lang: 'ru' });
+      set({ countries: response.data as unknown as Country[], isLoading: false });
+    } catch (error) {
+      const appError = ErrorHandler.handle(error);
+      set({ error: appError, isLoading: false });
+    }
+  },
+
   fetchCustomReferences: async (scope, entityId) => {
     set({ isLoading: true, error: null });
     try {
@@ -208,6 +224,7 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
       indicatorGroups: [],
       seasons: [],
       organizations: [],
+      countries: [],
       customReferences: [],
       error: null,
     }),

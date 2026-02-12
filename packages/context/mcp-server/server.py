@@ -35,9 +35,9 @@ logger = setup_logging()
 transformers_logging.set_verbosity_error()
 
 # Убрать шумные логи torch и transformers
-logging.getLogger("transformers").setLevel(logging.WARNING)
-logging.getLogger("torch").setLevel(logging.WARNING)
-logging.getLogger("accelerate").setLevel(logging.WARNING)
+logging.getLogger("transformers").setLevel(logging.ERROR)
+logging.getLogger("torch").setLevel(logging.ERROR)
+logging.getLogger("accelerate").setLevel(logging.ERROR)
 
 mcp = FastMCP("elbruso-memory")
 

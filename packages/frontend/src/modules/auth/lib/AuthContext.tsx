@@ -70,6 +70,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const initAuth = async () => {
+      // Skip if we are on an admin route
+      if (typeof window !== "undefined" && (window.location.pathname.startsWith("/admin") || window.location.port === "7201")) {
+        setState((prev) => ({ ...prev, isLoading: false }));
+        return;
+      }
+
       const authenticated = checkAuth();
       if (authenticated) {
         try {

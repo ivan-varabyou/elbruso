@@ -9,78 +9,144 @@ import {
   Param,
   UseGuards,
   Request,
-} from '@nestjs/common';
+  ParseUUIDPipe,
+} from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam, ApiResponse } from "@nestjs/swagger";
+import { AnyJwtAuthGuard } from "@backend/modules/auth/guards/any-jwt-auth.guard";
+import { CreatePageDto, UpdatePageDto, MovePageDto } from "../dto";
+import { PagesService } from "../services/pages.service";
 import {
-  ApiTags,
-  ApiOperation,
-  ApiBearerAuth,
-  ApiParam,
-} from '@nestjs/swagger';
-import { JwtAuthGuard } from '@backend/modules/auth/guards/jwt-auth.guard';
-import { CreatePageDto, UpdatePageDto, MovePageDto } from '../dto';
-import { PagesService } from '../services/pages.service';
+  PageResponseDto,
+  PagesListResponseDto,
+  PageTreeResponseDto,
+  PageTreeItemResponseDto,
+} from "../dto/responses";
 
-@ApiTags('Pages')
-@ApiBearerAuth('JWT-auth')
-@UseGuards(JwtAuthGuard)
+@ApiTags("Pages")
+@ApiBearerAuth("JWT-auth")
+@UseGuards(AnyJwtAuthGuard)
 @Controller()
 export class PagesController {
   constructor(private readonly pagesService: PagesService) {}
 
-  @Post('workspaces/:workspaceId/pages')
-  @ApiOperation({ summary: 'Create a new page in workspace' })
-  @ApiParam({ name: 'workspaceId', type: 'string' })
+  @Post("workspaces/:workspaceId/pages")
+  @ApiOperation({ summary: "Create a new page in workspace" })
+  @ApiParam({ name: "workspaceId", type: "string" })
+  @ApiResponse({ status: 201, description: "Page created successfully", type: PageResponseDto })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 403, description: "Forbidden" })
   async create(
-    @Param('workspaceId') workspaceId: string,
+    @Param("workspaceId", ParseUUIDPipe) workspaceId: string,
     @Body() dto: CreatePageDto,
     @Request() req: any,
   ) {
-    return this.pagesService.create(workspaceId, dto, req.user.sub);
+    const page = await this.pagesService.create(workspaceId, dto, req.user.sub);
+    return this.mapToPageResponse(page);
   }
 
-  @Get('workspaces/:workspaceId/pages')
-  @ApiOperation({ summary: 'Get page tree for workspace' })
-  @ApiParam({ name: 'workspaceId', type: 'string' })
-  async getTree(
-    @Param('workspaceId') workspaceId: string,
-    @Request() req: any,
-  ) {
-    return this.pagesService.getPageTree(workspaceId, req.user.sub);
+  @Get("workspaces/:workspaceId/pages")
+  @ApiOperation({ summary: "Get page tree for workspace" })
+  @ApiParam({ name: "workspaceId", type: "string" })
+  @ApiResponse({ status: 200, description: "Page tree", type: PageTreeResponseDto })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  async getTree(@Param("workspaceId", ParseUUIDPipe) workspaceId: string, @Request() req: any) {
+    const tree = await this.pagesService.getPageTree(workspaceId, req.user.sub);
+    return {
+      tree: tree.map((node) => this.mapToTreeItem(node)),
+      total: this.countTreeNodes(tree),
+    };
   }
 
-  @Get('pages/:id')
-  @ApiOperation({ summary: 'Get page by ID' })
-  @ApiParam({ name: 'id', type: 'string' })
-  async findOne(@Param('id') id: string, @Request() req: any) {
-    return this.pagesService.findById(id, req.user.sub);
+  @Get("pages/:id")
+  @ApiOperation({ summary: "Get page by ID" })
+  @ApiParam({ name: "id", type: "string" })
+  @ApiResponse({ status: 200, description: "Page details", type: PageResponseDto })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  @ApiResponse({ status: 404, description: "Page not found" })
+  async findOne(@Param("id", ParseUUIDPipe) id: string, @Request() req: any) {
+    const page = await this.pagesService.findById(id, req.user.sub);
+    return this.mapToPageResponse(page);
   }
 
-  @Patch('pages/:id')
-  @ApiOperation({ summary: 'Update page' })
-  @ApiParam({ name: 'id', type: 'string' })
+  @Patch("pages/:id")
+  @ApiOperation({ summary: "Update page" })
+  @ApiParam({ name: "id", type: "string" })
+  @ApiResponse({ status: 200, description: "Page updated successfully", type: PageResponseDto })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  @ApiResponse({ status: 404, description: "Page not found" })
   async update(
-    @Param('id') id: string,
+    @Param("id", ParseUUIDPipe) id: string,
     @Body() dto: UpdatePageDto,
     @Request() req: any,
   ) {
-    return this.pagesService.update(id, dto, req.user.sub);
+    const page = await this.pagesService.update(id, dto, req.user.sub);
+    return this.mapToPageResponse(page);
   }
 
-  @Post('pages/:id/move')
-  @ApiOperation({ summary: 'Move page to new parent or position' })
-  @ApiParam({ name: 'id', type: 'string' })
+  @Post("pages/:id/move")
+  @ApiOperation({ summary: "Move page to new parent or position" })
+  @ApiParam({ name: "id", type: "string" })
+  @ApiResponse({ status: 200, description: "Page moved successfully" })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  @ApiResponse({ status: 404, description: "Page not found" })
   async move(
-    @Param('id') id: string,
+    @Param("id", ParseUUIDPipe) id: string,
     @Body() dto: MovePageDto,
     @Request() req: any,
   ) {
     return this.pagesService.move(id, dto, req.user.sub);
   }
 
-  @Delete('pages/:id')
-  @ApiOperation({ summary: 'Delete page (soft delete)' })
-  @ApiParam({ name: 'id', type: 'string' })
-  async delete(@Param('id') id: string, @Request() req: any) {
+  @Delete("pages/:id")
+  @ApiOperation({ summary: "Delete page (soft delete)" })
+  @ApiParam({ name: "id", type: "string" })
+  @ApiResponse({ status: 200, description: "Page deleted successfully" })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 403, description: "Forbidden" })
+  @ApiResponse({ status: 404, description: "Page not found" })
+  async delete(@Param("id", ParseUUIDPipe) id: string, @Request() req: any) {
     return this.pagesService.delete(id, req.user.sub);
+  }
+
+  private mapToPageResponse(page: any): PageResponseDto {
+    return {
+      id: page.id,
+      title: page.title,
+      content: page.content || null,
+      icon: page.icon || null,
+      coverImageUrl: page.cover_image || page.coverImage || null,
+      isPublished: page.is_published ?? false,
+      isFavorite: page.is_favorite ?? false,
+      parentId: page.parent_page_id || null,
+      groupId: page.group_id || null,
+      workspaceId: page.workspace_id,
+      order: page.sort_order ?? 0,
+      createdBy: page.created_by,
+      createdAt: new Date(page.created_at),
+      updatedAt: new Date(page.updated_at),
+    };
+  }
+
+  private mapToTreeItem(node: any): PageTreeItemResponseDto {
+    return {
+      id: node.id,
+      title: node.title,
+      icon: node.icon || null,
+      order: node.sort_order ?? 0,
+      isPublished: node.is_published ?? false,
+      children: (node.children || []).map((child: any) => this.mapToTreeItem(child)),
+    };
+  }
+
+  private countTreeNodes(nodes: any[]): number {
+    let count = 0;
+    for (const node of nodes) {
+      count += 1 + this.countTreeNodes(node.children || []);
+    }
+    return count;
   }
 }

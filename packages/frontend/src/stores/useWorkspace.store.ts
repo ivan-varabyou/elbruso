@@ -11,6 +11,7 @@ export interface Workspace {
   description?: string;
   season_id?: string;
   owner_id: string;
+  is_template?: boolean;
   created_at: string;
   updated_at: string;
 }

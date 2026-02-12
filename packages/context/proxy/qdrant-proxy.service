@@ -1,0 +1,18 @@
+[Unit]
+Description=Qdrant Port Proxy for OpenCode
+Documentation=https://github.com/elbruso/elbruso
+After=network.target
+
+[Service]
+Type=simple
+User=ivan
+WorkingDirectory=/home/ivan/git/elbruso/packages/context/proxy
+ExecStart=/usr/bin/python3 /home/ivan/git/elbruso/packages/context/proxy/qdrant_proxy.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qdrant-proxy
+
+[Install]
+WantedBy=multi-user.target

@@ -1,6 +1,6 @@
 # Структура проекта app-web
 
-Генерировано: Пт 06 фев 2026 03:21:05 +03
+Генерировано: Чт 12 фев 2026 22:09:15 +03
 
 /home/ivan/git/elbruso/apps/app-web
 ├── assets
@@ -110,9 +110,7 @@
 │   │   └── middleware.ts
 │   ├── pages
 │   └── types
-│       └── next-shim.d.ts
 ├── AGENTS.md
-├── inject-source.cjs
 ├── next.config.mjs
 ├── next-env.d.ts
 ├── package.json
@@ -121,4 +119,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-42 directories, 75 files
+42 directories, 73 files

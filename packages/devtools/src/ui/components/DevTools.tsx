@@ -485,16 +485,8 @@ export function DevTools({ children }: { children: ReactNode }) {
                   zIndex: 10000000,
                 }}
               >
-                {hovered.info.callFileName && (
-                  <div>
-                    <span style={{ fontWeight: "bold", color: "#ffd700" }}>FROM:</span>{" "}
-                    {hovered.info.callFileName}:{hovered.info.callLineNumber}
-                  </div>
-                )}
-                <div>
-                  <span style={{ fontWeight: "bold", color: "#ffd700" }}>PATH:</span>{" "}
-                  {hovered.info.fileName}:{hovered.info.lineNumber}
-                </div>
+            
+             
                 {hovered.target.getAttribute("data-path") && (
                   <div style={{ fontSize: "9px", opacity: 0.8, marginTop: "2px" }}>
                     {hovered.target.getAttribute("data-path")}
@@ -505,24 +497,11 @@ export function DevTools({ children }: { children: ReactNode }) {
                     {hovered.target.getAttribute("data-call-path")}
                   </div>
                 )}
-                <div
-                  style={{
-                    marginTop: "4px",
-                    borderTop: "1px solid rgba(255,255,255,0.3)",
-                    paddingTop: "2px",
-                  }}
-                >
-                  <span style={{ fontWeight: "bold", color: "#90ee90" }}>TAG:</span>{" "}
-                  {hovered.info.test || hovered.target.tagName.toLowerCase()}
+               
+                 
                 </div>
-                {hovered.info.class && (
-                  <div style={{ fontSize: "9px" }}>
-                    <span style={{ fontWeight: "bold", color: "#87ceeb" }}>CLASS:</span>{" "}
-                    {hovered.info.class}
-                  </div>
-                )}
+                
               </div>
-            </div>
           )}
           {selections.map((s) => (
             <div
@@ -563,16 +542,7 @@ export function DevTools({ children }: { children: ReactNode }) {
                     {s.info.callPathLine}
                   </div>
                 )}
-                {s.target.getAttribute("data-path") && (
-                  <div style={{ fontSize: "9px", opacity: 0.8, marginTop: "2px" }}>
-                    {s.target.getAttribute("data-path")}
-                  </div>
-                )}
-                {s.target.getAttribute("data-call-path") && (
-                  <div style={{ fontSize: "9px", opacity: 0.8 }}>
-                    {s.target.getAttribute("data-call-path")}
-                  </div>
-                )}
+               
               </div>
             </div>
           ))}

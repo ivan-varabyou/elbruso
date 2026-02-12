@@ -1,12 +1,8 @@
 import "./globals.css";
 
 import { AppProviders } from "@frontend/app";
-import { Inter } from "next/font/google";
-
+import { AdminAuthProvider } from "@frontend/modules/admin/auth";
 import { getDictionary } from "@/lib/get-dictionary";
-import { AdminAuthProvider } from "@frontend/modules/admin-auth";
-
-const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata = {
   title: "Elbruso - Admin Panel",
@@ -27,7 +23,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <AdminAuthProvider>
           <AppProviders dictionary={dictionary}>{children}</AppProviders>
         </AdminAuthProvider>

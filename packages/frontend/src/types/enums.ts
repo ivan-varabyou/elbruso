@@ -1,4 +1,10 @@
 // Shared Type Definitions - All Enums and Literal Types
+export enum AdminRole {
+  ADMIN = 'ADMIN',
+  MODERATOR = 'MODERATOR',
+  SUPER_ADMIN = 'SUPER_ADMIN',
+}
+
 export type SystemEntityType = 'regions' | 'sports' | 'indicators' | 'indicator-groups' | 'organizations' | 'events' | 'seasons' | 'templates';
 
 export type LinkType = 'vertical' | 'horizontal' | 'formula' | 'reference';

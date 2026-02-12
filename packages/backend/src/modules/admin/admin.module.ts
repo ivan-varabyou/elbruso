@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
 import { DatabaseModule } from '@database/database.module';
 import { AdminAuthModule } from './admin-auth.module';
 import { AdminSetupController } from './controllers/admin-setup.controller';
@@ -9,10 +8,16 @@ import { AdminRolesModule } from './roles/admin-roles.module';
 import { AdminSetupService } from './services/admin-setup.service';
 import { AdminUsersModule } from './users/admin-users.module';
 
+import { AdminMeController } from './controllers/admin-me.controller';
+import { AdminWorkspaceTemplateController } from './controllers/admin-workspace-template.controller';
+import { AdminWorkspaceController } from './controllers/admin-workspace.controller';
+import { WorkspaceModule } from '../workspace/workspace.module';
+
 @Module({
   imports: [
     DatabaseModule,
-    PassportModule.register({ defaultStrategy: 'admin-jwt' }),
+    WorkspaceModule,
+    // PassportModule is exported by AdminAuthModule
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -27,7 +32,12 @@ import { AdminUsersModule } from './users/admin-users.module';
     AdminUsersModule,
     AdminRolesModule,
   ],
-  controllers: [AdminSetupController],
+  controllers: [
+    AdminSetupController, 
+    AdminWorkspaceController, 
+    AdminWorkspaceTemplateController,
+    AdminMeController,
+  ],
   providers: [AdminSetupService],
   exports: [AdminSetupService],
 })

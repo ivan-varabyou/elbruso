@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
 import { DatabaseModule } from '@database/database.module';
+import { Module } from '@nestjs/common';
+
+import { AdminOrganizationsController } from "./controllers/admin-organizations.controller";
 import { OrganizationsController } from './controllers/organizations.controller';
 import { OrganizationsService } from './services/organizations.service';
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [OrganizationsController],
+  controllers: [OrganizationsController, AdminOrganizationsController],
   providers: [OrganizationsService],
   exports: [OrganizationsService],
 })

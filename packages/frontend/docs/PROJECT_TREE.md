@@ -1,14 +1,19 @@
-# Структура проекта shared
+# Структура проекта frontend
 
-Генерировано: Чт 05 фев 2026 21:31:23 +03
+Генерировано: Чт 12 фев 2026 22:09:15 +03
 
-/home/ivan/git/elbruso/packages/shared
+/home/ivan/git/elbruso/packages/frontend
 ├── docs
 │   ├── COMPONENT_SYSTEM.md
 │   ├── MIGRATION_TABLE.md
 │   └── PROJECT_TREE.md
 ├── src
 │   ├── api
+│   │   ├── admin
+│   │   │   ├── admin-organizations.api.ts
+│   │   │   ├── auth.ts
+│   │   │   ├── client.ts
+│   │   │   └── index.ts
 │   │   ├── hooks
 │   │   │   ├── index.ts
 │   │   │   ├── queryClient.hook.ts
@@ -22,36 +27,56 @@
 │   │   │   ├── useUsers.hook.ts
 │   │   │   └── useWorkspaces.hook.ts
 │   │   ├── admin.api.ts
+│   │   ├── Admin.ts
 │   │   ├── api-mapping.ts
 │   │   ├── api-types.ts
 │   │   ├── api-utils.ts
 │   │   ├── auth.api.ts
+│   │   ├── Auth.ts
 │   │   ├── blocks.api.ts
+│   │   ├── Blocks.ts
 │   │   ├── client.ts
 │   │   ├── config.constant.ts
 │   │   ├── countries.api.ts
+│   │   ├── Countries.ts
 │   │   ├── create-api.service.ts
 │   │   ├── data-contracts.ts
 │   │   ├── definitions.ts
 │   │   ├── endpoints.ts
 │   │   ├── error.ts
 │   │   ├── events.api.ts
+│   │   ├── Events.ts
 │   │   ├── formulas.api.ts
+│   │   ├── Formulas.ts
 │   │   ├── groups.api.ts
+│   │   ├── Groups.ts
+│   │   ├── Health.ts
 │   │   ├── http-client.service.ts
+│   │   ├── http-client.ts
 │   │   ├── index.ts
 │   │   ├── pages.api.ts
+│   │   ├── Pages.ts
 │   │   ├── reference.api.ts
+│   │   ├── Reference.ts
 │   │   ├── tables.api.ts
+│   │   ├── Tables.ts
 │   │   ├── users.api.ts
+│   │   ├── Users.ts
 │   │   ├── versions.api.ts
+│   │   ├── Versions.ts
 │   │   ├── websocket.ws.ts
-│   │   └── workspaces.api.ts
+│   │   ├── workspaces.api.ts
+│   │   ├── Workspaces.ts
+│   │   ├── workspace-template.api.ts
+│   │   └── WorkspaceTemplates.ts
 │   ├── app
 │   │   ├── providers
 │   │   │   ├── AppProviders.tsx
 │   │   │   └── index.ts
 │   │   └── index.ts
+│   ├── build
+│   │   └── plugins
+│   │       └── inject-source.cjs
 │   ├── lib
 │   │   ├── react
 │   │   │   └── SourceTracker.smart.tsx
@@ -59,13 +84,38 @@
 │   │   └── index.ts
 │   ├── modules
 │   │   ├── admin
-│   │   │   └── index.ts
-│   │   ├── admin-auth
-│   │   │   ├── lib
-│   │   │   │   ├── AdminAuthContext.tsx
-│   │   │   │   └── ProtectedRoute.tsx
+│   │   │   ├── api
+│   │   │   ├── auth
+│   │   │   │   ├── lib
+│   │   │   │   │   ├── AdminAuthContext.tsx
+│   │   │   │   │   └── ProtectedRoute.tsx
+│   │   │   │   ├── ui
+│   │   │   │   │   ├── AdminLoginForm.tsx
+│   │   │   │   │   ├── auth.css
+│   │   │   │   │   └── index.ts
+│   │   │   │   └── index.ts
 │   │   │   ├── ui
-│   │   │   │   ├── AdminLoginForm.tsx
+│   │   │   │   ├── AdminLayout
+│   │   │   │   │   ├── AdminLayout.smart.tsx
+│   │   │   │   │   └── AdminRightPanel.smart.tsx
+│   │   │   │   ├── AdminLeftPanel
+│   │   │   │   │   ├── AdminLeftPanel.smart.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── AdminSettings
+│   │   │   │   │   ├── AdminSettings.smart.tsx
+│   │   │   │   │   ├── CreateAdminModal.dump.tsx
+│   │   │   │   │   ├── ProfileSettings.smart.tsx
+│   │   │   │   │   └── UserManagement.smart.tsx
+│   │   │   │   ├── AdminTemplateTree
+│   │   │   │   │   ├── AdminTemplateTree.smart.tsx
+│   │   │   │   │   ├── CreateTemplateModal.smart.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── Organizations
+│   │   │   │   │   ├── CreateOrganizationModal.tsx
+│   │   │   │   │   ├── DeleteConfirmationModal.tsx
+│   │   │   │   │   ├── EditOrganizationModal.tsx
+│   │   │   │   │   ├── OrganizationsList.tsx
+│   │   │   │   │   └── OrganizationsTree.tsx
 │   │   │   │   └── index.ts
 │   │   │   └── index.ts
 │   │   ├── auth
@@ -192,6 +242,18 @@
 │   │   │   │   ├── TableHeader.smart.tsx
 │   │   │   │   └── TableTheme.css
 │   │   │   └── index.ts
+│   │   ├── users
+│   │   │   ├── api
+│   │   │   │   └── users.api.ts
+│   │   │   ├── hooks
+│   │   │   │   └── useUsersPermissions.ts
+│   │   │   ├── stores
+│   │   │   │   └── useUsersPageStore.ts
+│   │   │   ├── types
+│   │   │   │   └── users.types.ts
+│   │   │   └── ui
+│   │   │       ├── UsersFilters.tsx
+│   │   │       └── UsersTable.tsx
 │   │   ├── visualization
 │   │   │   ├── lib
 │   │   │   │   ├── adapters
@@ -326,25 +388,32 @@
 │   │   │   │   └── index.ts
 │   │   │   └── index.ts
 │   │   ├── workspaces
+│   │   │   ├── ui
+│   │   │   │   └── AdminWorkspacesSmart.tsx
 │   │   │   └── index.ts
 │   │   └── index.ts
 │   ├── stores
 │   │   ├── index.ts
+│   │   ├── useAdminAuth.store.ts
+│   │   ├── useAdminSettings.store.ts
 │   │   ├── useFormatting.store.ts
 │   │   ├── useFormula.store.ts
 │   │   ├── useHistory.store.ts
+│   │   ├── useOrganizationsStore.ts
 │   │   ├── useReference.store.ts
 │   │   ├── useSelection.store.ts
 │   │   ├── useTableReference.store.ts
-│   │   ├── useTable.store.ts
+│   │   ├── useTableStore.ts
 │   │   ├── useUser.store.ts
-│   │   └── useWorkspace.store.ts
+│   │   ├── useWorkspace.store.ts
+│   │   └── useWorkspaceTemplate.store.ts
 │   ├── types
+│   │   ├── admin.types.ts
+│   │   ├── api-response.ts
 │   │   ├── dictionary.ts
 │   │   ├── enums.ts
 │   │   ├── index.ts
 │   │   ├── link.types.ts
-│   │   ├── next-shim.d.ts
 │   │   ├── reference.types.ts
 │   │   └── visualization.ts
 │   ├── ui
@@ -359,9 +428,9 @@
 │   │   │   ├── Header
 │   │   │   │   ├── Header.smart.tsx
 │   │   │   │   └── index.ts
-│   │   │   ├── PageLayout
+│   │   │   ├── ProfilePageLayout
 │   │   │   │   ├── index.ts
-│   │   │   │   └── PageLayout.tsx
+│   │   │   │   └── ProfilePageLayout.tsx
 │   │   │   └── index.ts
 │   │   ├── primitives
 │   │   │   ├── Button
@@ -381,6 +450,9 @@
 │   │   │   ├── Select
 │   │   │   │   ├── index.ts
 │   │   │   │   └── Select.dumb.tsx
+│   │   │   ├── Table
+│   │   │   │   ├── index.ts
+│   │   │   │   └── Table.dumb.tsx
 │   │   │   └── index.ts
 │   │   └── index.ts
 │   └── index.ts
@@ -389,4 +461,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-103 directories, 282 files
+121 directories, 336 files

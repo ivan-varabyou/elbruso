@@ -1,11 +1,8 @@
 import "./globals.css";
 
 import { AppProviders } from "@frontend/app";
-import { Inter } from "next/font/google";
 
 import { getDictionary } from "@/lib/get-dictionary";
-
-const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata = {
   title: "Elbruso - BI System",
@@ -26,7 +23,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <AppProviders dictionary={dictionary}>{children}</AppProviders>
       </body>
     </html>

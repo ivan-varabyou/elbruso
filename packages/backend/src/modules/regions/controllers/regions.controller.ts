@@ -1,50 +1,86 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-  ParseIntPipe,
-  NotFoundException,
-} from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { RegionFiltersDto } from '../dto/region-filters.dto';
-import { RegionsService } from '../services/regions.service';
+import { Controller, Get, Param, Query, ParseIntPipe, NotFoundException } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { RegionFiltersDto } from "../dto/region-filters.dto";
+import { RegionsService } from "../services/regions.service";
+import { RegionResponseDto, RegionsListResponseDto } from "../dto/responses";
 
-@Controller('reference/regions')
-@ApiTags('Regions')
+@Controller("reference/regions")
+@ApiTags("Regions")
 export class RegionsController {
   constructor(private regionsService: RegionsService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all regions' })
-  @ApiResponse({ status: 200, description: 'Returns list of regions' })
-  async findAll(@Query() filters: RegionFiltersDto) {
-    return this.regionsService.findAll(filters);
+  @ApiOperation({ summary: "Get all regions" })
+  @ApiResponse({
+    status: 200,
+    type: RegionsListResponseDto,
+    description: "Returns list of regions",
+  })
+  async findAll(@Query() filters: RegionFiltersDto): Promise<RegionsListResponseDto> {
+    const regions = await this.regionsService.findAll(filters);
+    return {
+      items: regions.map((r) => ({
+        id: Number(r.id),
+        code: r.code,
+        name: r.name_ru,
+        countryId: r.country_id ?? null,
+        districtId: r.federal_district_id ?? null,
+        isActive: Boolean(r.is_active),
+      })),
+      total: regions.length,
+    };
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get region by ID' })
-  @ApiResponse({ status: 200, description: 'Returns region' })
-  @ApiResponse({ status: 404, description: 'Region not found' })
-  async findById(@Param('id', ParseIntPipe) id: number) {
+  @Get(":id")
+  @ApiOperation({ summary: "Get region by ID" })
+  @ApiResponse({ status: 200, type: RegionResponseDto, description: "Returns region" })
+  @ApiResponse({ status: 404, description: "Region not found" })
+  async findById(@Param("id", ParseIntPipe) id: number): Promise<RegionResponseDto> {
     const region = await this.regionsService.findById(id);
     if (!region) {
       throw new NotFoundException(`Region with ID ${id} not found`);
     }
-    return region;
+    return {
+      id: Number(region.id),
+      code: region.code,
+      name: region.name_ru,
+      countryId: region.country_id ?? null,
+      districtId: region.federal_district_id ?? null,
+      isActive: Boolean(region.is_active),
+    };
   }
 
-  @Get('by-district/:districtId')
-  @ApiOperation({ summary: 'Get regions by federal district' })
-  @ApiResponse({ status: 200, description: 'Returns list of regions' })
-  async findByDistrict(@Param('districtId', ParseIntPipe) districtId: number) {
-    return this.regionsService.findByDistrict(districtId);
+  @Get("by-district/:districtId")
+  @ApiOperation({ summary: "Get regions by federal district" })
+  @ApiResponse({ status: 200, type: [RegionResponseDto], description: "Returns list of regions" })
+  async findByDistrict(
+    @Param("districtId", ParseIntPipe) districtId: number,
+  ): Promise<RegionResponseDto[]> {
+    const regions = await this.regionsService.findByDistrict(districtId);
+    return regions.map((r) => ({
+      id: Number(r.id),
+      code: r.code,
+      name: r.name_ru,
+      countryId: r.country_id ?? null,
+      districtId: r.federal_district_id ?? null,
+      isActive: Boolean(r.is_active),
+    }));
   }
 
-  @Get('by-country/:countryId')
-  @ApiOperation({ summary: 'Get regions by country' })
-  @ApiResponse({ status: 200, description: 'Returns list of regions' })
-  async findByCountry(@Param('countryId', ParseIntPipe) countryId: number) {
-    return this.regionsService.findByCountry(countryId);
+  @Get("by-country/:countryId")
+  @ApiOperation({ summary: "Get regions by country" })
+  @ApiResponse({ status: 200, type: [RegionResponseDto], description: "Returns list of regions" })
+  async findByCountry(
+    @Param("countryId", ParseIntPipe) countryId: number,
+  ): Promise<RegionResponseDto[]> {
+    const regions = await this.regionsService.findByCountry(countryId);
+    return regions.map((r) => ({
+      id: Number(r.id),
+      code: r.code,
+      name: r.name_ru,
+      countryId: r.country_id ?? null,
+      districtId: r.federal_district_id ?? null,
+      isActive: Boolean(r.is_active),
+    }));
   }
 }

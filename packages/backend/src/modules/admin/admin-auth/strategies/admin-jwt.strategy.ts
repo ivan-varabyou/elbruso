@@ -1,11 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ConfigService } from '@nestjs/config';
-import { AdminAuthService } from '../services/admin-auth.service';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { PassportStrategy } from "@nestjs/passport";
+import { ExtractJwt, Strategy } from "passport-jwt";
+import { ConfigService } from "@nestjs/config";
+import { AdminAuthService } from "../services/admin-auth.service";
 
 @Injectable()
-export class AdminJwtStrategy extends PassportStrategy(Strategy, 'admin-jwt') {
+export class AdminJwtStrategy extends PassportStrategy(Strategy, "admin-jwt") {
   constructor(
     configService: ConfigService,
     private readonly adminAuthService: AdminAuthService,
@@ -13,15 +13,22 @@ export class AdminJwtStrategy extends PassportStrategy(Strategy, 'admin-jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('ADMIN_JWT_SECRET'),
+      secretOrKey: configService.get<string>("ADMIN_JWT_SECRET"),
     });
   }
 
   async validate(payload: any) {
-    const user = await this.adminAuthService.validateToken(payload.sub);
-    if (!user) {
-      throw new UnauthorizedException();
+    // JWT already decoded by Passport.js
+    // Validate payload structure
+    if (!payload.sub || !payload.email || !payload.role) {
+      throw new UnauthorizedException("Invalid token payload");
     }
-    return user;
+
+    // Return user data for request.user
+    return {
+      sub: payload.sub,
+      email: payload.email,
+      role: payload.role,
+    };
   }
 }

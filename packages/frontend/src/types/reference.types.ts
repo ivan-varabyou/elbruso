@@ -10,6 +10,15 @@ export interface ReferenceData {
   data: unknown[];
 }
 
+export interface Country {
+  id: number;
+  name: string;
+  code: string;
+  flag: string;
+  name_ru?: string;
+  code_alpha2?: string;
+}
+
 export interface Region {
   id: string;
   code: string;

@@ -63,3 +63,9 @@ temp/
 # Misc
 .cache/
 .temp/
+
+# Prevent source pollution (compiled files in src)
+**/src/**/*.js
+**/src/**/*.js.map
+**/src/**/*.d.ts
+!**/src/**/*.d.ts # Keep manually created declaration files if they exist, but usually we don't have them in src

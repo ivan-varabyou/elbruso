@@ -33,5 +33,6 @@ def setup_logging() -> logging.Logger:
     logging.getLogger("qdrant_client").setLevel(logging.ERROR)
     logging.getLogger("httpx").setLevel(logging.ERROR)
     logging.getLogger("torch").setLevel(logging.ERROR)
+    logging.getLogger("sentence_transformers").setLevel(logging.ERROR)
 
     return logger

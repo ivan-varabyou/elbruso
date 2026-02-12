@@ -1,6 +1,6 @@
 "use client";
 
-import { useAdminAuth } from "@frontend/modules/admin-auth";
+import { useAdminAuth } from "@frontend/modules/admin/auth";
 import { ProfilePageLayout } from "@frontend/ui";
 import { LayoutDashboard, Users, Shield, Activity, Settings } from "lucide-react";
 

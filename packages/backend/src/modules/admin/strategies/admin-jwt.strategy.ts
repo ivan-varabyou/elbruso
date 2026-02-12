@@ -2,11 +2,14 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Request } from 'express';
+
+import { AdminRole } from '../enums/admin-role.enum';
 
 export interface AdminJwtPayload {
   sub: string;
   email: string;
-  role: string;
+  role: AdminRole;
 }
 
 @Injectable()
@@ -15,8 +18,15 @@ export class AdminJwtStrategy extends PassportStrategy(Strategy, 'admin-jwt') {
     const secret =
       configService.get<string>('ADMIN_JWT_SECRET') ||
       process.env.ADMIN_JWT_SECRET;
+    
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: (req: Request) => {
+        let token = null;
+        if (req && req.cookies) {
+          token = req.cookies['adminAccessToken'];
+        }
+        return token || ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+      },
       ignoreExpiration: false,
       secretOrKey: secret,
     });

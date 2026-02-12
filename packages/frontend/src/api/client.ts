@@ -5,6 +5,7 @@ import { API_URL, API_VERSION } from "./config.constant";
 export const apiClient: AxiosInstance = axios.create({
   baseURL: `${API_URL}/${API_VERSION}`,
   timeout: 30000,
+  withCredentials: true, // Send cookies (including adminAccessToken) with requests
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,7 +13,7 @@ export const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = getAccessToken();
+    const token = getAccessToken(config);
     if (token && config.headers) {
       config.headers.set("Authorization", `Bearer ${token}`);
     }
@@ -32,11 +33,39 @@ const processQueue = (error: Error | null, token: string | null) => {
   failedQueue = [];
 };
 
+function isAdminRequest(config: InternalAxiosRequestConfig): boolean {
+  return config.url?.includes("/admin/") ?? false;
+}
+
+function getAccessToken(config?: InternalAxiosRequestConfig): string | null {
+  if (typeof window === "undefined") return null;
+  // Admin API uses separate axios instance with cookies (admin/client.ts)
+  // This client is only for web app user auth
+  return localStorage.getItem("accessToken");
+}
+
+function getRefreshToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("refreshToken");
+}
+
+// Admin tokens are now handled by HttpOnly cookies, not localStorage
+// See: packages/frontend/src/api/admin/client.ts
+
+export function setTokens(accessToken: string, refreshToken: string): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("accessToken", accessToken);
+  localStorage.setItem("refreshToken", refreshToken);
+}
+
+export function clearTokens(): void {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+}
+
 apiClient.interceptors.response.use(
   (response) => {
-    if (response.data && typeof response.data === "object" && "success" in response.data) {
-      return { ...response, data: response.data.data };
-    }
     return response;
   },
   async (error: AxiosError) => {
@@ -50,8 +79,10 @@ apiClient.interceptors.response.use(
           })
           .catch(Promise.reject);
       }
+
       originalRequest._retry = true;
       isRefreshing = true;
+
       try {
         const refreshToken = getRefreshToken();
         if (!refreshToken) {
@@ -61,17 +92,29 @@ apiClient.interceptors.response.use(
           if (typeof window !== "undefined") window.location.href = "/login";
           return Promise.reject(error);
         }
-        const { data } = await axios.post(`${API_URL}/${API_VERSION}/auth/refresh`, {
-          refreshToken,
-        });
-        const newAccessToken = data.accessToken || data.access_token;
-        const newRefreshToken = data.refreshToken || data.refresh_token || refreshToken;
-        if (!newAccessToken) throw new Error("Invalid refresh response");
-        setTokens(newAccessToken, newRefreshToken);
-        isRefreshing = false;
-        processQueue(null, newAccessToken);
-        originalRequest.headers?.set("Authorization", `Bearer ${newAccessToken}`);
-        return apiClient(originalRequest);
+
+        const isAdmin = isAdminRequest(originalRequest);
+
+        if (isAdmin) {
+          // Admin API uses separate axios instance with cookies
+          // Redirect to login if admin session expired
+          isRefreshing = false;
+          processQueue(new Error("Admin session expired"), null);
+          if (typeof window !== "undefined") window.location.href = "/login";
+          return Promise.reject(error);
+        } else {
+          // Для веб - обычный refresh
+          const { data } = await axios.post(`${API_URL}/${API_VERSION}/auth/refresh`, {
+            refreshToken,
+          });
+          const newAccessToken = data.accessToken || data.access_token;
+          const newRefreshToken = data.refreshToken || data.refresh_token || refreshToken;
+          setTokens(newAccessToken, newRefreshToken);
+          isRefreshing = false;
+          processQueue(null, newAccessToken);
+          originalRequest.headers?.set("Authorization", `Bearer ${newAccessToken}`);
+          return apiClient(originalRequest);
+        }
       } catch (refreshError) {
         isRefreshing = false;
         processQueue(refreshError as Error, null);
@@ -83,28 +126,6 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-function getAccessToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("accessToken");
-}
-
-function getRefreshToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("refreshToken");
-}
-
-export function setTokens(accessToken: string, refreshToken: string): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
-}
-
-export function clearTokens(): void {
-  if (typeof window === "undefined") return;
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-}
 
 export function isAuthenticated(): boolean {
   return !!getAccessToken();

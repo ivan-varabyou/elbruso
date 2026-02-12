@@ -1,0 +1,121 @@
+# AGENTS.md - Web Zone
+
+## Documentation
+
+→ @docs/ → @docs/
+→ PROJECT_TREE.md → @apps/admin/docs/PROJECT_TREE.md
+
+## Commands
+
+```bash
+cd apps/admin
+pnpm dev            # Next.js dev (port 7200)
+pnpm build          # Production build
+pnpm typecheck      # TypeScript check
+```
+
+## Architecture
+
+```
+apps/admin/src/app/
+├── (auth)/                 # Auth routes group
+│   ├── login/
+│   ├── register/
+│   └── layout.tsx
+├── (admin)/              # Protected routes group
+│   ├── dashboard/
+│   ├── settings/
+│   └── layout.tsx
+├── page.tsx                # Home page
+└── layout.tsx              # Root layout
+```
+
+## Next.js Patterns
+
+### Page
+
+```typescript
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  description: 'User dashboard',
+};
+
+export default function DashboardPage() {
+  return <div>Dashboard</div>;
+}
+```
+
+### Layout
+
+```typescript
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="dashboard-layout">
+      <Sidebar />
+      <main>{children}</main>
+    </div>
+  );
+}
+```
+
+### Server Component
+
+```typescript
+async function getData(): Promise<User[]> {
+  const res = await fetch('https://api.example.com/users');
+  if (!res.ok) throw new Error('Failed to fetch');
+  return res.json();
+}
+
+export default async function UsersPage() {
+  const users = await getData();
+  return <UserList users={users} />;
+}
+```
+
+## Import from Shared
+
+```typescript
+// Use shared components
+import { LoginForm } from "@frontend/modules/auth";
+import { Dashboard } from "@frontend/modules/dashboard";
+
+// Use shared hooks
+import { useAuth } from "@frontend/modules/auth";
+import { useUsers } from "@frontend/api/hooks";
+
+// Use package frontend API
+import { adminClient } from "@frontend/api";
+```
+
+## Smart vs Dumb Components
+
+**Smart** - contain logic, use hooks, fetch data
+**Dumb** - pure UI, receive props, no hooks
+
+```typescript
+// Smart: has logic & state
+'use client';
+export function UserList.smart.tsx() {
+  const { users, loading } = useUsers();
+  return <UserListDumb users={users} loading={loading} />;
+}
+
+// Dumb: pure UI
+export function UserListDumb({ users, loading }: UserListProps) {
+  if (loading) return <Spinner />;
+  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;
+}
+```
+
+## ESLint Rules
+
+- `no-logic-in-dumb` - Dumb components cannot use hooks
+- `import-aliases` - Use `@frontend/*` aliases
+- Component suffixes validation

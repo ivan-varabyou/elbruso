@@ -23,7 +23,7 @@ export const ResetPasswordForm = () => {
   const [token, setToken] = useState("");
 
   useEffect(() => {
-    const tokenParam = searchParams.get("token");
+    const tokenParam = searchParams?.get("token");
     if (tokenParam) {
       setToken(tokenParam);
     } else {

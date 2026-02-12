@@ -1,70 +1,125 @@
 import {
-  Controller,
-  Post,
   Body,
+  Controller,
   HttpCode,
   HttpStatus,
-  Get,
+  Post,
   Req,
-  UseGuards,
-} from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AdminLoginDto } from '../dto/admin-login.dto';
-import { AdminJwtAuthGuard } from '../guards/admin-jwt-auth.guard';
-import { AdminAuthService } from '../services/admin-auth.service';
-import { AdminJwtPayload } from '../strategies/admin-jwt.strategy';
+  Res,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { Request, Response } from "express";
+import { plainToInstance } from "class-transformer";
 
-@ApiTags('Admin Authentication')
-@Controller('admin/auth')
+import { AdminLoginDto } from "../dto/admin-login.dto";
+import { AdminAuthService } from "../services/admin-auth.service";
+import { AdminUsersService } from "../users/admin-users.service";
+import {
+  AdminLoginResponseDto,
+  AdminLogoutResponseDto,
+  AdminRefreshResponseDto,
+} from "../dto/responses/admin-auth.response.dto";
+
+@ApiTags("Admin Authentication")
+@Controller("admin/auth")
 export class AdminAuthController {
-  constructor(private readonly adminAuthService: AdminAuthService) {}
+  constructor(
+    private readonly adminAuthService: AdminAuthService,
+    private readonly adminUsersService: AdminUsersService,
+  ) {}
 
-  @Post('login')
+  @Post("login")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Admin login with email and password' })
+  @ApiOperation({ summary: "Admin login with email and password" })
   @ApiResponse({
     status: 200,
-    description: 'Successfully logged in',
+    type: AdminLoginResponseDto,
   })
-  @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  async login(@Body() dto: AdminLoginDto) {
-    return this.adminAuthService.login(dto);
+  @ApiResponse({ status: 401, description: "Invalid credentials" })
+  async login(
+    @Body() dto: AdminLoginDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const ip = (req.ip || req.headers["x-forwarded-for"]?.toString()) as string | undefined;
+    const userAgent = req.headers["user-agent"] as string | undefined;
+    const result = await this.adminAuthService.login(dto, ip, userAgent);
+
+    res.cookie("adminAccessToken", result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000, // 15m
+    });
+
+    res.cookie("adminRefreshToken", result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+    });
+
+    return plainToInstance(AdminLoginResponseDto, {
+      access_token: result.accessToken,
+      user: result.user,
+    });
   }
 
-  @Post('logout')
+  @Post("logout")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Admin logout' })
+  @ApiOperation({ summary: "Admin logout" })
   @ApiResponse({
     status: 200,
-    description: 'Successfully logged out',
+    type: AdminLogoutResponseDto,
   })
-  @ApiResponse({ status: 401, description: 'Invalid refresh token' })
-  async logout(@Body() body: { refreshToken: string }) {
-    await this.adminAuthService.logout(body.refreshToken);
-    return { message: 'Successfully logged out' };
+  @ApiResponse({ status: 401, description: "Invalid refresh token" })
+  async logout(@Body() body: { refreshToken?: string }, @Res({ passthrough: true }) res: Response) {
+    const refreshToken = body.refreshToken || "";
+    if (refreshToken) {
+      await this.adminAuthService.logout(refreshToken);
+    }
+    res.clearCookie("adminAccessToken");
+    res.clearCookie("adminRefreshToken");
+    return plainToInstance(AdminLogoutResponseDto, { message: "Successfully logged out" });
   }
 
-  @Post('refresh')
+  @Post("refresh")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Refresh admin access token' })
+  @ApiOperation({ summary: "Refresh admin session" })
   @ApiResponse({
     status: 200,
-    description: 'Token successfully refreshed',
+    type: AdminRefreshResponseDto,
   })
-  @ApiResponse({ status: 401, description: 'Invalid refresh token' })
-  async refresh(@Body() body: { refreshToken: string }) {
-    return this.adminAuthService.refresh(body.refreshToken);
-  }
+  @ApiResponse({ status: 401, description: "Invalid refresh token" })
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: { refreshToken?: string },
+  ) {
+    const refreshToken = body.refreshToken || req.cookies?.adminRefreshToken;
+    if (!refreshToken) {
+      throw new UnauthorizedException("Refresh token missing");
+    }
 
-  @UseGuards(AdminJwtAuthGuard)
-  @Get('me')
-  @ApiOperation({ summary: 'Get current admin user profile' })
-  @ApiResponse({
-    status: 200,
-    description: 'Current admin user profile',
-  })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getMe(@Req() req: { user: AdminJwtPayload }) {
-    return this.adminAuthService.getMe(req.user.sub);
+    const ip = (req.ip || req.headers["x-forwarded-for"]?.toString()) as string | undefined;
+    const userAgent = req.headers["user-agent"] as string | undefined;
+    const result = await this.adminAuthService.refresh(refreshToken, ip, userAgent);
+
+    res.cookie("adminAccessToken", result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie("adminRefreshToken", result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return plainToInstance(AdminRefreshResponseDto, { access_token: result.accessToken });
   }
 }

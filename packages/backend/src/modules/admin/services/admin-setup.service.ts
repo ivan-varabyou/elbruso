@@ -1,6 +1,7 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { DatabaseService } from '@database/database.service';
+import { AdminRole } from '../enums/admin-role.enum';
 
 @Injectable()
 export class AdminSetupService {
@@ -35,7 +36,7 @@ export class AdminSetupService {
         email: data.email,
         password_hash: hashedPassword,
         name: data.name,
-        role: 'SUPER_ADMIN',
+        role: AdminRole.SUPER_ADMIN,
         is_active: true,
       })
       .returningAll()

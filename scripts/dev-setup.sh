@@ -176,7 +176,8 @@ generate_tree "$PROJECT_ROOT" "$PROJECT_ROOT/docs/PROJECT_TREE.md" "Структ
 generate_tree "$PROJECT_ROOT/apps/app-web" "$PROJECT_ROOT/apps/app-web/docs/PROJECT_TREE.md" "Структура проекта app-web"
 generate_tree "$PROJECT_ROOT/apps/api-gateway" "$PROJECT_ROOT/apps/api-gateway/docs/PROJECT_TREE.md" "Структура проекта api-gateway"
 generate_tree "$PROJECT_ROOT/apps/app-admin" "$PROJECT_ROOT/apps/app-admin/docs/PROJECT_TREE.md" "Структура проекта app-admin"
-generate_tree "$PROJECT_ROOT/packages/shared" "$PROJECT_ROOT/packages/shared/docs/PROJECT_TREE.md" "Структура проекта shared"
+generate_tree "$PROJECT_ROOT/packages/frontend" "$PROJECT_ROOT/packages/frontend/docs/PROJECT_TREE.md" "Структура проекта frontend"
+generate_tree "$PROJECT_ROOT/packages/backend" "$PROJECT_ROOT/packages/backend/docs/PROJECT_TREE.md" "Структура проекта backend"
 
 # Print URLs
 echo -e "${GREEN}📱 App Web: http://localhost:7200${NC}"
@@ -190,4 +191,5 @@ echo -e "${GREEN}🚀 Starting development servers...${NC}"
 echo ""
 
 # Start development servers
+pnpm run generate:api
 pnpm -w run dev:only

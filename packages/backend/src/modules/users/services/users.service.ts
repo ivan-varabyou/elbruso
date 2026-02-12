@@ -1,62 +1,157 @@
-import * as crypto from 'crypto';
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { Users } from '@database';
-import { DatabaseService } from '@database/database.service';
-import { CreateUserDto } from '../dto';
-import { UpdateProfileDto, AdminUpdateUserDto } from '../dto/user-settings.dto';
+import * as crypto from "crypto";
+import { Injectable, ConflictException, NotFoundException } from "@nestjs/common";
+import { Users } from "@database";
+import { DatabaseService } from "@database/database.service";
+import { CreateUserDto, UpdateUserDto } from "../dto";
+import { UpdateProfileDto, AdminUpdateUserDto } from "../dto/user-settings.dto";
 
 @Injectable()
 export class UsersService {
   constructor(private readonly db: DatabaseService) {}
 
   async create(dto: CreateUserDto) {
-    // Проверяем существование пользователя
     const existing = await this.findByEmail(dto.email);
     if (existing) {
-      throw new ConflictException('User with this email already exists');
+      throw new ConflictException("User with this email already exists");
     }
-
-    // Создаем пользователя
-    let orgId: number | null = null;
-    if (dto.organizationId) {
-      const parsed = parseInt(dto.organizationId, 10);
-      if (!isNaN(parsed)) {
-        orgId = parsed;
-      }
-    }
-
-    const countryId =
-      (dto as CreateUserDto & { countryId?: number }).countryId || 1;
 
     const user = await this.db.client
-      .insertInto('users')
+      .insertInto("users")
       .values({
         email: dto.email,
-        first_name: dto.name,
         password: dto.password,
-        organization_id: orgId,
-        country_id: countryId,
+        first_name: dto.first_name,
+        last_name: dto.last_name,
+        middle_name: dto.middle_name || null,
+        organization_id: dto.organization_id ? parseInt(dto.organization_id, 10) : null,
+        role: dto.role,
+        is_active: false,
       })
       .returningAll()
       .executeTakeFirst();
 
+    return this.sanitizeUser(user as unknown as Users);
+  }
+
+  async findAll(filters?: {
+    search?: string;
+    organization_id?: number;
+    role?: string;
+    is_active?: boolean;
+  }) {
+    let query = this.db.client.selectFrom("users").selectAll();
+
+    if (filters?.search) {
+      query = query.where((eb) =>
+        eb.or([
+          eb("first_name", "ilike", `%${filters.search}%`),
+          eb("last_name", "ilike", `%${filters.search}%`),
+          eb("email", "ilike", `%${filters.search}%`),
+        ]),
+      );
+    }
+
+    if (filters?.organization_id) {
+      query = query.where("organization_id", "=", filters.organization_id);
+    }
+
+    if (filters?.role) {
+      query = query.where("role", "=", filters.role);
+    }
+
+    if (filters?.is_active !== undefined) {
+      query = query.where("is_active", "=", filters.is_active);
+    }
+
+    const users = await query.execute();
+
+    const usersWithOrg = await Promise.all(
+      users.map(async (user) => {
+        let organization_name = null;
+        if (user.organization_id) {
+          const org = await this.db.client
+            .selectFrom("organizations")
+            .select(["name_ru"])
+            .where("id", "=", user.organization_id)
+            .executeTakeFirst();
+          organization_name = org?.name_ru || null;
+        }
+        return {
+          ...this.sanitizeUser(user as unknown as Users),
+          organization_name,
+        };
+      }),
+    );
+
+    return usersWithOrg;
+  }
+
+  async findById(id: string) {
+    const user = await this.db.client
+      .selectFrom("users")
+      .selectAll()
+      .where("id", "=", id)
+      .executeTakeFirst();
+
     if (!user) {
-      throw new ConflictException('Failed to create user');
+      throw new NotFoundException("User not found");
     }
 
     return this.sanitizeUser(user as unknown as Users);
   }
 
+  async update(id: string, dto: UpdateUserDto) {
+    const user = await this.db.client
+      .selectFrom("users")
+      .selectAll()
+      .where("id", "=", id)
+      .executeTakeFirst();
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    const updateData: any = {
+      updated_at: new Date(),
+    };
+
+    if (dto.first_name !== undefined) updateData.first_name = dto.first_name;
+    if (dto.last_name !== undefined) updateData.last_name = dto.last_name;
+    if (dto.middle_name !== undefined) updateData.middle_name = dto.middle_name;
+    if (dto.organization_id !== undefined) {
+      updateData.organization_id = dto.organization_id ? parseInt(dto.organization_id, 10) : null;
+    }
+    if (dto.role !== undefined) updateData.role = dto.role;
+    if (dto.is_active !== undefined) updateData.is_active = dto.is_active;
+
+    const updated = await this.db.client
+      .updateTable("users")
+      .set(updateData)
+      .where("id", "=", id)
+      .returningAll()
+      .executeTakeFirst();
+
+    return this.sanitizeUser(updated as unknown as Users);
+  }
+
+  async approve(id: string) {
+    return this.update(id, { is_active: true });
+  }
+
+  async block(id: string, block: boolean = true) {
+    return this.update(id, { is_active: !block });
+  }
+
+  async remove(id: string) {
+    await this.db.client.deleteFrom("users").where("id", "=", id).execute();
+    return { success: true };
+  }
+
   async findByEmail(email: string) {
     const user = await this.db.client
-      .selectFrom('users')
+      .selectFrom("users")
       .selectAll()
-      .where('email', '=', email)
-      .where('is_active', '=', true)
+      .where("email", "=", email)
       .executeTakeFirst();
 
     return user ? this.sanitizeUser(user as unknown as Users) : null;
@@ -64,50 +159,29 @@ export class UsersService {
 
   async findByEmailWithPassword(email: string) {
     const user = await this.db.client
-      .selectFrom('users')
+      .selectFrom("users")
       .selectAll()
-      .where('email', '=', email)
-      .where('is_active', '=', true)
+      .where("email", "=", email)
       .executeTakeFirst();
 
     return (user as unknown as Users) || null;
   }
 
-  async findById(id: string) {
-    const user = await this.db.client
-      .selectFrom('users')
-      .selectAll()
-      .where('id', '=', id)
-      .where('is_active', '=', true)
-      .executeTakeFirst();
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return this.sanitizeUser(user as unknown as Users);
-  }
-
   async findByApiKey(apiKey: string) {
-    // Хешируем API ключ для поиска
-    const keyHash = crypto.createHash('sha256').update(apiKey).digest('hex');
+    const keyHash = crypto.createHash("sha256").update(apiKey).digest("hex");
 
     const apiKeyRecord = await this.db.client
-      .selectFrom('api_keys')
+      .selectFrom("api_keys")
       .selectAll()
-      .where('key_hash', '=', keyHash)
-      .where('is_active', '=', true)
+      .where("key_hash", "=", keyHash)
       .executeTakeFirst();
 
-    if (!apiKeyRecord) {
-      return null;
-    }
+    if (!apiKeyRecord) return null;
 
-    // Обновляем last_used_at
     await this.db.client
-      .updateTable('api_keys')
+      .updateTable("api_keys")
       .set({ last_used_at: new Date() })
-      .where('id', '=', apiKeyRecord.id)
+      .where("id", "=", apiKeyRecord.id)
       .execute();
 
     return this.findById(apiKeyRecord.user_id);
@@ -115,10 +189,10 @@ export class UsersService {
 
   async saveRefreshToken(userId: string, refreshToken: string) {
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+    expiresAt.setDate(expiresAt.getDate() + 7);
 
     await this.db.client
-      .insertInto('sessions')
+      .insertInto("sessions")
       .values({
         user_id: userId,
         refresh_token: refreshToken,
@@ -129,11 +203,11 @@ export class UsersService {
 
   async validateRefreshToken(userId: string, refreshToken: string) {
     const session = await this.db.client
-      .selectFrom('sessions')
+      .selectFrom("sessions")
       .selectAll()
-      .where('user_id', '=', userId)
-      .where('refresh_token', '=', refreshToken)
-      .where('expires_at', '>', new Date())
+      .where("user_id", "=", userId)
+      .where("refresh_token", "=", refreshToken)
+      .where("expires_at", ">", new Date())
       .executeTakeFirst();
 
     return !!session;
@@ -141,19 +215,36 @@ export class UsersService {
 
   async revokeRefreshToken(userId: string, refreshToken: string) {
     await this.db.client
-      .deleteFrom('sessions')
-      .where('user_id', '=', userId)
-      .where('refresh_token', '=', refreshToken)
+      .deleteFrom("sessions")
+      .where("user_id", "=", userId)
+      .where("refresh_token", "=", refreshToken)
       .execute();
   }
 
+  async updateProfile(userId: string, dto: UpdateProfileDto) {
+    const user = await this.db.client
+      .updateTable("users")
+      .set({
+        ...dto,
+        updated_at: new Date(),
+      })
+      .where("id", "=", userId)
+      .returningAll()
+      .executeTakeFirst();
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    return this.sanitizeUser(user as unknown as Users);
+  }
+
   async createApiKey(userId: string, name: string, permissions: string[]) {
-    // Генерируем случайный API ключ
-    const apiKey = `elk_${crypto.randomBytes(32).toString('hex')}`;
-    const keyHash = crypto.createHash('sha256').update(apiKey).digest('hex');
+    const apiKey = `elk_${crypto.randomBytes(32).toString("hex")}`;
+    const keyHash = crypto.createHash("sha256").update(apiKey).digest("hex");
 
     await this.db.client
-      .insertInto('api_keys')
+      .insertInto("api_keys")
       .values({
         user_id: userId,
         name,
@@ -162,49 +253,22 @@ export class UsersService {
       })
       .execute();
 
-    // Возвращаем ключ только один раз
     return { apiKey, name };
-  }
-
-  async updateProfile(userId: string, dto: UpdateProfileDto) {
-    const user = await this.db.client
-      .updateTable('users')
-      .set({
-        ...dto,
-        updated_at: new Date(),
-      })
-      .where('id', '=', userId)
-      .returningAll()
-      .executeTakeFirst();
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return this.sanitizeUser(user as unknown as Users);
-  }
-
-  async findAll() {
-    return this.db.client
-      .selectFrom('users')
-      .selectAll()
-      .where('is_active', '=', true)
-      .execute();
   }
 
   async updateUserAdmin(userId: string, dto: AdminUpdateUserDto) {
     const user = await this.db.client
-      .updateTable('users')
+      .updateTable("users")
       .set({
         ...dto,
         updated_at: new Date(),
       })
-      .where('id', '=', userId)
+      .where("id", "=", userId)
       .returningAll()
       .executeTakeFirst();
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
 
     return this.sanitizeUser(user as unknown as Users);
@@ -212,7 +276,6 @@ export class UsersService {
 
   private sanitizeUser(user: Users | null) {
     if (!user) return null;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _password, ...sanitized } = user;
     return sanitized;
   }

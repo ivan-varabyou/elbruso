@@ -39,6 +39,13 @@ export class CreateWorkspaceDto {
   @IsString()
   @IsOptional()
   icon?: string;
+
+  @ApiPropertyOptional({
+    description: 'Is this workspace a template',
+    example: false,
+  })
+  @IsOptional()
+  is_template?: boolean;
 }
 
 export class UpdateWorkspaceDto {
@@ -69,6 +76,12 @@ export class UpdateWorkspaceDto {
   @IsString()
   @IsOptional()
   icon?: string;
+
+  @ApiPropertyOptional({
+    description: 'Is this workspace a template',
+  })
+  @IsOptional()
+  is_template?: boolean;
 }
 
 export enum WorkspaceRole {
