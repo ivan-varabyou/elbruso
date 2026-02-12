@@ -1,6 +1,6 @@
 # Структура проекта
 
-Генерировано: Чт 12 фев 2026 22:09:15 +03
+Генерировано: Чт 12 фев 2026 23:42:18 +03
 
 /home/ivan/git/elbruso
 ├── apps
@@ -606,8 +606,10 @@
 │   │   │   │   │   ├── dto
 │   │   │   │   │   │   ├── responses
 │   │   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   │   ├── organization-level.response.dto.ts
 │   │   │   │   │   │   │   ├── organization.response.dto.ts
-│   │   │   │   │   │   │   └── organizations-list.response.dto.ts
+│   │   │   │   │   │   │   ├── organizations-list.response.dto.ts
+│   │   │   │   │   │   │   └── organization-type.response.dto.ts
 │   │   │   │   │   │   ├── create-organization.dto.ts
 │   │   │   │   │   │   ├── index.ts
 │   │   │   │   │   │   ├── move-organization.dto.ts
@@ -1337,4 +1339,4 @@
 ├── tsconfig.json
 └── turbo.json
 
-389 directories, 944 files
+389 directories, 946 files

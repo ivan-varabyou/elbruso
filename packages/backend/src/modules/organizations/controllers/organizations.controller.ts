@@ -2,12 +2,7 @@ import { Controller, Get, NotFoundException, Param, ParseIntPipe, Query } from "
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { OrganizationFiltersDto } from "../dto/organization-filters.dto";
-import {
-  OrganizationLevelResponseDto,
-  OrganizationResponseDto,
-  OrganizationsListResponseDto,
-  OrganizationTypeResponseDto,
-} from "../dto/responses";
+import { OrganizationResponseDto, OrganizationsListResponseDto } from "../dto/responses";
 import { toOrganizationDto, toOrganizationListDto } from "../mappers/organization.mapper";
 import { OrganizationsService } from "../services/organizations.service";
 
@@ -15,20 +10,6 @@ import { OrganizationsService } from "../services/organizations.service";
 @ApiTags("Organizations")
 export class OrganizationsController {
   constructor(private organizationsService: OrganizationsService) {}
-
-  @Get("types")
-  @ApiOperation({ summary: "Get all organization types" })
-  @ApiResponse({ status: 200, type: [OrganizationTypeResponseDto] })
-  async findAllTypes(): Promise<OrganizationTypeResponseDto[]> {
-    return this.organizationsService.findAllTypes();
-  }
-
-  @Get("levels")
-  @ApiOperation({ summary: "Get all organization levels" })
-  @ApiResponse({ status: 200, type: [OrganizationLevelResponseDto] })
-  async findAllLevels(): Promise<OrganizationLevelResponseDto[]> {
-    return this.organizationsService.findAllLevels();
-  }
 
   @Get()
   @ApiOperation({ summary: "Get all organizations" })

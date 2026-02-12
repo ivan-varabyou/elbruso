@@ -41,17 +41,43 @@ export interface OrganizationLevel {
   code: string;
 }
 
+export interface ReferenceItem {
+  id: number;
+  name: string;
+  name_ru?: string;
+}
+
+export interface Sport extends ReferenceItem {
+  name_ru: string;
+}
+
+export interface Region extends ReferenceItem {
+  name_ru: string;
+}
+
 export const adminOrganizationsApi = {
   getAll: (filters?: OrganizationsFilters) => {
     return adminApiClient.get('organizations', { params: filters });
   },
 
   getTypes: () => {
-    return adminApiClient.get('reference/organizations/types');
+    return adminApiClient.get("organizations/types");
   },
 
   getLevels: () => {
-    return adminApiClient.get('reference/organizations/levels');
+    return adminApiClient.get('organizations/levels');
+  },
+
+  getCountries: () => {
+    return adminApiClient.get('organizations/reference/countries');
+  },
+
+  getRegions: () => {
+    return adminApiClient.get('organizations/reference/regions');
+  },
+
+  getSports: () => {
+    return adminApiClient.get('organizations/reference/sports');
   },
 
   getTree: (id: number) => {

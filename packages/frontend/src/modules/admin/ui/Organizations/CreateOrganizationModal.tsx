@@ -10,14 +10,20 @@ interface CreateOrganizationModalProps {
 }
 
 export function CreateOrganizationModal({ isOpen, onClose }: CreateOrganizationModalProps) {
-  const { 
-    createOrganization, 
-    types, 
-    levels, 
+  const {
+    createOrganization,
+    types,
+    levels,
     organizations,
-    fetchTypes, 
-    fetchLevels, 
-    fetchOrganizations 
+    countries,
+    regions,
+    sports,
+    fetchTypes,
+    fetchLevels,
+    fetchOrganizations,
+    fetchCountries,
+    fetchRegions,
+    fetchSports,
   } = useOrganizationsStore();
 
   const [formData, setFormData] = useState({
@@ -38,8 +44,19 @@ export function CreateOrganizationModal({ isOpen, onClose }: CreateOrganizationM
       fetchTypes();
       fetchLevels();
       fetchOrganizations();
+      fetchCountries();
+      fetchRegions();
+      fetchSports();
     }
-  }, [isOpen, fetchTypes, fetchLevels, fetchOrganizations]);
+  }, [
+    isOpen,
+    fetchTypes,
+    fetchLevels,
+    fetchOrganizations,
+    fetchCountries,
+    fetchRegions,
+    fetchSports,
+  ]);
 
   // Set default values when types/levels are loaded
   useEffect(() => {
@@ -83,10 +100,7 @@ export function CreateOrganizationModal({ isOpen, onClose }: CreateOrganizationM
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-200">
           <h2 className="text-lg font-semibold text-zinc-900">Создать организацию</h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-zinc-100 rounded transition-colors"
-          >
+          <button onClick={onClose} className="p-1 hover:bg-zinc-100 rounded transition-colors">
             <X className="h-5 w-5 text-zinc-500" />
           </button>
         </div>
@@ -114,12 +128,10 @@ export function CreateOrganizationModal({ isOpen, onClose }: CreateOrganizationM
             </div>
 
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
-                Аббревиатура
-              </label>
+              <label className="block text-sm font-medium text-zinc-700 mb-1">Аббревиатура</label>
               <input
                 type="text"
-                value={formData.abbreviation_ru || ''}
+                value={formData.abbreviation_ru || ""}
                 onChange={(e) => setFormData({ ...formData, abbreviation_ru: e.target.value })}
                 className="w-full px-3 py-2 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent"
                 placeholder="Введите аббревиатуру"
@@ -168,13 +180,81 @@ export function CreateOrganizationModal({ isOpen, onClose }: CreateOrganizationM
               </label>
               <select
                 value={formData.parent_id || ""}
-                onChange={(e) => setFormData({ ...formData, parent_id: e.target.value ? parseInt(e.target.value) : null })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    parent_id: e.target.value ? parseInt(e.target.value) : null,
+                  })
+                }
                 className="w-full px-3 py-2 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent"
               >
                 <option value="">Нет (корневая)</option>
                 {organizations.map((org) => (
                   <option key={org.id} value={org.id}>
                     {org.name_ru}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-zinc-700 mb-1">Вид спорта</label>
+              <select
+                value={formData.sport_id || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    sport_id: e.target.value ? parseInt(e.target.value) : null,
+                  })
+                }
+                className="w-full px-3 py-2 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent"
+              >
+                <option value="">Не указан</option>
+                {sports.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name_ru || s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-zinc-700 mb-1">Страна</label>
+              <select
+                value={formData.country_id || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    country_id: e.target.value ? parseInt(e.target.value) : null,
+                  })
+                }
+                className="w-full px-3 py-2 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent"
+              >
+                <option value="">Не указана</option>
+                {countries.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name_ru || c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-zinc-700 mb-1">Регион</label>
+              <select
+                value={formData.region_id || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    region_id: e.target.value ? parseInt(e.target.value) : null,
+                  })
+                }
+                className="w-full px-3 py-2 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent"
+              >
+                <option value="">Не указан</option>
+                {regions.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name_ru || r.name}
                   </option>
                 ))}
               </select>
@@ -194,7 +274,7 @@ export function CreateOrganizationModal({ isOpen, onClose }: CreateOrganizationM
               disabled={loading}
               className="px-4 py-2 text-sm bg-zinc-900 text-white rounded hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Создание...' : 'Создать'}
+              {loading ? "Создание..." : "Создать"}
             </button>
           </div>
         </form>

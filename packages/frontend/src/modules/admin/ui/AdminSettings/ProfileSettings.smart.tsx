@@ -15,20 +15,18 @@ import {
 } from "lucide-react";
 
 import { cn } from "@frontend/lib";
+import { Button, Input } from "@frontend/ui/primitives";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@frontend/ui/primitives";
 import { useAdminAuth } from "@frontend/modules/admin/auth";
 import { useAdminSettingsStore } from "@frontend/stores/useAdminSettings.store";
 import { AdminRole } from "@frontend/types/enums";
-import {
-  Button,
-  Input,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@frontend/ui/primitives";
-
 import { CreateAdminData, CreateAdminModal } from "./CreateAdminModal.dump";
 
 type TabType = "profile" | "security" | "admins" | "roles";
@@ -123,7 +121,6 @@ function ProfileTab() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            leftIcon={<User className="h-4 w-4" />}
             placeholder="Ваше имя"
             required
           />
@@ -136,7 +133,6 @@ function ProfileTab() {
             value={profile?.email || ""}
             readOnly
             disabled
-            leftIcon={<Mail className="h-4 w-4 text-zinc-400" />}
             placeholder="your@email.com"
           />
           <p className="text-xs text-zinc-500 mt-1">Email изменяется только через базу</p>
@@ -153,12 +149,8 @@ function ProfileTab() {
         )}
 
         <div className="pt-2">
-          <Button
-            type="submit"
-            variant="primary"
-            loading={loading}
-            leftIcon={<Save className="h-4 w-4" />}
-          >
+          <Button type="submit" variant="solid" isLoading={loading}>
+            <Save className="h-4 w-4" />
             Сохранить изменения
           </Button>
         </div>
@@ -214,8 +206,7 @@ function SecurityTab() {
             type="password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
-            leftIcon={<Lock className="h-4 w-4" />}
-            placeholder="••••••••"
+            placeholder="Текущий пароль"
             required
           />
         </div>
@@ -226,8 +217,7 @@ function SecurityTab() {
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            leftIcon={<Lock className="h-4 w-4" />}
-            placeholder="••••••••"
+            placeholder="Новый пароль"
             required
           />
         </div>
@@ -240,8 +230,7 @@ function SecurityTab() {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            leftIcon={<Lock className="h-4 w-4" />}
-            placeholder="••••••••"
+            placeholder="Подтвердите пароль"
             required
           />
         </div>
@@ -257,12 +246,8 @@ function SecurityTab() {
         )}
 
         <div className="pt-2">
-          <Button
-            type="submit"
-            variant="primary"
-            loading={loading}
-            leftIcon={<Save className="h-4 w-4" />}
-          >
+          <Button type="submit" variant="solid" isLoading={loading}>
+            <Lock className="h-4 w-4" />
             Изменить пароль
           </Button>
         </div>
@@ -339,11 +324,8 @@ function AdminsTab() {
       <div className="rounded-lg border border-zinc-100 bg-white p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-zinc-900">Администраторы системы</h2>
-          <Button
-            variant="primary"
-            leftIcon={<Plus className="h-4 w-4" />}
-            onClick={() => setIsCreateModalOpen(true)}
-          >
+          <Button variant="solid" onClick={() => setIsCreateModalOpen(true)}>
+            <Plus className="h-4 w-4" />
             Добавить администратора
           </Button>
         </div>
@@ -371,12 +353,10 @@ function AdminsTab() {
         ) : (
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Администратор</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Роль</TableHead>
-                <TableHead className="text-right">Действия</TableHead>
-              </TableRow>
+              <TableColumn>Администратор</TableColumn>
+              <TableColumn>Email</TableColumn>
+              <TableColumn>Роль</TableColumn>
+              <TableColumn className="text-right">Действия</TableColumn>
             </TableHeader>
             <TableBody>
               {users.map((admin) => (
@@ -418,8 +398,8 @@ function AdminsTab() {
                       size="sm"
                       onClick={() => handleDelete(admin.id)}
                       disabled={admin.id === profile?.id}
-                      leftIcon={<Trash2 className="h-4 w-4" />}
                     >
+                      <Trash2 className="h-4 w-4" />
                       Удалить
                     </Button>
                   </TableCell>
@@ -514,7 +494,7 @@ function RolesTab() {
                   <div
                     className={cn(
                       "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border",
-                      roleInfo.color
+                      roleInfo.color,
                     )}
                   >
                     <span className="uppercase tracking-wide">{roleInfo.role}</span>

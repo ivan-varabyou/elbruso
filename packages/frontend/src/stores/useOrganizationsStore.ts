@@ -1,6 +1,13 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import { adminOrganizationsApi,OrganizationLevel, OrganizationType } from '../api/admin/admin-organizations.api';
+import {
+  adminOrganizationsApi,
+  OrganizationLevel,
+  OrganizationType,
+  ReferenceItem,
+  Region,
+  Sport,
+} from "../api/admin/admin-organizations.api";
 
 export interface Organization {
   id: number;
@@ -40,21 +47,27 @@ interface OrganizationsState {
   selectedOrganization: Organization | null;
   types: OrganizationType[];
   levels: OrganizationLevel[];
-  viewMode: 'tree' | 'list';
+  countries: ReferenceItem[];
+  regions: Region[];
+  sports: Sport[];
+  viewMode: "tree" | "list";
   filters: OrganizationsFilters;
   loading: boolean;
   error: string | null;
 
   // Actions
-  setViewMode: (mode: 'tree' | 'list') => void;
+  setViewMode: (mode: "tree" | "list") => void;
   setFilters: (filters: Partial<OrganizationsFilters>) => void;
   clearFilters: () => void;
   setSelectedOrganization: (org: Organization | null) => void;
-  
+
   // CRUD operations
   fetchOrganizations: () => Promise<void>;
   fetchTypes: () => Promise<void>;
   fetchLevels: () => Promise<void>;
+  fetchCountries: () => Promise<void>;
+  fetchRegions: () => Promise<void>;
+  fetchSports: () => Promise<void>;
   fetchTree: (rootId?: number) => Promise<void>;
   createOrganization: (data: Partial<Organization>) => Promise<void>;
   updateOrganization: (id: number, data: Partial<Organization>) => Promise<void>;
@@ -68,7 +81,10 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
   selectedOrganization: null,
   types: [],
   levels: [],
-  viewMode: 'tree',
+  countries: [],
+  regions: [],
+  sports: [],
+  viewMode: "tree",
   filters: {},
   loading: false,
   error: null,
@@ -89,15 +105,15 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
     try {
       const { filters } = get();
       const response = await adminOrganizationsApi.getAll(filters);
-      
+
       // Axios response.data is the body, then .data is the wrapper, then .data is the array
       let organizations = response.data.data.data;
-      
+
       // Apply client-side search filter
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
         organizations = organizations.filter((org: Organization) =>
-          org.name_ru.toLowerCase().includes(searchLower)
+          org.name_ru.toLowerCase().includes(searchLower),
         );
       }
 
@@ -108,9 +124,9 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
 
       set({ organizations, loading: false });
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to fetch organizations',
-        loading: false 
+      set({
+        error: error instanceof Error ? error.message : "Failed to fetch organizations",
+        loading: false,
       });
     }
   },
@@ -120,7 +136,7 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
       const response = await adminOrganizationsApi.getTypes();
       set({ types: response.data.data });
     } catch (error) {
-      console.error('Failed to fetch types:', error);
+      console.error("Failed to fetch types:", error);
     }
   },
 
@@ -129,7 +145,34 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
       const response = await adminOrganizationsApi.getLevels();
       set({ levels: response.data.data });
     } catch (error) {
-      console.error('Failed to fetch levels:', error);
+      console.error("Failed to fetch levels:", error);
+    }
+  },
+
+  fetchCountries: async () => {
+    try {
+      const response = await adminOrganizationsApi.getCountries();
+      set({ countries: response.data.data || response.data });
+    } catch (error) {
+      console.error("Failed to fetch countries:", error);
+    }
+  },
+
+  fetchRegions: async () => {
+    try {
+      const response = await adminOrganizationsApi.getRegions();
+      set({ regions: response.data.data || response.data });
+    } catch (error) {
+      console.error("Failed to fetch regions:", error);
+    }
+  },
+
+  fetchSports: async () => {
+    try {
+      const response = await adminOrganizationsApi.getSports();
+      set({ sports: response.data.data || response.data });
+    } catch (error) {
+      console.error("Failed to fetch sports:", error);
     }
   },
 
@@ -160,16 +203,16 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
         };
 
         const rootNodes = buildTree(null);
-        set({ 
-          tree: rootNodes.length > 0 ? rootNodes[0] : null, 
+        set({
+          tree: rootNodes.length > 0 ? rootNodes[0] : null,
           organizations,
-          loading: false 
+          loading: false,
         });
       }
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to fetch tree',
-        loading: false 
+      set({
+        error: error instanceof Error ? error.message : "Failed to fetch tree",
+        loading: false,
       });
     }
   },
@@ -179,14 +222,14 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
     try {
       await adminOrganizationsApi.create(data);
       await get().fetchOrganizations();
-      if (get().viewMode === 'tree') {
+      if (get().viewMode === "tree") {
         await get().fetchTree();
       }
       set({ loading: false });
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to create organization',
-        loading: false 
+      set({
+        error: error instanceof Error ? error.message : "Failed to create organization",
+        loading: false,
       });
       throw error;
     }
@@ -197,14 +240,14 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
     try {
       await adminOrganizationsApi.update(id, data);
       await get().fetchOrganizations();
-      if (get().viewMode === 'tree') {
+      if (get().viewMode === "tree") {
         await get().fetchTree();
       }
       set({ loading: false });
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to update organization',
-        loading: false 
+      set({
+        error: error instanceof Error ? error.message : "Failed to update organization",
+        loading: false,
       });
       throw error;
     }
@@ -215,14 +258,14 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
     try {
       await adminOrganizationsApi.delete(id);
       await get().fetchOrganizations();
-      if (get().viewMode === 'tree') {
+      if (get().viewMode === "tree") {
         await get().fetchTree();
       }
       set({ loading: false, selectedOrganization: null });
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to delete organization',
-        loading: false 
+      set({
+        error: error instanceof Error ? error.message : "Failed to delete organization",
+        loading: false,
       });
       throw error;
     }
@@ -233,14 +276,14 @@ export const useOrganizationsStore = create<OrganizationsState>((set, get) => ({
     try {
       await adminOrganizationsApi.move(id, newParentId);
       await get().fetchOrganizations();
-      if (get().viewMode === 'tree') {
+      if (get().viewMode === "tree") {
         await get().fetchTree();
       }
       set({ loading: false });
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to move organization',
-        loading: false 
+      set({
+        error: error instanceof Error ? error.message : "Failed to move organization",
+        loading: false,
       });
       throw error;
     }

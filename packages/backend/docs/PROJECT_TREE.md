@@ -1,6 +1,6 @@
 # Структура проекта backend
 
-Генерировано: Чт 12 фев 2026 22:09:15 +03
+Генерировано: Чт 12 фев 2026 23:42:18 +03
 
 /home/ivan/git/elbruso/packages/backend
 ├── docs
@@ -219,8 +219,10 @@
 │   │   │   ├── dto
 │   │   │   │   ├── responses
 │   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── organization-level.response.dto.ts
 │   │   │   │   │   ├── organization.response.dto.ts
-│   │   │   │   │   └── organizations-list.response.dto.ts
+│   │   │   │   │   ├── organizations-list.response.dto.ts
+│   │   │   │   │   └── organization-type.response.dto.ts
 │   │   │   │   ├── create-organization.dto.ts
 │   │   │   │   ├── index.ts
 │   │   │   │   ├── move-organization.dto.ts
@@ -400,4 +402,4 @@
 ├── package.json
 └── tsconfig.json
 
-154 directories, 242 files
+154 directories, 244 files
