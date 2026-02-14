@@ -1,17 +1,17 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { DatabaseModule } from '@database/database.module';
-import { AdminAuthModule } from './admin-auth.module';
-import { AdminSetupController } from './controllers/admin-setup.controller';
-import { AdminRolesModule } from './roles/admin-roles.module';
-import { AdminSetupService } from './services/admin-setup.service';
-import { AdminUsersModule } from './users/admin-users.module';
+import { DatabaseModule } from "@database/database.module";
+import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
 
-import { AdminMeController } from './controllers/admin-me.controller';
-import { AdminWorkspaceTemplateController } from './controllers/admin-workspace-template.controller';
-import { AdminWorkspaceController } from './controllers/admin-workspace.controller';
-import { WorkspaceModule } from '../workspace/workspace.module';
+import { WorkspaceModule } from "../workspace/workspace.module";
+import { AdminAuthModule } from "./admin-auth.module";
+import { AdminMeController } from "./controllers/admin-me.controller";
+import { AdminSetupController } from "./controllers/admin-setup.controller";
+import { AdminWorkspaceController } from "./controllers/admin-workspace.controller";
+import { AdminWorkspaceTemplateController } from "./controllers/admin-workspace-template.controller";
+import { AdminRolesModule } from "./roles/admin-roles.module";
+import { AdminSetupService } from "./services/admin-setup.service";
+import { AdminUsersModule } from "./users/admin-users.module";
 
 @Module({
   imports: [
@@ -21,9 +21,9 @@ import { WorkspaceModule } from '../workspace/workspace.module';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('ADMIN_JWT_SECRET'),
+        secret: configService.get("ADMIN_JWT_SECRET"),
         signOptions: {
-          expiresIn: configService.get('ADMIN_JWT_EXPIRES_IN') || '1h',
+          expiresIn: configService.get("ADMIN_JWT_EXPIRES_IN") || "1h",
         },
       }),
       inject: [ConfigService],
@@ -33,8 +33,8 @@ import { WorkspaceModule } from '../workspace/workspace.module';
     AdminRolesModule,
   ],
   controllers: [
-    AdminSetupController, 
-    AdminWorkspaceController, 
+    AdminSetupController,
+    AdminWorkspaceController,
     AdminWorkspaceTemplateController,
     AdminMeController,
   ],

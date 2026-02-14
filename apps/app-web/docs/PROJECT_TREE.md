@@ -1,6 +1,6 @@
 # Структура проекта app-web
 
-Генерировано: Чт 12 фев 2026 23:42:18 +03
+Генерировано: Сб 14 фев 2026 12:19:31 +03
 
 /home/ivan/git/elbruso/apps/app-web
 ├── assets
@@ -12,7 +12,6 @@
 │   └── ru.json
 ├── docs
 │   ├── COMPONENT_SYSTEM.md
-│   ├── MIGRATION_TABLE.md
 │   └── PROJECT_TREE.md
 ├── public
 │   ├── assets
@@ -119,4 +118,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-42 directories, 73 files
+42 directories, 72 files

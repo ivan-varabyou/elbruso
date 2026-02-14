@@ -3,13 +3,27 @@ import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { RegionFiltersDto } from "../dto/region-filters.dto";
 import { RegionsService } from "../services/regions.service";
 import { RegionResponseDto, RegionsListResponseDto } from "../dto/responses";
+import { UseGuards } from "@nestjs/common";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 
 @Controller("reference/regions")
 @ApiTags("Regions")
+@UseGuards(AnyJwtAuthGuard, PermissionsGuard)
+@RbacResource({
+  code: RbacPermission.USER_REGIONS,
+  name: "Регионы",
+  group: "reference",
+  appType: "webapp",
+})
 export class RegionsController {
   constructor(private regionsService: RegionsService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.USER_REGIONS}:read`)
   @ApiOperation({ summary: "Get all regions" })
   @ApiResponse({
     status: 200,
@@ -32,6 +46,7 @@ export class RegionsController {
   }
 
   @Get(":id")
+  @Permissions(`${RbacPermission.USER_REGIONS}:read`)
   @ApiOperation({ summary: "Get region by ID" })
   @ApiResponse({ status: 200, type: RegionResponseDto, description: "Returns region" })
   @ApiResponse({ status: 404, description: "Region not found" })
@@ -51,6 +66,7 @@ export class RegionsController {
   }
 
   @Get("by-district/:districtId")
+  @Permissions(`${RbacPermission.USER_REGIONS}:read`)
   @ApiOperation({ summary: "Get regions by federal district" })
   @ApiResponse({ status: 200, type: [RegionResponseDto], description: "Returns list of regions" })
   async findByDistrict(
@@ -68,6 +84,7 @@ export class RegionsController {
   }
 
   @Get("by-country/:countryId")
+  @Permissions(`${RbacPermission.USER_REGIONS}:read`)
   @ApiOperation({ summary: "Get regions by country" })
   @ApiResponse({ status: 200, type: [RegionResponseDto], description: "Returns list of regions" })
   async findByCountry(

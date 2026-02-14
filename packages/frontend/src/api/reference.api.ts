@@ -16,13 +16,34 @@ import {
   GenerateSeasonsDto,
   UpdateIndicatorGroupDto,
 } from "./data-contracts";
+import axios from "axios";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:7100";
+const API_VERSION = "v1";
+
+const referenceClient = axios.create({
+  baseURL: `${API_URL}/${API_VERSION}`,
+  withCredentials: true,
+});
+
+referenceClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      if (typeof window !== "undefined" && !window.location.pathname.startsWith("/login")) {
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  },
+);
+
 import { ContentType, HttpClient, RequestParams } from "./http-client.service";
-import { apiClient } from "./client";
 
 export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   constructor() {
     super();
-    this.instance = apiClient;
+    this.instance = referenceClient;
   }
 
   /**
@@ -50,7 +71,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<void, any>({
-      path: `/reference/regions`,
+      path: `reference/regions`,
       method: "GET",
       query: query,
       ...params,
@@ -65,7 +86,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   regionsControllerFindById = (id: number, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/reference/regions/${id}`,
+      path: `reference/regions/${id}`,
       method: "GET",
       ...params,
     });
@@ -79,7 +100,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   regionsControllerFindByDistrict = (districtId: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/regions/by-district/${districtId}`,
+      path: `reference/regions/by-district/${districtId}`,
       method: "GET",
       ...params,
     });
@@ -93,7 +114,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   regionsControllerFindByCountry = (countryId: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/regions/by-country/${countryId}`,
+      path: `reference/regions/by-country/${countryId}`,
       method: "GET",
       ...params,
     });
@@ -107,7 +128,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   sportsControllerFindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/sports`,
+      path: `reference/sports`,
       method: "GET",
       ...params,
     });
@@ -121,7 +142,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   sportsControllerFindById = (id: number, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/reference/sports/${id}`,
+      path: `reference/sports/${id}`,
       method: "GET",
       ...params,
     });
@@ -135,7 +156,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   sportsControllerFindDisciplines = (id: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/sports/${id}/disciplines`,
+      path: `reference/sports/${id}/disciplines`,
       method: "GET",
       ...params,
     });
@@ -166,7 +187,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<void, any>({
-      path: `/reference/indicators`,
+      path: `reference/indicators`,
       method: "GET",
       query: query,
       secure: true,
@@ -183,7 +204,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerCreate = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators`,
+      path: `reference/indicators`,
       method: "POST",
       secure: true,
       ...params,
@@ -199,7 +220,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerUpdate = (id: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators/${id}`,
+      path: `reference/indicators/${id}`,
       method: "PATCH",
       secure: true,
       ...params,
@@ -215,7 +236,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerDelete = (id: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators/${id}`,
+      path: `reference/indicators/${id}`,
       method: "DELETE",
       secure: true,
       ...params,
@@ -231,7 +252,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerFindById = (id: number, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/reference/indicators/${id}`,
+      path: `reference/indicators/${id}`,
       method: "GET",
       secure: true,
       ...params,
@@ -247,7 +268,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerFindBySport = (sportId: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators/by-sport/${sportId}`,
+      path: `reference/indicators/by-sport/${sportId}`,
       method: "GET",
       secure: true,
       ...params,
@@ -263,7 +284,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerGetTemplates = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators/generation/templates`,
+      path: `reference/indicators/generation/templates`,
       method: "GET",
       secure: true,
       ...params,
@@ -279,7 +300,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerGenerate = (data: GenerateIndicatorsDto, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators/generation/generate`,
+      path: `reference/indicators/generation/generate`,
       method: "POST",
       body: data,
       secure: true,
@@ -303,7 +324,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<void, any>({
-      path: `/reference/indicators/groups`,
+      path: `reference/indicators/groups`,
       method: "GET",
       query: query,
       secure: true,
@@ -320,7 +341,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerCreateGroup = (data: CreateIndicatorGroupDto, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators/groups`,
+      path: `reference/indicators/groups`,
       method: "POST",
       body: data,
       secure: true,
@@ -338,7 +359,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerGetGenders = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators/genders`,
+      path: `reference/indicators/genders`,
       method: "GET",
       secure: true,
       ...params,
@@ -354,7 +375,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerGetAgeGroups = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators/age-groups`,
+      path: `reference/indicators/age-groups`,
       method: "GET",
       secure: true,
       ...params,
@@ -374,7 +395,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<void, any>({
-      path: `/reference/indicators/groups/${id}`,
+      path: `reference/indicators/groups/${id}`,
       method: "PATCH",
       body: data,
       secure: true,
@@ -392,7 +413,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorsControllerDeleteGroup = (id: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicators/groups/${id}`,
+      path: `reference/indicators/groups/${id}`,
       method: "DELETE",
       secure: true,
       ...params,
@@ -407,7 +428,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   organizationsControllerFindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/organizations`,
+      path: `reference/organizations`,
       method: "GET",
       ...params,
     });
@@ -421,7 +442,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   organizationsControllerFindFederations = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/organizations/federations`,
+      path: `reference/organizations/federations`,
       method: "GET",
       ...params,
     });
@@ -435,7 +456,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   organizationsControllerGetTree = (id: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/organizations/${id}/tree`,
+      path: `reference/organizations/${id}/tree`,
       method: "GET",
       ...params,
     });
@@ -449,7 +470,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   organizationsControllerGetHierarchy = (id: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/organizations/${id}/hierarchy`,
+      path: `reference/organizations/${id}/hierarchy`,
       method: "GET",
       ...params,
     });
@@ -463,7 +484,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   organizationsControllerFindById = (id: number, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/reference/organizations/${id}`,
+      path: `reference/organizations/${id}`,
       method: "GET",
       ...params,
     });
@@ -487,7 +508,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<void, any>({
-      path: `/reference/indicator-groups`,
+      path: `reference/indicator-groups`,
       method: "GET",
       query: query,
       ...params,
@@ -502,7 +523,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorGroupsControllerFindById = (id: number, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/reference/indicator-groups/${id}`,
+      path: `reference/indicator-groups/${id}`,
       method: "GET",
       ...params,
     });
@@ -516,7 +537,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   indicatorGroupsControllerFindIndicatorsByGroup = (id: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/indicator-groups/${id}/indicators`,
+      path: `reference/indicator-groups/${id}/indicators`,
       method: "GET",
       ...params,
     });
@@ -530,7 +551,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   seasonsControllerFindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/seasons`,
+      path: `reference/seasons`,
       method: "GET",
       ...params,
     });
@@ -544,7 +565,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   seasonsControllerCreate = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/seasons`,
+      path: `reference/seasons`,
       method: "POST",
       ...params,
     });
@@ -558,7 +579,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   seasonsControllerUpdate = (id: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/seasons/${id}`,
+      path: `reference/seasons/${id}`,
       method: "PATCH",
       ...params,
     });
@@ -572,7 +593,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   seasonsControllerDelete = (id: number, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/seasons/${id}`,
+      path: `reference/seasons/${id}`,
       method: "DELETE",
       ...params,
     });
@@ -586,7 +607,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   seasonsControllerFindById = (id: number, params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/reference/seasons/${id}`,
+      path: `reference/seasons/${id}`,
       method: "GET",
       ...params,
     });
@@ -600,7 +621,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   seasonsControllerGenerate = (data: GenerateSeasonsDto, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/reference/seasons/generate`,
+      path: `reference/seasons/generate`,
       method: "POST",
       body: data,
       type: ContentType.Json,
@@ -616,7 +637,7 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
    */
   seasonsControllerFindCurrent = (params: RequestParams = {}) =>
     this.request<void, void>({
-      path: `/reference/seasons/current`,
+      path: `reference/seasons/current`,
       method: "GET",
       ...params,
     });

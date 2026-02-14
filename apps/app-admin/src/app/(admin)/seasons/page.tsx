@@ -99,7 +99,7 @@ export default function SeasonsPage() {
                     Сезоны не найдены. Создайте свой первый сезон.
                   </td>
                 </tr>
-              ) : (
+              ) : Array.isArray(seasons) && seasons.length > 0 ? (
                 seasons.map((season) => (
                   <tr key={season.id} className="hover:bg-zinc-50/50 transition-colors group">
                     <td className="px-5 py-4">
@@ -152,7 +152,7 @@ export default function SeasonsPage() {
                     </td>
                   </tr>
                 ))
-              )}
+              ) : null}
             </tbody>
           </table>
         </div>

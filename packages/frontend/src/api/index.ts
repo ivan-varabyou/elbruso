@@ -7,7 +7,6 @@ export type {
   AddMemberDto,
   AdminLoginDto,
   AdminSetupDto,
-  AdminUpdateUserDto,
   AnalyzeFormulaDto,
   BatchCellUpdate,
   BatchUpdateCellsDto,
@@ -27,7 +26,7 @@ export type {
   GenerateIndicatorsDto,
   GenerateSeasonsDto,
   LinkFieldMapping,
-  LinkMetadataDto,
+  LinkMetadata,
   LoginDto,
   MoveBlockDto,
   MovePageDto,
@@ -50,6 +49,7 @@ export { Events } from "./events.api";
 export { Formulas } from "./formulas.api";
 export { Groups } from "./groups.api";
 export { Pages } from "./pages.api";
+export { rbacApi } from "./rbac.api";
 export { Reference } from "./reference.api";
 export { Tables } from "./tables.api";
 export { Users } from "./users.api";

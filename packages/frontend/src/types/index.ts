@@ -3,8 +3,8 @@ export type {
   AdminMeResponse,
   AdminUsersListResponse,
   AdminUser,
-  AdminRole,
 } from "./admin.types";
+export { AdminRole } from "./admin.types";
 export type { ApiResponse, PaginatedResponse } from "./api-response";
 export type { Dictionary } from "./dictionary";
 export type {

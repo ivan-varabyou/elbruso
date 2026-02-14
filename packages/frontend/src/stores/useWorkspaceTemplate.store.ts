@@ -23,7 +23,8 @@ export const useWorkspaceTemplateStore = create<WorkspaceTemplateStore>((set) =>
   fetchTemplates: async (filters) => {
     set({ isLoading: true, error: null });
     try {
-      const { data } = await templateApi.findAll(filters);
+      const response = await templateApi.findAll(filters);
+      const data = (response.data as any).data || response.data;
       set({ templates: data, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
@@ -33,7 +34,8 @@ export const useWorkspaceTemplateStore = create<WorkspaceTemplateStore>((set) =>
   fetchAdminTemplates: async (filters) => {
     set({ isLoading: true, error: null });
     try {
-      const { data } = await templateApi.adminFindAll(filters);
+      const response = await templateApi.adminFindAll(filters);
+      const data = (response.data as any).data || response.data;
       set({ templates: data, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
@@ -43,7 +45,8 @@ export const useWorkspaceTemplateStore = create<WorkspaceTemplateStore>((set) =>
   createTemplate: async (data) => {
     set({ isLoading: true, error: null });
     try {
-      const { data: newTemplate } = await templateApi.adminCreate(data);
+      const response = await templateApi.adminCreate(data);
+      const newTemplate = (response.data as any).data || response.data;
       set((state) => ({ templates: [newTemplate, ...state.templates], isLoading: false }));
     } catch (error: any) {
       set({ error: error.message, isLoading: false });

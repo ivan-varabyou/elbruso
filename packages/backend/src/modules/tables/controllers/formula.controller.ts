@@ -9,11 +9,21 @@ import {
 import { FormulaService } from "../services/formula.service";
 import { TablesService } from "../services/tables.service";
 import { FormulaAnalysisResponseDto } from "../formula/dto/responses";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 
 @ApiTags("Formulas")
 @Controller("formulas")
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth("JWT-auth")
+@RbacResource({
+  code: RbacPermission.USER_TABLES,
+  name: "Формулы",
+  group: "tables",
+  appType: "webapp",
+})
 export class FormulaController {
   constructor(
     private readonly formulaService: FormulaService,
@@ -22,6 +32,7 @@ export class FormulaController {
   ) {}
 
   @Post("analyze")
+  @Permissions(`${RbacPermission.USER_TABLES}:read`)
   @ApiOperation({
     summary: "Analyze formula and resolve external dependencies",
   })

@@ -1,6 +1,6 @@
 # Структура проекта backend
 
-Генерировано: Чт 12 фев 2026 23:42:18 +03
+Генерировано: Сб 14 фев 2026 12:19:31 +03
 
 /home/ivan/git/elbruso/packages/backend
 ├── docs
@@ -10,15 +10,6 @@
 │   ├── lib
 │   ├── modules
 │   │   ├── admin
-│   │   │   ├── admin-auth
-│   │   │   │   ├── controllers
-│   │   │   │   │   └── admin-auth.controller.ts
-│   │   │   │   ├── dto
-│   │   │   │   │   └── login.dto.ts
-│   │   │   │   ├── services
-│   │   │   │   │   └── admin-auth.service.ts
-│   │   │   │   └── strategies
-│   │   │   │       └── admin-jwt.strategy.ts
 │   │   │   ├── admin-users
 │   │   │   │   └── dto
 │   │   │   ├── controllers
@@ -261,6 +252,25 @@
 │   │   │   │   └── pages.service.ts
 │   │   │   ├── index.ts
 │   │   │   └── pages.module.ts
+│   │   ├── rbac
+│   │   │   ├── controllers
+│   │   │   │   └── rbac.controller.ts
+│   │   │   ├── decorators
+│   │   │   │   ├── permissions.decorator.ts
+│   │   │   │   └── resource.decorator.ts
+│   │   │   ├── dto
+│   │   │   │   └── rbac.dto.ts
+│   │   │   ├── enums
+│   │   │   │   └── permission.enum.ts
+│   │   │   ├── guards
+│   │   │   │   └── rbac.guard.ts
+│   │   │   ├── services
+│   │   │   │   ├── rbac-discovery.service.ts
+│   │   │   │   └── rbac.service.ts
+│   │   │   ├── types
+│   │   │   │   └── rbac.types.ts
+│   │   │   ├── rbac.module.ts
+│   │   │   └── README.md
 │   │   ├── reference
 │   │   │   ├── countries
 │   │   │   ├── organizations
@@ -402,4 +412,4 @@
 ├── package.json
 └── tsconfig.json
 
-154 directories, 244 files
+157 directories, 251 files

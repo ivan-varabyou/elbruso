@@ -1,8 +1,9 @@
+import React from "react";
 import { cn } from "@frontend/lib";
-import { ButtonHTMLAttributes, forwardRef, ReactNode } from "react";
+import { ButtonHTMLAttributes, forwardRef, isValidElement, ReactNode } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "outline" | "ghost" | "coral" | "dark";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "coral" | "dark";
   size?: "sm" | "md" | "lg";
   loading?: boolean;
   leftIcon?: ReactNode;
@@ -10,13 +11,74 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", loading, leftIcon, rightIcon, children, ...props }, ref) => {
+  (
+    {
+      className,
+      variant = "primary",
+      size = "md",
+      loading,
+      leftIcon,
+      rightIcon,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     const variants = {
-      primary: "btn-primary text-white bg-blue-600 hover:bg-blue-500 active:bg-blue-700",
-      coral: "btn-coral",
-      dark: "btn-primary",
-      outline: "btn-outline",
-      ghost: "h-[44px] px-6 text-gray-600 hover:bg-gray-50 active:bg-gray-100",
+      primary: "bg-zinc-900 text-white hover:bg-zinc-800 active:bg-zinc-950",
+      secondary:
+        "bg-white text-zinc-700 border border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100",
+      outline:
+        "bg-transparent text-zinc-700 border border-zinc-200 hover:bg-zinc-50 active:bg-zinc-100",
+      ghost: "bg-transparent text-zinc-600 hover:bg-zinc-100 active:bg-zinc-200",
+      coral: "bg-coral-500 text-white hover:bg-coral-600 active:bg-coral-700",
+      dark: "bg-zinc-900 text-white hover:bg-zinc-800 active:bg-zinc-950",
+    };
+
+    const sizes = {
+      sm: "h-8 px-3 py-1.5 text-xs gap-1.5",
+      md: "h-9 px-3.5 py-2 text-sm gap-2",
+      lg: "h-10 px-4 py-2 text-base gap-2",
+    };
+
+    const iconSizes = {
+      sm: "h-3.5 w-3.5",
+      md: "h-4 w-4",
+      lg: "h-4 w-4",
+    };
+
+    const isIconOnly =
+      children &&
+      isValidElement(children) &&
+      typeof children === "object" &&
+      children !== null &&
+      "type" in children &&
+      (children.type === "svg" ||
+        (children.type as React.ComponentType)?.displayName?.includes("Icon") ||
+        (children.props as { className?: string })?.className?.includes("h-"));
+
+    const renderIcon = (icon: ReactNode, position: "left" | "right" | "center") => {
+      if (!icon) return null;
+
+      if (isValidElement(icon)) {
+        const iconElement = icon as React.ReactElement<{ className?: string }>;
+        const iconClass = iconElement.props.className || "";
+        const newClass = iconClass.includes("h-")
+          ? iconClass
+          : `${iconClass} ${iconSizes[size]}`.trim();
+
+        return (
+          <span
+            className={`inline-flex shrink-0 ${position === "center" ? "mr-2" : ""}`}
+            data-position={position}
+          >
+            {newClass !== iconClass
+              ? React.cloneElement(iconElement, { className: newClass })
+              : icon}
+          </span>
+        );
+      }
+      return <span className="inline-flex shrink-0">{icon}</span>;
     };
 
     return (
@@ -24,8 +86,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={loading || props.disabled}
         className={cn(
-          "h-[44px] px-6 inline-flex items-center justify-center whitespace-nowrap rounded-8 text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-elbruso-blue focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative",
+          "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative",
           variants[variant],
+          sizes[size],
           className,
         )}
         {...props}
@@ -33,7 +96,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-inherit rounded-inherit">
             <svg
-              className="animate-spin h-5 w-5 text-current"
+              className="animate-spin h-4 w-4 text-current"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -54,10 +117,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             </svg>
           </div>
         )}
-        <span className={cn("inline-flex items-center gap-2", loading && "opacity-0")}>
-          {leftIcon && <span className="inline-flex">{leftIcon}</span>}
-          <span>{children}</span>
-          {rightIcon && <span className="inline-flex">{rightIcon}</span>}
+        <span
+          className={cn(
+            "inline-flex items-center gap-2",
+            loading && "opacity-0",
+            isIconOnly ? "gap-0" : "",
+          )}
+        >
+          {leftIcon && renderIcon(leftIcon, "left")}
+          {isIconOnly ? renderIcon(children, "center") : <span>{children}</span>}
+          {rightIcon && renderIcon(rightIcon, "right")}
         </span>
       </button>
     );

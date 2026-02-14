@@ -1,14 +1,9 @@
 # Component System Naming Convention
 
-See main documentation: [docs/COMPONENT_SYSTEM_MIGRATION.md](../../docs/COMPONENT_SYSTEM_MIGRATION.md)
-
-## Quick Reference
-
 ### Суффиксы компонентов
 
 | Тип        | Суффикс         | Пример                     |
 | ---------- | --------------- | -------------------------- |
-| Page       | `.page.tsx`     | Dashboard.page.tsx         |
 | Section    | `.section.tsx`  | Analytics.section.tsx      |
 | Widget     | `.widget.tsx`   | UserList.widget.tsx        |
 | Modal      | `.modal.tsx`    | ConfirmDelete.modal.tsx    |

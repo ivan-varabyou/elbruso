@@ -105,77 +105,78 @@ export function UsersTable() {
           </tr>
         </thead>
         <tbody className="divide-y divide-zinc-100">
-          {users.map((user) => (
-            <tr key={user.id} className="hover:bg-zinc-50/50 transition-colors group">
-              <td className="px-4 py-3">
-                <span className="text-sm font-medium text-zinc-900">{getFullName(user)}</span>
-              </td>
-              <td className="px-4 py-3">
-                <span className="text-sm text-zinc-600">{user.email}</span>
-              </td>
-              <td className="px-4 py-3">
-                <span className="text-sm text-zinc-600">{user.organization_name || "—"}</span>
-              </td>
-              <td className="px-4 py-3">{getRoleBadge(user.role)}</td>
-              <td className="px-4 py-3">{getStatusBadge(user)}</td>
-              <td className="px-4 py-3">
-                <span className="text-xs text-zinc-400">
-                  {user.created_at ? new Date(user.created_at).toLocaleDateString("ru-RU") : "—"}
-                </span>
-              </td>
-              <td className="px-4 py-3 text-right">
-                <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  {canUpdate && (
-                    <button
-                      onClick={() => setSelectedUser(user)}
-                      className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded-lg transition-all"
-                      title="Редактировать"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </button>
-                  )}
+          {Array.isArray(users) &&
+            users.map((user) => (
+              <tr key={user.id} className="hover:bg-zinc-50/50 transition-colors group">
+                <td className="px-4 py-3">
+                  <span className="text-sm font-medium text-zinc-900">{getFullName(user)}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="text-sm text-zinc-600">{user.email}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="text-sm text-zinc-600">{user.organization_name || "—"}</span>
+                </td>
+                <td className="px-4 py-3">{getRoleBadge(user.role)}</td>
+                <td className="px-4 py-3">{getStatusBadge(user)}</td>
+                <td className="px-4 py-3">
+                  <span className="text-xs text-zinc-400">
+                    {user.created_at ? new Date(user.created_at).toLocaleDateString("ru-RU") : "—"}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {canUpdate && (
+                      <button
+                        onClick={() => setSelectedUser(user)}
+                        className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded-lg transition-all"
+                        title="Редактировать"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </button>
+                    )}
 
-                  {!user.is_approved && canApprove && (
-                    <button
-                      onClick={() => approveUser(user.id)}
-                      className="p-1.5 text-zinc-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
-                      title="Утвердить"
-                    >
-                      <Check className="h-4 w-4" />
-                    </button>
-                  )}
+                    {!user.is_approved && canApprove && (
+                      <button
+                        onClick={() => approveUser(user.id)}
+                        className="p-1.5 text-zinc-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
+                        title="Утвердить"
+                      >
+                        <Check className="h-4 w-4" />
+                      </button>
+                    )}
 
-                  {canBlock && (
-                    <button
-                      onClick={() => blockUser(user.id, user.is_active)}
-                      className={`p-1.5 rounded-lg transition-all ${
-                        user.is_active
-                          ? "text-zinc-400 hover:text-red-600 hover:bg-red-50"
-                          : "text-zinc-400 hover:text-green-600 hover:bg-green-50"
-                      }`}
-                      title={user.is_active ? "Заблокировать" : "Разблокировать"}
-                    >
-                      <Ban className="h-4 w-4" />
-                    </button>
-                  )}
+                    {canBlock && (
+                      <button
+                        onClick={() => blockUser(user.id, user.is_active)}
+                        className={`p-1.5 rounded-lg transition-all ${
+                          user.is_active
+                            ? "text-zinc-400 hover:text-red-600 hover:bg-red-50"
+                            : "text-zinc-400 hover:text-green-600 hover:bg-green-50"
+                        }`}
+                        title={user.is_active ? "Заблокировать" : "Разблокировать"}
+                      >
+                        <Ban className="h-4 w-4" />
+                      </button>
+                    )}
 
-                  {canDelete && (
-                    <button
-                      onClick={() => {
-                        if (confirm("Удалить пользователя?")) {
-                          deleteUser(user.id);
-                        }
-                      }}
-                      className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                      title="Удалить"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
+                    {canDelete && (
+                      <button
+                        onClick={() => {
+                          if (confirm("Удалить пользователя?")) {
+                            deleteUser(user.id);
+                          }
+                        }}
+                        className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                        title="Удалить"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

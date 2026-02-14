@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+
 import { usersApi } from "../api/users.api";
 import {
+  CreateUserData,
+  Organization,
+  UpdateUserData,
   User,
   UsersFilters,
-  CreateUserData,
-  UpdateUserData,
-  Organization,
   UserStatus,
 } from "../types/users.types";
 
@@ -76,8 +77,9 @@ export const useUsersPageStore = create<UsersPageState>()(
                 break;
             }
 
-            const users = await usersApi.findAll(apiFilters);
-            set({ users, loading: false });
+            const response = await usersApi.findAll(apiFilters);
+            const data = (response as any).data || response;
+            set({ users: Array.isArray(data) ? data : [], loading: false });
           } catch (error: any) {
             set({ error: error.message, loading: false });
           }
@@ -85,8 +87,9 @@ export const useUsersPageStore = create<UsersPageState>()(
 
         fetchOrganizations: async () => {
           try {
-            const organizations = await usersApi.getOrganizations();
-            set({ organizations });
+            const response = await usersApi.getOrganizations();
+            const data = (response as any).data || response;
+            set({ organizations: Array.isArray(data) ? data : [] });
           } catch (error) {
             console.error("Failed to fetch organizations:", error);
           }

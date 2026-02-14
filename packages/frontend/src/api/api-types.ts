@@ -3,7 +3,7 @@ import {
   AddMemberDto,
   AdminLoginDto,
   AdminSetupDto,
-  AdminUpdateUserDto,
+  UpdateAdminUserDto,
   AnalyzeFormulaDto,
   BatchUpdateCellsDto,
   CreateAdminUserDto,
@@ -27,7 +27,6 @@ import {
   RegisterDto,
   ReorderGroupsDto,
   ResetPasswordDto,
-  UpdateAdminUserDto,
   UpdateBlockDto,
   UpdateGroupDto,
   UpdateIndicatorGroupDto,
@@ -156,7 +155,7 @@ export interface ApiTypes {
   UsersController_updateUserAdmin: {
     tag: "Users";
     parameters: {
-      body: AdminUpdateUserDto;
+      body: UpdateAdminUserDto;
       path: {
         id: string;
       };

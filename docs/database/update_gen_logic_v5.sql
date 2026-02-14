@@ -50,7 +50,7 @@ BEGIN
     
     -- 2. Generate all parameter combinations recursively
     WITH RECURSIVE param_combinations AS (
-        SELECT 0 as level, '{}'::jsonb as combo
+        SELECT 0::BIGINT as level, '{}'::jsonb as combo
         UNION ALL
         SELECT t.current_level, pc.combo || jsonb_build_object(t.param_name, t.value)
         FROM param_combinations pc
@@ -103,7 +103,8 @@ BEGIN
         -- 3.3 Replacement: Discipline
         IF v_combo ? 'discipline' THEN
             v_discipline_id := (v_combo->>'discipline')::INTEGER;
-            SELECT name_ru, code INTO v_discipline_name, v_discipline_code FROM disciplines WHERE id = v_discipline_id;
+            SELECT name_ru INTO v_discipline_name FROM disciplines WHERE id = v_discipline_id;
+            v_discipline_code := v_discipline_id::TEXT;
             
             v_code := REPLACE(v_code, '{discipline_code}', UPPER(v_discipline_code));
             v_code := REPLACE(v_code, '{discipline}', UPPER(REPLACE(v_discipline_name, ' ', '_')));
@@ -137,7 +138,8 @@ BEGIN
 
         IF v_template.sport_id IS NOT NULL THEN
             DECLARE v_sport_name TEXT; v_sport_code TEXT; BEGIN
-                SELECT name_ru, code INTO v_sport_name, v_sport_code FROM sports WHERE id = v_template.sport_id;
+                SELECT name_ru INTO v_sport_name FROM sports WHERE id = v_template.sport_id;
+                v_sport_code := v_template.sport_id::TEXT;
                 v_code := REPLACE(v_code, '{sport_code}', UPPER(v_sport_code));
                 v_name := REPLACE(v_name, '{sport}', v_sport_name);
             END;

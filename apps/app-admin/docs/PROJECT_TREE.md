@@ -1,6 +1,6 @@
 # Структура проекта app-admin
 
-Генерировано: Чт 12 фев 2026 23:42:18 +03
+Генерировано: Сб 14 фев 2026 12:19:31 +03
 
 /home/ivan/git/elbruso/apps/app-admin
 ├── dictionaries
@@ -25,6 +25,10 @@
 ├── src
 │   ├── app
 │   │   ├── (admin)
+│   │   │   ├── admins
+│   │   │   │   ├── roles
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── dashboard
 │   │   │   │   └── page.tsx
 │   │   │   ├── indicators
@@ -42,6 +46,8 @@
 │   │   │   ├── tables-test
 │   │   │   │   └── page.tsx
 │   │   │   ├── users
+│   │   │   │   ├── roles
+│   │   │   │   │   └── page.tsx
 │   │   │   │   └── page.tsx
 │   │   │   ├── workspaces
 │   │   │   │   └── page.tsx
@@ -72,4 +78,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-25 directories, 43 files
+28 directories, 46 files

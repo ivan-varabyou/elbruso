@@ -1,42 +1,16 @@
 "use client";
 
-import {
-  Building,
-  Building2,
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  GripVertical,
-  LayoutDashboard,
-  LogOut,
-  Settings,
-  Shield,
-  TrendingUp,
-  Users,
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
+import { GripVertical, LogOut } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useAdminAuth } from "@frontend/modules/admin/auth";
-
-import { AdminTemplateTree, CreateTemplateModal } from "../AdminTemplateTree";
+import { AdminMenu } from "../Menu";
+import { adminMenu } from "../Menu/admin.menu";
 
 interface LeftPanelProps {
   isCollapsed: boolean;
   onToggle: () => void;
 }
-
-const adminNavigationItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/workspaces", icon: Building, label: "Рабочие области" },
-  { href: "/organizations", icon: Building2, label: "Организации" },
-  { href: "/seasons", icon: Calendar, label: "Сезоны" },
-  { href: "/indicators", icon: TrendingUp, label: "Индикаторы" },
-  { href: "/users", icon: Users, label: "Пользователи" },
-  { href: "/roles", icon: Shield, label: "Роли" },
-  { href: "/settings", icon: Settings, label: "Настройки" },
-];
 
 const MIN_WIDTH = 180;
 const MAX_WIDTH = 400;
@@ -47,13 +21,11 @@ export function AdminLeftPanel({ isCollapsed, onToggle }: LeftPanelProps) {
   const { user, logout } = useAdminAuth();
   const [width, setWidth] = useState(240);
   const [isResizing, setIsResizing] = useState(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing) return;
-
       const newWidth = e.clientX;
       if (newWidth < COLLAPSE_THRESHOLD) {
         if (!isCollapsed) onToggle();
@@ -116,35 +88,15 @@ export function AdminLeftPanel({ isCollapsed, onToggle }: LeftPanelProps) {
             aria-label={isCollapsed ? "Развернуть" : "Свернуть"}
           >
             {isCollapsed ? (
-              <ChevronRight className="h-3.5 w-3.5 text-zinc-500" />
+              <span className="text-zinc-500">{">"}</span>
             ) : (
-              <ChevronLeft className="h-3.5 w-3.5 text-zinc-500" />
+              <span className="text-zinc-500">{"<"}</span>
             )}
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto px-1.5 py-1.5">
-          <div className="space-y-px">
-            {adminNavigationItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-
-              return (
-                <Link key={item.href} href={item.href}>
-                  <div
-                    className={`flex items-center gap-1.5 rounded px-1.5 py-1.5 text-[13px] transition-colors ${
-                      isActive
-                        ? "bg-zinc-100 text-zinc-900 font-medium"
-                        : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
-                    } ${isCollapsed ? "justify-center" : ""}`}
-                  >
-                    <Icon className="h-4 w-4 flex-shrink-0" />
-                    {!isCollapsed && <span>{item.label}</span>}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          <AdminMenu items={adminMenu} isCollapsed={isCollapsed} />
         </div>
 
         <div className="border-t border-zinc-100 px-1.5 py-1.5">
@@ -161,7 +113,6 @@ export function AdminLeftPanel({ isCollapsed, onToggle }: LeftPanelProps) {
                 </div>
                 {user?.role && (
                   <div className="flex items-center gap-1 text-[10px] text-zinc-500">
-                    <Shield className="h-2.5 w-2.5" />
                     <span className="font-black uppercase tracking-wider">
                       {user.role.toLowerCase().replace("_", " ")}
                     </span>
@@ -187,8 +138,6 @@ export function AdminLeftPanel({ isCollapsed, onToggle }: LeftPanelProps) {
           )}
         </div>
       </aside>
-
-      <CreateTemplateModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />
     </>
   );
 }

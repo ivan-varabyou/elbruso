@@ -8,6 +8,7 @@ interface AdminAuthStore {
   user: AdminUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isInitialized: boolean;
   error: string | null;
 
   // Actions
@@ -16,7 +17,7 @@ interface AdminAuthStore {
   setError: (error: string | null) => void;
   login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => void;
-  fetchMe: () => Promise<void>;
+  fetchMe: (force?: boolean) => Promise<void>;
   updateProfile: (data: {
     name?: string;
     email?: string;
@@ -34,6 +35,7 @@ export const useAdminAuthStore = create<AdminAuthStore>((set) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
+  isInitialized: false,
   error: null,
 
   // Actions
@@ -76,20 +78,27 @@ export const useAdminAuthStore = create<AdminAuthStore>((set) => ({
     }
   },
 
-  fetchMe: async () => {
+  fetchMe: async (force = false) => {
+    const { isInitialized, isLoading, user } = useAdminAuthStore.getState();
+
+    // Skip if already loading
+    if (isLoading) return;
+
+    // Skip if already initialized and not forced, and we have a user
+    if (isInitialized && !force && user) return;
+
     set({ isLoading: true });
     try {
       const response = await adminApi.instance.get("/me");
-      // Backend returns: { success: true, data: AdminUser, error: null, meta: {...} }
       const userData = response.data?.data as AdminUser;
 
       if (userData) {
-        set({ user: userData, isAuthenticated: true, isLoading: false });
+        set({ user: userData, isAuthenticated: true, isLoading: false, isInitialized: true });
       } else {
-        set({ user: null, isAuthenticated: false, isLoading: false });
+        set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true });
       }
     } catch (error) {
-      set({ user: null, isAuthenticated: false, isLoading: false });
+      set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true });
     }
   },
 

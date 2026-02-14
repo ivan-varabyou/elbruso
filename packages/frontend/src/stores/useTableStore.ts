@@ -1,5 +1,5 @@
 import type { CreateTableDto, UpdateTableDto } from "@frontend/api";
-import { Tables, Versions, Workspaces } from "@frontend/api";
+import { Tables, Versions, Workspaces, CellDataDto, BatchCellUpdate } from "@frontend/api";
 import { ErrorHandler } from "@frontend/api/error";
 import type { CellData, CellUpdate } from "@frontend/modules/table/types";
 import type { AppError } from "@frontend/types/enums";
@@ -190,11 +190,13 @@ export const useTableStore = create<TableStore>((set, get) => ({
     try {
       // 2. Server update
       await versionsApi.dynamicTablesControllerBatchUpdateCells(activeTable.activeVersion.id, {
-        cells: updates.map((u) => ({
-          rowIndex: u.row,
-          colIndex: u.col,
-          cellData: u.data as unknown as Record<string, unknown>,
-        })),
+        cells: updates.map(
+          (u): BatchCellUpdate => ({
+            rowIndex: u.row,
+            colIndex: u.col,
+            cellData: { value: u.data } as CellDataDto,
+          }),
+        ),
       });
     } catch (error) {
       // 3. Rollback on error

@@ -847,6 +847,41 @@ export interface Roles {
   permissions: Generated<Json | null>;
 }
 
+export interface RbacRoles {
+  code: string;
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<string>;
+  is_editable: Generated<boolean | null>;
+  is_system: Generated<boolean | null>;
+  name: string;
+  permissions: Generated<Json | null>;
+  type: string;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface RbacPermissions {
+  actions: string[] | null;
+  app_type: string;
+  code: string;
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  group_name: string;
+  id: Generated<string>;
+  is_system: Generated<boolean | null>;
+  name: string;
+}
+
+export interface RbacUserRoles {
+  app_type: string;
+  granted_at: Generated<Timestamp | null>;
+  granted_by: string | null;
+  id: Generated<string>;
+  organization_id: number | null;
+  role_id: string;
+  user_id: string;
+}
+
 export interface SavedQueries {
   cache_ttl: Generated<number | null>;
   cache_updated_at: Timestamp | null;
@@ -1349,6 +1384,9 @@ export interface DB {
   region_types: RegionTypes;
   regions: Regions;
   roles: Roles;
+  rbac_permissions: RbacPermissions;
+  rbac_roles: RbacRoles;
+  rbac_user_roles: RbacUserRoles;
   saved_queries: SavedQueries;
   season_sports: SeasonSports;
   seasons: Seasons;

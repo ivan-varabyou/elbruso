@@ -9,13 +9,30 @@ import {
 } from "../dto/responses";
 import { toIndicatorGroupDto, toIndicatorGroupListDto } from "../mappers/indicator-group.mapper";
 import { toIndicatorListDto } from "../mappers/indicator.mapper";
+import { UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
+import { AdminJwtAuthGuard } from "../../admin/guards/admin-jwt-auth.guard";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("reference/indicator-groups")
 @ApiTags("Indicator Groups")
+@UseGuards(AdminJwtAuthGuard, PermissionsGuard)
+@ApiBearerAuth("JWT-auth")
+@RbacResource({
+  code: RbacPermission.USER_INDICATORS,
+  name: "Группы показателей",
+  group: "indicators",
+  appType: "webapp",
+})
 export class IndicatorGroupsController {
   constructor(private indicatorGroupsService: IndicatorGroupsService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.USER_INDICATORS}:read`)
   @ApiOperation({ summary: "Get all indicator groups" })
   @ApiResponse({ status: 200, description: "Returns list of groups", type: GroupsListResponseDto })
   async findAll(@Query() filters: IndicatorGroupFiltersDto): Promise<GroupsListResponseDto> {
@@ -27,6 +44,7 @@ export class IndicatorGroupsController {
   }
 
   @Get(":id")
+  @Permissions(`${RbacPermission.USER_INDICATORS}:read`)
   @ApiOperation({ summary: "Get indicator group by ID" })
   @ApiResponse({ status: 200, description: "Returns group", type: IndicatorGroupResponseDto })
   @ApiResponse({ status: 404, description: "Group not found" })
@@ -39,6 +57,7 @@ export class IndicatorGroupsController {
   }
 
   @Get(":id/indicators")
+  @Permissions(`${RbacPermission.USER_INDICATORS}:read`)
   @ApiOperation({ summary: "Get indicators for a specific group" })
   @ApiResponse({
     status: 200,

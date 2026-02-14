@@ -1,22 +1,32 @@
 "use client";
 
-import { useEffect } from "react";
-import { Users, UserPlus } from "lucide-react";
-import { useUsersPageStore } from "@frontend/modules/users/stores/useUsersPageStore";
-import { UsersTable } from "@frontend/modules/users/ui/UsersTable";
-import { UsersFilters } from "@frontend/modules/users/ui/UsersFilters";
 import { useUsersPermissions } from "@frontend/modules/users/hooks/useUsersPermissions";
+import { useUsersPageStore } from "@frontend/modules/users/stores/useUsersPageStore";
+import { UsersFilters } from "@frontend/modules/users/ui/UsersFilters";
+import { UsersTable } from "@frontend/modules/users/ui/UsersTable";
+import { useAdminAuthStore } from "@frontend/stores/useAdminAuth.store";
+import { Users } from "lucide-react";
+import { useEffect } from "react";
 
 export default function UsersPage() {
   const { fetchUsers, fetchOrganizations, loading, users } = useUsersPageStore();
   const { canRead } = useUsersPermissions();
+  const { isInitialized } = useAdminAuthStore();
 
   useEffect(() => {
-    if (canRead) {
+    if (isInitialized && canRead) {
       fetchUsers();
       fetchOrganizations();
     }
-  }, [fetchUsers, fetchOrganizations, canRead]);
+  }, [fetchUsers, fetchOrganizations, canRead, isInitialized]);
+
+  if (!isInitialized) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="h-8 w-8 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!canRead) {
     return (

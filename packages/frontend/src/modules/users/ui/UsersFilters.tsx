@@ -25,7 +25,6 @@ export function UsersFilters() {
           placeholder="Поиск по ФИО или email..."
           value={filters.search || ""}
           onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-          leftIcon={<Search className="h-4 w-4" />}
         />
       </div>
 
@@ -47,7 +46,7 @@ export function UsersFilters() {
 
       {canCreate && (
         <Button
-          variant="primary"
+          variant="solid"
           onClick={() => {
             // TODO: Open create modal
             alert("Создание пользователя");

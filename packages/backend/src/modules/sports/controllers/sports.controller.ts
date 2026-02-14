@@ -2,13 +2,27 @@ import { Controller, Get, Param, ParseIntPipe, NotFoundException } from "@nestjs
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { SportsService } from "../services/sports.service";
 import { SportResponseDto, SportsListResponseDto } from "../dto/responses";
+import { UseGuards } from "@nestjs/common";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 
 @Controller("reference/sports")
 @ApiTags("Sports")
+@UseGuards(AnyJwtAuthGuard, PermissionsGuard)
+@RbacResource({
+  code: RbacPermission.USER_SPORTS,
+  name: "Виды спорта",
+  group: "reference",
+  appType: "webapp",
+})
 export class SportsController {
   constructor(private sportsService: SportsService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.USER_SPORTS}:read`)
   @ApiOperation({ summary: "Get all sports" })
   @ApiResponse({ status: 200, type: SportsListResponseDto, description: "Returns list of sports" })
   async findAll(): Promise<SportsListResponseDto> {
@@ -26,6 +40,7 @@ export class SportsController {
   }
 
   @Get(":id")
+  @Permissions(`${RbacPermission.USER_SPORTS}:read`)
   @ApiOperation({ summary: "Get sport by ID" })
   @ApiResponse({ status: 200, type: SportResponseDto, description: "Returns sport" })
   @ApiResponse({ status: 404, description: "Sport not found" })

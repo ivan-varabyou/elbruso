@@ -16,15 +16,25 @@ import { RequestWithUser } from "../../auth/interfaces";
 import { CreateWorkspaceDto, UpdateWorkspaceDto, AddMemberDto, UpdateMemberRoleDto } from "../dto";
 import { WorkspaceService } from "../services/workspace.service";
 import { WorkspaceResponseDto, WorkspacesListResponseDto } from "../dto/responses";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 
 @ApiTags("Workspaces")
 @ApiBearerAuth("JWT-auth")
 @UseGuards(AnyJwtAuthGuard)
 @Controller("workspaces")
+@RbacResource({
+  code: RbacPermission.USER_WORKSPACES,
+  name: "Воркспейсы",
+  group: "workspaces",
+  appType: "webapp",
+})
 export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Post()
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:create`)
   @ApiOperation({ summary: "Create a new workspace" })
   @ApiResponse({
     status: 201,
@@ -38,6 +48,7 @@ export class WorkspaceController {
   }
 
   @Get()
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:read`)
   @ApiOperation({ summary: "Get all workspaces for current user" })
   @ApiResponse({ status: 200, description: "List of workspaces", type: WorkspacesListResponseDto })
   @ApiResponse({ status: 401, description: "Unauthorized" })
@@ -50,6 +61,7 @@ export class WorkspaceController {
   }
 
   @Get(":id")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:read`)
   @ApiOperation({ summary: "Get workspace by ID" })
   @ApiResponse({ status: 200, description: "Workspace details", type: WorkspaceResponseDto })
   @ApiResponse({ status: 401, description: "Unauthorized" })
@@ -61,6 +73,7 @@ export class WorkspaceController {
   }
 
   @Patch(":id")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:write`)
   @ApiOperation({ summary: "Update workspace" })
   @ApiResponse({
     status: 200,
@@ -80,6 +93,7 @@ export class WorkspaceController {
   }
 
   @Delete(":id")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:delete`)
   @ApiOperation({ summary: "Delete workspace" })
   @ApiResponse({ status: 200, description: "Workspace deleted successfully" })
   @ApiResponse({ status: 401, description: "Unauthorized" })

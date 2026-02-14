@@ -13,13 +13,27 @@ import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { GenerateSeasonsDto } from "../dto";
 import { SeasonsService } from "../services/seasons.service";
 import { SeasonResponseDto, SeasonsListResponseDto } from "../dto/responses";
+import { UseGuards } from "@nestjs/common";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 
 @Controller("reference/seasons")
 @ApiTags("Seasons")
+@UseGuards(AnyJwtAuthGuard, PermissionsGuard)
+@RbacResource({
+  code: RbacPermission.USER_SEASONS,
+  name: "Сезоны",
+  group: "reference",
+  appType: "webapp",
+})
 export class SeasonsController {
   constructor(private seasonsService: SeasonsService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.USER_SEASONS}:read`)
   @ApiOperation({ summary: "Get all seasons" })
   @ApiResponse({
     status: 200,
@@ -45,6 +59,7 @@ export class SeasonsController {
   }
 
   @Post()
+  @Permissions(`${RbacPermission.USER_SEASONS}:create`)
   @ApiOperation({ summary: "Create a new season" })
   @ApiResponse({ status: 201, type: SeasonResponseDto, description: "Season created" })
   async create(@Body() data: any): Promise<SeasonResponseDto> {
@@ -63,6 +78,7 @@ export class SeasonsController {
   }
 
   @Patch(":id")
+  @Permissions(`${RbacPermission.USER_SEASONS}:write`)
   @ApiOperation({ summary: "Update an existing season" })
   @ApiResponse({ status: 200, type: SeasonResponseDto, description: "Season updated" })
   async update(
@@ -84,6 +100,7 @@ export class SeasonsController {
   }
 
   @Delete(":id")
+  @Permissions(`${RbacPermission.USER_SEASONS}:delete`)
   @ApiOperation({ summary: "Delete a season" })
   @ApiResponse({ status: 200, description: "Season deleted" })
   async delete(@Param("id", ParseIntPipe) id: number) {

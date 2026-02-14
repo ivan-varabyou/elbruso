@@ -8,18 +8,18 @@ import {
   Res,
   UnauthorizedException,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { Request, Response } from "express";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { plainToInstance } from "class-transformer";
+import { Request, Response } from "express";
 
 import { AdminLoginDto } from "../dto/admin-login.dto";
-import { AdminAuthService } from "../services/admin-auth.service";
-import { AdminUsersService } from "../users/admin-users.service";
 import {
   AdminLoginResponseDto,
   AdminLogoutResponseDto,
   AdminRefreshResponseDto,
 } from "../dto/responses/admin-auth.response.dto";
+import { AdminAuthService } from "../services/admin-auth.service";
+import { AdminUsersService } from "../users/admin-users.service";
 
 @ApiTags("Admin Authentication")
 @Controller("admin/auth")
@@ -49,14 +49,16 @@ export class AdminAuthController {
     res.cookie("adminAccessToken", result.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000, // 15m
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 1000, // 1h to match JWT expiration
     });
 
     res.cookie("adminRefreshToken", result.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
     });
 
@@ -109,14 +111,16 @@ export class AdminAuthController {
     res.cookie("adminAccessToken", result.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 1000,
     });
 
     res.cookie("adminRefreshToken", result.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 

@@ -11,13 +11,26 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagg
 import { EventFiltersDto } from "../dto";
 import { EventsService } from "../services/events.service";
 import { EventResponseDto, EventsListResponseDto } from "../dto/responses";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 
 @ApiTags("Events")
 @Controller("events")
+@UseGuards(AnyJwtAuthGuard, PermissionsGuard)
+@RbacResource({
+  code: RbacPermission.USER_EVENTS,
+  name: "События",
+  group: "reference",
+  appType: "webapp",
+})
 export class EventsController {
   constructor(private eventsService: EventsService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.USER_EVENTS}:read`)
   @ApiOperation({ summary: "Get all events with filters" })
   @ApiResponse({ status: 200, description: "List of events", type: EventsListResponseDto })
   async findAll(@Query() filters: EventFiltersDto) {
@@ -29,6 +42,7 @@ export class EventsController {
   }
 
   @Get(":id")
+  @Permissions(`${RbacPermission.USER_EVENTS}:read`)
   @ApiOperation({ summary: "Get event by ID" })
   @ApiResponse({ status: 200, description: "Event details", type: EventResponseDto })
   @ApiResponse({ status: 401, description: "Unauthorized" })

@@ -1,44 +1,55 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-  ParseIntPipe,
-  NotFoundException,
-  Post,
-  Body,
-  Patch,
-  Delete,
-  UseGuards,
-  Request,
-} from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
-import { JwtAuthGuard } from "@backend/modules/auth/guards/jwt-auth.guard";
-import { AdminJwtAuthGuard } from "@backend/modules/auth/guards/admin-jwt-auth.guard";
+import { AdminJwtAuthGuard } from "@backend/modules/admin/guards/admin-jwt-auth.guard";
+import { PermissionsGuard } from "@backend/modules/admin/guards/permissions.guard";
+import { AdminJwtPayload } from "@backend/modules/admin/strategies/admin-jwt.strategy";
 import { OrganizationsService } from "@backend/modules/organizations/services/organizations.service";
+import { Permissions } from "@backend/modules/rbac/decorators/permissions.decorator";
+import { RbacResource } from "@backend/modules/rbac/decorators/resource.decorator";
+import { RbacPermission } from "@backend/modules/rbac/enums/permission.enum";
 import { UsersService } from "@backend/modules/users/services/users.service";
 import { DatabaseService } from "@database/database.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+
 import { GenerateIndicatorsDto } from "../dto/generate-indicators.dto";
 import { IndicatorFiltersDto } from "../dto/indicator-filters.dto";
+import { CreateIndicatorGroupDto, GetIndicatorGroupsDto } from "../dto/indicator-group.dto";
 import {
-  CreateIndicatorGroupDto,
-  UpdateIndicatorGroupDto,
-  GetIndicatorGroupsDto,
-} from "../dto/indicator-group.dto";
-import { IndicatorsService } from "../services/indicators.service";
-import {
+  GroupsListResponseDto,
+  IndicatorGroupResponseDto,
   IndicatorResponseDto,
   IndicatorsListResponseDto,
-  IndicatorGroupResponseDto,
-  GroupsListResponseDto,
 } from "../dto/responses";
 import { toIndicatorDto, toIndicatorListDto } from "../mappers/indicator.mapper";
 import { toIndicatorGroupDto, toIndicatorGroupListDto } from "../mappers/indicator-group.mapper";
+import { IndicatorsService } from "../services/indicators.service";
+
+interface AuthenticatedRequest extends Express.Request {
+  user: AdminJwtPayload;
+}
 
 @Controller("reference/indicators")
 @ApiTags("Indicators")
-@UseGuards(JwtAuthGuard)
+@UseGuards(AdminJwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth("JWT-auth")
+@RbacResource({
+  code: RbacPermission.USER_INDICATORS,
+  name: "Показатели",
+  group: "indicators",
+  appType: "webapp",
+})
 export class IndicatorsController {
   constructor(
     private indicatorsService: IndicatorsService,
@@ -48,6 +59,7 @@ export class IndicatorsController {
   ) {}
 
   @Get()
+  @Permissions(`${RbacPermission.USER_INDICATORS}:read`)
   @ApiOperation({ summary: "Get all indicators with filters" })
   @ApiResponse({
     status: 200,
@@ -55,10 +67,21 @@ export class IndicatorsController {
     type: IndicatorsListResponseDto,
   })
   async findAll(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Query() filters: IndicatorFiltersDto,
   ): Promise<IndicatorsListResponseDto> {
-    const user = await this.usersService.findById(req.user.sub);
+    console.log("!!! FIND ALL CALLED !!!");
+    const jwtPayload = req.user;
+
+    // Safely try to find user in web app users table.
+    // Admins might not exist there, so we don't want to throw 404.
+    let user = null;
+    try {
+      user = await this.usersService.findById(jwtPayload?.sub);
+    } catch (e) {
+      // Ignore not found for admins
+    }
+
     if (user) {
       filters.userId = String(user.id);
       filters.userOrganizationId = user.organization_id ?? undefined;
@@ -88,10 +111,19 @@ export class IndicatorsController {
   }
 
   @Post()
+  @Permissions(`${RbacPermission.USER_INDICATORS}:write`)
   @ApiOperation({ summary: "Create a manual indicator" })
   @ApiResponse({ status: 201, description: "Indicator created", type: IndicatorResponseDto })
-  async create(@Request() req, @Body() data: any): Promise<IndicatorResponseDto> {
-    const user = await this.usersService.findById(req.user.sub);
+  async create(
+    @Request() req: AuthenticatedRequest,
+    @Body() data: any,
+  ): Promise<IndicatorResponseDto> {
+    let user = null;
+    try {
+      user = await this.usersService.findById(req.user.sub);
+    } catch (e) {
+      // Ignore for admins
+    }
     const result = await this.indicatorsService.create({
       ...data,
       created_by: req.user.sub,
@@ -101,64 +133,16 @@ export class IndicatorsController {
     return toIndicatorDto(result as any);
   }
 
-  @Patch(":id")
-  @ApiOperation({ summary: "Update indicator" })
-  async update(
-    @Param("id", ParseIntPipe) id: number,
-    @Body() data: any,
-  ): Promise<IndicatorResponseDto> {
-    const result = await this.indicatorsService.update(id, data);
-    return toIndicatorDto(result as any);
-  }
-
-  @Delete(":id")
-  @ApiOperation({ summary: "Delete indicator (mark as inactive)" })
-  async delete(@Param("id", ParseIntPipe) id: number) {
-    return this.indicatorsService.delete(id);
-  }
-
-  @Get(":id")
-  @ApiOperation({ summary: "Get indicator by ID" })
-  @ApiResponse({ status: 200, description: "Returns indicator", type: IndicatorResponseDto })
-  @ApiResponse({ status: 404, description: "Indicator not found" })
-  async findById(@Param("id", ParseIntPipe) id: number): Promise<IndicatorResponseDto> {
-    const indicator = await this.indicatorsService.findById(id);
-    if (!indicator) {
-      throw new NotFoundException(`Indicator with ID ${id} not found`);
-    }
-    return toIndicatorDto(indicator as any);
-  }
-
-  @Get("by-sport/:sportId")
-  @ApiOperation({ summary: "Get indicators for a sport" })
-  @ApiResponse({
-    status: 200,
-    description: "Returns list of indicators",
-    type: IndicatorsListResponseDto,
-  })
-  async findBySport(
-    @Param("sportId", ParseIntPipe) sportId: number,
-  ): Promise<IndicatorsListResponseDto> {
-    const indicators = await this.indicatorsService.findBySport(sportId);
-    return {
-      data: toIndicatorListDto(indicators as any[]),
-      total: indicators.length,
-    };
-  }
-
-  @Get("generation/templates")
-  @ApiOperation({ summary: "Get indicator generation templates" })
-  async getTemplates() {
-    return this.indicatorsService.getTemplates();
-  }
-
-  @Post("generation/generate")
-  @ApiOperation({ summary: "Generate indicators (flexible)" })
-  async generate(@Body() dto: GenerateIndicatorsDto) {
-    return this.indicatorsService.generate(dto);
+  @Post("groups")
+  @ApiOperation({ summary: "Create indicator group" })
+  @ApiResponse({ status: 201, description: "Group created", type: IndicatorGroupResponseDto })
+  async createGroup(@Body() data: CreateIndicatorGroupDto): Promise<IndicatorGroupResponseDto> {
+    const result = await this.indicatorsService.createGroup(data);
+    return toIndicatorGroupDto(result as any);
   }
 
   @Get("groups")
+  @Permissions(`${RbacPermission.USER_INDICATORS}:read`)
   @ApiOperation({ summary: "Get all indicator groups" })
   @ApiResponse({ status: 200, description: "Returns list of groups", type: GroupsListResponseDto })
   async getGroups(@Query() dto: GetIndicatorGroupsDto): Promise<GroupsListResponseDto> {
@@ -182,27 +166,62 @@ export class IndicatorsController {
     return this.indicatorsService.getAgeGroups();
   }
 
-  @Post("groups")
-  @ApiOperation({ summary: "Create indicator group" })
-  @ApiResponse({ status: 201, description: "Group created", type: IndicatorGroupResponseDto })
-  async createGroup(@Body() data: CreateIndicatorGroupDto): Promise<IndicatorGroupResponseDto> {
-    const result = await this.indicatorsService.createGroup(data);
-    return toIndicatorGroupDto(result as any);
+  @Get("generation/templates")
+  @ApiOperation({ summary: "Get indicator generation templates" })
+  async getTemplates() {
+    return this.indicatorsService.getTemplates();
   }
 
-  @Patch("groups/:id")
-  @ApiOperation({ summary: "Update indicator group" })
-  async updateGroup(
+  @Post("generation/generate")
+  @ApiOperation({ summary: "Generate indicators (flexible)" })
+  async generate(@Body() dto: GenerateIndicatorsDto) {
+    return this.indicatorsService.generate(dto);
+  }
+
+  @Get("by-sport/:sportId")
+  @ApiOperation({ summary: "Get indicators for a sport" })
+  @ApiResponse({
+    status: 200,
+    description: "Returns list of indicators",
+    type: IndicatorsListResponseDto,
+  })
+  async findBySport(
+    @Param("sportId", ParseIntPipe) sportId: number,
+  ): Promise<IndicatorsListResponseDto> {
+    const indicators = await this.indicatorsService.findBySport(sportId);
+    return {
+      data: toIndicatorListDto(indicators as any[]),
+      total: indicators.length,
+    };
+  }
+
+  @Patch(":id")
+  @Permissions(`${RbacPermission.USER_INDICATORS}:write`)
+  @ApiOperation({ summary: "Update indicator" })
+  async update(
     @Param("id", ParseIntPipe) id: number,
-    @Body() data: UpdateIndicatorGroupDto,
-  ): Promise<IndicatorGroupResponseDto> {
-    const result = await this.indicatorsService.updateGroup(id, data);
-    return toIndicatorGroupDto(result as any);
+    @Body() data: any,
+  ): Promise<IndicatorResponseDto> {
+    const result = await this.indicatorsService.update(id, data);
+    return toIndicatorDto(result as any);
   }
 
-  @Delete("groups/:id")
-  @ApiOperation({ summary: "Delete indicator group" })
-  async deleteGroup(@Param("id", ParseIntPipe) id: number) {
-    return this.indicatorsService.deleteGroup(id);
+  @Delete(":id")
+  @Permissions(`${RbacPermission.USER_INDICATORS}:delete`)
+  @ApiOperation({ summary: "Delete indicator (mark as inactive)" })
+  async delete(@Param("id", ParseIntPipe) id: number) {
+    return this.indicatorsService.delete(id);
+  }
+
+  @Get(":id")
+  @ApiOperation({ summary: "Get indicator by ID" })
+  @ApiResponse({ status: 200, description: "Returns indicator", type: IndicatorResponseDto })
+  @ApiResponse({ status: 404, description: "Indicator not found" })
+  async findById(@Param("id", ParseIntPipe) id: number): Promise<IndicatorResponseDto> {
+    const indicator = await this.indicatorsService.findById(id);
+    if (!indicator) {
+      throw new NotFoundException(`Indicator with ID ${id} not found`);
+    }
+    return toIndicatorDto(indicator as any);
   }
 }

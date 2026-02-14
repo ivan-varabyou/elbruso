@@ -3,7 +3,7 @@
 import { Reference } from "@frontend/api";
 import { cn } from "@frontend/lib";
 import type { Sport } from "@frontend/types/reference.types";
-import { Button } from "@frontend/ui";
+import { Button, Select } from "@frontend/ui";
 import {
   AlertCircle,
   Check,
@@ -47,7 +47,7 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
     const fetchInitialData = async () => {
       try {
         const sportsResponse = await referenceApi.sportsControllerFindAll();
-        setSports((sportsResponse as { data?: Sport[] })?.data || []);
+        setSports((sportsResponse.data as any)?.data || []);
         // Initial fetch
         fetchTemplates("");
       } catch (err) {
@@ -61,24 +61,13 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
     setFetchingTemplates(true);
     try {
       const templatesResponse = await referenceApi.indicatorsControllerGetTemplates();
-      const allTemplates =
-        (
-          templatesResponse as {
-            data?: Array<{
-              id: number;
-              name_ru?: string;
-              name?: string;
-              code_pattern?: string;
-              sport_id: number;
-            }>;
-          }
-        )?.data || [];
+      const allTemplates = (templatesResponse.data as any)?.data || [];
       const filtered = sportId
-        ? allTemplates.filter((t) => t.sport_id === Number(sportId))
+        ? allTemplates.filter((t: any) => t.sport_id === Number(sportId))
         : allTemplates;
 
       setTemplates(filtered);
-      setSelectedTemplateIds(filtered.map((t) => t.id));
+      setSelectedTemplateIds(filtered.map((t: any) => t.id));
     } catch (err) {
       console.error("Failed to fetch templates:", err);
       setError("Не удалось загрузить шаблоны");
@@ -192,10 +181,10 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
           {step === "templates" && (
             <div className="flex items-center gap-2">
               <Trophy className="h-3.5 w-3.5 text-zinc-400" />
-              <select
+              <Select
                 value={selectedSportId}
                 onChange={(e) => handleSportChange(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-zinc-600 focus:outline-none cursor-pointer hover:text-blue-600 transition-colors"
+                className="min-w-[140px] bg-transparent text-xs font-semibold text-zinc-600 focus:outline-none cursor-pointer hover:text-blue-600"
               >
                 <option value="">Все виды спорта</option>
                 {sports.map((s) => (
@@ -203,7 +192,7 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
                     {s.name_ru}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
           )}
         </div>

@@ -15,16 +15,27 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam, ApiResponse } from "@ne
 import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
 import { CreateGroupDto, UpdateGroupDto, ReorderGroupsDto } from "../dto/workspace-group.dto";
 import { WorkspaceGroupService } from "../services/workspace-group.service";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 import { WorkspaceGroupResponseDto, GroupsListResponseDto } from "../dto/responses";
 
 @ApiTags("Workspace Groups")
 @ApiBearerAuth("JWT-auth")
-@UseGuards(AnyJwtAuthGuard)
+@UseGuards(AnyJwtAuthGuard, PermissionsGuard)
 @Controller()
+@RbacResource({
+  code: RbacPermission.USER_WORKSPACES,
+  name: "Группы рабочих пространств",
+  group: "workspaces",
+  appType: "webapp",
+})
 export class WorkspaceGroupController {
   constructor(private readonly groupService: WorkspaceGroupService) {}
 
   @Post("workspaces/:workspaceId/groups")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:write`)
   @ApiOperation({ summary: "Create a new group in workspace" })
   @ApiParam({ name: "workspaceId", type: "string" })
   @ApiResponse({
@@ -45,6 +56,7 @@ export class WorkspaceGroupController {
   }
 
   @Get("workspaces/:workspaceId/groups")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:read`)
   @ApiOperation({ summary: "Get all groups in workspace" })
   @ApiParam({ name: "workspaceId", type: "string" })
   @ApiResponse({ status: 200, description: "List of groups", type: GroupsListResponseDto })
@@ -59,6 +71,7 @@ export class WorkspaceGroupController {
   }
 
   @Patch("groups/:id")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:write`)
   @ApiOperation({ summary: "Update group" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({
@@ -82,6 +95,7 @@ export class WorkspaceGroupController {
   }
 
   @Delete("groups/:id")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:delete`)
   @ApiOperation({ summary: "Delete group" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Group deleted successfully" })
@@ -93,6 +107,7 @@ export class WorkspaceGroupController {
   }
 
   @Post("workspaces/:workspaceId/groups/reorder")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:write`)
   @ApiOperation({ summary: "Reorder groups" })
   @ApiParam({ name: "workspaceId", type: "string" })
   @ApiResponse({ status: 200, description: "Groups reordered successfully" })

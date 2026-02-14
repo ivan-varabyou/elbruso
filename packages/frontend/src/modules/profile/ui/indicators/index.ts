@@ -3,3 +3,7 @@ export { FilterDropdown } from "./components/FilterDropdown.smart";
 export { GenerateIndicatorsModal } from "./components/GenerateIndicatorsModal";
 export { IndicatorGroupModal } from "./components/IndicatorGroupModal";
 export { IndicatorGroupsList } from "./components/IndicatorGroupsList.smart";
+export { IndicatorGroupsTableDumb } from "./components/IndicatorGroupsTable.dumb";
+export { IndicatorGroupsTableSmart } from "./components/IndicatorGroupsTable.smart";
+export { IndicatorsTableDumb } from "./components/IndicatorsTable.dumb";
+export { IndicatorsTableSmart } from "./components/IndicatorsTable.smart";

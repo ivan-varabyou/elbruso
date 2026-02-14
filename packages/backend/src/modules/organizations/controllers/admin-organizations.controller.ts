@@ -18,17 +18,20 @@ import { Roles } from "../../admin/decorators/roles.decorator";
 import { AdminRole } from "../../admin/enums/admin-role.enum";
 import { AdminJwtAuthGuard } from "../../admin/guards/admin-jwt-auth.guard";
 import { RolesGuard } from "../../admin/guards/roles.guard";
+import { CountryResponseDto } from "../../countries/dto/responses/country.response.dto";
 import { CountriesService } from "../../countries/services/countries.service";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
+import { RegionResponseDto } from "../../regions/dto/responses/region.response.dto";
 import { RegionsService } from "../../regions/services/regions.service";
+import { SportResponseDto } from "../../sports/dto/responses/sport.response.dto";
 import { SportsService } from "../../sports/services/sports.service";
 import { CreateOrganizationDto } from "../dto/create-organization.dto";
 import { MoveOrganizationDto } from "../dto/move-organization.dto";
 import { OrganizationFiltersDto } from "../dto/organization-filters.dto";
 import { OrganizationResponseDto, OrganizationsListResponseDto } from "../dto/responses";
 import { OrganizationLevelResponseDto, OrganizationTypeResponseDto } from "../dto/responses";
-import { CountryResponseDto } from "../../countries/dto/responses/country.response.dto";
-import { RegionResponseDto } from "../../regions/dto/responses/region.response.dto";
-import { SportResponseDto } from "../../sports/dto/responses/sport.response.dto";
 import { UpdateOrganizationDto } from "../dto/update-organization.dto";
 import { OrganizationsService } from "../services/organizations.service";
 
@@ -37,7 +40,12 @@ import { OrganizationsService } from "../services/organizations.service";
 @UseGuards(AdminJwtAuthGuard, RolesGuard)
 @Roles(AdminRole.SUPER_ADMIN, AdminRole.ADMIN)
 @ApiBearerAuth("JWT-auth")
-// Trigger reload
+@RbacResource({
+  code: RbacPermission.ADMIN_ORGANIZATIONS,
+  name: "Организации",
+  group: "organizations",
+  appType: "admin",
+})
 export class AdminOrganizationsController {
   constructor(
     private readonly organizationsService: OrganizationsService,
@@ -47,6 +55,7 @@ export class AdminOrganizationsController {
   ) {}
 
   @Get("types")
+  @Permissions(`${RbacPermission.ADMIN_ORGANIZATIONS}:read`)
   @ApiOperation({ summary: "Get all organization types" })
   @ApiResponse({ status: 200, type: [OrganizationTypeResponseDto] })
   async findAllTypes(): Promise<OrganizationTypeResponseDto[]> {
@@ -54,6 +63,7 @@ export class AdminOrganizationsController {
   }
 
   @Get("levels")
+  @Permissions(`${RbacPermission.ADMIN_ORGANIZATIONS}:read`)
   @ApiOperation({ summary: "Get all organization levels" })
   @ApiResponse({ status: 200, type: [OrganizationLevelResponseDto] })
   async findAllLevels(): Promise<OrganizationLevelResponseDto[]> {
@@ -85,6 +95,7 @@ export class AdminOrganizationsController {
   }
 
   @Get()
+  @Permissions(`${RbacPermission.ADMIN_ORGANIZATIONS}:read`)
   @ApiOperation({ summary: "List all organizations (including inactive for admin)" })
   @ApiResponse({ status: 200, type: OrganizationsListResponseDto })
   async findAll(@Query() filters: OrganizationFiltersDto): Promise<OrganizationsListResponseDto> {
@@ -104,6 +115,7 @@ export class AdminOrganizationsController {
   }
 
   @Post()
+  @Permissions(`${RbacPermission.ADMIN_ORGANIZATIONS}:create`)
   @ApiOperation({ summary: "Create new organization" })
   @ApiResponse({ status: 201, type: OrganizationResponseDto })
   @ApiResponse({ status: 400, description: "Invalid data" })
@@ -113,6 +125,7 @@ export class AdminOrganizationsController {
   }
 
   @Patch(":id")
+  @Permissions(`${RbacPermission.ADMIN_ORGANIZATIONS}:write`)
   @ApiOperation({ summary: "Update organization" })
   @ApiResponse({ status: 200, type: OrganizationResponseDto })
   @ApiResponse({ status: 404, description: "Organization not found" })
@@ -138,6 +151,7 @@ export class AdminOrganizationsController {
   }
 
   @Delete(":id")
+  @Permissions(`${RbacPermission.ADMIN_ORGANIZATIONS}:delete`)
   @ApiOperation({ summary: "Delete organization (soft delete)" })
   @ApiResponse({ status: 200, description: "Organization deleted successfully" })
   @ApiResponse({ status: 404, description: "Organization not found" })

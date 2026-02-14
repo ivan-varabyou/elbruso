@@ -2,8 +2,8 @@
 
 import { Reference } from "@frontend/api";
 import type { IndicatorGroup, Sport } from "@frontend/types/reference.types";
-import { Button } from "@frontend/ui";
-import { AlertCircle, Layers, Trophy, X } from "lucide-react";
+import { Button, Input, Select } from "@frontend/ui";
+import { AlertCircle, Layers, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -98,39 +98,29 @@ export function IndicatorGroupModal({ group, onClose, onSuccess }: Props) {
           )}
 
           <div className="space-y-4">
-            <div>
-              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2 ml-1">
-                Название группы
-              </label>
-              <input
-                required
-                value={formData.name_ru}
-                onChange={(e) => setFormData((prev) => ({ ...prev, name_ru: e.target.value }))}
-                className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium"
-                placeholder="Например: Маркетинг и PR"
-              />
-            </div>
+            <Input
+              required
+              label="Название группы"
+              placeholder="Например: Маркетинг и PR"
+              value={formData.name_ru}
+              onChange={(e) => setFormData((prev) => ({ ...prev, name_ru: e.target.value }))}
+            />
 
-            <div>
-              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2 ml-1">
-                Технический код
-              </label>
-              <input
-                required
-                value={formData.code}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    code: e.target.value.toUpperCase().replace(/\s/g, "_"),
-                  }))
-                }
-                className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-2xl focus:outline-none font-mono text-xs focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                placeholder="MARKETING_GROUP"
-              />
-            </div>
+            <Input
+              required
+              label="Технический код"
+              placeholder="MARKETING_GROUP"
+              value={formData.code}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  code: e.target.value.toUpperCase().replace(/\s/g, "_"),
+                }))
+              }
+            />
 
-            <div>
-              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2 ml-1">
+            <div className="flex flex-col gap-2">
+              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider ml-1">
                 Описание (необязательно)
               </label>
               <textarea
@@ -141,31 +131,23 @@ export function IndicatorGroupModal({ group, onClose, onSuccess }: Props) {
               />
             </div>
 
-            <div>
-              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2 ml-1">
-                Вид спорта (необязательно)
-              </label>
-              <div className="relative group/select">
-                <Trophy className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within/select:text-blue-500 transition-colors" />
-                <select
-                  value={formData.sport_id || ""}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      sport_id: e.target.value ? Number(e.target.value) : undefined,
-                    }))
-                  }
-                  className="w-full pl-11 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm appearance-none"
-                >
-                  <option value="">Все виды спорта (Глобальная)</option>
-                  {sports.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name_ru}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            <Select
+              label="Вид спорта (необязательно)"
+              value={formData.sport_id?.toString() || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  sport_id: e.target.value ? Number(e.target.value) : undefined,
+                }))
+              }
+            >
+              <option value="">Все виды спорта (Глобальная)</option>
+              {sports.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name_ru}
+                </option>
+              ))}
+            </Select>
           </div>
 
           <div className="flex items-center gap-3 pt-4">

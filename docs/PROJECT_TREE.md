@@ -1,10 +1,13 @@
 # Структура проекта
 
-Генерировано: Чт 12 фев 2026 23:42:18 +03
+Генерировано: Сб 14 фев 2026 12:19:31 +03
 
 /home/ivan/git/elbruso
 ├── apps
 │   ├── api-gateway
+│   │   └── docs
+│   │       └── PROJECT_TREE.md
+│   ├── api-getaway
 │   │   ├── docs
 │   │   │   └── PROJECT_TREE.md
 │   │   ├── src
@@ -94,6 +97,10 @@
 │   │   ├── src
 │   │   │   ├── app
 │   │   │   │   ├── (admin)
+│   │   │   │   │   ├── admins
+│   │   │   │   │   │   ├── roles
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── dashboard
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── indicators
@@ -111,6 +118,8 @@
 │   │   │   │   │   ├── tables-test
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── users
+│   │   │   │   │   │   ├── roles
+│   │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── workspaces
 │   │   │   │   │   │   └── page.tsx
@@ -150,7 +159,6 @@
 │       │   └── ru.json
 │       ├── docs
 │       │   ├── COMPONENT_SYSTEM.md
-│       │   ├── MIGRATION_TABLE.md
 │       │   └── PROJECT_TREE.md
 │       ├── public
 │       │   ├── assets
@@ -283,6 +291,8 @@
 │   │   ├── Организации и структуры.md
 │   │   └── Реестр_общероссийских_и_региональных_аккредитованных_спортивных_федераций.csv
 │   ├── database
+│   │   ├── migrations
+│   │   │   └── fix_webapp_constraints.sql
 │   │   ├── __pycache__
 │   │   │   ├── import_federations.cpython-310.pyc
 │   │   │   └── sport_code_mapping.cpython-310.pyc
@@ -299,6 +309,7 @@
 │   │   ├── 08_basketball_indicators_full.sql
 │   │   ├── 08_basketball_indicators.sql
 │   │   ├── 09_universal_indicators_system.sql
+│   │   ├── 104_rbac_system.sql
 │   │   ├── 10_seasons_utilities.sql
 │   │   ├── 11_reference_tables.sql
 │   │   ├── 12_group_relationships.sql
@@ -387,6 +398,8 @@
 │   ├── memory-graph.html
 │   ├── PRODUCTION_SETUP.md
 │   ├── PROJECT_TREE.md
+│   ├── RBAC_API.md
+│   ├── RBAC_SYSTEM.md
 │   └── TEST_CREDENTIALS.md
 ├── packages
 │   ├── backend
@@ -397,15 +410,6 @@
 │   │   │   ├── lib
 │   │   │   ├── modules
 │   │   │   │   ├── admin
-│   │   │   │   │   ├── admin-auth
-│   │   │   │   │   │   ├── controllers
-│   │   │   │   │   │   │   └── admin-auth.controller.ts
-│   │   │   │   │   │   ├── dto
-│   │   │   │   │   │   │   └── login.dto.ts
-│   │   │   │   │   │   ├── services
-│   │   │   │   │   │   │   └── admin-auth.service.ts
-│   │   │   │   │   │   └── strategies
-│   │   │   │   │   │       └── admin-jwt.strategy.ts
 │   │   │   │   │   ├── admin-users
 │   │   │   │   │   │   └── dto
 │   │   │   │   │   ├── controllers
@@ -648,6 +652,25 @@
 │   │   │   │   │   │   └── pages.service.ts
 │   │   │   │   │   ├── index.ts
 │   │   │   │   │   └── pages.module.ts
+│   │   │   │   ├── rbac
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── rbac.controller.ts
+│   │   │   │   │   ├── decorators
+│   │   │   │   │   │   ├── permissions.decorator.ts
+│   │   │   │   │   │   └── resource.decorator.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   └── rbac.dto.ts
+│   │   │   │   │   ├── enums
+│   │   │   │   │   │   └── permission.enum.ts
+│   │   │   │   │   ├── guards
+│   │   │   │   │   │   └── rbac.guard.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   ├── rbac-discovery.service.ts
+│   │   │   │   │   │   └── rbac.service.ts
+│   │   │   │   │   ├── types
+│   │   │   │   │   │   └── rbac.types.ts
+│   │   │   │   │   ├── rbac.module.ts
+│   │   │   │   │   └── README.md
 │   │   │   │   ├── reference
 │   │   │   │   │   ├── countries
 │   │   │   │   │   ├── organizations
@@ -913,6 +936,7 @@
 │       │   │   ├── index.ts
 │       │   │   ├── pages.api.ts
 │       │   │   ├── Pages.ts
+│       │   │   ├── rbac.api.ts
 │       │   │   ├── reference.api.ts
 │       │   │   ├── Reference.ts
 │       │   │   ├── tables.api.ts
@@ -958,21 +982,46 @@
 │       │   │   │   │   ├── AdminLeftPanel
 │       │   │   │   │   │   ├── AdminLeftPanel.smart.tsx
 │       │   │   │   │   │   └── index.ts
+│       │   │   │   │   ├── AdminRoles
+│       │   │   │   │   │   ├── AdminRoles.page.tsx
+│       │   │   │   │   │   └── index.ts
+│       │   │   │   │   ├── Admins
+│       │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   └── page.tsx
 │       │   │   │   │   ├── AdminSettings
 │       │   │   │   │   │   ├── AdminSettings.smart.tsx
-│       │   │   │   │   │   ├── CreateAdminModal.dump.tsx
+│       │   │   │   │   │   ├── CreateAdminModal.tsx
+│       │   │   │   │   │   ├── EditAdminModal.tsx
 │       │   │   │   │   │   ├── ProfileSettings.smart.tsx
 │       │   │   │   │   │   └── UserManagement.smart.tsx
 │       │   │   │   │   ├── AdminTemplateTree
 │       │   │   │   │   │   ├── AdminTemplateTree.smart.tsx
 │       │   │   │   │   │   ├── CreateTemplateModal.smart.tsx
 │       │   │   │   │   │   └── index.ts
+│       │   │   │   │   ├── Menu
+│       │   │   │   │   │   ├── admin.menu.ts
+│       │   │   │   │   │   ├── AdminMenu.tsx
+│       │   │   │   │   │   └── index.ts
 │       │   │   │   │   ├── Organizations
 │       │   │   │   │   │   ├── CreateOrganizationModal.tsx
 │       │   │   │   │   │   ├── DeleteConfirmationModal.tsx
 │       │   │   │   │   │   ├── EditOrganizationModal.tsx
+│       │   │   │   │   │   ├── OrganizationsFilters.tsx
 │       │   │   │   │   │   ├── OrganizationsList.tsx
+│       │   │   │   │   │   ├── OrganizationsSmart.tsx
 │       │   │   │   │   │   └── OrganizationsTree.tsx
+│       │   │   │   │   ├── RolesManagement
+│       │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   └── RolesManagement.tsx
+│       │   │   │   │   ├── UserRoles
+│       │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   └── UserRoles.page.tsx
+│       │   │   │   │   ├── Users
+│       │   │   │   │   │   ├── roles
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   └── page.tsx
+│       │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   └── page.tsx
 │       │   │   │   │   └── index.ts
 │       │   │   │   └── index.ts
 │       │   │   ├── auth
@@ -1018,7 +1067,8 @@
 │       │   │   │   ├── ui
 │       │   │   │   │   ├── index.ts
 │       │   │   │   │   └── ToastContainer.smart.tsx
-│       │   │   │   └── index.ts
+│       │   │   │   ├── index.ts
+│       │   │   │   └── toast.service.ts
 │       │   │   ├── pages
 │       │   │   │   └── index.ts
 │       │   │   ├── profile
@@ -1026,11 +1076,16 @@
 │       │   │   │   │   ├── indicators
 │       │   │   │   │   │   ├── components
 │       │   │   │   │   │   │   ├── CreateIndicatorModal.tsx
+│       │   │   │   │   │   │   ├── FilterDropdown.dumb.tsx
 │       │   │   │   │   │   │   ├── FilterDropdown.smart.tsx
 │       │   │   │   │   │   │   ├── GenerateIndicatorsModal.tsx
 │       │   │   │   │   │   │   ├── index.ts
 │       │   │   │   │   │   │   ├── IndicatorGroupModal.tsx
-│       │   │   │   │   │   │   └── IndicatorGroupsList.smart.tsx
+│       │   │   │   │   │   │   ├── IndicatorGroupsList.smart.tsx
+│       │   │   │   │   │   │   ├── IndicatorGroupsTable.dumb.tsx
+│       │   │   │   │   │   │   ├── IndicatorGroupsTable.smart.tsx
+│       │   │   │   │   │   │   ├── IndicatorsTable.dumb.tsx
+│       │   │   │   │   │   │   └── IndicatorsTable.smart.tsx
 │       │   │   │   │   │   └── index.ts
 │       │   │   │   │   ├── ProfileLayout
 │       │   │   │   │   │   ├── Sidebar
@@ -1271,6 +1326,7 @@
 │       │   │   ├── enums.ts
 │       │   │   ├── index.ts
 │       │   │   ├── link.types.ts
+│       │   │   ├── rbac.ts
 │       │   │   ├── reference.types.ts
 │       │   │   └── visualization.ts
 │       │   ├── ui
@@ -1293,6 +1349,12 @@
 │       │   │   │   ├── Button
 │       │   │   │   │   ├── Button.dumb.tsx
 │       │   │   │   │   └── index.ts
+│       │   │   │   ├── Checkbox
+│       │   │   │   │   ├── Checkbox.tsx
+│       │   │   │   │   └── index.ts
+│       │   │   │   ├── ConfirmDialog
+│       │   │   │   │   ├── ConfirmDialog.dumb.tsx
+│       │   │   │   │   └── index.ts
 │       │   │   │   ├── IconButton
 │       │   │   │   │   ├── IconButton.dumb.tsx
 │       │   │   │   │   └── index.ts
@@ -1304,6 +1366,18 @@
 │       │   │   │   │   ├── index.ts
 │       │   │   │   │   ├── Logo.dumb.tsx
 │       │   │   │   │   └── LogoV2.tsx
+│       │   │   │   ├── Modal
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── Modal.tsx
+│       │   │   │   ├── PermissionsTree
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── PermissionsTree.tsx
+│       │   │   │   ├── RoleCard
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── RoleCard.tsx
+│       │   │   │   ├── RolePermissionsEditor
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── RolePermissionsEditor.tsx
 │       │   │   │   ├── Select
 │       │   │   │   │   ├── index.ts
 │       │   │   │   │   └── Select.dumb.tsx
@@ -1318,12 +1392,18 @@
 │       ├── tsconfig.json
 │       └── tsconfig.tsbuildinfo
 ├── scripts
+│   ├── check-db-simple.js
+│   ├── check-indicators.ts
 │   ├── dev-setup.sh
 │   ├── generate-project-trees.sh
 │   ├── generate-secrets.sh
 │   ├── generate-swagger.ts
 │   ├── migrate.mjs
-│   └── production-setup.sh
+│   ├── production-setup.sh
+│   ├── rbac-setup.sh
+│   ├── setup-rbac.sh
+│   ├── setup-rbac-test.sh
+│   └── test-rbac.sh
 ├── AGENTS.md
 ├── docker-compose.yml
 ├── eslint.config.mjs
@@ -1339,4 +1419,4 @@
 ├── tsconfig.json
 └── turbo.json
 
-389 directories, 946 files
+411 directories, 1004 files

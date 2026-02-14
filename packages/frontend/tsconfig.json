@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@frontend/*": ["./src/*"],
-      "@frontend": ["./src"]
+      "@frontend": ["./src"],
+      "@elbruso/devtools": ["../devtools/src"]
     }
   },
   "include": ["src", "src/**/*", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

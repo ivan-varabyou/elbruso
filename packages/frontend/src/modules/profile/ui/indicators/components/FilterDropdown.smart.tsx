@@ -1,8 +1,15 @@
 "use client";
 
 import { cn } from "@frontend/lib";
-import { Check,ChevronDown } from "lucide-react";
-import { useEffect,useRef, useState } from "react";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Checkbox,
+} from "@frontend/ui/primitives";
+import { ChevronDown } from "lucide-react";
+import { Key, useState } from "react";
 
 interface Option {
   value: string;
@@ -26,80 +33,107 @@ export function FilterDropdown({
   icon: Icon,
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  console.log("[FilterDropdown] Render", { isOpen, selectedCount: selected.length });
 
   const toggleOption = (value: string) => {
-    if (selected.includes(value)) {
-      onChange(selected.filter((v) => v !== value));
-    } else {
-      onChange([...selected, value]);
-    }
+    const newSelected = selected.includes(value)
+      ? selected.filter((v) => v !== value)
+      : [...selected, value];
+
+    console.log("[FilterDropdown] Selection changed", {
+      value,
+      action: selected.includes(value) ? "removed" : "added",
+      newSelected,
+    });
+
+    onChange(newSelected);
+  };
+
+  const allSelected = selected.length === options.length;
+  const someSelected = selected.length > 0 && !allSelected;
+
+  const toggleAll = () => {
+    const newSelected = allSelected ? [] : options.map((o) => o.value);
+    console.log("[FilterDropdown] Toggle all", { allSelected, newSelected });
+    onChange(newSelected);
   };
 
   return (
-    <div className="relative" ref={containerRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg border transition-all",
-          isOpen || selected.length > 0
-            ? "bg-white border-blue-500 text-blue-600 shadow-sm ring-1 ring-blue-500/20"
-            : "bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300",
-        )}
-      >
-        <Icon className="h-4 w-4" />
-        <span>{label}</span>
-        {selected.length > 0 && (
-          <span className="ml-1 px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-bold">
-            {selected.length}
-          </span>
-        )}
-        <ChevronDown
-          className={cn("ml-1 h-3.5 w-3.5 transition-transform", isOpen && "rotate-180")}
-        />
-      </button>
+    <Dropdown isOpen={isOpen} onOpenChange={setIsOpen}>
+      <DropdownTrigger>
+        <button
+          type="button"
+          className={cn(
+            "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg border transition-all",
+            isOpen || selected.length > 0
+              ? "bg-white border-default-400 text-default-foreground shadow-sm"
+              : "bg-white border-default-200 text-default-600 hover:border-default-300",
+          )}
+        >
+          <Icon className="h-4 w-4" />
+          <span>{label}</span>
+          {selected.length > 0 && (
+            <span className="ml-1 px-1.5 py-0.5 bg-default-100 text-default-700 rounded text-[10px] font-bold">
+              {selected.length}
+            </span>
+          )}
+          <ChevronDown
+            className={cn("ml-1 h-3.5 w-3.5 transition-transform", isOpen && "rotate-180")}
+          />
+        </button>
+      </DropdownTrigger>
 
-      {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-zinc-200 rounded-xl shadow-xl z-50 p-1 animate-in fade-in zoom-in duration-200">
-          {options.map((option) => {
-            const isSelected = selected.includes(option.value);
-            const OptionIcon = option.icon;
-            return (
-              <button
-                key={option.value}
-                onClick={() => toggleOption(option.value)}
-                className={cn(
-                  "flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-colors",
-                  isSelected ? "bg-blue-50 text-blue-700" : "text-zinc-600 hover:bg-zinc-50",
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <div
-                    className={cn(
-                      "flex h-4 w-4 items-center justify-center rounded border transition-all",
-                      isSelected ? "bg-blue-500 border-blue-500" : "border-zinc-300",
-                    )}
-                  >
-                    {isSelected && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
-                  </div>
-                  {OptionIcon && <OptionIcon className="h-4 w-4 opacity-70" />}
-                  <span>{option.label}</span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
+      <DropdownMenu
+        items={[
+          {
+            key: "select-all",
+            value: "select-all",
+            label: "Выбрать все",
+            onClick: toggleAll,
+            isSelected: allSelected,
+            isIndeterminate: someSelected,
+          },
+          ...options.map((option) => ({
+            key: option.value,
+            value: option.value,
+            label: option.label,
+            icon: option.icon,
+            onClick: () => toggleOption(option.value),
+            isSelected: selected.includes(option.value),
+          })),
+        ]}
+        onAction={(key: Key) => {
+          const allItems = [
+            { key: "select-all", onClick: toggleAll },
+            ...options.map((o) => ({ key: o.value, onClick: () => toggleOption(o.value) })),
+          ];
+          const item = allItems.find((i) => i.key === key);
+          if (item?.onClick) item.onClick();
+        }}
+        className="w-56"
+      >
+        {(item: Record<string, unknown>) => (
+          <DropdownItem
+            key={item.key as string}
+            className={cn(
+              item.key !== "select-all" && options.length > 0 && item.key !== options[0]?.value
+                ? "mt-1 pt-1 border-t border-default-200"
+                : "",
+            )}
+            startContent={
+              "isSelected" in item ? (
+                <Checkbox
+                  isSelected={item.isSelected as boolean}
+                  isIndeterminate={item.isIndeterminate as boolean}
+                />
+              ) : null
+            }
+          >
+            {item.label as string}
+          </DropdownItem>
+        )}
+      </DropdownMenu>
+    </Dropdown>
   );
 }

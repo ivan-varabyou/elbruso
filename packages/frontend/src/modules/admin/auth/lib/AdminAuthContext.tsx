@@ -39,6 +39,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     login: storeLogin,
     logout: storeLogout,
     fetchMe,
+    isInitialized,
     updateProfile,
     setUser,
     clearError,
@@ -46,10 +47,10 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
 
   // Initial fetch to sync with cookies
   useEffect(() => {
-    if (!user && isAdminAuthenticated()) {
+    if (!isInitialized && isAdminAuthenticated()) {
       fetchMe();
     }
-  }, [user, fetchMe]);
+  }, [isInitialized, fetchMe]);
 
   const login = useCallback(
     async (credentials: { email: string; password: string }) => {

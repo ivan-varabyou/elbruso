@@ -1,47 +1,51 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  UseGuards,
-  Request,
-  Patch,
-  Delete,
-  Query,
-} from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from "@nestjs/swagger";
-import { plainToInstance } from "class-transformer";
-import { JwtAuthGuard } from "@backend/modules/auth/guards/jwt-auth.guard";
-import { RequestWithUser } from "../../auth/interfaces/auth.interface";
-import {
-  CreateApiKeyDto,
-  UpdateProfileDto,
-  AdminUpdateUserDto,
-  CreateUserDto,
-  UpdateUserDto,
-} from "../dto";
-import { UsersService } from "../services/users.service";
 import { AdminJwtAuthGuard } from "@backend/modules/admin/guards/admin-jwt-auth.guard";
-import { PermissionsGuard, Permissions } from "@backend/modules/admin/guards/permissions.guard";
+import { Permissions, PermissionsGuard } from "@backend/modules/admin/guards/permissions.guard";
+import { JwtAuthGuard } from "@backend/modules/auth/guards/jwt-auth.guard";
+import { RbacResource } from "@backend/modules/rbac/decorators/resource.decorator";
+import { RbacPermission } from "@backend/modules/rbac/enums/permission.enum";
 import {
-  UserResponseDto,
-  UsersListResponseDto,
-  UserCreatedResponseDto,
-  UserUpdatedResponseDto,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { plainToInstance } from "class-transformer";
+
+import { RequestWithUser } from "../../auth/interfaces/auth.interface";
+import { CreateApiKeyDto, CreateUserDto, UpdateProfileDto, UpdateUserDto } from "../dto";
+import {
+  ApiKeyResponseDto,
   UserApprovedResponseDto,
   UserBlockedResponseDto,
+  UserCreatedResponseDto,
   UserDeletedResponseDto,
-  ApiKeyResponseDto,
+  UserResponseDto,
+  UsersListResponseDto,
+  UserUpdatedResponseDto,
 } from "../dto/responses";
+import { UsersService } from "../services/users.service";
 
 @ApiTags("Users")
 @Controller("users")
+@RbacResource({
+  code: RbacPermission.USER_USERS,
+  name: "Пользователи",
+  group: "users",
+  appType: "both",
+})
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get("me")
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(`${RbacPermission.USER_USERS}:read`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Get current user profile" })
   @ApiResponse({
@@ -55,7 +59,8 @@ export class UsersController {
   }
 
   @Patch("profile")
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(`${RbacPermission.USER_USERS}:write`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Update current user profile" })
   @ApiResponse({
@@ -70,7 +75,7 @@ export class UsersController {
 
   @Get()
   @UseGuards(AdminJwtAuthGuard, PermissionsGuard)
-  @Permissions("users:read")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:read`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "List all users" })
   @ApiQuery({ name: "search", required: false })
@@ -115,7 +120,7 @@ export class UsersController {
 
   @Get(":id")
   @UseGuards(AdminJwtAuthGuard, PermissionsGuard)
-  @Permissions("users:read")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:read`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Get user by ID" })
   @ApiResponse({
@@ -130,7 +135,7 @@ export class UsersController {
 
   @Post()
   @UseGuards(AdminJwtAuthGuard, PermissionsGuard)
-  @Permissions("users:create")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:write`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Create user" })
   @ApiResponse({
@@ -145,7 +150,7 @@ export class UsersController {
 
   @Patch(":id")
   @UseGuards(AdminJwtAuthGuard, PermissionsGuard)
-  @Permissions("users:update")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:write`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Update user" })
   @ApiResponse({
@@ -160,7 +165,7 @@ export class UsersController {
 
   @Patch(":id/approve")
   @UseGuards(AdminJwtAuthGuard, PermissionsGuard)
-  @Permissions("users:approve")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:write`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Approve user" })
   @ApiResponse({
@@ -175,7 +180,7 @@ export class UsersController {
 
   @Patch(":id/block")
   @UseGuards(AdminJwtAuthGuard, PermissionsGuard)
-  @Permissions("users:block")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:write`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Block/unblock user" })
   @ApiResponse({
@@ -190,7 +195,7 @@ export class UsersController {
 
   @Delete(":id")
   @UseGuards(AdminJwtAuthGuard, PermissionsGuard)
-  @Permissions("users:delete")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:delete`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Delete user" })
   @ApiResponse({
@@ -204,7 +209,8 @@ export class UsersController {
   }
 
   @Post("api-keys")
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(`${RbacPermission.USER_USERS}:write`)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Create API key for current user" })
   @ApiResponse({

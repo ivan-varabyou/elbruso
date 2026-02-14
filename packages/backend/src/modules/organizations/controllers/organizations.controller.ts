@@ -5,13 +5,28 @@ import { OrganizationFiltersDto } from "../dto/organization-filters.dto";
 import { OrganizationResponseDto, OrganizationsListResponseDto } from "../dto/responses";
 import { toOrganizationDto, toOrganizationListDto } from "../mappers/organization.mapper";
 import { OrganizationsService } from "../services/organizations.service";
+import { UseGuards } from "@nestjs/common";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("reference/organizations")
 @ApiTags("Organizations")
+@UseGuards(AnyJwtAuthGuard, PermissionsGuard)
+@RbacResource({
+  code: RbacPermission.USER_ORGANIZATIONS,
+  name: "Организации",
+  group: "organizations",
+  appType: "webapp",
+})
 export class OrganizationsController {
   constructor(private organizationsService: OrganizationsService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.USER_ORGANIZATIONS}:read`)
   @ApiOperation({ summary: "Get all organizations" })
   @ApiResponse({
     status: 200,
@@ -27,6 +42,7 @@ export class OrganizationsController {
   }
 
   @Get("federations")
+  @Permissions(`${RbacPermission.USER_ORGANIZATIONS}:read`)
   @ApiOperation({ summary: "Get federations" })
   @ApiResponse({
     status: 200,
@@ -44,6 +60,7 @@ export class OrganizationsController {
   }
 
   @Get(":id/tree")
+  @Permissions(`${RbacPermission.USER_ORGANIZATIONS}:read`)
   @ApiOperation({ summary: "Get organization tree" })
   async getTree(@Param("id", ParseIntPipe) id: number) {
     const tree = await this.organizationsService.getTree(id);
@@ -54,6 +71,7 @@ export class OrganizationsController {
   }
 
   @Get(":id/hierarchy")
+  @Permissions(`${RbacPermission.USER_ORGANIZATIONS}:read`)
   @ApiOperation({ summary: "Get organization hierarchy (flat list)" })
   async getHierarchy(@Param("id", ParseIntPipe) id: number) {
     const hierarchy = await this.organizationsService.getHierarchy(id);
@@ -64,6 +82,7 @@ export class OrganizationsController {
   }
 
   @Get(":id")
+  @Permissions(`${RbacPermission.USER_ORGANIZATIONS}:read`)
   @ApiOperation({ summary: "Get organization by ID" })
   @ApiResponse({ status: 200, description: "Returns organization", type: OrganizationResponseDto })
   @ApiResponse({ status: 404, description: "Organization not found" })

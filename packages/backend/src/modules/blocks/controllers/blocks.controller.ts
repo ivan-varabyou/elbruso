@@ -16,16 +16,26 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam, ApiResponse } from "@ne
 import { AnyJwtAuthGuard } from "@backend/modules/auth/guards/any-jwt-auth.guard";
 import { CreateBlockDto, UpdateBlockDto, MoveBlockDto } from "../dto";
 import { BlocksService } from "../services/blocks.service";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 import { BlockResponseDto, BlocksListResponseDto } from "../dto/responses";
 
 @ApiTags("Blocks")
 @ApiBearerAuth("JWT-auth")
 @UseGuards(AnyJwtAuthGuard)
 @Controller()
+@RbacResource({
+  code: RbacPermission.USER_BLOCKS,
+  name: "Блоки",
+  group: "blocks",
+  appType: "webapp",
+})
 export class BlocksController {
   constructor(private readonly blocksService: BlocksService) {}
 
   @Post("pages/:pageId/blocks")
+  @Permissions(`${RbacPermission.USER_BLOCKS}:create`)
   @ApiOperation({ summary: "Create a new block in page" })
   @ApiParam({ name: "pageId", type: "string" })
   @ApiResponse({ status: 201, description: "Block created successfully", type: BlockResponseDto })
@@ -42,6 +52,7 @@ export class BlocksController {
   }
 
   @Get("pages/:pageId/blocks")
+  @Permissions(`${RbacPermission.USER_BLOCKS}:read`)
   @ApiOperation({ summary: "Get all blocks for a page" })
   @ApiParam({ name: "pageId", type: "string" })
   @ApiResponse({ status: 200, description: "List of blocks", type: BlocksListResponseDto })
@@ -56,6 +67,7 @@ export class BlocksController {
   }
 
   @Get("blocks/:id")
+  @Permissions(`${RbacPermission.USER_BLOCKS}:read`)
   @ApiOperation({ summary: "Get block by ID" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Block details", type: BlockResponseDto })
@@ -72,6 +84,7 @@ export class BlocksController {
   }
 
   @Patch("blocks/:id")
+  @Permissions(`${RbacPermission.USER_BLOCKS}:write`)
   @ApiOperation({ summary: "Update block content" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Block updated successfully", type: BlockResponseDto })
@@ -88,6 +101,7 @@ export class BlocksController {
   }
 
   @Post("blocks/:id/move")
+  @Permissions(`${RbacPermission.USER_BLOCKS}:write`)
   @ApiOperation({ summary: "Move block to new position" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Block moved successfully" })
@@ -103,6 +117,7 @@ export class BlocksController {
   }
 
   @Delete("blocks/:id")
+  @Permissions(`${RbacPermission.USER_BLOCKS}:delete`)
   @ApiOperation({ summary: "Delete block (soft delete)" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Block deleted successfully" })

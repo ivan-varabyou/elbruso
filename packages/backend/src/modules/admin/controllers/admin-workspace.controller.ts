@@ -11,6 +11,9 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { plainToInstance } from "class-transformer";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
 import { AdminJwtAuthGuard } from "../../auth/guards/admin-jwt-auth.guard";
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from "../../workspace/dto/workspace.dto";
 import { WorkspaceService } from "../../workspace/services/workspace.service";
@@ -24,10 +27,17 @@ import { WorkspacesListResponseDto } from "../dto/responses/workspaces-list.resp
 @ApiBearerAuth("JWT-auth")
 @UseGuards(AdminJwtAuthGuard)
 @Controller("admin/workspaces")
+@RbacResource({
+  code: RbacPermission.USER_WORKSPACES,
+  name: "Воркспейсы",
+  group: "workspaces",
+  appType: "admin",
+})
 export class AdminWorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:read`)
   @ApiOperation({ summary: "Get all workspaces (Admin only)" })
   @ApiResponse({ status: 200, type: WorkspacesListResponseDto })
   async findAll() {
@@ -36,6 +46,7 @@ export class AdminWorkspaceController {
   }
 
   @Post()
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:write`)
   @ApiOperation({ summary: "Create a new workspace/template as admin" })
   @ApiResponse({ status: 201, type: WorkspaceResponseDto })
   async create(@Body() dto: CreateWorkspaceDto) {
@@ -44,6 +55,7 @@ export class AdminWorkspaceController {
   }
 
   @Patch(":id")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:write`)
   @ApiOperation({ summary: "Update any workspace" })
   @ApiResponse({ status: 200, type: WorkspaceResponseDto })
   async update(@Param("id", ParseUUIDPipe) id: string, @Body() dto: UpdateWorkspaceDto) {
@@ -52,6 +64,7 @@ export class AdminWorkspaceController {
   }
 
   @Delete(":id")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:delete`)
   @ApiOperation({ summary: "Delete any workspace" })
   @ApiResponse({ status: 200, type: DeleteWorkspaceResponseDto })
   async delete(@Param("id", ParseUUIDPipe) id: string) {

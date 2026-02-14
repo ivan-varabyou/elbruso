@@ -1,3 +1,5 @@
+import { RbacResource } from "@backend/modules/rbac/decorators/resource.decorator";
+import { RbacPermission } from "@backend/modules/rbac/enums/permission.enum";
 import {
   Body,
   Controller,
@@ -13,6 +15,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { plainToInstance } from "class-transformer";
 
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
 import { Roles } from "../decorators/roles.decorator";
 import {
   AdminUserResponseDto,
@@ -31,10 +34,17 @@ import { UpdateAdminUserDto } from "./dto/update-admin-user.dto";
 @UseGuards(AdminJwtAuthGuard, RolesGuard)
 @Roles(AdminRole.SUPER_ADMIN)
 @ApiBearerAuth("JWT-auth")
+@RbacResource({
+  code: RbacPermission.ADMIN_USERS,
+  name: "Пользователи",
+  group: "users",
+  appType: "admin",
+})
 export class AdminUsersController {
   constructor(private readonly adminUsersService: AdminUsersService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.ADMIN_USERS}:read`)
   @ApiOperation({ summary: "List all admin users with pagination" })
   @ApiResponse({ status: 200, type: AdminUsersListResponseDto })
   async findAll(@Query("page") page?: number, @Query("limit") limit?: number) {
@@ -46,6 +56,7 @@ export class AdminUsersController {
   }
 
   @Post()
+  @Permissions(`${RbacPermission.ADMIN_USERS}:create`)
   @ApiOperation({ summary: "Create new admin user" })
   @ApiResponse({ status: 201, type: AdminUserResponseDto })
   @ApiResponse({
@@ -58,6 +69,7 @@ export class AdminUsersController {
   }
 
   @Get(":id")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:read`)
   @ApiOperation({ summary: "Get admin user by ID" })
   @ApiResponse({ status: 200, type: AdminUserResponseDto })
   @ApiResponse({ status: 404, description: "Admin user not found" })
@@ -67,6 +79,7 @@ export class AdminUsersController {
   }
 
   @Patch(":id")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:write`)
   @ApiOperation({ summary: "Update admin user" })
   @ApiResponse({ status: 200, type: AdminUserResponseDto })
   @ApiResponse({ status: 404, description: "Admin user not found" })
@@ -76,6 +89,7 @@ export class AdminUsersController {
   }
 
   @Delete(":id")
+  @Permissions(`${RbacPermission.ADMIN_USERS}:delete`)
   @ApiOperation({ summary: "Delete admin user" })
   @ApiResponse({ status: 200, type: DeleteAdminUserResponseDto })
   @ApiResponse({

@@ -2,13 +2,27 @@ import { Controller, Get, Query } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from "@nestjs/swagger";
 import { CountriesService } from "../services/countries.service";
 import { CountryResponseDto } from "../dto/responses";
+import { UseGuards } from "@nestjs/common";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 
 @ApiTags("Countries")
 @Controller("countries")
+@UseGuards(AnyJwtAuthGuard, PermissionsGuard)
+@RbacResource({
+  code: RbacPermission.USER_COUNTRIES,
+  name: "Страны",
+  group: "reference",
+  appType: "webapp",
+})
 export class CountriesController {
   constructor(private readonly countriesService: CountriesService) {}
 
   @Get("active")
+  @Permissions(`${RbacPermission.USER_COUNTRIES}:read`)
   @ApiOperation({ summary: "Get all active countries" })
   @ApiQuery({ name: "lang", required: false, type: String })
   @ApiResponse({ status: 200, type: [CountryResponseDto], description: "List of active countries" })
@@ -23,6 +37,7 @@ export class CountriesController {
   }
 
   @Get()
+  @Permissions(`${RbacPermission.USER_COUNTRIES}:read`)
   @ApiOperation({ summary: "Get all countries" })
   @ApiQuery({ name: "lang", required: false, type: String })
   @ApiResponse({ status: 200, type: [CountryResponseDto], description: "List of all countries" })

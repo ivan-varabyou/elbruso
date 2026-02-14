@@ -2,13 +2,29 @@ import { Controller, Get, Param, Query, ParseUUIDPipe } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from "@nestjs/swagger";
 import { WorkspaceService } from "../services/workspace.service";
 import { TemplateResponseDto, TemplatesListResponseDto } from "../workspace-template/dto/responses";
+import { UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @ApiTags("Workspace Templates")
 @Controller("workspace-templates")
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiBearerAuth("JWT-auth")
+@RbacResource({
+  code: RbacPermission.USER_WORKSPACES,
+  name: "Шаблоны рабочих пространств",
+  group: "workspaces",
+  appType: "webapp",
+})
 export class WorkspaceTemplateController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:read`)
   @ApiOperation({ summary: "List all available workspace templates" })
   @ApiQuery({ name: "organization_id", required: false, type: Number })
   @ApiQuery({ name: "sport_id", required: false, type: Number })
@@ -31,6 +47,7 @@ export class WorkspaceTemplateController {
   }
 
   @Get(":id")
+  @Permissions(`${RbacPermission.USER_WORKSPACES}:read`)
   @ApiOperation({ summary: "Get template details" })
   @ApiResponse({ status: 200, description: "Template details", type: TemplateResponseDto })
   async findOne(@Param("id", ParseUUIDPipe) id: string) {

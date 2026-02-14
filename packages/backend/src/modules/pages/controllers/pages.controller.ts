@@ -15,6 +15,9 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam, ApiResponse } from "@ne
 import { AnyJwtAuthGuard } from "@backend/modules/auth/guards/any-jwt-auth.guard";
 import { CreatePageDto, UpdatePageDto, MovePageDto } from "../dto";
 import { PagesService } from "../services/pages.service";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 import {
   PageResponseDto,
   PagesListResponseDto,
@@ -26,10 +29,17 @@ import {
 @ApiBearerAuth("JWT-auth")
 @UseGuards(AnyJwtAuthGuard)
 @Controller()
+@RbacResource({
+  code: RbacPermission.USER_PAGES,
+  name: "Страницы",
+  group: "pages",
+  appType: "webapp",
+})
 export class PagesController {
   constructor(private readonly pagesService: PagesService) {}
 
   @Post("workspaces/:workspaceId/pages")
+  @Permissions(`${RbacPermission.USER_PAGES}:create`)
   @ApiOperation({ summary: "Create a new page in workspace" })
   @ApiParam({ name: "workspaceId", type: "string" })
   @ApiResponse({ status: 201, description: "Page created successfully", type: PageResponseDto })
@@ -45,6 +55,7 @@ export class PagesController {
   }
 
   @Get("workspaces/:workspaceId/pages")
+  @Permissions(`${RbacPermission.USER_PAGES}:read`)
   @ApiOperation({ summary: "Get page tree for workspace" })
   @ApiParam({ name: "workspaceId", type: "string" })
   @ApiResponse({ status: 200, description: "Page tree", type: PageTreeResponseDto })
@@ -59,6 +70,7 @@ export class PagesController {
   }
 
   @Get("pages/:id")
+  @Permissions(`${RbacPermission.USER_PAGES}:read`)
   @ApiOperation({ summary: "Get page by ID" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Page details", type: PageResponseDto })
@@ -71,6 +83,7 @@ export class PagesController {
   }
 
   @Patch("pages/:id")
+  @Permissions(`${RbacPermission.USER_PAGES}:write`)
   @ApiOperation({ summary: "Update page" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Page updated successfully", type: PageResponseDto })
@@ -87,6 +100,7 @@ export class PagesController {
   }
 
   @Post("pages/:id/move")
+  @Permissions(`${RbacPermission.USER_PAGES}:write`)
   @ApiOperation({ summary: "Move page to new parent or position" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Page moved successfully" })
@@ -102,6 +116,7 @@ export class PagesController {
   }
 
   @Delete("pages/:id")
+  @Permissions(`${RbacPermission.USER_PAGES}:delete`)
   @ApiOperation({ summary: "Delete page (soft delete)" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Page deleted successfully" })

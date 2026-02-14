@@ -1,6 +1,6 @@
 # Структура проекта frontend
 
-Генерировано: Чт 12 фев 2026 23:42:18 +03
+Генерировано: Сб 14 фев 2026 12:19:31 +03
 
 /home/ivan/git/elbruso/packages/frontend
 ├── docs
@@ -56,6 +56,7 @@
 │   │   ├── index.ts
 │   │   ├── pages.api.ts
 │   │   ├── Pages.ts
+│   │   ├── rbac.api.ts
 │   │   ├── reference.api.ts
 │   │   ├── Reference.ts
 │   │   ├── tables.api.ts
@@ -101,21 +102,46 @@
 │   │   │   │   ├── AdminLeftPanel
 │   │   │   │   │   ├── AdminLeftPanel.smart.tsx
 │   │   │   │   │   └── index.ts
+│   │   │   │   ├── AdminRoles
+│   │   │   │   │   ├── AdminRoles.page.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── Admins
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── AdminSettings
 │   │   │   │   │   ├── AdminSettings.smart.tsx
-│   │   │   │   │   ├── CreateAdminModal.dump.tsx
+│   │   │   │   │   ├── CreateAdminModal.tsx
+│   │   │   │   │   ├── EditAdminModal.tsx
 │   │   │   │   │   ├── ProfileSettings.smart.tsx
 │   │   │   │   │   └── UserManagement.smart.tsx
 │   │   │   │   ├── AdminTemplateTree
 │   │   │   │   │   ├── AdminTemplateTree.smart.tsx
 │   │   │   │   │   ├── CreateTemplateModal.smart.tsx
 │   │   │   │   │   └── index.ts
+│   │   │   │   ├── Menu
+│   │   │   │   │   ├── admin.menu.ts
+│   │   │   │   │   ├── AdminMenu.tsx
+│   │   │   │   │   └── index.ts
 │   │   │   │   ├── Organizations
 │   │   │   │   │   ├── CreateOrganizationModal.tsx
 │   │   │   │   │   ├── DeleteConfirmationModal.tsx
 │   │   │   │   │   ├── EditOrganizationModal.tsx
+│   │   │   │   │   ├── OrganizationsFilters.tsx
 │   │   │   │   │   ├── OrganizationsList.tsx
+│   │   │   │   │   ├── OrganizationsSmart.tsx
 │   │   │   │   │   └── OrganizationsTree.tsx
+│   │   │   │   ├── RolesManagement
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── RolesManagement.tsx
+│   │   │   │   ├── UserRoles
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── UserRoles.page.tsx
+│   │   │   │   ├── Users
+│   │   │   │   │   ├── roles
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── page.tsx
 │   │   │   │   └── index.ts
 │   │   │   └── index.ts
 │   │   ├── auth
@@ -161,7 +187,8 @@
 │   │   │   ├── ui
 │   │   │   │   ├── index.ts
 │   │   │   │   └── ToastContainer.smart.tsx
-│   │   │   └── index.ts
+│   │   │   ├── index.ts
+│   │   │   └── toast.service.ts
 │   │   ├── pages
 │   │   │   └── index.ts
 │   │   ├── profile
@@ -169,11 +196,16 @@
 │   │   │   │   ├── indicators
 │   │   │   │   │   ├── components
 │   │   │   │   │   │   ├── CreateIndicatorModal.tsx
+│   │   │   │   │   │   ├── FilterDropdown.dumb.tsx
 │   │   │   │   │   │   ├── FilterDropdown.smart.tsx
 │   │   │   │   │   │   ├── GenerateIndicatorsModal.tsx
 │   │   │   │   │   │   ├── index.ts
 │   │   │   │   │   │   ├── IndicatorGroupModal.tsx
-│   │   │   │   │   │   └── IndicatorGroupsList.smart.tsx
+│   │   │   │   │   │   ├── IndicatorGroupsList.smart.tsx
+│   │   │   │   │   │   ├── IndicatorGroupsTable.dumb.tsx
+│   │   │   │   │   │   ├── IndicatorGroupsTable.smart.tsx
+│   │   │   │   │   │   ├── IndicatorsTable.dumb.tsx
+│   │   │   │   │   │   └── IndicatorsTable.smart.tsx
 │   │   │   │   │   └── index.ts
 │   │   │   │   ├── ProfileLayout
 │   │   │   │   │   ├── Sidebar
@@ -414,6 +446,7 @@
 │   │   ├── enums.ts
 │   │   ├── index.ts
 │   │   ├── link.types.ts
+│   │   ├── rbac.ts
 │   │   ├── reference.types.ts
 │   │   └── visualization.ts
 │   ├── ui
@@ -436,6 +469,12 @@
 │   │   │   ├── Button
 │   │   │   │   ├── Button.dumb.tsx
 │   │   │   │   └── index.ts
+│   │   │   ├── Checkbox
+│   │   │   │   ├── Checkbox.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── ConfirmDialog
+│   │   │   │   ├── ConfirmDialog.dumb.tsx
+│   │   │   │   └── index.ts
 │   │   │   ├── IconButton
 │   │   │   │   ├── IconButton.dumb.tsx
 │   │   │   │   └── index.ts
@@ -447,6 +486,18 @@
 │   │   │   │   ├── index.ts
 │   │   │   │   ├── Logo.dumb.tsx
 │   │   │   │   └── LogoV2.tsx
+│   │   │   ├── Modal
+│   │   │   │   ├── index.ts
+│   │   │   │   └── Modal.tsx
+│   │   │   ├── PermissionsTree
+│   │   │   │   ├── index.ts
+│   │   │   │   └── PermissionsTree.tsx
+│   │   │   ├── RoleCard
+│   │   │   │   ├── index.ts
+│   │   │   │   └── RoleCard.tsx
+│   │   │   ├── RolePermissionsEditor
+│   │   │   │   ├── index.ts
+│   │   │   │   └── RolePermissionsEditor.tsx
 │   │   │   ├── Select
 │   │   │   │   ├── index.ts
 │   │   │   │   └── Select.dumb.tsx
@@ -461,4 +512,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-121 directories, 336 files
+134 directories, 374 files

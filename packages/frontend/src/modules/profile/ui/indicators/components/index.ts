@@ -1,5 +1,10 @@
 export { CreateIndicatorModal } from "./CreateIndicatorModal";
 export { FilterDropdown } from "./FilterDropdown.smart";
+export { FilterDropdownDumb } from "./FilterDropdown.dumb";
 export { GenerateIndicatorsModal } from "./GenerateIndicatorsModal";
 export { IndicatorGroupModal } from "./IndicatorGroupModal";
 export { IndicatorGroupsList } from "./IndicatorGroupsList.smart";
+export { IndicatorGroupsTableDumb } from "./IndicatorGroupsTable.dumb";
+export { IndicatorGroupsTableSmart } from "./IndicatorGroupsTable.smart";
+export { IndicatorsTableDumb } from "./IndicatorsTable.dumb";
+export { IndicatorsTableSmart } from "./IndicatorsTable.smart";

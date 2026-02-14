@@ -13,7 +13,7 @@ export const usersApi = {
       params.append("is_approved", String(filters.is_approved));
 
     const query = params.toString();
-    const url = query ? `/users?${query}` : "/users";
+    const url = query ? `users?${query}` : "users";
     const response = await apiClient.get(url);
     return response.data;
   },
@@ -49,7 +49,7 @@ export const usersApi = {
   },
 
   async getOrganizations() {
-    const response = await apiClient.get("/organizations");
+    const response = await apiClient.get("/reference/organizations");
     return response.data;
   },
 };

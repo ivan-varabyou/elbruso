@@ -5,7 +5,8 @@ import { ReactQueryProvider } from "@frontend/api/hooks/ReactQueryProvider";
 import { AuthProvider } from "@frontend/modules/auth/lib";
 import { I18nProvider, LanguageProvider } from "@frontend/modules/i18n/lib";
 import { ToastProvider } from "@frontend/modules/notifications";
-import { ReactNode } from "react";
+import { useAdminAuthStore } from "@frontend/stores/useAdminAuth.store";
+import { ReactNode, useEffect } from "react";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -15,6 +16,12 @@ interface AppProvidersProps {
 const defaultDictionary: { [key: string]: unknown } = {};
 
 export function AppProviders({ children, dictionary = defaultDictionary }: AppProvidersProps) {
+  const { fetchMe } = useAdminAuthStore();
+
+  useEffect(() => {
+    fetchMe();
+  }, [fetchMe]);
+
   return (
     <I18nProvider dictionary={dictionary}>
       <LanguageProvider>

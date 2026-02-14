@@ -1,37 +1,48 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
   Body,
+  Controller,
+  Delete,
+  Get,
   Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
   Query,
   UseGuards,
-  ParseUUIDPipe,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { plainToInstance } from "class-transformer";
-import { AdminJwtAuthGuard } from "../guards/admin-jwt-auth.guard";
+
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 import {
   CreateWorkspaceTemplateDto,
   UpdateWorkspaceTemplateDto,
 } from "../../workspace/dto/workspace-template.dto";
 import { WorkspaceService } from "../../workspace/services/workspace.service";
 import {
-  WorkspaceTemplateResponseDto,
   DeleteWorkspaceTemplateResponseDto,
+  WorkspaceTemplateResponseDto,
 } from "../dto/responses/workspace-template.response.dto";
 import { WorkspaceTemplatesListResponseDto } from "../dto/responses/workspace-templates-list.response.dto";
+import { AdminJwtAuthGuard } from "../guards/admin-jwt-auth.guard";
 
 @ApiTags("Admin Workspace Templates")
 @ApiBearerAuth("JWT-auth")
 @UseGuards(AdminJwtAuthGuard)
 @Controller("admin/workspace-templates")
+@RbacResource({
+  code: RbacPermission.ADMIN_TEMPLATES,
+  name: "Шаблоны Workspace",
+  group: "templates",
+  appType: "admin",
+})
 export class AdminWorkspaceTemplateController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Get()
+  @Permissions(`${RbacPermission.ADMIN_TEMPLATES}:read`)
   @ApiOperation({ summary: "List all workspace templates" })
   @ApiQuery({ name: "organization_id", required: false, type: Number })
   @ApiQuery({ name: "sport_id", required: false, type: Number })
@@ -51,6 +62,7 @@ export class AdminWorkspaceTemplateController {
   }
 
   @Post()
+  @Permissions(`${RbacPermission.ADMIN_TEMPLATES}:create`)
   @ApiOperation({ summary: "Create a new workspace template" })
   @ApiResponse({ status: 201, type: WorkspaceTemplateResponseDto })
   async create(@Body() dto: CreateWorkspaceTemplateDto) {
@@ -59,6 +71,7 @@ export class AdminWorkspaceTemplateController {
   }
 
   @Patch(":id")
+  @Permissions(`${RbacPermission.ADMIN_TEMPLATES}:write`)
   @ApiOperation({ summary: "Update workspace template" })
   @ApiResponse({ status: 200, type: WorkspaceTemplateResponseDto })
   async update(@Param("id", ParseUUIDPipe) id: string, @Body() dto: UpdateWorkspaceTemplateDto) {
@@ -67,6 +80,7 @@ export class AdminWorkspaceTemplateController {
   }
 
   @Delete(":id")
+  @Permissions(`${RbacPermission.ADMIN_TEMPLATES}:delete`)
   @ApiOperation({ summary: "Delete workspace template" })
   @ApiResponse({ status: 200, type: DeleteWorkspaceTemplateResponseDto })
   async delete(@Param("id", ParseUUIDPipe) id: string) {

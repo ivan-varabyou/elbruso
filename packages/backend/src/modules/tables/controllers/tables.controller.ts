@@ -21,6 +21,9 @@ import {
   ApiResponse,
 } from "@nestjs/swagger";
 import { AnyJwtAuthGuard } from "@backend/modules/auth/guards/any-jwt-auth.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 import {
   CreateTableDto,
   UpdateTableDto,
@@ -37,10 +40,17 @@ import { TableResponseDto, TablesListResponseDto, CellsResponseDto } from "../dt
 @Controller("tables")
 @UseGuards(AnyJwtAuthGuard)
 @ApiBearerAuth("JWT-auth")
+@RbacResource({
+  code: RbacPermission.USER_TABLES,
+  name: "Таблицы",
+  group: "tables",
+  appType: "webapp",
+})
 export class TablesController {
   constructor(private readonly tablesService: TablesService) {}
 
   @Post("workspaces/:workspaceId/tables")
+  @Permissions(`${RbacPermission.USER_TABLES}:create`)
   @ApiOperation({ summary: "Create a new table in workspace" })
   @ApiParam({ name: "workspaceId", type: "string" })
   @ApiResponse({ status: 201, description: "Table created successfully", type: TableResponseDto })
@@ -56,6 +66,7 @@ export class TablesController {
   }
 
   @Get("workspaces/:workspaceId/tables")
+  @Permissions(`${RbacPermission.USER_TABLES}:read`)
   @ApiOperation({ summary: "Get all tables in workspace" })
   @ApiParam({ name: "workspaceId", type: "string" })
   @ApiQuery({ name: "groupId", required: false, type: "string" })
@@ -75,6 +86,7 @@ export class TablesController {
   }
 
   @Get("tables/:id")
+  @Permissions(`${RbacPermission.USER_TABLES}:read`)
   @ApiOperation({ summary: "Get table by ID" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Table details", type: TableResponseDto })
@@ -87,6 +99,7 @@ export class TablesController {
   }
 
   @Patch("tables/:id")
+  @Permissions(`${RbacPermission.USER_TABLES}:write`)
   @ApiOperation({ summary: "Update table" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Table updated successfully", type: TableResponseDto })
@@ -103,6 +116,7 @@ export class TablesController {
   }
 
   @Delete("tables/:id")
+  @Permissions(`${RbacPermission.USER_TABLES}:delete`)
   @ApiOperation({ summary: "Delete table" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Table deleted successfully" })
@@ -114,6 +128,7 @@ export class TablesController {
   }
 
   @Post("tables/:id/versions")
+  @Permissions(`${RbacPermission.USER_TABLES}:write`)
   @ApiOperation({ summary: "Create new version" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 201, description: "Version created successfully" })
@@ -150,6 +165,7 @@ export class TablesController {
   }
 
   @Get("versions/:id/cells")
+  @Permissions(`${RbacPermission.USER_CELLS}:read`)
   @ApiOperation({ summary: "Get cells with pagination" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Cells data", type: CellsResponseDto })
@@ -165,6 +181,7 @@ export class TablesController {
   }
 
   @Patch("versions/:id/cells/:rowIndex/:colIndex")
+  @Permissions(`${RbacPermission.USER_CELLS}:write`)
   @ApiOperation({ summary: "Update single cell" })
   @ApiParam({ name: "id", type: "string" })
   @ApiParam({ name: "rowIndex", type: "number" })
@@ -191,6 +208,7 @@ export class TablesController {
   }
 
   @Post("versions/:id/cells/batch")
+  @Permissions(`${RbacPermission.USER_CELLS}:write`)
   @ApiOperation({ summary: "Batch update cells" })
   @ApiParam({ name: "id", type: "string" })
   @ApiResponse({ status: 200, description: "Cells updated" })

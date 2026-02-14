@@ -4,6 +4,7 @@ import { Countries, Reference } from "../api";
 import { ErrorHandler } from "../api/error";
 import type {
   AppError,
+  Country,
   Indicator,
   IndicatorGroup,
   Organization,
@@ -12,7 +13,6 @@ import type {
   Region,
   Season,
   Sport,
-  Country,
 } from "../types";
 
 const referencesApi = new Reference();
@@ -68,7 +68,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
       const response = await referencesApi.regionsControllerFindAll(
         filters as Parameters<typeof referencesApi.regionsControllerFindAll>[0],
       );
-      set({ regions: response.data as unknown as Region[], isLoading: false });
+      // Backend returns { data: Region[], ... }
+      const data = (response.data as any).data || response.data;
+      set({ regions: data as Region[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -79,7 +81,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await referencesApi.sportsControllerFindAll();
-      set({ sports: response.data as unknown as Sport[], isLoading: false });
+      // Backend returns { data: Sport[], ... }
+      const data = (response.data as any).data || response.data;
+      set({ sports: data as Sport[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -92,7 +96,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
       const response = await referencesApi.indicatorsControllerFindAll(
         filters as Parameters<typeof referencesApi.indicatorsControllerFindAll>[0],
       );
-      set({ indicators: response.data as unknown as Indicator[], isLoading: false });
+      // Backend returns { data: Indicator[], ... }
+      const data = (response.data as any).data || response.data;
+      set({ indicators: data as Indicator[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -105,7 +111,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
       const response = await referencesApi.indicatorsControllerGetGroups(
         filters as Parameters<typeof referencesApi.indicatorsControllerGetGroups>[0],
       );
-      set({ indicatorGroups: response.data as unknown as IndicatorGroup[], isLoading: false });
+      // Backend returns { data: IndicatorGroup[], ... }
+      const data = (response.data as any).data || response.data;
+      set({ indicatorGroups: data as IndicatorGroup[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -116,7 +124,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await referencesApi.seasonsControllerFindAll();
-      set({ seasons: response.data as unknown as Season[], isLoading: false });
+      // Backend returns { items: Season[], ... }
+      const data = (response.data as any).items || (response.data as any).data || response.data;
+      set({ seasons: data as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -130,7 +140,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
         data as Parameters<typeof referencesApi.seasonsControllerCreate>[0],
       );
       const response = await referencesApi.seasonsControllerFindAll();
-      set({ seasons: response.data as unknown as Season[], isLoading: false });
+      const seasonData =
+        (response.data as any).items || (response.data as any).data || response.data;
+      set({ seasons: seasonData as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -146,7 +158,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
         data as Parameters<typeof referencesApi.seasonsControllerUpdate>[1],
       );
       const response = await referencesApi.seasonsControllerFindAll();
-      set({ seasons: response.data as unknown as Season[], isLoading: false });
+      const seasonData =
+        (response.data as any).items || (response.data as any).data || response.data;
+      set({ seasons: seasonData as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -159,7 +173,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     try {
       await referencesApi.seasonsControllerDelete(parseInt(id));
       const response = await referencesApi.seasonsControllerFindAll();
-      set({ seasons: response.data as unknown as Season[], isLoading: false });
+      const seasonData =
+        (response.data as any).items || (response.data as any).data || response.data;
+      set({ seasons: seasonData as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -174,7 +190,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
         data as Parameters<typeof referencesApi.seasonsControllerGenerate>[0],
       );
       const response = await referencesApi.seasonsControllerFindAll();
-      set({ seasons: response.data as unknown as Season[], isLoading: false });
+      const seasonData =
+        (response.data as any).items || (response.data as any).data || response.data;
+      set({ seasons: seasonData as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -186,7 +204,9 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await referencesApi.organizationsControllerFindAll();
-      set({ organizations: response.data as unknown as Organization[], isLoading: false });
+      // Backend returns { data: Organization[], ... }
+      const data = (response.data as any).data || response.data;
+      set({ organizations: data as Organization[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -196,8 +216,10 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
   fetchCountries: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await countriesApi.countriesControllerFindActive({ lang: 'ru' });
-      set({ countries: response.data as unknown as Country[], isLoading: false });
+      const response = await countriesApi.countriesControllerFindActive({ lang: "ru" });
+      // Backend returns { data: Country[], ... }
+      const data = (response.data as any).data || response.data;
+      set({ countries: data as Country[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -208,7 +230,8 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await referencesApi.organizationsControllerFindAll();
-      set({ customReferences: response.data as unknown as ReferenceData[], isLoading: false });
+      const data = (response.data as any).data || response.data;
+      set({ customReferences: data as unknown as ReferenceData[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });

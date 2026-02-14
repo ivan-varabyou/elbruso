@@ -1,2 +1,1 @@
-// Admin module placeholder
-// This module does not have a ui/ directory
+export { RolesManagement } from "./ui/RolesManagement/RolesManagement";
