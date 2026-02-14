@@ -1,6 +1,6 @@
 # Структура проекта frontend
 
-Генерировано: Сб 14 фев 2026 12:19:31 +03
+Генерировано: Сб 14 фев 2026 16:01:01 +03
 
 /home/ivan/git/elbruso/packages/frontend
 ├── docs
@@ -32,6 +32,7 @@
 │   │   ├── api-types.ts
 │   │   ├── api-utils.ts
 │   │   ├── auth.api.ts
+│   │   ├── auth-client.ts
 │   │   ├── Auth.ts
 │   │   ├── blocks.api.ts
 │   │   ├── Blocks.ts
@@ -512,4 +513,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-134 directories, 374 files
+134 directories, 375 files

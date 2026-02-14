@@ -1,6 +1,6 @@
 # Структура проекта
 
-Генерировано: Сб 14 фев 2026 12:19:31 +03
+Генерировано: Сб 14 фев 2026 16:01:01 +03
 
 /home/ivan/git/elbruso
 ├── apps
@@ -912,6 +912,7 @@
 │       │   │   ├── api-types.ts
 │       │   │   ├── api-utils.ts
 │       │   │   ├── auth.api.ts
+│       │   │   ├── auth-client.ts
 │       │   │   ├── Auth.ts
 │       │   │   ├── blocks.api.ts
 │       │   │   ├── Blocks.ts
@@ -1407,6 +1408,7 @@
 ├── AGENTS.md
 ├── docker-compose.yml
 ├── eslint.config.mjs
+├── fix-read-permissions.sql
 ├── opencode.json
 ├── package.json
 ├── package-lock.json
@@ -1419,4 +1421,4 @@
 ├── tsconfig.json
 └── turbo.json
 
-411 directories, 1004 files
+411 directories, 1006 files

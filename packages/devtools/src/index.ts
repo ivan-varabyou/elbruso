@@ -1,6 +1,6 @@
 // UI exports
-export { DevTools } from "./ui/components/DevTools.js";
-export { copyElementInfo,getElementInfo, mount, stateManager } from "./ui/index.js";
+export { DevTools } from "./ui/components/DevTools";
+export { copyElementInfo, getElementInfo, mount, stateManager } from "./ui/index";
 
 // Types
 export type {
@@ -10,4 +10,4 @@ export type {
   PathInfo,
   PluginOptions,
   TransformResult,
-} from "./ui/lib/types.js";
+} from "./ui/lib/types";

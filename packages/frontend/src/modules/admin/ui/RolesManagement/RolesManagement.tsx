@@ -40,11 +40,7 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
       const response = await rbacApi.getAdminRoles();
       // Robust data extraction: some APIs wrap data in another 'data' property
       const data = response.data;
-      const rolesData = Array.isArray(data) 
-        ? data 
-        : (data as any)?.data || (response as any).data || [];
-      
-      setRoles(Array.isArray(rolesData) ? rolesData : []);
+      setRoles(Array.isArray(data) ? data : []);
     } catch (err) {
       toastService.error(err instanceof Error ? err.message : "Failed to load roles");
     }
@@ -118,6 +114,9 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
             <TableColumn className="bg-zinc-50/50 text-zinc-500 font-semibold py-4 px-6 border-b border-zinc-100 whitespace-nowrap">
               Разрешения
             </TableColumn>
+            <TableColumn className="bg-zinc-50/50 text-zinc-500 font-semibold py-4 px-6 border-b border-zinc-100 whitespace-nowrap text-center">
+              Приоритет
+            </TableColumn>
             <TableColumn className="bg-zinc-50/50 text-zinc-500 font-semibold py-4 px-6 border-b border-zinc-100 w-32 text-center whitespace-nowrap">
               Действия
             </TableColumn>
@@ -158,10 +157,22 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
                 <TableCell className="py-4 px-6">
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm font-medium text-zinc-700">
-                      {Object.keys(role.permissions || {}).length}
+                      {
+                        new Set(Object.keys(role.permissions || {}).map((p) => p.split(":")[0]))
+                          .size
+                      }
                     </span>
-                    <span className="text-xs text-zinc-500">модулей настроено</span>
+                    <span className="text-xs text-zinc-500">модулей</span>
                   </div>
+                </TableCell>
+                <TableCell className="py-4 px-6 text-center">
+                  <Chip
+                    size="sm"
+                    variant="flat"
+                    className="h-6 font-mono font-bold bg-blue-50 text-blue-600 border-blue-100"
+                  >
+                    {role.weight}
+                  </Chip>
                 </TableCell>
                 <TableCell className="py-4 px-6">
                   <div className="flex items-center justify-center gap-1">
@@ -210,11 +221,21 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
           }}
           role={selectedRole}
           permissionsTree={permissionsTree}
-          onSave={async (roleId, permissions) => {
+          onSave={async (roleId, permissions, weight) => {
             try {
-              await rbacApi.updateAdminRolePermissions(roleId, permissions);
+              const promises = [];
+
+              // 1. Update permissions
+              promises.push(rbacApi.updateAdminRolePermissions(roleId, permissions));
+
+              // 2. Update weight (if it's different from the current one)
+              if (selectedRole.weight !== weight) {
+                promises.push(rbacApi.updateAdminRole(roleId, { weight }));
+              }
+
+              await Promise.all(promises);
               await loadRoles();
-              toastService.success("Разрешения успешно обновлены");
+              toastService.success("Роль успешно обновлена");
             } catch (err) {
               toastService.error(err instanceof Error ? err.message : "Ошибка при сохранении");
             }

@@ -41,6 +41,7 @@ export interface RbacRole {
   name: string;
   description: string | null;
   permissions: Record<string, string[]>;
+  weight: number;
   isSystem: boolean;
   isEditable: boolean;
   createdAt: Date;

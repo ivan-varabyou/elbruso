@@ -38,10 +38,8 @@ export const useUserStore = create<UserStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const users = new Users();
-      const { data: user } = (await users.usersControllerGetProfile()) as unknown as {
-        data: User;
-      };
-      set({ user, isLoading: false });
+      const response = (await users.usersControllerGetProfile()) as unknown as { data: User };
+      set({ user: response.data, isLoading: false });
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false });
     }

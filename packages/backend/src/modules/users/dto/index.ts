@@ -71,6 +71,11 @@ export class UpdateUserDto {
   @IsOptional()
   @IsBoolean()
   is_approved?: boolean;
+
+  @ApiPropertyOptional({ type: "array" })
+  @IsOptional()
+  @IsArray()
+  workspaces?: { id: string; role: string }[];
 }
 
 export class CreateApiKeyDto {

@@ -52,4 +52,14 @@ export const usersApi = {
     const response = await apiClient.get("/reference/organizations");
     return response.data;
   },
+
+  async getWorkspaces() {
+    const response = await apiClient.get("/admin/workspaces");
+    return response.data;
+  },
+
+  async getRoles() {
+    const response = await apiClient.get("/admin/roles");
+    return response.data;
+  },
 };

@@ -857,6 +857,7 @@ export interface RbacRoles {
   name: string;
   permissions: Generated<Json | null>;
   type: string;
+  weight: Generated<number>;
   updated_at: Generated<Timestamp | null>;
 }
 

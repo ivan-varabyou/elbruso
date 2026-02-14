@@ -22,6 +22,21 @@ apiClient.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error),
 );
 
+apiClient.interceptors.response.use(
+  (response) => {
+    if (
+      response.data &&
+      typeof response.data === "object" &&
+      "success" in response.data &&
+      "data" in response.data
+    ) {
+      response.data = response.data.data;
+    }
+    return response;
+  },
+  (error) => Promise.reject(error),
+);
+
 let isRefreshing = false;
 let failedQueue: Array<{ resolve: (token: string) => void; reject: (error: Error) => void }> = [];
 
@@ -104,11 +119,12 @@ apiClient.interceptors.response.use(
           return Promise.reject(error);
         } else {
           // Для веб - обычный refresh
-          const { data } = await axios.post(`${API_URL}/${API_VERSION}/auth/refresh`, {
+          const response = await axios.post(`${API_URL}/${API_VERSION}/auth/refresh`, {
             refreshToken,
           });
-          const newAccessToken = data.accessToken || data.access_token;
-          const newRefreshToken = data.refreshToken || data.refresh_token || refreshToken;
+          const data = response.data?.data || response.data;
+          const newAccessToken = data?.accessToken || data?.access_token;
+          const newRefreshToken = data?.refreshToken || data?.refresh_token || refreshToken;
           setTokens(newAccessToken, newRefreshToken);
           isRefreshing = false;
           processQueue(null, newAccessToken);

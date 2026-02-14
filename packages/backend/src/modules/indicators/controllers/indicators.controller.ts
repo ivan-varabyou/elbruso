@@ -1,6 +1,6 @@
-import { AdminJwtAuthGuard } from "@backend/modules/admin/guards/admin-jwt-auth.guard";
 import { PermissionsGuard } from "@backend/modules/admin/guards/permissions.guard";
-import { AdminJwtPayload } from "@backend/modules/admin/strategies/admin-jwt.strategy";
+import { JwtAuthGuard } from "@backend/modules/auth/guards/jwt-auth.guard";
+import { JwtPayload } from "@backend/modules/auth/interfaces";
 import { OrganizationsService } from "@backend/modules/organizations/services/organizations.service";
 import { Permissions } from "@backend/modules/rbac/decorators/permissions.decorator";
 import { RbacResource } from "@backend/modules/rbac/decorators/resource.decorator";
@@ -37,12 +37,12 @@ import { toIndicatorGroupDto, toIndicatorGroupListDto } from "../mappers/indicat
 import { IndicatorsService } from "../services/indicators.service";
 
 interface AuthenticatedRequest extends Express.Request {
-  user: AdminJwtPayload;
+  user: JwtPayload;
 }
 
 @Controller("reference/indicators")
 @ApiTags("Indicators")
-@UseGuards(AdminJwtAuthGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth("JWT-auth")
 @RbacResource({
   code: RbacPermission.USER_INDICATORS,

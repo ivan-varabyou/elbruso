@@ -21,7 +21,7 @@ export function IndicatorsTableDumb({
   onEdit,
   onDelete,
 }: IndicatorsTableDumbProps) {
-  if (indicators.length === 0) {
+  if (!Array.isArray(indicators) || indicators.length === 0) {
     return (
       <div className="flex items-center justify-center h-32 text-muted-foreground">
         Нет данных для отображения

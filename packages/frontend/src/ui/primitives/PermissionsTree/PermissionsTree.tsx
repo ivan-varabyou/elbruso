@@ -53,16 +53,17 @@ export const PermissionsTree: React.FC<PermissionsTreeProps> = ({
   };
 
   const getColumnState = (action: string) => {
-    const availablePermissions = flatPermissions.filter((p) => 
-      getPermissionActions(p).includes(action)
+    const availablePermissions = flatPermissions.filter((p) =>
+      getPermissionActions(p).includes(action),
     );
-    
+
     if (availablePermissions.length === 0) return { checked: false, indeterminate: false };
-    
-    const selectedCount = availablePermissions.filter((p) => 
-      (permissions[p.code] || []).includes(action as PermissionAction)
-    ).length;
-    
+
+    const selectedCount = availablePermissions.filter((p) => {
+      const hasAction = (permissions[p.code] || []).includes(action as PermissionAction);
+      return hasAction;
+    }).length;
+
     return {
       checked: selectedCount === availablePermissions.length,
       indeterminate: selectedCount > 0 && selectedCount < availablePermissions.length,
@@ -192,7 +193,7 @@ export const PermissionsTree: React.FC<PermissionsTreeProps> = ({
                   {hasAction ? (
                     <div className="flex justify-center items-center h-full w-full pointer-events-none">
                       <Checkbox
-                        key={`${permission.code}-${action}-${isChecked}`}
+                        key={`${permission.code}-${action}`}
                         size="md"
                         color={config.color}
                         checked={isChecked}

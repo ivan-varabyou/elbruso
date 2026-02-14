@@ -44,8 +44,7 @@ export const rbacApi = {
   ): Promise<ApiResponse<PermissionsTree>> =>
     request(`${API_BASE}/permissions/tree?appType=${appType}`),
 
-  getAdminRoles: (): Promise<ApiResponse<RbacRole[]>> =>
-    request(`${API_BASE}/admin/roles`),
+  getAdminRoles: (): Promise<ApiResponse<RbacRole[]>> => request(`${API_BASE}/admin/roles`),
 
   getAdminRole: (id: string): Promise<ApiResponse<RbacRole>> =>
     request(`${API_BASE}/admin/roles/${id}`),
@@ -56,10 +55,7 @@ export const rbacApi = {
       body: JSON.stringify(data),
     }),
 
-  updateAdminRole: (
-    id: string,
-    data: Partial<CreateRoleDto>,
-  ): Promise<ApiResponse<RbacRole>> =>
+  updateAdminRole: (id: string, data: Partial<CreateRoleDto>): Promise<ApiResponse<RbacRole>> =>
     request(`${API_BASE}/admin/roles/${id}`, {
       method: "PUT",
       body: JSON.stringify(data),
@@ -68,11 +64,12 @@ export const rbacApi = {
   updateAdminRolePermissions: (
     id: string,
     permissions: Record<string, string[]>,
-  ): Promise<ApiResponse<RbacRole>> =>
-    request(`${API_BASE}/admin/roles/${id}/permissions`, {
+  ): Promise<ApiResponse<RbacRole>> => {
+    return request(`${API_BASE}/admin/roles/${id}/permissions`, {
       method: "PUT",
       body: JSON.stringify(permissions),
-    }),
+    });
+  },
 
   deleteAdminRole: (id: string): Promise<ApiResponse<{ success: boolean }>> =>
     request(`${API_BASE}/admin/roles/${id}`, { method: "DELETE" }),
@@ -88,10 +85,7 @@ export const rbacApi = {
       body: JSON.stringify(data),
     }),
 
-  updateUserRole: (
-    id: string,
-    data: Partial<CreateRoleDto>,
-  ): Promise<ApiResponse<RbacRole>> =>
+  updateUserRole: (id: string, data: Partial<CreateRoleDto>): Promise<ApiResponse<RbacRole>> =>
     request(`${API_BASE}/user/roles/${id}`, {
       method: "PUT",
       body: JSON.stringify(data),

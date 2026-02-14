@@ -1,5 +1,6 @@
-import { IsEmail, IsString, IsOptional, IsEnum, MinLength } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsArray, IsEmail, IsEnum, IsOptional, IsString, MinLength } from "class-validator";
+
 import { UserRole } from "../enums/user-role.enum";
 
 export class CreateUserDto {
@@ -32,4 +33,9 @@ export class CreateUserDto {
   @ApiProperty({ enum: UserRole, example: UserRole.MANAGER })
   @IsEnum(UserRole)
   role!: UserRole;
+
+  @ApiPropertyOptional({ type: "array" })
+  @IsOptional()
+  @IsArray()
+  workspaces?: { id: string; role: string }[];
 }

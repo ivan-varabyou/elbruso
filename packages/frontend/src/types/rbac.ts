@@ -28,6 +28,7 @@ export interface RbacRole {
   name: string;
   description?: string;
   permissions: Record<string, PermissionAction[]>;
+  weight: number;
   isSystem: boolean;
   isEditable: boolean;
   createdAt: string;
@@ -43,6 +44,7 @@ export interface CreateRoleDto {
   name: string;
   description?: string;
   permissions: Record<string, PermissionAction[]>;
+  weight?: number;
 }
 
 export interface AssignUserRoleDto {

@@ -1,6 +1,6 @@
 # Структура проекта app-admin
 
-Генерировано: Сб 14 фев 2026 12:19:31 +03
+Генерировано: Сб 14 фев 2026 16:01:01 +03
 
 /home/ivan/git/elbruso/apps/app-admin
 ├── dictionaries

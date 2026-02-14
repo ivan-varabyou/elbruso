@@ -1,6 +1,6 @@
 "use client";
 
-import { DevTools } from "@elbruso/devtools";
+import { DevTools } from "@devtools";
 import { ReactQueryProvider } from "@frontend/api/hooks/ReactQueryProvider";
 import { AuthProvider } from "@frontend/modules/auth/lib";
 import { I18nProvider, LanguageProvider } from "@frontend/modules/i18n/lib";

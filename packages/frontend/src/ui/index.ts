@@ -4,6 +4,7 @@ export { Input } from "./primitives/Input";
 export { Select } from "./primitives/Select";
 export { Checkbox } from "./primitives/Checkbox";
 export { PermissionsTree } from "./primitives/PermissionsTree";
+export { Logo } from "./primitives/Logo";
 
 // Layout
 export { AuthLayout } from "./layout/AuthLayout/AuthLayout";

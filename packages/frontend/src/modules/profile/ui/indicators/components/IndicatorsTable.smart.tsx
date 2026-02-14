@@ -3,7 +3,7 @@
 import { IndicatorResponseDto } from "@frontend/api/data-contracts";
 import { Reference } from "@frontend/api/reference.api";
 import { Button, Checkbox, Input, Spinner } from "@frontend/ui/primitives";
-import { ChevronLeft, ChevronRight, FileSpreadsheet,Plus, Search, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileSpreadsheet, Plus, Search, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { FilterDropdown } from "./FilterDropdown.smart";
@@ -78,17 +78,17 @@ export function IndicatorsTableSmart({
     });
 
     try {
-      const response = await referenceApi.indicatorsControllerFindAll(
+      const response = (await referenceApi.indicatorsControllerFindAll(
         {
           search: debouncedSearch || undefined,
           scopes: selectedScopes.length > 0 ? selectedScopes : undefined,
         },
         { signal: abortControllerRef.current.signal },
-      );
+      )) as unknown as { data: { total: number; data: IndicatorResponseDto[] } };
 
       console.log("[IndicatorsTable] Fetch success", {
         total: response.data.total,
-        dataLength: response.data.data.length,
+        dataLength: response.data.data?.length,
       });
 
       setIndicators(response.data.data);

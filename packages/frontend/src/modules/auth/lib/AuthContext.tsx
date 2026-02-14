@@ -1,8 +1,8 @@
 "use client";
 
 import type { LoginDto, RegisterDto } from "@frontend/api";
-import { Auth, clearTokens, isAuthenticated as checkAuth, setTokens } from "@frontend/api";
-import { disconnectProfileSocket, getProfileSocket } from "@frontend/api/websocket.ws";
+import { Auth } from "@frontend/api";
+import { clearTokens, isAuthenticated as checkAuth, setTokens } from "@frontend/api/auth-client";
 import React, {
   createContext,
   ReactNode,
@@ -106,7 +106,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     clearTokens();
-    disconnectProfileSocket();
+    // WebSocket disabled for cookie-based auth
+    // disconnectProfileSocket();
     setState({
       user: null,
       isAuthenticated: false,
@@ -160,19 +161,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isRefreshing = true;
 
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (!refreshToken) {
-          logout();
-          return;
-        }
-
-        const response = (await authApi.authControllerRefresh({ refreshToken })) as unknown as {
+        // Refresh token is now in httpOnly cookie
+        const response = (await authApi.authControllerRefresh({ refreshToken: "" })) as unknown as {
           data: { accessToken?: string; refreshToken?: string };
         };
         const data = response.data;
 
         if (data.accessToken) {
-          setTokens(data.accessToken, data.refreshToken || refreshToken);
+          setTokens(data.accessToken, data.refreshToken || "");
           scheduleRefresh(data.accessToken);
         }
       } catch (error) {
@@ -203,17 +199,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (loginResponse?.data?.accessToken && loginResponse?.data?.refreshToken) {
         setTokens(loginResponse.data.accessToken, loginResponse.data.refreshToken);
+      } else {
+        // Tokens are in httpOnly cookies, just set the logged_in flag
+        setTokens("", "");
       }
 
-      const accessToken = loginResponse.data.accessToken || localStorage.getItem("accessToken");
-
-      if (accessToken && CONFIG.WEBSOCKET_ENABLED) {
-        try {
-          getProfileSocket(accessToken);
-        } catch (wsError) {
-          console.warn("WebSocket connection failed, falling back to REST:", wsError);
-        }
-      }
+      // WebSocket is disabled for now since we're using cookies
+      // const accessToken = loginResponse.data.accessToken || localStorage.getItem("accessToken");
+      // if (accessToken && CONFIG.WEBSOCKET_ENABLED) {
+      //   try {
+      //     getProfileSocket(accessToken);
+      //   } catch (wsError) {
+      //     console.warn("WebSocket connection failed, falling back to REST:", wsError);
+      //   }
+      // }
 
       const response = await authApi.authControllerGetMe();
 
@@ -244,17 +243,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (registerResponse?.data?.accessToken && registerResponse?.data?.refreshToken) {
         setTokens(registerResponse.data.accessToken, registerResponse.data.refreshToken);
+      } else {
+        // Tokens are in httpOnly cookies, just set the logged_in flag
+        setTokens("", "");
       }
 
-      const accessToken = registerResponse.data.accessToken || localStorage.getItem("accessToken");
-
-      if (accessToken && CONFIG.WEBSOCKET_ENABLED) {
-        try {
-          getProfileSocket(accessToken);
-        } catch (wsError) {
-          console.warn("WebSocket connection failed, falling back to REST:", wsError);
-        }
-      }
+      // WebSocket is disabled for now since we're using cookies
+      // const accessToken = registerResponse.data.accessToken || localStorage.getItem("accessToken");
+      // if (accessToken && CONFIG.WEBSOCKET_ENABLED) {
+      //   try {
+      //     getProfileSocket(accessToken);
+      //   } catch (wsError) {
+      //     console.warn("WebSocket connection failed, falling back to REST:", wsError);
+      //   }
+      // }
 
       const response = await authApi.authControllerGetMe();
 

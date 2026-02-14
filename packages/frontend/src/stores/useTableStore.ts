@@ -1,5 +1,5 @@
 import type { CreateTableDto, UpdateTableDto } from "@frontend/api";
-import { Tables, Versions, Workspaces, CellDataDto, BatchCellUpdate } from "@frontend/api";
+import { BatchCellUpdate,CellDataDto, Tables, Versions, Workspaces } from "@frontend/api";
 import { ErrorHandler } from "@frontend/api/error";
 import type { CellData, CellUpdate } from "@frontend/modules/table/types";
 import type { AppError } from "@frontend/types/enums";
@@ -53,7 +53,8 @@ export const useTableStore = create<TableStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await workspacesApi.dynamicTablesControllerFindAll(workspaceId, { groupId });
-      set({ tables: response.data as unknown as DynamicTable[], isLoading: false });
+      const tablesData = response.data as unknown as { tables: DynamicTable[] };
+      set({ tables: tablesData.tables as unknown as DynamicTable[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });

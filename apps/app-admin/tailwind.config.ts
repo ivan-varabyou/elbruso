@@ -17,20 +17,24 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
+          DEFAULT: "#1A73E8",
           blue: "#1A73E8",
           "blue-dark": "#0F4C81",
           "blue-light": "#4285F4",
           blue_hover: "#1664C4",
         },
         success: {
+          DEFAULT: "#34A853",
           green: "#34A853",
           "green-dark": "#0F9D58",
         },
         warning: {
+          DEFAULT: "#FB8C00",
           orange: "#FB8C00",
           yellow: "#FBBC05",
         },
         error: {
+          DEFAULT: "#EA4335",
           red: "#EA4335",
           "red-dark": "#D32F2F",
         },

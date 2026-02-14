@@ -33,6 +33,9 @@ export class UserResponseDto {
 
   @ApiProperty({ required: false })
   updated_at?: Date;
+
+  @ApiProperty({ required: false, type: "array" })
+  workspaces?: any[];
 }
 
 export class UserProfileResponseDto extends UserResponseDto {}

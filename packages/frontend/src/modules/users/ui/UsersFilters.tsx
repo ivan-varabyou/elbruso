@@ -1,13 +1,14 @@
 "use client";
 
-import { Input, Button } from "@frontend/ui/primitives";
-import { Search, Filter, X } from "lucide-react";
+import { Button, Input } from "@frontend/ui/primitives";
+import { Plus } from "lucide-react";
+
+import { useUsersPermissions } from "../hooks/useUsersPermissions";
 import { useUsersPageStore } from "../stores/useUsersPageStore";
 import { UserStatus } from "../types/users.types";
-import { useUsersPermissions } from "../hooks/useUsersPermissions";
 
 export function UsersFilters() {
-  const { filters, setFilters, selectedStatus, setSelectedStatus, fetchOrganizations } =
+  const { filters, setFilters, selectedStatus, setSelectedStatus, setSelectedUser, setEditorOpen } =
     useUsersPageStore();
   const { canCreate } = useUsersPermissions();
 
@@ -48,10 +49,11 @@ export function UsersFilters() {
         <Button
           variant="solid"
           onClick={() => {
-            // TODO: Open create modal
-            alert("Создание пользователя");
+            setSelectedUser(null);
+            setEditorOpen(true);
           }}
         >
+          <Plus className="h-4 w-4 mr-2" />
           Создать пользователя
         </Button>
       )}

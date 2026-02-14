@@ -3,14 +3,17 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   Post,
   Req,
+  Res,
   UseGuards,
 } from "@nestjs/common";
-import { ApiOperation, ApiResponse,ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { plainToInstance } from "class-transformer";
+import { Response } from "express";
 
 import {
   ChangePasswordDto,
@@ -45,8 +48,29 @@ export class AuthController {
     type: RegisterResponseDto,
   })
   @ApiResponse({ status: 400, description: "Bad request" })
-  async register(@Body() dto: RegisterDto): Promise<RegisterResponseDto> {
+  async register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<RegisterResponseDto> {
     const result = await this.authService.register(dto);
+
+    // Set httpOnly cookies for secure token storage
+    res.cookie("accessToken", result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 15 * 60 * 1000, // 15m
+    });
+
+    res.cookie("refreshToken", result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+    });
+
     return plainToInstance(RegisterResponseDto, result);
   }
 
@@ -59,8 +83,29 @@ export class AuthController {
     type: LoginResponseDto,
   })
   @ApiResponse({ status: 401, description: "Invalid credentials" })
-  async login(@Body() dto: LoginDto): Promise<LoginResponseDto> {
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<LoginResponseDto> {
     const result = await this.authService.login(dto);
+
+    // Set httpOnly cookies for secure token storage
+    res.cookie("accessToken", result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 15 * 60 * 1000, // 15m to match JWT expiration
+    });
+
+    res.cookie("refreshToken", result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+    });
+
     return plainToInstance(LoginResponseDto, result);
   }
 
@@ -73,8 +118,36 @@ export class AuthController {
     type: RefreshTokenResponseDto,
   })
   @ApiResponse({ status: 401, description: "Invalid refresh token" })
-  async refresh(@Body() dto: RefreshTokenDto): Promise<RefreshTokenResponseDto> {
-    const result = await this.authService.refreshToken(dto);
+  async refresh(
+    @Body() dto: RefreshTokenDto,
+    @Req() req: Request & { cookies?: Record<string, string> },
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<RefreshTokenResponseDto> {
+    // Try to get refresh token from cookie first, then from body
+    const refreshToken = req.cookies?.refreshToken || dto.refreshToken;
+    if (!refreshToken) {
+      throw new HttpException("Refresh token missing", HttpStatus.UNAUTHORIZED);
+    }
+
+    const result = await this.authService.refreshToken({ refreshToken });
+
+    // Update httpOnly cookies
+    res.cookie("accessToken", result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie("refreshToken", result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     return plainToInstance(RefreshTokenResponseDto, result);
   }
 

@@ -9,7 +9,11 @@ interface RolePermissionsEditorProps {
   role: RbacRole;
   isOpen: boolean;
   onClose: () => void;
-  onSave: (roleId: string, permissions: Record<string, PermissionAction[]>) => Promise<void>;
+  onSave: (
+    roleId: string,
+    permissions: Record<string, PermissionAction[]>,
+    weight: number,
+  ) => Promise<void>;
   permissionsTree?: {
     groups: PermissionGroup[];
   };
@@ -23,12 +27,14 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
   permissionsTree,
 }) => {
   const [permissions, setPermissions] = useState<Record<string, PermissionAction[]>>({});
+  const [weight, setWeight] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     if (isOpen && role) {
       setPermissions(role.permissions || {});
+      setWeight(role.weight || 0);
       setHasChanges(false);
     }
   }, [isOpen, role]);
@@ -54,8 +60,10 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
   const handleSave = async () => {
     setLoading(true);
     try {
-      await onSave(role.id, permissions);
+      await onSave(role.id, permissions, weight);
       onClose();
+    } catch (error) {
+      console.error("[RolePermissionsEditor] error in onSave:", error);
     } finally {
       setLoading(false);
     }
@@ -91,6 +99,7 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
 
   const handleReset = () => {
     setPermissions(role.permissions || {});
+    setWeight(role.weight || 0);
     setHasChanges(false);
   };
 
@@ -113,12 +122,31 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
               <span className="text-xs text-zinc-400 font-medium">Конфигурация прав доступа</span>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-zinc-200/50 rounded-full transition-all text-zinc-400 hover:text-zinc-600"
-          >
-            <X className="h-6 w-6" />
-          </button>
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col items-end gap-1 mr-4">
+              <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
+                Приоритет (Вес)
+              </span>
+              <input
+                type="number"
+                value={weight}
+                onChange={(e) => {
+                  setWeight(Number(e.target.value));
+                  setHasChanges(true);
+                }}
+                className="w-20 bg-zinc-100 border border-zinc-200 rounded px-2 py-1 text-sm font-mono font-bold text-zinc-700 text-center focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                placeholder="0"
+                min="0"
+                max="1000"
+              />
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-zinc-200/50 rounded-full transition-all text-zinc-400 hover:text-zinc-600"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
         </div>
 
         {/* Content */}
@@ -135,7 +163,9 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
           ) : (
             <div className="flex flex-col items-center justify-center py-24 text-zinc-400 gap-4">
               <div className="h-10 w-10 animate-spin rounded-full border-3 border-zinc-200 border-t-zinc-900" />
-              <span className="text-sm font-medium animate-pulse">Загрузка дерева разрешений...</span>
+              <span className="text-sm font-medium animate-pulse">
+                Загрузка дерева разрешений...
+              </span>
             </div>
           )}
         </div>
@@ -145,7 +175,7 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
           <Button
             variant="light"
             onPress={handleReset}
-            disabled={!hasChanges || loading}
+            isDisabled={!hasChanges || loading}
             className="text-zinc-500 hover:text-zinc-900 font-medium"
           >
             <RotateCcw className="h-4 w-4 mr-2" />
@@ -164,7 +194,7 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
               variant="solid"
               color="primary"
               onPress={handleSave}
-              disabled={!hasChanges || loading}
+              isDisabled={!hasChanges || loading}
               className="px-8 font-semibold shadow-lg shadow-blue-500/20"
             >
               <div className="flex items-center gap-2">

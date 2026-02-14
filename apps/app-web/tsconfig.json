@@ -26,6 +26,8 @@
       "@database": ["../../packages/database/src"],
       "@database/*": ["../../packages/database/src/*"],
       "@devtools": ["../../packages/devtools/src"],
+      "@devtools/*": ["../../packages/devtools/src/*"],
+      "@elbruso/devtools": ["../../packages/devtools/src"],
       "@appweb": ["./src"],
       "@appadmin": ["../app-admin/src"],
       "@apigateway/*": ["../../apps/api-gateway/src/*"]

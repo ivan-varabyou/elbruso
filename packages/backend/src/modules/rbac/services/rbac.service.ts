@@ -142,6 +142,8 @@ export class RbacService {
     name: string,
     description: string | null,
     permissions: Record<string, string[]>,
+    weight?: number,
+    actingUserId?: string,
   ): Promise<RbacRole> {
     const dbType = type === RbacAppType.ADMIN ? "admin" : "user";
 
@@ -153,6 +155,7 @@ export class RbacService {
         name,
         description,
         permissions: sql`${JSON.stringify(permissions)}::jsonb`,
+        weight: weight ?? 0,
         is_system: false,
         is_editable: true,
       })
@@ -162,11 +165,19 @@ export class RbacService {
     return this.formatRole(role!);
   }
 
-  async updateRole(id: string, data: { name?: string; description?: string }): Promise<RbacRole> {
+  async updateRole(
+    id: string,
+    data: { name?: string; description?: string; weight?: number },
+    actingUserId?: string,
+  ): Promise<RbacRole> {
     const role = await this.getRoleById(id);
 
     if (!role) {
       throw new NotFoundException("Role not found");
+    }
+
+    if (actingUserId) {
+      await this.validatePriority(actingUserId, role);
     }
 
     if (!role.isEditable) {
@@ -182,6 +193,9 @@ export class RbacService {
     }
     if (data.description !== undefined) {
       updateData.description = data.description;
+    }
+    if (data.weight !== undefined) {
+      updateData.weight = data.weight;
     }
 
     const updated = await this.db.client
@@ -200,11 +214,16 @@ export class RbacService {
   async updateRolePermissions(
     id: string,
     permissions: Record<string, string[]>,
+    actingUserId?: string,
   ): Promise<RbacRole> {
     const role = await this.getRoleById(id);
 
     if (!role) {
       throw new NotFoundException("Role not found");
+    }
+
+    if (actingUserId) {
+      await this.validatePriority(actingUserId, role);
     }
 
     // Note: isEditable check removed - RBAC guard ensures only authorized users can call this
@@ -223,11 +242,15 @@ export class RbacService {
     return this.formatRole(updated!);
   }
 
-  async deleteRole(id: string): Promise<void> {
+  async deleteRole(id: string, actingUserId?: string): Promise<void> {
     const role = await this.getRoleById(id);
 
     if (!role) {
       throw new NotFoundException("Role not found");
+    }
+
+    if (actingUserId) {
+      await this.validatePriority(actingUserId, role);
     }
 
     if (role.isSystem) {
@@ -325,6 +348,42 @@ export class RbacService {
   }
 
   // ============================================
+  // Priority Validation
+  // ============================================
+
+  /**
+   * Validates that the acting user has enough priority to modify the target role.
+   * Super Admins can modify everything.
+   * Other users can only modify roles with lower weight than their own.
+   */
+  async validatePriority(actingUserId: string, targetRole: RbacRole): Promise<void> {
+    // 1. Get acting user's role
+    const actingUserWithRole = await this.getUserWithRole(actingUserId);
+    if (!actingUserWithRole) {
+      throw new ForbiddenException("Acting user role not found");
+    }
+
+    // 2. Super Admin bypass
+    if (this.isAdminRole(actingUserWithRole.roleCode)) {
+      return;
+    }
+
+    // 3. Get acting user's role weight
+    const actingRole = await this.getRoleById(actingUserWithRole.roleId);
+    if (!actingRole) {
+      throw new ForbiddenException("Acting role details not found");
+    }
+
+    // 4. Compare weights
+    // Acting user weight MUST be GREATER than target role weight
+    if (actingRole.weight <= targetRole.weight) {
+      throw new ForbiddenException(
+        `Insufficient priority: your role weight (${actingRole.weight}) must be higher than target role weight (${targetRole.weight})`,
+      );
+    }
+  }
+
+  // ============================================
   // Private Helpers
   // ============================================
 
@@ -335,26 +394,48 @@ export class RbacService {
     organizationId: number | null;
     appType: string;
   } | null> {
-    // Get admin user role first
-    const adminRole = await this.db.client
+    // 1. Try new rbac_user_roles table first
+    const adminRbacRole = await this.db.client
       .selectFrom("rbac_user_roles")
       .selectAll()
       .where("user_id", "=", userId)
       .where("app_type", "=", "admin")
       .executeTakeFirst();
 
-    if (adminRole) {
-      const role = await this.getRoleById(adminRole.role_id);
+    if (adminRbacRole) {
+      const role = await this.getRoleById(adminRbacRole.role_id);
       return {
         id: userId,
         roleCode: role?.code || "",
-        roleId: adminRole.role_id,
+        roleId: adminRbacRole.role_id,
         organizationId: null,
         appType: "admin",
       };
     }
 
-    // Get webapp user role
+    // 2. Fallback to existing admin_users table (legacy)
+    const adminUser = await this.db.client
+      .selectFrom("admin_users")
+      .select(["id", "role", "role_id"])
+      .where("id", "=", userId)
+      .executeTakeFirst();
+
+    if (adminUser) {
+      // Map legacy role string to RBAC code
+      const roleCode = String(adminUser.role).toLowerCase();
+      // Try to find the corresponding role in the new system to get its ID
+      const rbacRole = await this.getRoleByTypeAndCode(RbacAppType.ADMIN, roleCode);
+
+      return {
+        id: userId,
+        roleCode: roleCode,
+        roleId: rbacRole?.id || adminUser.role_id || "",
+        organizationId: null,
+        appType: "admin",
+      };
+    }
+
+    // 3. Try webapp user role
     const webappRole = await this.db.client
       .selectFrom("rbac_user_roles")
       .selectAll()
@@ -457,6 +538,7 @@ export class RbacService {
     name: string;
     description: string | null;
     permissions: unknown;
+    weight: number; // Added to match expanded DB query
     is_system: boolean | number | null;
     is_editable: boolean | number | null;
     created_at: Date | null;
@@ -481,6 +563,7 @@ export class RbacService {
       name: role.name,
       description: role.description,
       permissions,
+      weight: role.weight || 0,
       isSystem: Boolean(role.is_system),
       isEditable: Boolean(role.is_editable),
       createdAt: role.created_at || new Date(),

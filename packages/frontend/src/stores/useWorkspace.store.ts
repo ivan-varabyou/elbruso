@@ -1,6 +1,5 @@
 import type { CreateWorkspaceDto, UpdateWorkspaceDto } from "@frontend/api";
 import { Workspaces } from "@frontend/api";
-import type { AxiosResponse } from "axios";
 import { create } from "zustand";
 
 const workspacesApi = new Workspaces();
@@ -42,9 +41,10 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
   fetchWorkspaces: async () => {
     set({ isLoading: true, error: null });
     try {
-      const { data: workspaces } =
-        (await workspacesApi.workspacesControllerFindAll()) as unknown as { data: Workspace[] };
-      set({ workspaces, isLoading: false });
+      const response = (await workspacesApi.workspacesControllerFindAll()) as unknown as {
+        data: { workspaces: Workspace[] };
+      };
+      set({ workspaces: response.data.workspaces, isLoading: false });
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false });
     }
@@ -55,9 +55,10 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
   createWorkspace: async (data) => {
     set({ isLoading: true, error: null });
     try {
-      const { data: newWorkspace } = (await workspacesApi.workspacesControllerCreate(
-        data,
-      )) as unknown as AxiosResponse<Workspace>;
+      const response = (await workspacesApi.workspacesControllerCreate(data)) as unknown as {
+        data: { workspace: Workspace };
+      };
+      const newWorkspace = response.data.workspace;
       set((state) => ({
         workspaces: [...state.workspaces, newWorkspace],
         isLoading: false,
@@ -70,10 +71,10 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
   updateWorkspace: async (id, data) => {
     set({ isLoading: true, error: null });
     try {
-      const { data: updatedWorkspace } = (await workspacesApi.workspacesControllerUpdate(
-        id,
-        data,
-      )) as unknown as AxiosResponse<Workspace>;
+      const response = (await workspacesApi.workspacesControllerUpdate(id, data)) as unknown as {
+        data: { workspace: Workspace };
+      };
+      const updatedWorkspace = response.data.workspace;
       set((state) => ({
         workspaces: state.workspaces.map((w) => (w.id === id ? updatedWorkspace : w)),
         isLoading: false,

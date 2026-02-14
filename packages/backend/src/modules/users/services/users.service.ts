@@ -1,13 +1,19 @@
-import * as crypto from "crypto";
-import { Injectable, ConflictException, NotFoundException } from "@nestjs/common";
 import { Users } from "@database";
 import { DatabaseService } from "@database/database.service";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import * as crypto from "crypto";
+
+import { RbacAppType } from "../../rbac/enums/permission.enum";
+import { RbacService } from "../../rbac/services/rbac.service";
 import { CreateUserDto, UpdateUserDto } from "../dto";
-import { UpdateProfileDto, AdminUpdateUserDto } from "../dto/user-settings.dto";
+import { AdminUpdateUserDto, UpdateProfileDto } from "../dto/user-settings.dto";
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly rbacService: RbacService,
+  ) {}
 
   async create(dto: CreateUserDto) {
     const existing = await this.findByEmail(dto.email);
@@ -24,13 +30,43 @@ export class UsersService {
         last_name: dto.last_name,
         middle_name: dto.middle_name || null,
         organization_id: dto.organization_id ? parseInt(dto.organization_id, 10) : null,
-        role: dto.role,
+        role: dto.role || "VIEWER",
         is_active: false,
       })
       .returningAll()
       .executeTakeFirst();
 
-    return this.sanitizeUser(user as unknown as Users);
+    if (!user) {
+      throw new Error("Failed to create user");
+    }
+
+    // Sync role with RBAC
+    if (dto.role) {
+      const rbacRole = await this.rbacService.getRoleByTypeAndCode(
+        RbacAppType.WEBAPP,
+        dto.role.toLowerCase(),
+      );
+      if (rbacRole) {
+        await this.rbacService.assignUserRole(user.id, RbacAppType.WEBAPP, rbacRole.id);
+      }
+    }
+
+    // Process workspaces if provided
+    if (dto.workspaces && dto.workspaces.length > 0) {
+      await this.db.client
+        .insertInto("workspace_permissions")
+        .values(
+          dto.workspaces.map((ws) => ({
+            user_id: user.id,
+            workspace_id: ws.id,
+            permission_level: ws.role,
+            granted_at: new Date(),
+          })),
+        )
+        .execute();
+    }
+
+    return this.findById(user.id);
   }
 
   async findAll(filters?: {
@@ -97,7 +133,28 @@ export class UsersService {
       throw new NotFoundException("User not found");
     }
 
-    return this.sanitizeUser(user as unknown as Users);
+    let organization_name = null;
+    if (user.organization_id) {
+      const org = await this.db.client
+        .selectFrom("organizations")
+        .select(["name_ru"])
+        .where("id", "=", user.organization_id)
+        .executeTakeFirst();
+      organization_name = org?.name_ru || null;
+    }
+
+    const workspaces = await this.db.client
+      .selectFrom("workspaces as w")
+      .innerJoin("workspace_permissions as wp", "w.id", "wp.workspace_id")
+      .select(["w.id", "w.name", "wp.permission_level as role", "wp.granted_at"])
+      .where("wp.user_id", "=", id)
+      .execute();
+
+    return {
+      ...this.sanitizeUser(user as unknown as Users),
+      organization_name,
+      workspaces,
+    };
   }
 
   async update(id: string, dto: UpdateUserDto) {
@@ -131,7 +188,39 @@ export class UsersService {
       .returningAll()
       .executeTakeFirst();
 
-    return this.sanitizeUser(updated as unknown as Users);
+    // Sync role with RBAC
+    if (dto.role) {
+      const rbacRole = await this.rbacService.getRoleByTypeAndCode(
+        RbacAppType.WEBAPP,
+        dto.role.toLowerCase(),
+      );
+      if (rbacRole) {
+        await this.rbacService.assignUserRole(id, RbacAppType.WEBAPP, rbacRole.id);
+      }
+    }
+
+    // Process workspaces if provided
+    if (dto.workspaces) {
+      // 1. Remove existing workspace permissions
+      await this.db.client.deleteFrom("workspace_permissions").where("user_id", "=", id).execute();
+
+      // 2. Add new workspace permissions
+      if (dto.workspaces.length > 0) {
+        await this.db.client
+          .insertInto("workspace_permissions")
+          .values(
+            dto.workspaces.map((ws) => ({
+              user_id: id,
+              workspace_id: ws.id,
+              permission_level: ws.role,
+              granted_at: new Date(),
+            })),
+          )
+          .execute();
+      }
+    }
+
+    return this.findById(id);
   }
 
   async approve(id: string) {

@@ -1,3 +1,4 @@
+import { RbacRole } from "@frontend/types/rbac";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -24,10 +25,16 @@ interface UsersPageState {
   error: string | null;
   selectedUser: User | null;
   selectedStatus: UserStatus;
+  roles: RbacRole[];
+  allWorkspaces: any[];
+  isEditorOpen: boolean;
 
   // Actions
   fetchUsers: () => Promise<void>;
   fetchOrganizations: () => Promise<void>;
+  fetchRoles: () => Promise<void>;
+  fetchWorkspaces: () => Promise<void>;
+  setEditorOpen: (open: boolean) => void;
   createUser: (data: CreateUserData) => Promise<void>;
   updateUser: (id: string, data: UpdateUserData) => Promise<void>;
   approveUser: (id: string) => Promise<void>;
@@ -47,6 +54,9 @@ const initialState = {
   error: null,
   selectedUser: null,
   selectedStatus: "all" as UserStatus,
+  roles: [],
+  allWorkspaces: [],
+  isEditorOpen: false,
 };
 
 export const useUsersPageStore = create<UsersPageState>()(
@@ -93,6 +103,30 @@ export const useUsersPageStore = create<UsersPageState>()(
           } catch (error) {
             console.error("Failed to fetch organizations:", error);
           }
+        },
+
+        fetchRoles: async () => {
+          try {
+            const response = await usersApi.getRoles();
+            const data = (response as any).data || response;
+            set({ roles: Array.isArray(data) ? data : [] });
+          } catch (error) {
+            console.error("Failed to fetch roles:", error);
+          }
+        },
+
+        fetchWorkspaces: async () => {
+          try {
+            const response = await usersApi.getWorkspaces();
+            const data = (response as any).data || response;
+            set({ allWorkspaces: Array.isArray(data) ? data : [] });
+          } catch (error) {
+            console.error("Failed to fetch workspaces:", error);
+          }
+        },
+
+        setEditorOpen: (open: boolean) => {
+          set({ isEditorOpen: open });
         },
 
         createUser: async (data: CreateUserData) => {

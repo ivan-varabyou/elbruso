@@ -1,17 +1,17 @@
 "use client";
 
-import { Button, Input } from "@frontend/ui/primitives";
-import { Search, Check, X, Shield, ShieldCheck, Ban, Trash2, Edit } from "lucide-react";
 import { useUsersPageStore } from "@frontend/modules/users/stores/useUsersPageStore";
+import { Ban, Check, Edit, Shield, ShieldCheck, Trash2 } from "lucide-react";
+
 import { useUsersPermissions } from "../hooks/useUsersPermissions";
-import { User, UserStatus } from "../types/users.types";
+import { User } from "../index";
 
 export function UsersTable() {
-  const { users, loading, blockUser, approveUser, deleteUser, setSelectedUser } =
+  const { users, loading, blockUser, approveUser, deleteUser, setSelectedUser, setEditorOpen } =
     useUsersPageStore();
   const { canUpdate, canDelete, canApprove, canBlock } = useUsersPermissions();
 
-  const getStatusBadge = (user: any) => {
+  const getStatusBadge = (user: User) => {
     if (!user.is_active) {
       return (
         <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-700">
@@ -59,7 +59,7 @@ export function UsersTable() {
     }
   };
 
-  const getFullName = (user: any) => {
+  const getFullName = (user: User) => {
     const parts = [user.last_name, user.first_name, user.middle_name].filter(Boolean);
     return parts.join(" ") || "—";
   };
@@ -128,7 +128,10 @@ export function UsersTable() {
                   <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     {canUpdate && (
                       <button
-                        onClick={() => setSelectedUser(user)}
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setEditorOpen(true);
+                        }}
                         className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded-lg transition-all"
                         title="Редактировать"
                       >

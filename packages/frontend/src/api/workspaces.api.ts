@@ -308,7 +308,7 @@ export class Workspaces<SecurityDataType = unknown> extends HttpClient<SecurityD
    * @tags Dynamic Tables
    * @name DynamicTablesControllerFindAll
    * @summary Get all tables in workspace
-   * @request GET:/workspaces/{workspaceId}/tables
+   * @request GET:/tables/workspaces/{workspaceId}/tables
    * @secure
    */
   dynamicTablesControllerFindAll = (
@@ -319,7 +319,7 @@ export class Workspaces<SecurityDataType = unknown> extends HttpClient<SecurityD
     params: RequestParams = {},
   ) =>
     this.request<void, any>({
-      path: `/workspaces/${workspaceId}/tables`,
+      path: `/tables/workspaces/${workspaceId}/tables`,
       method: "GET",
       query: query,
       secure: true,

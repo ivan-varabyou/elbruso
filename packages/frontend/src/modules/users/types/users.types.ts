@@ -11,6 +11,7 @@ export interface User {
   is_approved: boolean;
   created_at: string;
   updated_at: string | null;
+  workspaces?: { id: string; name: string; role: string }[];
 }
 
 export interface Organization {
@@ -33,7 +34,8 @@ export interface CreateUserData {
   last_name: string;
   middle_name?: string;
   organization_id: string;
-  role: "ADMIN" | "MANAGER" | "VIEWER";
+  role: string;
+  workspaces?: { id: string; role: string }[];
 }
 
 export interface UpdateUserData {
@@ -41,9 +43,10 @@ export interface UpdateUserData {
   last_name?: string;
   middle_name?: string;
   organization_id?: string;
-  role?: "ADMIN" | "MANAGER" | "VIEWER";
+  role?: string;
   is_active?: boolean;
   is_approved?: boolean;
+  workspaces?: { id: string; role: string }[];
 }
 
 export type UserStatus = "all" | "active" | "pending" | "blocked";

@@ -1,9 +1,12 @@
 "use client";
 
-import { useUsersPermissions } from "@frontend/modules/users/hooks/useUsersPermissions";
-import { useUsersPageStore } from "@frontend/modules/users/stores/useUsersPageStore";
-import { UsersFilters } from "@frontend/modules/users/ui/UsersFilters";
-import { UsersTable } from "@frontend/modules/users/ui/UsersTable";
+import {
+  UserEditorModal,
+  UsersFilters,
+  UsersTable,
+  useUsersPageStore,
+  useUsersPermissions,
+} from "@frontend/modules/users";
 import { useAdminAuthStore } from "@frontend/stores/useAdminAuth.store";
 import { Users } from "lucide-react";
 import { useEffect } from "react";
@@ -55,6 +58,8 @@ export default function UsersPage() {
           <UsersFilters />
 
           <UsersTable />
+
+          <UserEditorModal />
 
           {loading && users.length === 0 && (
             <div className="flex items-center justify-center py-8">

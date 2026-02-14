@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth,ApiOperation, ApiTags } from "@nestjs/swagger";
@@ -18,6 +19,15 @@ import { RbacResource } from "../decorators/resource.decorator";
 import { RbacAppType, RbacPermission } from "../enums/permission.enum";
 import { RbacGuard } from "../guards/rbac.guard";
 import { RbacService } from "../services/rbac.service";
+
+interface RequestWithUser {
+  user?: {
+    id?: string;
+    sub?: string;
+    role?: string;
+    appType?: string;
+  };
+}
 
 @ApiTags("RBAC")
 @Controller("rbac")
@@ -37,16 +47,14 @@ export class RbacController {
   @ApiOperation({ summary: "Get permissions tree for admin or user" })
   async getPermissionsTree(@Query("appType") appType?: string) {
     const rbacAppType = appType === "admin" ? RbacAppType.ADMIN : RbacAppType.WEBAPP;
-    const tree = await this.rbacService.getPermissionsTree(rbacAppType);
-    return { data: tree };
+    return this.rbacService.getPermissionsTree(rbacAppType);
   }
 
   @Get("admin/roles")
   @Permissions(`${RbacPermission.ADMIN_ROLES}:read`)
   @ApiOperation({ summary: "Get all admin roles" })
   async getAdminRoles() {
-    const roles = await this.rbacService.getAllRoles(RbacAppType.ADMIN);
-    return { data: roles };
+    return this.rbacService.getAllRoles(RbacAppType.ADMIN);
   }
 
   @Get("admin/roles/:id")
@@ -57,7 +65,7 @@ export class RbacController {
     if (!role) {
       return { error: "Role not found", statusCode: 404 };
     }
-    return { data: role };
+    return role;
   }
 
   @Post("admin/roles")
@@ -70,16 +78,20 @@ export class RbacController {
       name: string;
       description?: string;
       permissions: Record<string, string[]>;
+      weight?: number;
     },
+    @Req() req: RequestWithUser,
   ) {
-    const role = await this.rbacService.createRole(
+    const actingUserId = req.user?.id || req.user?.sub;
+    return this.rbacService.createRole(
       RbacAppType.ADMIN,
       body.code,
       body.name,
       body.description || null,
       body.permissions,
+      0, // weight
+      actingUserId,
     );
-    return { data: role };
   }
 
   @Put("admin/roles/:id")
@@ -87,10 +99,11 @@ export class RbacController {
   @ApiOperation({ summary: "Update admin role" })
   async updateAdminRole(
     @Param("id", ParseUUIDPipe) id: string,
-    @Body() body: { name?: string; description?: string },
+    @Body() body: { name?: string; description?: string; weight?: number },
+    @Req() req: RequestWithUser,
   ) {
-    const role = await this.rbacService.updateRole(id, body);
-    return { data: role };
+    const actingUserId = req.user?.id || req.user?.sub;
+    return this.rbacService.updateRole(id, body, actingUserId);
   }
 
   @Put("admin/roles/:id/permissions")
@@ -99,16 +112,18 @@ export class RbacController {
   async updateAdminRolePermissions(
     @Param("id", ParseUUIDPipe) id: string,
     @Body() permissions: Record<string, string[]>,
+    @Req() req: RequestWithUser,
   ) {
-    const role = await this.rbacService.updateRolePermissions(id, permissions);
-    return { data: role };
+    const actingUserId = req.user?.id || req.user?.sub;
+    return this.rbacService.updateRolePermissions(id, permissions, actingUserId);
   }
 
   @Delete("admin/roles/:id")
   @Permissions(`${RbacPermission.ADMIN_ROLES}:write`)
   @ApiOperation({ summary: "Delete admin role" })
-  async deleteAdminRole(@Param("id", ParseUUIDPipe) id: string) {
-    await this.rbacService.deleteRole(id);
+  async deleteAdminRole(@Param("id", ParseUUIDPipe) id: string, @Req() req: RequestWithUser) {
+    const actingUserId = req.user?.id || req.user?.sub;
+    await this.rbacService.deleteRole(id, actingUserId);
     return { success: true };
   }
 
@@ -116,8 +131,7 @@ export class RbacController {
   @Permissions("user:roles:read")
   @ApiOperation({ summary: "Get all user roles" })
   async getUserRoles() {
-    const roles = await this.rbacService.getAllRoles(RbacAppType.WEBAPP);
-    return { data: roles };
+    return this.rbacService.getAllRoles(RbacAppType.WEBAPP);
   }
 
   @Get("user/roles/:id")
@@ -128,7 +142,7 @@ export class RbacController {
     if (!role) {
       return { error: "Role not found", statusCode: 404 };
     }
-    return { data: role };
+    return role;
   }
 
   @Post("user/roles")
@@ -141,6 +155,8 @@ export class RbacController {
       name: string;
       description?: string;
       permissions: Record<string, string[]>;
+      weight?: number;
+      actingUserId?: string;
     },
   ) {
     const role = await this.rbacService.createRole(
@@ -149,8 +165,10 @@ export class RbacController {
       body.name,
       body.description || null,
       body.permissions,
+      body.weight || 0,
+      undefined, // actingUserId (optional for webapp roles here)
     );
-    return { data: role };
+    return role;
   }
 
   @Put("user/roles/:id")
@@ -160,8 +178,7 @@ export class RbacController {
     @Param("id", ParseUUIDPipe) id: string,
     @Body() body: { name?: string; description?: string },
   ) {
-    const role = await this.rbacService.updateRole(id, body);
-    return { data: role };
+    return this.rbacService.updateRole(id, body);
   }
 
   @Put("user/roles/:id/permissions")
@@ -171,8 +188,7 @@ export class RbacController {
     @Param("id", ParseUUIDPipe) id: string,
     @Body() permissions: Record<string, string[]>,
   ) {
-    const role = await this.rbacService.updateRolePermissions(id, permissions);
-    return { data: role };
+    return this.rbacService.updateRolePermissions(id, permissions);
   }
 
   @Delete("user/roles/:id")
@@ -190,11 +206,10 @@ export class RbacController {
     @Param("userId", ParseUUIDPipe) userId: string,
     @Query("appType") appType: "admin" | "webapp" = "webapp",
   ) {
-    const role = await this.rbacService.getUserRole(
+    return this.rbacService.getUserRole(
       userId,
       appType === "admin" ? RbacAppType.ADMIN : RbacAppType.WEBAPP,
     );
-    return { data: role };
   }
 
   @Put("user/:userId/role")
