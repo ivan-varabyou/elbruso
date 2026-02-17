@@ -1,6 +1,5 @@
 "use client";
 
-import "ag-grid-community/styles/ag-theme-quartz.css";
 import "./TableTheme.css";
 
 import {

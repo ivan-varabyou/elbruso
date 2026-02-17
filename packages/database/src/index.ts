@@ -57,6 +57,7 @@ export type {
   PasswordResetTokens,
   PermissionHistory,
   ReferenceLinks,
+  RefereeLicenseCategories,
   RegionPopulation,
   Regions,
   RegionTypes,

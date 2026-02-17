@@ -35,5 +35,5 @@ export class UpdateUserDto {
   @ApiPropertyOptional({ example: true })
   @IsOptional()
   @IsBoolean()
-  is_approved!: boolean;
+  is_approved?: boolean;
 }

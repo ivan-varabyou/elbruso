@@ -1,1 +1,4 @@
-export { EventFiltersDto } from './event-filters.dto';
+export * from "./event-filters.dto";
+export * from "./create-event.dto";
+export * from "./update-event.dto";
+export * from "./responses";

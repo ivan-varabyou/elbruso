@@ -23,7 +23,7 @@ interface GenerateIndicatorsModalProps {
   onSuccess: () => void;
 }
 
-type Step = "templates" | "preview";
+type Step = "templates" | "parameters" | "preview";
 
 export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicatorsModalProps) {
   const referenceApi = new Reference();
@@ -43,11 +43,26 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
   const [selectedTemplateIds, setSelectedTemplateIds] = useState<number[]>([]);
   const [fetchingTemplates, setFetchingTemplates] = useState(false);
 
+  // Parameter states
+  const [templateParams, setTemplateParams] = useState<any[]>([]);
+  const [fetchingParams, setFetchingParams] = useState(false);
+  const [selectedParams, setSelectedParams] = useState<Record<string, any[]>>({});
+
+  const extractArray = (res: any): any[] => {
+    if (Array.isArray(res)) return res;
+    if (!res || typeof res !== "object") return [];
+    if (Array.isArray(res.items)) return res.items;
+    if (Array.isArray(res.data)) return res.data;
+    if (res.items) return extractArray(res.items);
+    if (res.data) return extractArray(res.data);
+    return [];
+  };
+
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
         const sportsResponse = await referenceApi.sportsControllerFindAll();
-        setSports((sportsResponse.data as any)?.data || []);
+        setSports(extractArray(sportsResponse.data));
         // Initial fetch
         fetchTemplates("");
       } catch (err) {
@@ -61,7 +76,7 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
     setFetchingTemplates(true);
     try {
       const templatesResponse = await referenceApi.indicatorsControllerGetTemplates();
-      const allTemplates = (templatesResponse.data as any)?.data || [];
+      const allTemplates = extractArray(templatesResponse.data);
       const filtered = sportId
         ? allTemplates.filter((t: any) => t.sport_id === Number(sportId))
         : allTemplates;
@@ -81,14 +96,60 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
     fetchTemplates(sportId);
   };
 
-  const handleNext = () => {
+  const fetchParams = async () => {
+    if (selectedTemplateIds.length === 0) return;
+    setFetchingParams(true);
+    try {
+      // For simplicity, we fetch params for the FIRST selected template if multiple are selected,
+      // OR we could aggregate them. Let's aggregate unique parameter types.
+      const allParams: any[] = [];
+      const paramNames = new Set<string>();
+
+      for (const id of selectedTemplateIds) {
+        // Use a generic request since the client hasn't been regenerated yet
+        const res = await (referenceApi as any).request<any, any>({
+          path: `reference/indicators/generation/templates/${id}/params`,
+          method: "GET",
+          secure: true,
+        });
+        const params = extractArray(res.data);
+        for (const p of params) {
+          if (!paramNames.has(p.name)) {
+            paramNames.add(p.name);
+            allParams.push(p);
+          }
+        }
+      }
+      setTemplateParams(allParams);
+
+      // Initialize selectedParams if empty
+      const initial: Record<string, any[]> = { ...selectedParams };
+      allParams.forEach((p) => {
+        if (!initial[p.name]) initial[p.name] = [];
+      });
+      setSelectedParams(initial);
+    } catch (err) {
+      console.error("Failed to fetch parameter options:", err);
+      setError("Не удалось загрузить параметры шаблона");
+    } finally {
+      setFetchingParams(false);
+    }
+  };
+
+  const handleNext = async () => {
     if (step === "templates") {
+      if (selectedTemplateIds.length > 0) {
+        await fetchParams();
+        setStep("parameters");
+      }
+    } else if (step === "parameters") {
       setStep("preview");
     }
   };
 
   const handleBack = () => {
-    if (step === "preview") setStep("templates");
+    if (step === "preview") setStep("parameters");
+    else if (step === "parameters") setStep("templates");
   };
 
   const toggleTemplate = (id: number) => {
@@ -103,9 +164,10 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
     setError(null);
     try {
       await referenceApi.indicatorsControllerGenerate({
-        templateIds: selectedTemplateIds.map(String),
+        templateIds: selectedTemplateIds as any,
         sportId: selectedSportId ? Number(selectedSportId) : undefined,
         overwrite: true,
+        filters: selectedParams,
       });
 
       setStatus("success");
@@ -123,8 +185,12 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
   };
 
   const renderStepIcon = (s: Step, index: number) => {
+    const steps: Step[] = ["templates", "parameters", "preview"];
+    const currentIdx = steps.indexOf(step);
+    const stepIdx = steps.indexOf(s);
+
     const isActive = step === s;
-    const isCompleted = step === "preview" && s === "templates";
+    const isCompleted = currentIdx > stepIdx;
 
     return (
       <div className="flex items-center">
@@ -140,7 +206,7 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
         >
           {isCompleted ? <Check className="h-4 w-4" /> : index + 1}
         </div>
-        {index < 1 && (
+        {index < 2 && (
           <div className={cn("h-[2px] w-8 mx-2", isCompleted ? "bg-green-200" : "bg-zinc-100")} />
         )}
       </div>
@@ -175,7 +241,8 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
         <div className="px-8 py-3 bg-zinc-50/50 flex items-center justify-between border-b border-zinc-100 shrink-0">
           <div className="flex items-center">
             {renderStepIcon("templates", 0)}
-            {renderStepIcon("preview", 1)}
+            {renderStepIcon("parameters", 1)}
+            {renderStepIcon("preview", 2)}
           </div>
 
           {step === "templates" && (
@@ -198,7 +265,7 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
         </div>
 
         {/* Content */}
-        <div className="p-8 overflow-y-auto custom-scrollbar flex-1">
+        <div className="p-8 overflow-y-auto custom-scrollbar flex-1 min-h-[400px]">
           {status === "success" ? (
             <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
               <div className="h-20 w-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center animate-bounce">
@@ -296,6 +363,84 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
                 </div>
               )}
 
+              {step === "parameters" && (
+                <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h4 className="font-semibold text-zinc-900">Настройка параметров</h4>
+                      <p className="text-sm text-zinc-500">
+                        Выберите конкретные значения для генерации. Оставьте пустым, чтобы выбрать
+                        все.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-8 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                    {fetchingParams ? (
+                      <div className="flex flex-col items-center justify-center py-20 gap-3">
+                        <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
+                        <p className="text-sm text-zinc-400">Загрузка параметров...</p>
+                      </div>
+                    ) : templateParams.length > 0 ? (
+                      templateParams.map((param) => (
+                        <div key={param.name} className="space-y-3">
+                          <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center justify-between">
+                            <span>
+                              {param.name === "event_id"
+                                ? "Событие"
+                                : param.name === "license_category"
+                                  ? "Категория"
+                                  : param.name}
+                            </span>
+                            <span className="text-blue-500 normal-case font-normal italic">
+                              {selectedParams[param.name]?.length || 0} выбр.
+                            </span>
+                          </label>
+                          <div className="grid grid-cols-2 gap-2">
+                            {param.options?.map((opt: any) => (
+                              <button
+                                key={opt.id}
+                                onClick={() => {
+                                  const current = selectedParams[param.name] || [];
+                                  const next = current.includes(String(opt.id))
+                                    ? current.filter((id) => id !== String(opt.id))
+                                    : [...current, String(opt.id)];
+                                  setSelectedParams({ ...selectedParams, [param.name]: next });
+                                }}
+                                className={cn(
+                                  "flex items-center gap-2 p-3 rounded-xl border text-xs font-medium transition-all text-left",
+                                  (selectedParams[param.name] || []).includes(String(opt.id))
+                                    ? "bg-blue-50 border-blue-200 text-blue-700 shadow-sm ring-2 ring-blue-500/10"
+                                    : "bg-white border-zinc-100 text-zinc-600 hover:border-zinc-200",
+                                )}
+                              >
+                                <div
+                                  className={cn(
+                                    "h-4 w-4 rounded border flex items-center justify-center transition-colors",
+                                    (selectedParams[param.name] || []).includes(String(opt.id))
+                                      ? "bg-blue-500 border-blue-500"
+                                      : "bg-white border-zinc-200",
+                                  )}
+                                >
+                                  {(selectedParams[param.name] || []).includes(String(opt.id)) && (
+                                    <Check className="h-3 w-3 text-white" />
+                                  )}
+                                </div>
+                                <span className="truncate">{opt.label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="py-20 text-center bg-zinc-50 rounded-2xl border border-dashed border-zinc-200 font-medium text-zinc-400 text-sm">
+                        Для этих шаблонов нет настраиваемых параметров
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {step === "preview" && (
                 <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
                   <div className="space-y-1">
@@ -335,8 +480,8 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
                   <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 text-blue-800 text-xs leading-relaxed">
                     <AlertCircle className="h-4 w-4 shrink-0" />
                     <p>
-                      Будут сгенерированы все возможные комбинации Пола, Возраста и Дисциплины,
-                      указанные в выбранных шаблонах.
+                      Будут сгенерированы все комбинации Пола, Возраста, Дисциплины,
+                      <b> Событий и Категорий лицензий</b>, указанные в выбранных шаблонах.
                     </p>
                   </div>
                 </div>

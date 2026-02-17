@@ -53,6 +53,9 @@ export interface Indicator {
   sport_name?: string;
   unit_name?: string;
 
+  event_id?: string | number;
+  license_category_id?: string | number;
+
   created_by?: string | number;
   is_system?: boolean;
   is_active?: boolean;

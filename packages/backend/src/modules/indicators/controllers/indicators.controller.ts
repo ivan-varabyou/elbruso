@@ -1,5 +1,5 @@
 import { PermissionsGuard } from "@backend/modules/admin/guards/permissions.guard";
-import { JwtAuthGuard } from "@backend/modules/auth/guards/jwt-auth.guard";
+import { AnyJwtAuthGuard } from "@backend/modules/auth/guards/any-jwt-auth.guard";
 import { JwtPayload } from "@backend/modules/auth/interfaces";
 import { OrganizationsService } from "@backend/modules/organizations/services/organizations.service";
 import { Permissions } from "@backend/modules/rbac/decorators/permissions.decorator";
@@ -42,7 +42,7 @@ interface AuthenticatedRequest extends Express.Request {
 
 @Controller("reference/indicators")
 @ApiTags("Indicators")
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseGuards(AnyJwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth("JWT-auth")
 @RbacResource({
   code: RbacPermission.USER_INDICATORS,
@@ -101,6 +101,10 @@ export class IndicatorsController {
           filters.userSportId = federation.sport_id;
         }
       }
+    } else if (jwtPayload) {
+      // Fallback for Admins from AdminJwtStrategy
+      filters.userId = jwtPayload.sub;
+      filters.userRole = (jwtPayload as any).role;
     }
 
     const indicators = await this.indicatorsService.findAll(filters);
@@ -170,6 +174,12 @@ export class IndicatorsController {
   @ApiOperation({ summary: "Get indicator generation templates" })
   async getTemplates() {
     return this.indicatorsService.getTemplates();
+  }
+
+  @Get("generation/templates/:id/params")
+  @ApiOperation({ summary: "Get parameters for a specific template" })
+  async getTemplateParams(@Param("id", ParseIntPipe) id: number) {
+    return this.indicatorsService.getTemplateParams(id);
   }
 
   @Post("generation/generate")

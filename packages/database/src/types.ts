@@ -504,8 +504,10 @@ export interface IndicatorCatalog {
   default_weight: Generated<Numeric | null>;
   description: string | null;
   discipline_id: number | null;
+  event_id: number | null;
   gender_id: number | null;
   id: Generated<number>;
+  license_category_id: number | null;
   is_active: Generated<boolean | null>;
   is_system: Generated<boolean | null>;
   /**
@@ -807,6 +809,21 @@ export interface ReferenceLinks {
   mapping_config: Generated<Json | null>;
   reference_table: string;
   reference_type: string;
+}
+
+export interface RefereeLicenseCategories {
+  code: string;
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  discipline_id: number | null;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  level: number;
+  name_ru: string;
+  personnel_type: string;
+  requirements: string | null;
+  short_name_ru: string | null;
+  sport_id: number | null;
 }
 
 export interface RegionPopulation {
@@ -1403,6 +1420,7 @@ export interface DB {
   template_generation_params: TemplateGenerationParams;
   translations: Translations;
   users: Users;
+  referee_license_categories: RefereeLicenseCategories;
   v_events_catalog_full: VEventsCatalogFull;
   v_generated_indicators: VGeneratedIndicators;
   v_generation_templates: VGenerationTemplates;

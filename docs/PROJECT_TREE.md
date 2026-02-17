@@ -1,6 +1,6 @@
 # Структура проекта
 
-Генерировано: Сб 14 фев 2026 16:01:01 +03
+Генерировано: Пн 16 фев 2026 21:15:23 +03
 
 /home/ivan/git/elbruso
 ├── apps
@@ -105,10 +105,18 @@
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── indicators
 │   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   ├── organizations
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   ├── seasons
-│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── reference
+│   │   │   │   │   │   ├── data
+│   │   │   │   │   │   │   └── [table]
+│   │   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │   ├── events
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   ├── license-categories
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   └── management
+│   │   │   │   │   │       ├── new
+│   │   │   │   │   │       │   └── page.tsx
+│   │   │   │   │   │       └── page.tsx
 │   │   │   │   │   ├── settings
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── tables
@@ -330,6 +338,9 @@
 │   │   ├── 26_dynamic_tables_permissions.sql
 │   │   ├── 27_dynamic_tables_history.sql
 │   │   ├── 28_dashboard_reports.sql
+│   │   ├── 29_entity_linked_indicators.sql
+│   │   ├── 30_indicators_templates_unified.sql
+│   │   ├── 31_sports_analytics_references.sql
 │   │   ├── 99_admin_roles.sql
 │   │   ├── ALL_UNIFIED_DATA.sql
 │   │   ├── ALL_UNIFIED_INDICATORS.sql
@@ -368,6 +379,8 @@
 │   │   ├── UNIVERSAL_SYSTEM_README.md
 │   │   ├── update_gen_logic_v4.sql
 │   │   ├── update_gen_logic_v5.sql
+│   │   ├── update_gen_logic_v6.sql
+│   │   ├── update_gen_logic_v7.sql
 │   │   ├── update_gen_v3.sql
 │   │   └── update_users_v1.sql
 │   ├── entity
@@ -405,6 +418,9 @@
 │   ├── backend
 │   │   ├── docs
 │   │   │   └── PROJECT_TREE.md
+│   │   ├── migrations
+│   │   │   ├── add-is-approved-to-users.sql
+│   │   │   └── rbac-role-weights.sql
 │   │   ├── src
 │   │   │   ├── config
 │   │   │   ├── lib
@@ -571,8 +587,10 @@
 │   │   │   │   │   │   │   ├── event.response.dto.ts
 │   │   │   │   │   │   │   ├── events-list.response.dto.ts
 │   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── create-event.dto.ts
 │   │   │   │   │   │   ├── event-filters.dto.ts
-│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   └── update-event.dto.ts
 │   │   │   │   │   ├── events
 │   │   │   │   │   ├── services
 │   │   │   │   │   │   └── events.service.ts
@@ -581,7 +599,8 @@
 │   │   │   │   ├── indicators
 │   │   │   │   │   ├── controllers
 │   │   │   │   │   │   ├── indicator-groups.controller.ts
-│   │   │   │   │   │   └── indicators.controller.ts
+│   │   │   │   │   │   ├── indicators.controller.ts
+│   │   │   │   │   │   └── license-categories.controller.ts
 │   │   │   │   │   ├── dto
 │   │   │   │   │   │   ├── responses
 │   │   │   │   │   │   │   ├── groups-list.response.dto.ts
@@ -592,7 +611,8 @@
 │   │   │   │   │   │   ├── generate-indicators.dto.ts
 │   │   │   │   │   │   ├── indicator-filters.dto.ts
 │   │   │   │   │   │   ├── indicator-group.dto.ts
-│   │   │   │   │   │   └── indicator-group-filters.dto.ts
+│   │   │   │   │   │   ├── indicator-group-filters.dto.ts
+│   │   │   │   │   │   └── license-category.dto.ts
 │   │   │   │   │   ├── entities
 │   │   │   │   │   ├── interfaces
 │   │   │   │   │   ├── mappers
@@ -600,7 +620,8 @@
 │   │   │   │   │   │   └── indicator.mapper.ts
 │   │   │   │   │   ├── services
 │   │   │   │   │   │   ├── indicator-groups.service.ts
-│   │   │   │   │   │   └── indicators.service.ts
+│   │   │   │   │   │   ├── indicators.service.ts
+│   │   │   │   │   │   └── license-categories.service.ts
 │   │   │   │   │   ├── index.ts
 │   │   │   │   │   └── indicators.module.ts
 │   │   │   │   ├── organizations
@@ -677,6 +698,17 @@
 │   │   │   │   │   ├── regions
 │   │   │   │   │   ├── seasons
 │   │   │   │   │   └── sports
+│   │   │   │   ├── reference-data
+│   │   │   │   │   ├── config
+│   │   │   │   │   │   └── tables.config.ts
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   ├── reference-data.controller.ts
+│   │   │   │   │   │   └── reference-management.controller.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   ├── reference-data.service.ts
+│   │   │   │   │   │   └── reference-management.service.ts
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── reference-data.module.ts
 │   │   │   │   ├── regions
 │   │   │   │   │   ├── controllers
 │   │   │   │   │   │   └── regions.controller.ts
@@ -1011,6 +1043,28 @@
 │       │   │   │   │   │   ├── OrganizationsList.tsx
 │       │   │   │   │   │   ├── OrganizationsSmart.tsx
 │       │   │   │   │   │   └── OrganizationsTree.tsx
+│       │   │   │   │   ├── ReferenceData
+│       │   │   │   │   │   ├── Events
+│       │   │   │   │   │   │   ├── EventFormModal.tsx
+│       │   │   │   │   │   │   ├── EventsFilters.tsx
+│       │   │   │   │   │   │   ├── EventsList.tsx
+│       │   │   │   │   │   │   ├── EventsManagementSmart.tsx
+│       │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   ├── LicenseCategories
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   ├── LicenseCategoriesFilters.tsx
+│       │   │   │   │   │   │   ├── LicenseCategoriesList.tsx
+│       │   │   │   │   │   │   ├── LicenseCategoriesSmart.tsx
+│       │   │   │   │   │   │   └── LicenseCategoryFormModal.tsx
+│       │   │   │   │   │   ├── Management
+│       │   │   │   │   │   │   ├── index.ts
+│       │   │   │   │   │   │   ├── ReferenceManagerForm.tsx
+│       │   │   │   │   │   │   └── ReferenceManagerPage.tsx
+│       │   │   │   │   │   └── UniversalTable
+│       │   │   │   │   │       ├── index.ts
+│       │   │   │   │   │       ├── ReferenceFormModal.tsx
+│       │   │   │   │   │       ├── ReferenceTablePage.tsx
+│       │   │   │   │   │       └── table-configs.ts
 │       │   │   │   │   ├── RolesManagement
 │       │   │   │   │   │   ├── index.ts
 │       │   │   │   │   │   └── RolesManagement.tsx
@@ -1164,9 +1218,11 @@
 │       │   │   │   │   └── useUsersPageStore.ts
 │       │   │   │   ├── types
 │       │   │   │   │   └── users.types.ts
-│       │   │   │   └── ui
-│       │   │   │       ├── UsersFilters.tsx
-│       │   │   │       └── UsersTable.tsx
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── UserEditorModal.tsx
+│       │   │   │   │   ├── UsersFilters.tsx
+│       │   │   │   │   └── UsersTable.tsx
+│       │   │   │   └── index.ts
 │       │   │   ├── visualization
 │       │   │   │   ├── lib
 │       │   │   │   │   ├── adapters
@@ -1421,4 +1477,4 @@
 ├── tsconfig.json
 └── turbo.json
 
-411 directories, 1006 files
+426 directories, 1047 files

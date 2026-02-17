@@ -14,6 +14,7 @@ import { BlocksModule } from '@backend/modules/blocks/blocks.module';
 
 // Reference Data Modules
 import { CountriesModule } from '@backend/modules/countries/countries.module';
+import { ReferenceDataModule } from '@backend/modules/reference-data/reference-data.module';
 
 // Infrastructure Modules
 import { EmailModule } from '@backend/modules/email/email.module';
@@ -63,6 +64,7 @@ import { RbacModule } from '@backend/modules/rbac/rbac.module';
     EventsModule,
     OrganizationsModule,
     CountriesModule,
+    ReferenceDataModule,
   ],
   providers: [
     {

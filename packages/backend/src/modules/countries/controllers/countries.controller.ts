@@ -1,16 +1,17 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from "@nestjs/swagger";
-import { CountriesService } from "../services/countries.service";
-import { CountryResponseDto } from "../dto/responses";
 import { UseGuards } from "@nestjs/common";
-import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+
 import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
 import { Permissions } from "../../rbac/decorators/permissions.decorator";
 import { RbacResource } from "../../rbac/decorators/resource.decorator";
 import { RbacPermission } from "../../rbac/enums/permission.enum";
+import { CountryResponseDto } from "../dto/responses";
+import { CountriesService } from "../services/countries.service";
 
 @ApiTags("Countries")
-@Controller("countries")
+@Controller(["admin/countries", "countries"])
 @UseGuards(AnyJwtAuthGuard, PermissionsGuard)
 @RbacResource({
   code: RbacPermission.USER_COUNTRIES,

@@ -1,6 +1,6 @@
 # Структура проекта frontend
 
-Генерировано: Сб 14 фев 2026 16:01:01 +03
+Генерировано: Пн 16 фев 2026 21:15:23 +03
 
 /home/ivan/git/elbruso/packages/frontend
 ├── docs
@@ -131,6 +131,28 @@
 │   │   │   │   │   ├── OrganizationsList.tsx
 │   │   │   │   │   ├── OrganizationsSmart.tsx
 │   │   │   │   │   └── OrganizationsTree.tsx
+│   │   │   │   ├── ReferenceData
+│   │   │   │   │   ├── Events
+│   │   │   │   │   │   ├── EventFormModal.tsx
+│   │   │   │   │   │   ├── EventsFilters.tsx
+│   │   │   │   │   │   ├── EventsList.tsx
+│   │   │   │   │   │   ├── EventsManagementSmart.tsx
+│   │   │   │   │   │   └── index.ts
+│   │   │   │   │   ├── LicenseCategories
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── LicenseCategoriesFilters.tsx
+│   │   │   │   │   │   ├── LicenseCategoriesList.tsx
+│   │   │   │   │   │   ├── LicenseCategoriesSmart.tsx
+│   │   │   │   │   │   └── LicenseCategoryFormModal.tsx
+│   │   │   │   │   ├── Management
+│   │   │   │   │   │   ├── index.ts
+│   │   │   │   │   │   ├── ReferenceManagerForm.tsx
+│   │   │   │   │   │   └── ReferenceManagerPage.tsx
+│   │   │   │   │   └── UniversalTable
+│   │   │   │   │       ├── index.ts
+│   │   │   │   │       ├── ReferenceFormModal.tsx
+│   │   │   │   │       ├── ReferenceTablePage.tsx
+│   │   │   │   │       └── table-configs.ts
 │   │   │   │   ├── RolesManagement
 │   │   │   │   │   ├── index.ts
 │   │   │   │   │   └── RolesManagement.tsx
@@ -284,9 +306,11 @@
 │   │   │   │   └── useUsersPageStore.ts
 │   │   │   ├── types
 │   │   │   │   └── users.types.ts
-│   │   │   └── ui
-│   │   │       ├── UsersFilters.tsx
-│   │   │       └── UsersTable.tsx
+│   │   │   ├── ui
+│   │   │   │   ├── UserEditorModal.tsx
+│   │   │   │   ├── UsersFilters.tsx
+│   │   │   │   └── UsersTable.tsx
+│   │   │   └── index.ts
 │   │   ├── visualization
 │   │   │   ├── lib
 │   │   │   │   ├── adapters
@@ -513,4 +537,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-134 directories, 375 files
+139 directories, 394 files

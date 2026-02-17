@@ -1,26 +1,27 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Param,
   Body,
-  ParseIntPipe,
+  Controller,
+  Delete,
+  Get,
   NotFoundException,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { GenerateSeasonsDto } from "../dto";
-import { SeasonsService } from "../services/seasons.service";
-import { SeasonResponseDto, SeasonsListResponseDto } from "../dto/responses";
 import { UseGuards } from "@nestjs/common";
-import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+
 import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
 import { Permissions } from "../../rbac/decorators/permissions.decorator";
 import { RbacResource } from "../../rbac/decorators/resource.decorator";
 import { RbacPermission } from "../../rbac/enums/permission.enum";
+import { GenerateSeasonsDto } from "../dto";
+import { SeasonResponseDto, SeasonsListResponseDto } from "../dto/responses";
+import { SeasonsService } from "../services/seasons.service";
 
-@Controller("reference/seasons")
+@Controller(["admin/reference/seasons", "reference/seasons"])
 @ApiTags("Seasons")
 @UseGuards(AnyJwtAuthGuard, PermissionsGuard)
 @RbacResource({

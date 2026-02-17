@@ -1,16 +1,17 @@
-import { Controller, Get, Param, Query, ParseIntPipe, NotFoundException } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { RegionFiltersDto } from "../dto/region-filters.dto";
-import { RegionsService } from "../services/regions.service";
-import { RegionResponseDto, RegionsListResponseDto } from "../dto/responses";
+import { Controller, Get, NotFoundException, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { UseGuards } from "@nestjs/common";
-import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+
 import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
 import { Permissions } from "../../rbac/decorators/permissions.decorator";
 import { RbacResource } from "../../rbac/decorators/resource.decorator";
 import { RbacPermission } from "../../rbac/enums/permission.enum";
+import { RegionFiltersDto } from "../dto/region-filters.dto";
+import { RegionResponseDto, RegionsListResponseDto } from "../dto/responses";
+import { RegionsService } from "../services/regions.service";
 
-@Controller("reference/regions")
+@Controller(["admin/reference/regions", "reference/regions"])
 @ApiTags("Regions")
 @UseGuards(AnyJwtAuthGuard, PermissionsGuard)
 @RbacResource({

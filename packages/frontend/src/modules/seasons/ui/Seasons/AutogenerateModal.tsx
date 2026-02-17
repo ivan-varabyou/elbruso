@@ -148,11 +148,12 @@ export function AutogenerateModal({ isOpen, onClose }: AutogenerateModalProps) {
                       className="w-full appearance-none rounded-lg border border-zinc-200 bg-white pl-9 pr-4 py-2 text-sm focus:border-zinc-900 focus:outline-none transition-all"
                     >
                       <option value="">Все виды спорта (массово)</option>
-                      {sports.map((s: { id: string; name_ru: string }) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name_ru}
-                        </option>
-                      ))}
+                      {Array.isArray(sports) &&
+                        sports.map((s: { id: string; name_ru: string }) => (
+                          <option key={s.id} value={s.id}>
+                            {s.name_ru}
+                          </option>
+                        ))}
                     </select>
                     <Trophy className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
                   </div>

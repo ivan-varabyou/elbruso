@@ -224,7 +224,7 @@ export class UsersService {
   }
 
   async approve(id: string) {
-    return this.update(id, { is_active: true });
+    return this.update(id, { is_active: true, is_approved: true });
   }
 
   async block(id: string, block: boolean = true) {

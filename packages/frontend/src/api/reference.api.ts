@@ -15,35 +15,21 @@ import {
   GenerateIndicatorsDto,
   GenerateSeasonsDto,
   UpdateIndicatorGroupDto,
+  CreateEventDto,
+  UpdateEventDto,
+  EventResponseDto,
+  EventsListResponseDto,
+  CreateLicenseCategoryDto,
+  UpdateLicenseCategoryDto,
+  LicenseCategoryResponseDto,
 } from "./data-contracts";
-import axios from "axios";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:7100";
-const API_VERSION = "v1";
-
-const referenceClient = axios.create({
-  baseURL: `${API_URL}/${API_VERSION}`,
-  withCredentials: true,
-});
-
-referenceClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      if (typeof window !== "undefined" && !window.location.pathname.startsWith("/login")) {
-        window.location.href = "/login";
-      }
-    }
-    return Promise.reject(error);
-  },
-);
-
+import { apiClient } from "./client";
 import { ContentType, HttpClient, RequestParams } from "./http-client.service";
 
 export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   constructor() {
     super();
-    this.instance = referenceClient;
+    this.instance = apiClient;
   }
 
   /**
@@ -639,6 +625,199 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
     this.request<void, void>({
       path: `reference/seasons/current`,
       method: "GET",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Events
+   * @name EventsControllerFindAll
+   * @summary Get all events with filters
+   * @request GET:/events
+   */
+  eventsControllerFindAll = (
+    query?: {
+      /** Filter by sport ID */
+      sportId?: number;
+      /** Filter by region ID */
+      regionId?: number;
+      /** Filter by importance */
+      importance?: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<EventsListResponseDto, any>({
+      path: `events`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Events
+   * @name EventsControllerFindById
+   * @summary Get event by ID
+   * @request GET:/events/{id}
+   */
+  eventsControllerFindById = (id: number, params: RequestParams = {}) =>
+    this.request<EventResponseDto, any>({
+      path: `events/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Events
+   * @name EventsControllerCreate
+   * @summary Create a new event
+   * @request POST:/events
+   */
+  eventsControllerCreate = (data: CreateEventDto, params: RequestParams = {}) =>
+    this.request<EventResponseDto, any>({
+      path: `events`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Events
+   * @name EventsControllerUpdate
+   * @summary Update an existing event
+   * @request PATCH:/events/{id}
+   */
+  eventsControllerUpdate = (id: number, data: UpdateEventDto, params: RequestParams = {}) =>
+    this.request<EventResponseDto, any>({
+      path: `events/${id}`,
+      method: "PATCH",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Events
+   * @name EventsControllerDelete
+   * @summary Delete an event
+   * @request DELETE:/events/{id}
+   */
+  eventsControllerDelete = (id: number, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `events/${id}`,
+      method: "DELETE",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerFindAll
+   * @summary Get all license categories
+   * @request GET:/reference/license-categories
+   */
+  licenseCategoriesControllerFindAll = (
+    query?: {
+      /** Filter by sport ID */
+      sportId?: number;
+      /** Filter by type */
+      type?: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<LicenseCategoryResponseDto[], any>({
+      path: `reference/license-categories`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerFindById
+   * @summary Get category by ID
+   * @request GET:/reference/license-categories/{id}
+   */
+  licenseCategoriesControllerFindById = (id: number, params: RequestParams = {}) =>
+    this.request<LicenseCategoryResponseDto, any>({
+      path: `reference/license-categories/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerCreate
+   * @summary Create new category
+   * @request POST:/reference/license-categories
+   */
+  licenseCategoriesControllerCreate = (
+    data: CreateLicenseCategoryDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<LicenseCategoryResponseDto, any>({
+      path: `reference/license-categories`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerUpdate
+   * @summary Update category
+   * @request PATCH:/reference/license-categories/{id}
+   */
+  licenseCategoriesControllerUpdate = (
+    id: number,
+    data: UpdateLicenseCategoryDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<LicenseCategoryResponseDto, any>({
+      path: `reference/license-categories/${id}`,
+      method: "PATCH",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerDelete
+   * @summary Delete category
+   * @request DELETE:/reference/license-categories/{id}
+   */
+  licenseCategoriesControllerDelete = (id: number, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `reference/license-categories/${id}`,
+      method: "DELETE",
       ...params,
     });
 }

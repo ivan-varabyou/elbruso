@@ -1,19 +1,18 @@
 import { Controller, Get, NotFoundException, Param, ParseIntPipe, Query } from "@nestjs/common";
+import { UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
+import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { Permissions } from "../../rbac/decorators/permissions.decorator";
+import { RbacResource } from "../../rbac/decorators/resource.decorator";
+import { RbacPermission } from "../../rbac/enums/permission.enum";
 import { OrganizationFiltersDto } from "../dto/organization-filters.dto";
 import { OrganizationResponseDto, OrganizationsListResponseDto } from "../dto/responses";
 import { toOrganizationDto, toOrganizationListDto } from "../mappers/organization.mapper";
 import { OrganizationsService } from "../services/organizations.service";
-import { UseGuards } from "@nestjs/common";
-import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
-import { PermissionsGuard } from "../../admin/guards/permissions.guard";
-import { Permissions } from "../../rbac/decorators/permissions.decorator";
-import { RbacResource } from "../../rbac/decorators/resource.decorator";
-import { RbacPermission } from "../../rbac/enums/permission.enum";
-import { ApiBearerAuth } from "@nestjs/swagger";
 
-@Controller("reference/organizations")
+@Controller(["admin/reference/organizations", "reference/organizations"])
 @ApiTags("Organizations")
 @UseGuards(AnyJwtAuthGuard, PermissionsGuard)
 @RbacResource({

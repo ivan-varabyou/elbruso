@@ -25,3 +25,12 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
     totalPages: number;
   };
 }
+
+export interface AxiosResponse<T> {
+  status: number;
+  statusText: string;
+  headers: Record<string, string>;
+  config: Record<string, unknown>;
+  request: Record<string, unknown>;
+  data: ApiResponse<T>;
+}

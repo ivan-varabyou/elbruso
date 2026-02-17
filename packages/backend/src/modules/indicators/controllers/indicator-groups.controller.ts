@@ -1,24 +1,24 @@
-import { Controller, Get, Param, Query, ParseIntPipe, NotFoundException } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { IndicatorGroupFiltersDto } from "../dto/indicator-group-filters.dto";
-import { IndicatorGroupsService } from "../services/indicator-groups.service";
-import {
-  IndicatorGroupResponseDto,
-  GroupsListResponseDto,
-  IndicatorsListResponseDto,
-} from "../dto/responses";
-import { toIndicatorGroupDto, toIndicatorGroupListDto } from "../mappers/indicator-group.mapper";
-import { toIndicatorListDto } from "../mappers/indicator.mapper";
+import { Controller, Get, NotFoundException, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth } from "@nestjs/swagger";
+
 import { AdminJwtAuthGuard } from "../../admin/guards/admin-jwt-auth.guard";
 import { PermissionsGuard } from "../../admin/guards/permissions.guard";
 import { Permissions } from "../../rbac/decorators/permissions.decorator";
 import { RbacResource } from "../../rbac/decorators/resource.decorator";
 import { RbacPermission } from "../../rbac/enums/permission.enum";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { IndicatorGroupFiltersDto } from "../dto/indicator-group-filters.dto";
+import {
+  GroupsListResponseDto,
+  IndicatorGroupResponseDto,
+  IndicatorsListResponseDto,
+} from "../dto/responses";
+import { toIndicatorListDto } from "../mappers/indicator.mapper";
+import { toIndicatorGroupDto, toIndicatorGroupListDto } from "../mappers/indicator-group.mapper";
+import { IndicatorGroupsService } from "../services/indicator-groups.service";
 
-@Controller("reference/indicator-groups")
+@Controller(["admin/reference/indicator-groups", "reference/indicator-groups"])
 @ApiTags("Indicator Groups")
 @UseGuards(AdminJwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth("JWT-auth")

@@ -50,6 +50,21 @@ interface ReferenceStore {
   reset: () => void;
 }
 
+const extractArray = (res: any): any[] => {
+  if (Array.isArray(res)) return res;
+  if (!res || typeof res !== "object") return [];
+
+  // Try extracting from known properties
+  if (Array.isArray(res.items)) return res.items;
+  if (Array.isArray(res.data)) return res.data;
+
+  // Recursive check for double-wrapped data (e.g., { success: true, data: { items: [...] } })
+  if (res.items) return extractArray(res.items);
+  if (res.data) return extractArray(res.data);
+
+  return [];
+};
+
 export const useReferenceStore = create<ReferenceStore>((set, get) => ({
   regions: [],
   sports: [],
@@ -68,9 +83,13 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
       const response = await referencesApi.regionsControllerFindAll(
         filters as Parameters<typeof referencesApi.regionsControllerFindAll>[0],
       );
-      // Backend returns { data: Region[], ... }
-      const data = (response.data as any).data || response.data;
-      set({ regions: data as Region[], isLoading: false });
+      const data = extractArray(response.data);
+      const normalized = data.map((r: any) => ({
+        ...r,
+        name_ru: r.name_ru || r.name,
+        country_id: r.country_id || r.countryId,
+      }));
+      set({ regions: normalized as Region[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -81,9 +100,12 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await referencesApi.sportsControllerFindAll();
-      // Backend returns { data: Sport[], ... }
-      const data = (response.data as any).data || response.data;
-      set({ sports: data as Sport[], isLoading: false });
+      const data = extractArray(response.data);
+      const normalized = data.map((s: any) => ({
+        ...s,
+        name_ru: s.name_ru || s.name,
+      }));
+      set({ sports: normalized as Sport[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -96,9 +118,12 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
       const response = await referencesApi.indicatorsControllerFindAll(
         filters as Parameters<typeof referencesApi.indicatorsControllerFindAll>[0],
       );
-      // Backend returns { data: Indicator[], ... }
-      const data = (response.data as any).data || response.data;
-      set({ indicators: data as Indicator[], isLoading: false });
+      const data = extractArray(response.data);
+      const normalized = data.map((i: any) => ({
+        ...i,
+        name_ru: i.name_ru || i.name,
+      }));
+      set({ indicators: normalized as Indicator[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -111,9 +136,12 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
       const response = await referencesApi.indicatorsControllerGetGroups(
         filters as Parameters<typeof referencesApi.indicatorsControllerGetGroups>[0],
       );
-      // Backend returns { data: IndicatorGroup[], ... }
-      const data = (response.data as any).data || response.data;
-      set({ indicatorGroups: data as IndicatorGroup[], isLoading: false });
+      const data = extractArray(response.data);
+      const normalized = data.map((g: any) => ({
+        ...g,
+        name_ru: g.name_ru || g.name,
+      }));
+      set({ indicatorGroups: normalized as IndicatorGroup[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -124,9 +152,18 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await referencesApi.seasonsControllerFindAll();
-      // Backend returns { items: Season[], ... }
-      const data = (response.data as any).items || (response.data as any).data || response.data;
-      set({ seasons: data as Season[], isLoading: false });
+      const data = extractArray(response.data);
+      const normalized = data.map((s: any) => ({
+        ...s,
+        name_ru: s.name_ru || s.name,
+        start_date: s.start_date || s.startDate,
+        end_date: s.end_date || s.endDate,
+        sports: s.sports?.map((sp: any) => ({
+          ...sp,
+          name_ru: sp.name_ru || sp.name,
+        })),
+      }));
+      set({ seasons: normalized as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -140,9 +177,18 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
         data as Parameters<typeof referencesApi.seasonsControllerCreate>[0],
       );
       const response = await referencesApi.seasonsControllerFindAll();
-      const seasonData =
-        (response.data as any).items || (response.data as any).data || response.data;
-      set({ seasons: seasonData as Season[], isLoading: false });
+      const dataList = extractArray(response.data);
+      const normalized = dataList.map((s: any) => ({
+        ...s,
+        name_ru: s.name_ru || s.name,
+        start_date: s.start_date || s.startDate,
+        end_date: s.end_date || s.endDate,
+        sports: s.sports?.map((sp: any) => ({
+          ...sp,
+          name_ru: sp.name_ru || sp.name,
+        })),
+      }));
+      set({ seasons: normalized as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -158,9 +204,18 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
         data as Parameters<typeof referencesApi.seasonsControllerUpdate>[1],
       );
       const response = await referencesApi.seasonsControllerFindAll();
-      const seasonData =
-        (response.data as any).items || (response.data as any).data || response.data;
-      set({ seasons: seasonData as Season[], isLoading: false });
+      const dataList = extractArray(response.data);
+      const normalized = dataList.map((s: any) => ({
+        ...s,
+        name_ru: s.name_ru || s.name,
+        start_date: s.start_date || s.startDate,
+        end_date: s.end_date || s.endDate,
+        sports: s.sports?.map((sp: any) => ({
+          ...sp,
+          name_ru: sp.name_ru || sp.name,
+        })),
+      }));
+      set({ seasons: normalized as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -173,9 +228,18 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     try {
       await referencesApi.seasonsControllerDelete(parseInt(id));
       const response = await referencesApi.seasonsControllerFindAll();
-      const seasonData =
-        (response.data as any).items || (response.data as any).data || response.data;
-      set({ seasons: seasonData as Season[], isLoading: false });
+      const dataList = extractArray(response.data);
+      const normalized = dataList.map((s: any) => ({
+        ...s,
+        name_ru: s.name_ru || s.name,
+        start_date: s.start_date || s.startDate,
+        end_date: s.end_date || s.endDate,
+        sports: s.sports?.map((sp: any) => ({
+          ...sp,
+          name_ru: sp.name_ru || sp.name,
+        })),
+      }));
+      set({ seasons: normalized as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -190,9 +254,18 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
         data as Parameters<typeof referencesApi.seasonsControllerGenerate>[0],
       );
       const response = await referencesApi.seasonsControllerFindAll();
-      const seasonData =
-        (response.data as any).items || (response.data as any).data || response.data;
-      set({ seasons: seasonData as Season[], isLoading: false });
+      const dataList = extractArray(response.data);
+      const normalized = dataList.map((s: any) => ({
+        ...s,
+        name_ru: s.name_ru || s.name,
+        start_date: s.start_date || s.startDate,
+        end_date: s.end_date || s.endDate,
+        sports: s.sports?.map((sp: any) => ({
+          ...sp,
+          name_ru: sp.name_ru || sp.name,
+        })),
+      }));
+      set({ seasons: normalized as Season[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -204,9 +277,12 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await referencesApi.organizationsControllerFindAll();
-      // Backend returns { data: Organization[], ... }
-      const data = (response.data as any).data || response.data;
-      set({ organizations: data as Organization[], isLoading: false });
+      const data = extractArray(response.data);
+      const normalized = data.map((o: any) => ({
+        ...o,
+        name_ru: o.name_ru || o.name,
+      }));
+      set({ organizations: normalized as Organization[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -217,9 +293,12 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await countriesApi.countriesControllerFindActive({ lang: "ru" });
-      // Backend returns { data: Country[], ... }
-      const data = (response.data as any).data || response.data;
-      set({ countries: data as Country[], isLoading: false });
+      const data = extractArray(response.data);
+      const normalized = data.map((c: any) => ({
+        ...c,
+        name_ru: c.name_ru || c.name,
+      }));
+      set({ countries: normalized as Country[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });
@@ -230,8 +309,12 @@ export const useReferenceStore = create<ReferenceStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await referencesApi.organizationsControllerFindAll();
-      const data = (response.data as any).data || response.data;
-      set({ customReferences: data as unknown as ReferenceData[], isLoading: false });
+      const dataList = extractArray(response.data);
+      const normalized = dataList.map((o: any) => ({
+        ...o,
+        name_ru: o.name_ru || o.name,
+      }));
+      set({ customReferences: normalized as unknown as ReferenceData[], isLoading: false });
     } catch (error) {
       const appError = ErrorHandler.handle(error);
       set({ error: appError, isLoading: false });

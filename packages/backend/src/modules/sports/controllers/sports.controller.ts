@@ -1,15 +1,16 @@
-import { Controller, Get, Param, ParseIntPipe, NotFoundException } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { SportsService } from "../services/sports.service";
-import { SportResponseDto, SportsListResponseDto } from "../dto/responses";
+import { Controller, Get, NotFoundException, Param, ParseIntPipe } from "@nestjs/common";
 import { UseGuards } from "@nestjs/common";
-import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+
 import { PermissionsGuard } from "../../admin/guards/permissions.guard";
+import { AnyJwtAuthGuard } from "../../auth/guards/any-jwt-auth.guard";
 import { Permissions } from "../../rbac/decorators/permissions.decorator";
 import { RbacResource } from "../../rbac/decorators/resource.decorator";
 import { RbacPermission } from "../../rbac/enums/permission.enum";
+import { SportResponseDto, SportsListResponseDto } from "../dto/responses";
+import { SportsService } from "../services/sports.service";
 
-@Controller("reference/sports")
+@Controller(["admin/reference/sports", "reference/sports"])
 @ApiTags("Sports")
 @UseGuards(AnyJwtAuthGuard, PermissionsGuard)
 @RbacResource({

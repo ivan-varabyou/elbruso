@@ -1,76 +1,57 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class EventResponseDto {
-  @ApiProperty({
-    description: 'Event ID',
-    example: 1,
-  })
-  id: number;
+  @ApiProperty({ description: "Event ID" })
+  id!: number;
 
-  @ApiProperty({
-    description: 'Event title',
-    example: 'Team Meeting',
-  })
-  title: string;
+  @ApiPropertyOptional({ description: "Parent event ID" })
+  parent_event_id?: number | null;
 
-  @ApiProperty({
-    description: 'Event description',
-    example: 'Weekly sync with the team',
-  })
-  description?: string;
+  @ApiProperty({ description: "Unique code" })
+  code!: string;
 
-  @ApiProperty({
-    description: 'Start date and time',
-    example: '2024-01-20T10:00:00.000Z',
-  })
-  startDate: Date;
+  @ApiProperty({ description: "Full name in Russian" })
+  name_ru!: string;
 
-  @ApiProperty({
-    description: 'End date and time',
-    example: '2024-01-20T11:00:00.000Z',
-  })
-  endDate: Date;
+  @ApiPropertyOptional({ description: "Short name in Russian" })
+  short_name_ru?: string | null;
 
-  @ApiProperty({
-    description: 'Event location',
-    example: 'Conference Room A',
-  })
-  location?: string;
+  @ApiPropertyOptional({ description: "Event type ID" })
+  event_type_id?: number | null;
 
-  @ApiProperty({
-    description: 'Whether event is all day',
-    example: false,
-  })
-  isAllDay: boolean;
+  @ApiPropertyOptional({ description: "Event level ID" })
+  level_id?: number | null;
 
-  @ApiProperty({
-    description: 'Event color in hex format',
-    example: '#3498db',
-  })
-  color?: string;
+  @ApiPropertyOptional({ description: "Event stage ID" })
+  stage_id?: number | null;
 
-  @ApiProperty({
-    description: 'Event status',
-    enum: ['pending', 'confirmed', 'cancelled'],
-    example: 'confirmed',
-  })
-  status: string;
+  @ApiPropertyOptional({ description: "Sport ID" })
+  sport_id?: number | null;
 
-  @ApiProperty({
-    description: 'Creator user ID',
-    example: 1,
-  })
-  userId: number;
+  @ApiPropertyOptional({ description: "Discipline ID" })
+  discipline_id?: number | null;
 
-  @ApiProperty({
-    description: 'Creation timestamp',
-    example: '2024-01-15T10:30:00.000Z',
-  })
-  createdAt: Date;
+  @ApiPropertyOptional({ description: "Gender ID" })
+  gender_id?: number | null;
 
-  @ApiProperty({
-    description: 'Last update timestamp',
-    example: '2024-01-15T10:30:00.000Z',
-  })
-  updatedAt: Date;
+  @ApiPropertyOptional({ description: "Age group ID" })
+  age_group_id?: number | null;
+
+  @ApiPropertyOptional({ description: "Organizer ID" })
+  organizer_id?: number | null;
+
+  @ApiPropertyOptional({ description: "Description" })
+  description?: string | null;
+
+  @ApiPropertyOptional({ description: "Metadata (JSON)" })
+  metadata?: any;
+
+  @ApiProperty({ description: "Active status" })
+  is_active!: boolean;
+
+  @ApiProperty({ description: "Creation date" })
+  createdAt!: Date;
+
+  @ApiProperty({ description: "Last update date" })
+  updatedAt!: Date;
 }
