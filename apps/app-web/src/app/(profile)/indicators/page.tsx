@@ -93,7 +93,6 @@ export default function IndicatorsPage() {
     <ProfilePageLayout
       title="Индикаторы"
       icon={TrendingUp}
-      description="Управление каталогом показателей и автоматическая генерация."
       actions={
         <div className="flex items-center gap-2">
           <Button

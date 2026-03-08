@@ -146,6 +146,7 @@ export interface UserResponseDto {
   created_at?: string;
   /** @format date-time */
   updated_at?: string;
+  workspaces?: any[];
 }
 
 export interface UpdateProfileDto {
@@ -244,6 +245,7 @@ export interface UpdateUserDto {
   is_active?: boolean;
   /** @example true */
   is_approved?: boolean;
+  workspaces?: any[];
 }
 
 export interface UserUpdatedResponseDto {
@@ -1440,15 +1442,19 @@ export interface IndicatorsListResponseDto {
   total: number;
 }
 
-export interface GenerateIndicatorsDto {
-  /** Template IDs to generate from */
-  templateIds?: string[];
-  /** Sport ID filter */
-  sportId?: number;
-  /** Category filter */
-  category?: string;
-  /** Overwrite existing indicators */
-  overwrite?: boolean;
+export interface CreateIndicatorGroupDto {
+  /** Group name in Russian */
+  name_ru: string;
+  /** Technical code */
+  code: string;
+  /** Group description */
+  description?: string;
+  /** Sport ID */
+  sport_id?: number;
+  /** Sort order */
+  sort_order?: number;
+  /** Active status */
+  is_active?: boolean;
 }
 
 export interface IndicatorGroupResponseDto {
@@ -1478,34 +1484,135 @@ export interface IndicatorGroupResponseDto {
   updated_at: string;
 }
 
-export interface CreateIndicatorGroupDto {
-  /** Group name in Russian */
+export interface CreateIndicatorTemplateDto {
   name_ru: string;
-  /** Technical code */
-  code: string;
-  /** Group description */
+  name_pattern: string;
+  code_pattern: string;
   description?: string;
-  /** Sport ID */
+  description_pattern?: string;
   sport_id?: number;
-  /** Sort order */
-  sort_order?: number;
-  /** Active status */
+  category_id?: number;
+  measurement_unit_id?: number;
+  base_weight?: number;
+  value_type?: string;
+  use_population?: boolean;
+  is_active?: boolean;
+  generation_config?: object;
+}
+
+export interface UpdateIndicatorTemplateDto {
+  name_ru: string;
+  name_pattern: string;
+  code_pattern: string;
+  description?: string;
+  description_pattern?: string;
+  sport_id?: number;
+  category_id?: number;
+  measurement_unit_id?: number;
+  base_weight?: number;
+  value_type?: string;
+  use_population?: boolean;
+  is_active?: boolean;
+  generation_config?: object;
+}
+
+export interface GenerateIndicatorsDto {
+  /** Template IDs to generate from */
+  templateIds?: string[];
+  /** Sport ID filter */
+  sportId?: number;
+  /** Category filter */
+  category?: string;
+  /** Overwrite existing indicators */
+  overwrite?: boolean;
+  /** Filters for template parameters */
+  filters?: object;
+}
+
+export interface CreateLicenseCategoryDto {
+  /** Sport ID */
+  sport_id: number;
+  /** Category name in Russian */
+  name_ru: string;
+  /** Short name in Russian */
+  short_name_ru?: string;
+  /** Unique code */
+  code: string;
+  /** Description */
+  description?: string;
+  /** Level (numeric value for sorting/logic) */
+  level: number;
+  /** Personnel type (e.g., referee, coach) */
+  personnel_type: string;
+  /** Requirements text */
+  requirements?: string;
+  /** Discipline ID */
+  discipline_id?: number;
+  /**
+   * Is active status
+   * @default true
+   */
   is_active?: boolean;
 }
 
-export interface UpdateIndicatorGroupDto {
-  /** Group name in Russian */
+export interface UpdateLicenseCategoryDto {
+  /** Category name in Russian */
   name_ru?: string;
-  /** Technical code */
-  code?: string;
-  /** Group description */
+  /** Short name in Russian */
+  short_name_ru?: string;
+  /** Description */
   description?: string;
-  /** Sport ID */
-  sport_id?: number;
+  /** Level */
+  level?: number;
+  /** Requirements text */
+  requirements?: string;
+  /** Is active status */
+  is_active?: boolean;
+}
+
+export interface OrganizationTypeResponseDto {
+  /** Type ID */
+  id: number;
+  /** Type name in Russian */
+  name_ru: string;
+  /** Type code */
+  code: string;
   /** Sort order */
   sort_order?: number;
-  /** Active status */
-  is_active?: boolean;
+}
+
+export interface OrganizationLevelResponseDto {
+  /** Level ID */
+  id: number;
+  /** Level name in Russian */
+  name_ru: string;
+  /** Level code */
+  code: string;
+  /** Sort order */
+  sort_order: number;
+}
+
+export interface CountryResponseDto {
+  /**
+   * Country ID
+   * @example 1
+   */
+  id: number;
+  /**
+   * Country code (ISO 3166-1 alpha-2)
+   * @example "RU"
+   */
+  code: string;
+  /**
+   * Country name in Russian
+   * @example "Россия"
+   */
+  name: string;
+  /**
+   * Flag emoji
+   * @example "🇷🇺"
+   */
+  flag: string;
 }
 
 export interface OrganizationResponseDto {
@@ -1552,6 +1659,71 @@ export interface OrganizationsListResponseDto {
   data: OrganizationResponseDto[];
   /** Total count of organizations */
   total: number;
+}
+
+export interface CreateOrganizationDto {
+  /** Organization name in Russian */
+  name_ru: string;
+  /** Abbreviation in Russian */
+  abbreviation_ru?: string | null;
+  /** Internal code */
+  internal_code?: string | null;
+  /** Organization type ID */
+  type_id: number;
+  /** Parent organization ID */
+  parent_id?: number | null;
+  /** Sport ID */
+  sport_id?: number | null;
+  /** Region ID */
+  region_id?: number | null;
+  /** Country ID */
+  country_id?: number | null;
+  /** Organization level ID */
+  level_id: number;
+  /** Founded year */
+  founded_year?: number | null;
+  /**
+   * Active status
+   * @default true
+   */
+  is_active?: boolean;
+  /** Metadata (JSON) */
+  metadata?: object | null;
+}
+
+export interface UpdateOrganizationDto {
+  /** Organization name in Russian */
+  name_ru?: string;
+  /** Abbreviation in Russian */
+  abbreviation_ru?: string | null;
+  /** Internal code */
+  internal_code?: string | null;
+  /** Organization type ID */
+  type_id?: number;
+  /** Parent organization ID */
+  parent_id?: number | null;
+  /** Sport ID */
+  sport_id?: number | null;
+  /** Region ID */
+  region_id?: number | null;
+  /** Country ID */
+  country_id?: number | null;
+  /** Organization level ID */
+  level_id?: number;
+  /** Founded year */
+  founded_year?: number | null;
+  /**
+   * Active status
+   * @default true
+   */
+  is_active?: boolean;
+  /** Metadata (JSON) */
+  metadata?: object | null;
+}
+
+export interface MoveOrganizationDto {
+  /** New parent organization ID (null for root level) */
+  parent_id: number | null;
 }
 
 export interface SportReferenceDto {
@@ -1640,68 +1812,46 @@ export interface GenerateSeasonsDto {
 }
 
 export interface EventResponseDto {
-  /**
-   * Event ID
-   * @example 1
-   */
+  /** Event ID */
   id: number;
+  /** Parent event ID */
+  parent_event_id?: number;
+  /** Unique code */
+  code: string;
+  /** Full name in Russian */
+  name_ru: string;
+  /** Short name in Russian */
+  short_name_ru?: string;
+  /** Event type ID */
+  event_type_id?: number;
+  /** Event level ID */
+  level_id?: number;
+  /** Event stage ID */
+  stage_id?: number;
+  /** Sport ID */
+  sport_id?: number;
+  /** Discipline ID */
+  discipline_id?: number;
+  /** Gender ID */
+  gender_id?: number;
+  /** Age group ID */
+  age_group_id?: number;
+  /** Organizer ID */
+  organizer_id?: number;
+  /** Description */
+  description?: string;
+  /** Metadata (JSON) */
+  metadata?: object;
+  /** Active status */
+  is_active: boolean;
   /**
-   * Event title
-   * @example "Team Meeting"
-   */
-  title: string;
-  /**
-   * Event description
-   * @example "Weekly sync with the team"
-   */
-  description: string;
-  /**
-   * Start date and time
+   * Creation date
    * @format date-time
-   * @example "2024-01-20T10:00:00.000Z"
-   */
-  startDate: string;
-  /**
-   * End date and time
-   * @format date-time
-   * @example "2024-01-20T11:00:00.000Z"
-   */
-  endDate: string;
-  /**
-   * Event location
-   * @example "Conference Room A"
-   */
-  location: string;
-  /**
-   * Whether event is all day
-   * @example false
-   */
-  isAllDay: boolean;
-  /**
-   * Event color in hex format
-   * @example "#3498db"
-   */
-  color: string;
-  /**
-   * Event status
-   * @example "confirmed"
-   */
-  status: "pending" | "confirmed" | "cancelled";
-  /**
-   * Creator user ID
-   * @example 1
-   */
-  userId: number;
-  /**
-   * Creation timestamp
-   * @format date-time
-   * @example "2024-01-15T10:30:00.000Z"
    */
   createdAt: string;
   /**
-   * Last update timestamp
+   * Last update date
    * @format date-time
-   * @example "2024-01-15T10:30:00.000Z"
    */
   updatedAt: string;
 }
@@ -1716,25 +1866,97 @@ export interface EventsListResponseDto {
   total: number;
 }
 
-export interface CountryResponseDto {
-  /**
-   * Country ID
-   * @example 1
-   */
-  id: number;
-  /**
-   * Country code (ISO 3166-1 alpha-2)
-   * @example "RU"
-   */
+export interface CreateEventDto {
+  /** Sport ID */
+  sport_id: number;
+  /** Unique code */
   code: string;
+  /** Full name in Russian */
+  name_ru: string;
+  /** Short name in Russian */
+  short_name_ru?: string;
+  /** Description */
+  description?: string;
+  /** Event type ID */
+  event_type_id?: number;
+  /** Event level ID */
+  level_id?: number;
+  /** Stage ID */
+  stage_id?: number;
+  /** Discipline ID */
+  discipline_id?: number;
+  /** Age group ID */
+  age_group_id?: number;
+  /** Gender ID */
+  gender_id?: number;
+  /** Organizer ID */
+  organizer_id?: number;
+  /** Parent event ID */
+  parent_event_id?: number;
   /**
-   * Country name in Russian
-   * @example "Россия"
+   * Is active
+   * @default true
    */
-  name: string;
+  is_active?: boolean;
+}
+
+export interface UpdateEventDto {
+  /** Sport ID */
+  sport_id?: number;
+  /** Unique code */
+  code?: string;
+  /** Full name in Russian */
+  name_ru?: string;
+  /** Short name in Russian */
+  short_name_ru?: string;
+  /** Description */
+  description?: string;
+  /** Event type ID */
+  event_type_id?: number;
+  /** Event level ID */
+  level_id?: number;
+  /** Stage ID */
+  stage_id?: number;
+  /** Discipline ID */
+  discipline_id?: number;
+  /** Age group ID */
+  age_group_id?: number;
+  /** Gender ID */
+  gender_id?: number;
+  /** Organizer ID */
+  organizer_id?: number;
+  /** Parent event ID */
+  parent_event_id?: number;
   /**
-   * Flag emoji
-   * @example "🇷🇺"
+   * Is active
+   * @default true
    */
-  flag: string;
+  is_active?: boolean;
+}
+
+export interface DynamicColumnDefinition {
+  key: string;
+  label: string;
+  type: string;
+  required?: boolean;
+  editable?: boolean;
+  placeholder?: string;
+  description?: string;
+  defaultValue?: string;
+  relation?: object;
+}
+
+export interface CreateReferenceTableDto {
+  tableKey: string;
+  label: string;
+  icon?: string;
+  category?: string;
+  columns: DynamicColumnDefinition[];
+  hasIsActive?: boolean;
+  hasIsSystem?: boolean;
+  hasSortOrder?: boolean;
+  permissionCode?: string;
+  /** @default "user" */
+  type?: "system" | "user";
+  accessLevelId?: number;
 }

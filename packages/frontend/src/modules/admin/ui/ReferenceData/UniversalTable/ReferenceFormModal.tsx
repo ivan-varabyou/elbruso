@@ -13,13 +13,13 @@ import {
 } from "@heroui/react";
 import { useEffect, useState } from "react";
 
-import type { FrontendColumnMeta } from "./table-configs";
+import type { ReferenceColumnMeta } from "./types";
 
 interface ReferenceFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: Record<string, unknown>) => void;
-  columns: FrontendColumnMeta[];
+  columns: ReferenceColumnMeta[];
   initialData?: Record<string, unknown> | null;
   tableLabel: string;
   relatedData?: Record<string, Record<string, unknown>[]>;

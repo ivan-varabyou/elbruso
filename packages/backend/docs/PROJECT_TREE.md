@@ -1,12 +1,13 @@
 # Структура проекта backend
 
-Генерировано: Пн 16 фев 2026 21:15:23 +03
+Генерировано: Ср 04 мар 2026 14:36:38 +03
 
 /home/ivan/git/elbruso/packages/backend
 ├── docs
 │   └── PROJECT_TREE.md
 ├── migrations
 │   ├── add-is-approved-to-users.sql
+│   ├── rbac-access-levels.sql
 │   └── rbac-role-weights.sql
 ├── src
 │   ├── config
@@ -199,6 +200,7 @@
 │   │   │   │   ├── indicator-filters.dto.ts
 │   │   │   │   ├── indicator-group.dto.ts
 │   │   │   │   ├── indicator-group-filters.dto.ts
+│   │   │   │   ├── indicator-template.dto.ts
 │   │   │   │   └── license-category.dto.ts
 │   │   │   ├── entities
 │   │   │   ├── interfaces
@@ -344,6 +346,16 @@
 │   │   │   │   └── sports.service.ts
 │   │   │   ├── index.ts
 │   │   │   └── sports.module.ts
+│   │   ├── spreadsheet
+│   │   │   ├── controllers
+│   │   │   │   └── spreadsheet.controller.ts
+│   │   │   ├── dto
+│   │   │   │   ├── responses
+│   │   │   │   │   └── spreadsheet.response.dto.ts
+│   │   │   │   └── spreadsheet.dto.ts
+│   │   │   ├── services
+│   │   │   │   └── spreadsheet.service.ts
+│   │   │   └── spreadsheet.module.ts
 │   │   ├── tables
 │   │   │   ├── controllers
 │   │   │   │   ├── formula.controller.ts
@@ -381,6 +393,7 @@
 │   │   │   │   │   ├── index.ts
 │   │   │   │   │   ├── user.response.dto.ts
 │   │   │   │   │   └── users-list.response.dto.ts
+│   │   │   │   ├── create-api-key.dto.ts
 │   │   │   │   ├── create-user.dto.ts
 │   │   │   │   ├── index.ts
 │   │   │   │   ├── update-user.dto.ts
@@ -431,4 +444,4 @@
 ├── package.json
 └── tsconfig.json
 
-162 directories, 265 files
+167 directories, 273 files

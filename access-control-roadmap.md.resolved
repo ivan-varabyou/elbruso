@@ -1,0 +1,86 @@
+# SpreadsheetEngine — Access Control & Permissions (Phase 7)
+
+> Реализуется **после** стабилизации core engine (Phases 1-5).  
+> База данных уже имеет таблицы `cell_permissions`, `table_permissions`, `workspace_permissions`, `permission_history` — используем их как reference.
+
+---
+
+## Модель прав доступа
+
+### Уровни доступа к Spreadsheet
+
+| Роль | Описание | Права |
+|------|----------|-------|
+| **Owner** | Создатель / Админ | Полный доступ: CRUD, права, публикация, удаление |
+| **Editor** | Редактор | Редактирование ячеек, добавление строк/столбцов |
+| **Viewer** | Читатель | Только просмотр |
+| **Commenter** | Комментатор | Просмотр + комментарии |
+
+### Уровни гранулярности
+
+```
+Organization Level
+  └── Spreadsheet Level
+        └── Sheet Level
+              └── Cell/Range Level
+```
+
+---
+
+## Задачи
+
+### 7.1: Spreadsheet-level Permissions
+- [ ] CRUD прав на spreadsheet (`spreadsheet_permissions` таблица)
+- [ ] Роли: owner, editor, viewer, commenter
+- [ ] Наследование прав от организации
+- [ ] Sharing: генерация ссылки с правами (view/edit)
+- [ ] Срок действия прав (`expires_at`)
+
+### 7.2: Sheet-level Permissions
+- [ ] Возможность скрыть sheet от определённых ролей
+- [ ] Sheet-level readonly для не-админов
+- [ ] Visible/Hidden sheets per role
+
+### 7.3: Cell/Range-level Permissions
+- [ ] Блокировка диапазонов ячеек для конкретных ролей
+- [ ] `can_read`, `can_write` на уровне ячейки/диапазона
+- [ ] Access condition: доступ только к данным своего региона/организации
+  - Пример: пользователь из «Москва» видит только строки с `region = Москва`
+- [ ] Визуальная индикация заблокированных ячеек
+
+### 7.4: Organization-based Access
+- [ ] Привязка spreadsheet к организации
+- [ ] Автоматическое предоставление прав членам организации
+- [ ] Иерархия организаций: родительская видит дочерние
+
+### 7.5: Data Source Permissions
+- [ ] Кто может привязывать справочники к столбцам
+- [ ] Кто может привязывать индикаторы
+- [ ] Кто может создавать формулы (cross-sheet, cross-spreadsheet)
+- [ ] Кто может публиковать шаблоны
+
+### 7.6: Template Permissions
+- [ ] Кто может создавать шаблоны (admin only)
+- [ ] Кто может клонировать шаблоны
+- [ ] Кто может видеть драфты vs опубликованные
+- [ ] Версионирование шаблонов: кто может откатить
+
+### 7.7: Audit & History
+- [ ] Лог всех изменений прав (`permission_history`)
+- [ ] Лог всех изменений ячеек (`cell_history`) с `user_id`
+- [ ] Просмотр истории изменений ячейки (кто, когда, что)
+- [ ] Экспорт audit log
+
+### 7.8: API Authorization
+- [ ] Guards на все endpoints `/spreadsheets/*`
+- [ ] Проверка прав перед каждой операцией
+- [ ] Rate limiting per user
+- [ ] RBAC интеграция с существующей системой ([RbacPermission](file:///home/ivan/git/elbruso/packages/database/src/types.ts#882-893))
+
+---
+
+## Технические заметки
+
+- Существующая RBAC система: [RbacPermission](file:///home/ivan/git/elbruso/packages/database/src/types.ts#882-893), `PermissionsGuard`, `@Permissions()` decorator
+- Существующие таблицы: `cell_permissions`, `table_permissions`, `workspace_permissions` — можно либо переиспользовать, либо создать аналогичные для `spreadsheet_*`
+- Рекомендация: создать `spreadsheet_permissions` с единой структурой, не привязываться к legacy

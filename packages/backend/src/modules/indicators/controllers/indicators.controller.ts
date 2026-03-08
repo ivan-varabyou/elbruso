@@ -27,6 +27,10 @@ import { GenerateIndicatorsDto } from "../dto/generate-indicators.dto";
 import { IndicatorFiltersDto } from "../dto/indicator-filters.dto";
 import { CreateIndicatorGroupDto, GetIndicatorGroupsDto } from "../dto/indicator-group.dto";
 import {
+  CreateIndicatorTemplateDto,
+  UpdateIndicatorTemplateDto,
+} from "../dto/indicator-template.dto";
+import {
   GroupsListResponseDto,
   IndicatorGroupResponseDto,
   IndicatorResponseDto,
@@ -174,6 +178,31 @@ export class IndicatorsController {
   @ApiOperation({ summary: "Get indicator generation templates" })
   async getTemplates() {
     return this.indicatorsService.getTemplates();
+  }
+
+  @Post("generation/templates")
+  @Permissions(`${RbacPermission.USER_INDICATORS}:write`)
+  @ApiOperation({ summary: "Create indicator generation template" })
+  @ApiResponse({ status: 201, description: "Template created" })
+  async createTemplate(@Body() data: CreateIndicatorTemplateDto) {
+    return this.indicatorsService.createTemplate(data as any);
+  }
+
+  @Patch("generation/templates/:id")
+  @Permissions(`${RbacPermission.USER_INDICATORS}:write`)
+  @ApiOperation({ summary: "Update indicator generation template" })
+  async updateTemplate(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() data: UpdateIndicatorTemplateDto,
+  ) {
+    return this.indicatorsService.updateTemplate(id, data as any);
+  }
+
+  @Delete("generation/templates/:id")
+  @Permissions(`${RbacPermission.USER_INDICATORS}:delete`)
+  @ApiOperation({ summary: "Delete indicator generation template" })
+  async deleteTemplate(@Param("id", ParseIntPipe) id: number) {
+    return this.indicatorsService.deleteTemplate(id);
   }
 
   @Get("generation/templates/:id/params")

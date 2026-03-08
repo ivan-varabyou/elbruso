@@ -29,6 +29,7 @@ export interface RbacRole {
   description?: string;
   permissions: Record<string, PermissionAction[]>;
   weight: number;
+  accessLevelId: number | null;
   isSystem: boolean;
   isEditable: boolean;
   createdAt: string;
@@ -45,6 +46,7 @@ export interface CreateRoleDto {
   description?: string;
   permissions: Record<string, PermissionAction[]>;
   weight?: number;
+  accessLevelId?: number | null;
 }
 
 export interface AssignUserRoleDto {

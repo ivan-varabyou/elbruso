@@ -148,7 +148,7 @@ export class IndicatorsService implements OnModuleInit {
       .values({
         ...data,
         is_active: true,
-      } as Record<string, unknown>)
+      } as any)
       .returningAll()
       .executeTakeFirstOrThrow() as unknown as IndicatorCatalog;
   }
@@ -242,6 +242,37 @@ export class IndicatorsService implements OnModuleInit {
     return resolvedParams;
   }
 
+  async createTemplate(data: Record<string, unknown>): Promise<unknown> {
+    return this.db.client
+      .insertInto("indicator_generation_templates")
+      .values({
+        ...data,
+        is_active: true,
+      } as any)
+      .returningAll()
+      .executeTakeFirstOrThrow();
+  }
+
+  async updateTemplate(id: number, data: Record<string, unknown>): Promise<unknown> {
+    return this.db.client
+      .updateTable("indicator_generation_templates")
+      .set({
+        ...data,
+        updated_at: new Date(),
+      })
+      .where("id", "=", id)
+      .returningAll()
+      .executeTakeFirstOrThrow();
+  }
+
+  async deleteTemplate(id: number): Promise<void> {
+    await this.db.client
+      .updateTable("indicator_generation_templates")
+      .set({ is_active: false })
+      .where("id", "=", id)
+      .execute();
+  }
+
   async generate(dto: GenerateIndicatorsDto): Promise<unknown[]> {
     const { templateIds, sportId, category, overwrite, filters } = dto;
     let templates: { id: number }[] = [];
@@ -321,7 +352,7 @@ export class IndicatorsService implements OnModuleInit {
       .values({
         ...data,
         is_active: true,
-      })
+      } as any)
       .returningAll()
       .executeTakeFirstOrThrow();
   }

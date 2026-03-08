@@ -12,6 +12,8 @@
 
 import {
   CreateIndicatorGroupDto,
+  CreateIndicatorTemplateDto,
+  CreateLicenseCategoryDto,
   GenerateIndicatorsDto,
   GenerateSeasonsDto,
   GroupsListResponseDto,
@@ -26,7 +28,8 @@ import {
   SeasonsListResponseDto,
   SportResponseDto,
   SportsListResponseDto,
-  UpdateIndicatorGroupDto,
+  UpdateIndicatorTemplateDto,
+  UpdateLicenseCategoryDto,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
@@ -214,6 +217,222 @@ export class Reference<
    * No description
    *
    * @tags Indicators
+   * @name IndicatorsControllerCreateGroup
+   * @summary Create indicator group
+   * @request POST:/reference/indicators/groups
+   * @secure
+   */
+  indicatorsControllerCreateGroup = (
+    data: CreateIndicatorGroupDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<IndicatorGroupResponseDto, any>({
+      path: `/reference/indicators/groups`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerGetGroups
+   * @summary Get all indicator groups
+   * @request GET:/reference/indicators/groups
+   * @secure
+   */
+  indicatorsControllerGetGroups = (
+    query?: {
+      /** Filter by sport ID */
+      sportId?: number;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<GroupsListResponseDto, any>({
+      path: `/reference/indicators/groups`,
+      method: "GET",
+      query: query,
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerGetGenders
+   * @summary Get all genders
+   * @request GET:/reference/indicators/genders
+   * @secure
+   */
+  indicatorsControllerGetGenders = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/reference/indicators/genders`,
+      method: "GET",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerGetAgeGroups
+   * @summary Get all age groups
+   * @request GET:/reference/indicators/age-groups
+   * @secure
+   */
+  indicatorsControllerGetAgeGroups = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/reference/indicators/age-groups`,
+      method: "GET",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerGetTemplates
+   * @summary Get indicator generation templates
+   * @request GET:/reference/indicators/generation/templates
+   * @secure
+   */
+  indicatorsControllerGetTemplates = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/reference/indicators/generation/templates`,
+      method: "GET",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerCreateTemplate
+   * @summary Create indicator generation template
+   * @request POST:/reference/indicators/generation/templates
+   * @secure
+   */
+  indicatorsControllerCreateTemplate = (
+    data: CreateIndicatorTemplateDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/indicators/generation/templates`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerUpdateTemplate
+   * @summary Update indicator generation template
+   * @request PATCH:/reference/indicators/generation/templates/{id}
+   * @secure
+   */
+  indicatorsControllerUpdateTemplate = (
+    id: number,
+    data: UpdateIndicatorTemplateDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/indicators/generation/templates/${id}`,
+      method: "PATCH",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerDeleteTemplate
+   * @summary Delete indicator generation template
+   * @request DELETE:/reference/indicators/generation/templates/{id}
+   * @secure
+   */
+  indicatorsControllerDeleteTemplate = (
+    id: number,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/indicators/generation/templates/${id}`,
+      method: "DELETE",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerGetTemplateParams
+   * @summary Get parameters for a specific template
+   * @request GET:/reference/indicators/generation/templates/{id}/params
+   * @secure
+   */
+  indicatorsControllerGetTemplateParams = (
+    id: number,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/indicators/generation/templates/${id}/params`,
+      method: "GET",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerGenerate
+   * @summary Generate indicators (flexible)
+   * @request POST:/reference/indicators/generation/generate
+   * @secure
+   */
+  indicatorsControllerGenerate = (
+    data: GenerateIndicatorsDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/indicators/generation/generate`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerFindBySport
+   * @summary Get indicators for a sport
+   * @request GET:/reference/indicators/by-sport/{sportId}
+   * @secure
+   */
+  indicatorsControllerFindBySport = (
+    sportId: number,
+    params: RequestParams = {},
+  ) =>
+    this.request<IndicatorsListResponseDto, any>({
+      path: `/reference/indicators/by-sport/${sportId}`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
    * @name IndicatorsControllerUpdate
    * @summary Update indicator
    * @request PATCH:/reference/indicators/{id}
@@ -262,183 +481,11 @@ export class Reference<
   /**
    * No description
    *
-   * @tags Indicators
-   * @name IndicatorsControllerFindBySport
-   * @summary Get indicators for a sport
-   * @request GET:/reference/indicators/by-sport/{sportId}
-   * @secure
-   */
-  indicatorsControllerFindBySport = (
-    sportId: number,
-    params: RequestParams = {},
-  ) =>
-    this.request<IndicatorsListResponseDto, any>({
-      path: `/reference/indicators/by-sport/${sportId}`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Indicators
-   * @name IndicatorsControllerGetTemplates
-   * @summary Get indicator generation templates
-   * @request GET:/reference/indicators/generation/templates
-   * @secure
-   */
-  indicatorsControllerGetTemplates = (params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/reference/indicators/generation/templates`,
-      method: "GET",
-      secure: true,
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Indicators
-   * @name IndicatorsControllerGenerate
-   * @summary Generate indicators (flexible)
-   * @request POST:/reference/indicators/generation/generate
-   * @secure
-   */
-  indicatorsControllerGenerate = (
-    data: GenerateIndicatorsDto,
-    params: RequestParams = {},
-  ) =>
-    this.request<void, any>({
-      path: `/reference/indicators/generation/generate`,
-      method: "POST",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Indicators
-   * @name IndicatorsControllerGetGroups
-   * @summary Get all indicator groups
-   * @request GET:/reference/indicators/groups
-   * @secure
-   */
-  indicatorsControllerGetGroups = (
-    query?: {
-      /** Filter by sport ID */
-      sportId?: number;
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<GroupsListResponseDto, any>({
-      path: `/reference/indicators/groups`,
-      method: "GET",
-      query: query,
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Indicators
-   * @name IndicatorsControllerCreateGroup
-   * @summary Create indicator group
-   * @request POST:/reference/indicators/groups
-   * @secure
-   */
-  indicatorsControllerCreateGroup = (
-    data: CreateIndicatorGroupDto,
-    params: RequestParams = {},
-  ) =>
-    this.request<IndicatorGroupResponseDto, any>({
-      path: `/reference/indicators/groups`,
-      method: "POST",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Indicators
-   * @name IndicatorsControllerGetGenders
-   * @summary Get all genders
-   * @request GET:/reference/indicators/genders
-   * @secure
-   */
-  indicatorsControllerGetGenders = (params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/reference/indicators/genders`,
-      method: "GET",
-      secure: true,
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Indicators
-   * @name IndicatorsControllerGetAgeGroups
-   * @summary Get all age groups
-   * @request GET:/reference/indicators/age-groups
-   * @secure
-   */
-  indicatorsControllerGetAgeGroups = (params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/reference/indicators/age-groups`,
-      method: "GET",
-      secure: true,
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Indicators
-   * @name IndicatorsControllerUpdateGroup
-   * @summary Update indicator group
-   * @request PATCH:/reference/indicators/groups/{id}
-   * @secure
-   */
-  indicatorsControllerUpdateGroup = (
-    id: number,
-    data: UpdateIndicatorGroupDto,
-    params: RequestParams = {},
-  ) =>
-    this.request<void, any>({
-      path: `/reference/indicators/groups/${id}`,
-      method: "PATCH",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Indicators
-   * @name IndicatorsControllerDeleteGroup
-   * @summary Delete indicator group
-   * @request DELETE:/reference/indicators/groups/{id}
-   * @secure
-   */
-  indicatorsControllerDeleteGroup = (id: number, params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/reference/indicators/groups/${id}`,
-      method: "DELETE",
-      secure: true,
-      ...params,
-    });
-  /**
-   * No description
-   *
    * @tags Indicator Groups
    * @name IndicatorGroupsControllerFindAll
    * @summary Get all indicator groups
    * @request GET:/reference/indicator-groups
+   * @secure
    */
   indicatorGroupsControllerFindAll = (
     query?: {
@@ -455,6 +502,7 @@ export class Reference<
       path: `/reference/indicator-groups`,
       method: "GET",
       query: query,
+      secure: true,
       format: "json",
       ...params,
     });
@@ -465,6 +513,7 @@ export class Reference<
    * @name IndicatorGroupsControllerFindById
    * @summary Get indicator group by ID
    * @request GET:/reference/indicator-groups/{id}
+   * @secure
    */
   indicatorGroupsControllerFindById = (
     id: number,
@@ -473,6 +522,7 @@ export class Reference<
     this.request<IndicatorGroupResponseDto, void>({
       path: `/reference/indicator-groups/${id}`,
       method: "GET",
+      secure: true,
       format: "json",
       ...params,
     });
@@ -483,6 +533,7 @@ export class Reference<
    * @name IndicatorGroupsControllerFindIndicatorsByGroup
    * @summary Get indicators for a specific group
    * @request GET:/reference/indicator-groups/{id}/indicators
+   * @secure
    */
   indicatorGroupsControllerFindIndicatorsByGroup = (
     id: number,
@@ -491,7 +542,112 @@ export class Reference<
     this.request<IndicatorsListResponseDto, any>({
       path: `/reference/indicator-groups/${id}/indicators`,
       method: "GET",
+      secure: true,
       format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerFindAll
+   * @summary Get all license categories
+   * @request GET:/reference/license-categories
+   * @secure
+   */
+  licenseCategoriesControllerFindAll = (
+    query: {
+      sportId: number;
+      type: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/license-categories`,
+      method: "GET",
+      query: query,
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerCreate
+   * @summary Create new category
+   * @request POST:/reference/license-categories
+   * @secure
+   */
+  licenseCategoriesControllerCreate = (
+    data: CreateLicenseCategoryDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/license-categories`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerFindById
+   * @summary Get category by ID
+   * @request GET:/reference/license-categories/{id}
+   * @secure
+   */
+  licenseCategoriesControllerFindById = (
+    id: number,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/license-categories/${id}`,
+      method: "GET",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerUpdate
+   * @summary Update category
+   * @request PATCH:/reference/license-categories/{id}
+   * @secure
+   */
+  licenseCategoriesControllerUpdate = (
+    id: number,
+    data: UpdateLicenseCategoryDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/license-categories/${id}`,
+      method: "PATCH",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags License Categories
+   * @name LicenseCategoriesControllerDelete
+   * @summary Delete category
+   * @request DELETE:/reference/license-categories/{id}
+   * @secure
+   */
+  licenseCategoriesControllerDelete = (
+    id: number,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/license-categories/${id}`,
+      method: "DELETE",
+      secure: true,
       ...params,
     });
   /**
@@ -677,6 +833,122 @@ export class Reference<
       path: `/reference/seasons/current`,
       method: "GET",
       format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Reference Data
+   * @name ReferenceDataControllerGetAvailableTables
+   * @summary Get all available reference tables
+   * @request GET:/reference/data/tables
+   * @secure
+   */
+  referenceDataControllerGetAvailableTables = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/reference/data/tables`,
+      method: "GET",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Reference Data
+   * @name ReferenceDataControllerFindAll
+   * @summary List all records from a reference table
+   * @request GET:/reference/data/{table}
+   * @secure
+   */
+  referenceDataControllerFindAll = (
+    table: string,
+    query?: {
+      /** Search query */
+      search?: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/data/${table}`,
+      method: "GET",
+      query: query,
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Reference Data
+   * @name ReferenceDataControllerCreate
+   * @summary Create a new record in a reference table
+   * @request POST:/reference/data/{table}
+   * @secure
+   */
+  referenceDataControllerCreate = (table: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/reference/data/${table}`,
+      method: "POST",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Reference Data
+   * @name ReferenceDataControllerFindById
+   * @summary Get a single record by ID
+   * @request GET:/reference/data/{table}/{id}
+   * @secure
+   */
+  referenceDataControllerFindById = (
+    table: string,
+    id: number,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/data/${table}/${id}`,
+      method: "GET",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Reference Data
+   * @name ReferenceDataControllerUpdate
+   * @summary Update a record by ID
+   * @request PATCH:/reference/data/{table}/{id}
+   * @secure
+   */
+  referenceDataControllerUpdate = (
+    table: string,
+    id: number,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/data/${table}/${id}`,
+      method: "PATCH",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Reference Data
+   * @name ReferenceDataControllerDelete
+   * @summary Delete (or deactivate) a record by ID
+   * @request DELETE:/reference/data/{table}/{id}
+   * @secure
+   */
+  referenceDataControllerDelete = (
+    table: string,
+    id: number,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/reference/data/${table}/${id}`,
+      method: "DELETE",
+      secure: true,
       ...params,
     });
 }

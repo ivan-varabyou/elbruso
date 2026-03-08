@@ -75,6 +75,21 @@ export class RbacService {
       return { allowed: false, reason: "Insufficient permissions" };
     }
 
+    // 5. Check organizational hierarchy context
+    if (
+      user.organizationId &&
+      context?.organizationId &&
+      String(user.organizationId) !== String(context.organizationId)
+    ) {
+      const isDescendant = await this.isDescendantOrganization(
+        Number(user.organizationId),
+        Number(context.organizationId),
+      );
+      if (!isDescendant) {
+        return { allowed: false, reason: "Access denied to this organization scope" };
+      }
+    }
+
     return { allowed: true };
   }
 
@@ -144,6 +159,7 @@ export class RbacService {
     permissions: Record<string, string[]>,
     weight?: number,
     actingUserId?: string,
+    accessLevelId?: number | null,
   ): Promise<RbacRole> {
     const dbType = type === RbacAppType.ADMIN ? "admin" : "user";
 
@@ -156,6 +172,7 @@ export class RbacService {
         description,
         permissions: sql`${JSON.stringify(permissions)}::jsonb`,
         weight: weight ?? 0,
+        access_level_id: accessLevelId || null,
         is_system: false,
         is_editable: true,
       })
@@ -167,7 +184,7 @@ export class RbacService {
 
   async updateRole(
     id: string,
-    data: { name?: string; description?: string; weight?: number },
+    data: { name?: string; description?: string; weight?: number; accessLevelId?: number | null },
     actingUserId?: string,
   ): Promise<RbacRole> {
     const role = await this.getRoleById(id);
@@ -196,6 +213,9 @@ export class RbacService {
     }
     if (data.weight !== undefined) {
       updateData.weight = data.weight;
+    }
+    if (data.accessLevelId !== undefined) {
+      updateData.access_level_id = data.accessLevelId;
     }
 
     const updated = await this.db.client
@@ -392,6 +412,7 @@ export class RbacService {
     roleCode: string;
     roleId: string;
     organizationId: number | null;
+    accessLevelId: number | null;
     appType: string;
   } | null> {
     // 1. Try new rbac_user_roles table first
@@ -409,6 +430,7 @@ export class RbacService {
         roleCode: role?.code || "",
         roleId: adminRbacRole.role_id,
         organizationId: null,
+        accessLevelId: role?.accessLevelId || null,
         appType: "admin",
       };
     }
@@ -431,6 +453,7 @@ export class RbacService {
         roleCode: roleCode,
         roleId: rbacRole?.id || adminUser.role_id || "",
         organizationId: null,
+        accessLevelId: rbacRole?.accessLevelId || null,
         appType: "admin",
       };
     }
@@ -450,6 +473,7 @@ export class RbacService {
         roleCode: role?.code || "",
         roleId: webappRole.role_id,
         organizationId: webappRole.organization_id || null,
+        accessLevelId: role?.accessLevelId || null,
         appType: "webapp",
       };
     }
@@ -525,10 +549,35 @@ export class RbacService {
     return false;
   }
 
-  private async getOrganization(organizationId: number): Promise<{ isBlocked: boolean } | null> {
-    // This would need OrganizationService injection
-    // For now, return mock - implement properly later
-    return { isBlocked: false };
+  private async isDescendantOrganization(parentId: number, childId: number): Promise<boolean> {
+    const result = await sql<{ id: number }>`
+      WITH RECURSIVE org_hierarchy AS (
+        SELECT id FROM organizations WHERE id = ${parentId}
+        UNION ALL
+        SELECT o.id FROM organizations o
+        JOIN org_hierarchy oh ON o.parent_id = oh.id
+      )
+      SELECT id FROM org_hierarchy WHERE id = ${childId}
+    `.execute(this.db.client);
+
+    return result.rows.length > 0;
+  }
+
+  private async getOrganization(
+    organizationId: number,
+  ): Promise<{ isBlocked: boolean; parentId: number | null } | null> {
+    const org = await this.db.client
+      .selectFrom("organizations")
+      .select(["parent_id", "is_active"])
+      .where("id", "=", organizationId)
+      .executeTakeFirst();
+
+    if (!org) return null;
+
+    return {
+      isBlocked: !org.is_active,
+      parentId: org.parent_id,
+    };
   }
 
   private formatRole(role: {
@@ -538,7 +587,8 @@ export class RbacService {
     name: string;
     description: string | null;
     permissions: unknown;
-    weight: number; // Added to match expanded DB query
+    weight: number;
+    access_level_id: number | null;
     is_system: boolean | number | null;
     is_editable: boolean | number | null;
     created_at: Date | null;
@@ -564,6 +614,7 @@ export class RbacService {
       description: role.description,
       permissions,
       weight: role.weight || 0,
+      accessLevelId: role.access_level_id,
       isSystem: Boolean(role.is_system),
       isEditable: Boolean(role.is_editable),
       createdAt: role.created_at || new Date(),

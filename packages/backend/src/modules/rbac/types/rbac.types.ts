@@ -42,6 +42,7 @@ export interface RbacRole {
   description: string | null;
   permissions: Record<string, string[]>;
   weight: number;
+  accessLevelId: number | null;
   isSystem: boolean;
   isEditable: boolean;
   createdAt: Date;
@@ -54,6 +55,7 @@ export interface RbacUserRole {
   appType: "admin" | "webapp";
   roleId: string;
   organizationId: number | null;
+  accessLevelId: number | null;
   grantedBy: string | null;
   grantedAt: Date;
   expiresAt: Date | null;

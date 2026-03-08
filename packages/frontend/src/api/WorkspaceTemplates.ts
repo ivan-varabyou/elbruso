@@ -26,6 +26,7 @@ export class WorkspaceTemplates<
    * @name WorkspaceTemplateControllerFindAll
    * @summary List all available workspace templates
    * @request GET:/workspace-templates
+   * @secure
    */
   workspaceTemplateControllerFindAll = (
     query?: {
@@ -39,6 +40,7 @@ export class WorkspaceTemplates<
       path: `/workspace-templates`,
       method: "GET",
       query: query,
+      secure: true,
       format: "json",
       ...params,
     });
@@ -49,6 +51,7 @@ export class WorkspaceTemplates<
    * @name WorkspaceTemplateControllerFindOne
    * @summary Get template details
    * @request GET:/workspace-templates/{id}
+   * @secure
    */
   workspaceTemplateControllerFindOne = (
     id: string,
@@ -57,6 +60,7 @@ export class WorkspaceTemplates<
     this.request<TemplateResponseDto, any>({
       path: `/workspace-templates/${id}`,
       method: "GET",
+      secure: true,
       format: "json",
       ...params,
     });

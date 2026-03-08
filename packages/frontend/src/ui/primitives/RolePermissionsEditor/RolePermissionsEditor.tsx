@@ -1,3 +1,7 @@
+import {
+  adminOrganizationsApi,
+  OrganizationLevel,
+} from "@frontend/api/admin/admin-organizations.api";
 import type { PermissionAction, PermissionGroup, RbacRole } from "@frontend/types/rbac";
 import { Button } from "@frontend/ui/primitives";
 import { RotateCcw, Save, X } from "lucide-react";
@@ -13,6 +17,7 @@ interface RolePermissionsEditorProps {
     roleId: string,
     permissions: Record<string, PermissionAction[]>,
     weight: number,
+    accessLevelId: number | null,
   ) => Promise<void>;
   permissionsTree?: {
     groups: PermissionGroup[];
@@ -28,6 +33,8 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
 }) => {
   const [permissions, setPermissions] = useState<Record<string, PermissionAction[]>>({});
   const [weight, setWeight] = useState<number>(0);
+  const [accessLevelId, setAccessLevelId] = useState<number | null>(null);
+  const [levels, setLevels] = useState<OrganizationLevel[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -35,9 +42,18 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
     if (isOpen && role) {
       setPermissions(role.permissions || {});
       setWeight(role.weight || 0);
+      setAccessLevelId(role.accessLevelId || null);
       setHasChanges(false);
     }
   }, [isOpen, role]);
+
+  useEffect(() => {
+    if (isOpen) {
+      adminOrganizationsApi.getLevels().then((res) => {
+        setLevels(res.data || []);
+      });
+    }
+  }, [isOpen]);
 
   const handlePermissionChange = (
     _group: string,
@@ -60,7 +76,7 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
   const handleSave = async () => {
     setLoading(true);
     try {
-      await onSave(role.id, permissions, weight);
+      await onSave(role.id, permissions, weight, accessLevelId);
       onClose();
     } catch (error) {
       console.error("[RolePermissionsEditor] error in onSave:", error);
@@ -73,10 +89,10 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
     if (!permissionsTree?.groups) return;
 
     const allPermissions = permissionsTree.groups.flatMap((g) => g.permissions);
-    
+
     setPermissions((prev) => {
       const updated = { ...prev };
-      
+
       allPermissions.forEach((p) => {
         // Only update if the permission actually supports this action
         const availableActions = p.actions || ["read", "write", "create", "delete"];
@@ -91,7 +107,7 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
           }
         }
       });
-      
+
       return updated;
     });
     setHasChanges(true);
@@ -100,6 +116,7 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
   const handleReset = () => {
     setPermissions(role.permissions || {});
     setWeight(role.weight || 0);
+    setAccessLevelId(role.accessLevelId || null);
     setHasChanges(false);
   };
 
@@ -123,6 +140,26 @@ export const RolePermissionsEditor: React.FC<RolePermissionsEditorProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <div className="flex flex-col items-end gap-1 mr-4">
+              <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
+                Уровень доступа
+              </span>
+              <select
+                value={accessLevelId || ""}
+                onChange={(e) => {
+                  setAccessLevelId(e.target.value ? Number(e.target.value) : null);
+                  setHasChanges(true);
+                }}
+                className="bg-zinc-100 border border-zinc-200 rounded px-2 py-1 text-sm font-medium text-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+              >
+                <option value="">Не выбран</option>
+                {levels.map((level) => (
+                  <option key={level.id} value={level.id}>
+                    {level.name_ru}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="flex flex-col items-end gap-1 mr-4">
               <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
                 Приоритет (Вес)

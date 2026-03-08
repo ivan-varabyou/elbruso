@@ -3,7 +3,7 @@
 import { IndicatorResponseDto } from "@frontend/api/data-contracts";
 import { Reference } from "@frontend/api/reference.api";
 import { Button, Checkbox, Input, Spinner } from "@frontend/ui/primitives";
-import { ChevronLeft, ChevronRight, FileSpreadsheet, Plus, Search, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileSpreadsheet, Search, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { FilterDropdown } from "./FilterDropdown.smart";
@@ -93,8 +93,8 @@ export function IndicatorsTableSmart({
 
       setIndicators(response.data.data);
       setTotal(response.data.total);
-    } catch (err) {
-      if (err instanceof Error && err.name === "AbortError") {
+    } catch (err: any) {
+      if (err?.name === "AbortError" || err?.message === "canceled" || err?.name === "CanceledError") {
         return;
       }
       console.error("[IndicatorsTable] Fetch error", {
@@ -231,16 +231,6 @@ export function IndicatorsTableSmart({
             label="Область"
             icon={FileSpreadsheet}
           />
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="bordered" onClick={handleGenerate}>
-            <FileSpreadsheet className="h-4 w-4 mr-2" />
-            Сгенерировать
-          </Button>
-          <Button onClick={handleCreate}>
-            <Plus className="h-4 w-4 mr-2" />
-            Добавить
-          </Button>
         </div>
       </div>
 

@@ -1,5 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "qwen-code": {}
+  },
+  "skills": {
+    "paths": [".agent/skills"]
+  },
   "mcp": {
     "heroui": {
       "type": "local",
@@ -40,13 +46,6 @@
         "DATABASE_URL": "${DATABASE_URL}"
       },
       "enabled": false
-    }
-  },
-  "agent": {
-    "plan": {
-      "tools": {
-        "skill": true
-      }
     }
   }
 }

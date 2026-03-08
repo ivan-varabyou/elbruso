@@ -1,6 +1,7 @@
-import { LucideIcon, Plus } from "lucide-react";
-import { ReactNode } from "react";
 import { Button } from "@frontend/ui/primitives";
+import { LucideIcon, Plus, Settings2 } from "lucide-react";
+import Link from "next/link";
+import { ReactNode } from "react";
 
 interface PageLayoutProps {
   title: string;
@@ -9,6 +10,8 @@ interface PageLayoutProps {
   description?: string;
   actions?: ReactNode;
   onAddClick?: () => void;
+  constructorLabel?: string;
+  constructorLink?: string;
 }
 
 export function ProfilePageLayout({
@@ -18,6 +21,8 @@ export function ProfilePageLayout({
   description,
   actions,
   onAddClick,
+  constructorLabel,
+  constructorLink,
 }: PageLayoutProps) {
   return (
     <div className="h-full">
@@ -31,9 +36,21 @@ export function ProfilePageLayout({
           </div>
           <div className="flex items-center gap-2">
             {onAddClick && (
-              <Button variant="solid" size="sm" onPress={onAddClick}>
+              <Button variant="solid" size="sm" onClick={onAddClick}>
                 <Plus className="h-4 w-4" />
                 Добавить
+              </Button>
+            )}
+            {constructorLink && (
+              <Button
+                as={Link}
+                href={constructorLink}
+                variant="bordered"
+                size="sm"
+                className="bg-white"
+              >
+                <Settings2 className="h-4 w-4 text-zinc-500" />
+                {constructorLabel || "Конструктор"}
               </Button>
             )}
             {actions && <div className="flex items-center gap-2">{actions}</div>}

@@ -1,16 +1,12 @@
 "use client";
 
-import { Button, Input } from "@frontend/ui/primitives";
-import { Plus } from "lucide-react";
+import { Input } from "@frontend/ui/primitives";
 
-import { useUsersPermissions } from "../hooks/useUsersPermissions";
 import { useUsersPageStore } from "../stores/useUsersPageStore";
 import { UserStatus } from "../types/users.types";
 
 export function UsersFilters() {
-  const { filters, setFilters, selectedStatus, setSelectedStatus, setSelectedUser, setEditorOpen } =
-    useUsersPageStore();
-  const { canCreate } = useUsersPermissions();
+  const { filters, setFilters, selectedStatus, setSelectedStatus } = useUsersPageStore();
 
   const statuses: { value: UserStatus; label: string }[] = [
     { value: "all", label: "Все" },
@@ -45,18 +41,6 @@ export function UsersFilters() {
         ))}
       </div>
 
-      {canCreate && (
-        <Button
-          variant="solid"
-          onClick={() => {
-            setSelectedUser(null);
-            setEditorOpen(true);
-          }}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Создать пользователя
-        </Button>
-      )}
     </div>
   );
 }

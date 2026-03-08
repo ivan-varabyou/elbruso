@@ -1,0 +1,41 @@
+# Workspace Template Editor — Task Tracker
+
+## Phase 1: Backend — Новый модуль SpreadsheetEngine
+- [ ] SQL миграция: таблицы `spreadsheets`, `spreadsheet_sheets`, `spreadsheet_cells`, `spreadsheet_merged_regions`, `spreadsheet_column_configs`, `spreadsheet_data_sources`
+- [ ] NestJS module: `spreadsheet.module.ts`, controller, service, DTOs
+- [ ] REST API endpoints: CRUD spreadsheets, sheets, cells, publish, clone
+- [ ] Регенерировать Kysely types
+
+## Phase 2: Frontend — Модуль SpreadsheetEngine
+- [ ] Структура модуля `packages/frontend/src/modules/spreadsheet/`
+- [ ] `spreadsheet.types.ts` — Domain types
+- [ ] `spreadsheet.api.ts` — API client
+- [ ] `useSpreadsheetStore.ts` — Zustand store
+- [ ] `formula-engine.ts` — HyperFormula wrapper
+- [ ] `SpreadsheetGrid.tsx` — ag-grid wrapper
+- [ ] `SpreadsheetToolbar.tsx`
+- [ ] `FormulaBar.tsx`
+- [ ] `SheetTabs.tsx`
+- [ ] `PropertiesPanel.tsx`
+- [ ] `ContextMenu.tsx`
+- [ ] `SpreadsheetEditor.tsx` — Main component (Admin)
+
+## Phase 3: Admin Edit Page
+- [ ] `/spreadsheets/page.tsx` — Gallery/list view
+- [ ] `/spreadsheets/[id]/page.tsx` — Editor page
+- [ ] Sidebar navigation item
+
+## Phase 4: Data Source Integration
+- [ ] `data-source-registry.ts`
+- [ ] `DataSourcePicker.tsx`
+- [ ] Reference dropdown cells
+- [ ] Indicator cells
+- [ ] Auto-populate linked columns
+
+## Phase 5: User Mode
+- [ ] `SpreadsheetViewer.tsx`
+- [ ] Locked cell styling & behavior
+- [ ] User workspace creation from template
+
+## Phase 6: Migration
+- [ ] Migrate [ReferenceTablePage](file:///home/ivan/git/elbruso/packages/frontend/src/modules/admin/ui/ReferenceData/UniversalTable/ReferenceTablePage.tsx#44-615) → SpreadsheetViewer

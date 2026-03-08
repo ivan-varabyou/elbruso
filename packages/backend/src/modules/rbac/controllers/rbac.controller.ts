@@ -79,6 +79,7 @@ export class RbacController {
       description?: string;
       permissions: Record<string, string[]>;
       weight?: number;
+      accessLevelId?: number | null;
     },
     @Req() req: RequestWithUser,
   ) {
@@ -89,8 +90,9 @@ export class RbacController {
       body.name,
       body.description || null,
       body.permissions,
-      0, // weight
+      body.weight ?? 0,
       actingUserId,
+      body.accessLevelId || null,
     );
   }
 
@@ -99,7 +101,8 @@ export class RbacController {
   @ApiOperation({ summary: "Update admin role" })
   async updateAdminRole(
     @Param("id", ParseUUIDPipe) id: string,
-    @Body() body: { name?: string; description?: string; weight?: number },
+    @Body()
+    body: { name?: string; description?: string; weight?: number; accessLevelId?: number | null },
     @Req() req: RequestWithUser,
   ) {
     const actingUserId = req.user?.id || req.user?.sub;
@@ -156,6 +159,7 @@ export class RbacController {
       description?: string;
       permissions: Record<string, string[]>;
       weight?: number;
+      accessLevelId?: number | null;
       actingUserId?: string;
     },
   ) {
@@ -166,7 +170,8 @@ export class RbacController {
       body.description || null,
       body.permissions,
       body.weight || 0,
-      undefined, // actingUserId (optional for webapp roles here)
+      undefined, // actingUserId
+      body.accessLevelId || null,
     );
     return role;
   }
@@ -176,7 +181,8 @@ export class RbacController {
   @ApiOperation({ summary: "Update user role" })
   async updateUserRole(
     @Param("id", ParseUUIDPipe) id: string,
-    @Body() body: { name?: string; description?: string },
+    @Body()
+    body: { name?: string; description?: string; weight?: number; accessLevelId?: number | null },
   ) {
     return this.rbacService.updateRole(id, body);
   }

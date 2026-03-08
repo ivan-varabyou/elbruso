@@ -15,16 +15,21 @@ import {
   TableRow,
   Tooltip,
 } from "@frontend/ui/primitives";
+import { RoleEditor } from "@frontend/ui/primitives";
 import { ConfirmDialog } from "@frontend/ui/primitives/ConfirmDialog";
 import { RolePermissionsEditor } from "@frontend/ui/primitives/RolePermissionsEditor";
-import { Settings2, Shield, Trash2 } from "lucide-react";
+import { Edit2, Settings2, Shield, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface RolesManagementProps {
+  appType?: "admin" | "user";
   onAddRole: () => void;
 }
 
-export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) => {
+export const RolesManagement: React.FC<RolesManagementProps> = ({
+  onAddRole,
+  appType = "admin",
+}) => {
   const [roles, setRoles] = useState<RbacRole[]>([]);
   const [permissionsTree, setPermissionsTree] = useState<{ groups: PermissionGroup[] } | null>(
     null,
@@ -32,12 +37,16 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
   const [loading, setLoading] = useState(true);
   const [selectedRole, setSelectedRole] = useState<RbacRole | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [roleToEdit, setRoleToEdit] = useState<RbacRole | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [roleToDelete, setRoleToDelete] = useState<RbacRole | null>(null);
 
   const loadRoles = async () => {
     try {
-      const response = await rbacApi.getAdminRoles();
+      const response = await (appType === "admin"
+        ? rbacApi.getAdminRoles()
+        : rbacApi.getUserRoles());
       // Robust data extraction: some APIs wrap data in another 'data' property
       const data = response.data;
       setRoles(Array.isArray(data) ? data : []);
@@ -48,9 +57,12 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
 
   const loadPermissions = async () => {
     try {
-      const response = await rbacApi.getPermissionsTree();
+      const response = await rbacApi.getPermissionsTree(appType === "admin" ? "admin" : "user");
       if (response && response.data) {
-        const treeData = (response.data as any).groups ? response.data : (response.data as any).data;
+        const data = response.data as unknown as
+          | { groups: PermissionGroup[] }
+          | { data: { groups: PermissionGroup[] } };
+        const treeData = "groups" in data ? data : data.data;
         setPermissionsTree(treeData || null);
       }
     } catch (err) {
@@ -66,12 +78,16 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
       setLoading(false);
     };
     init();
-  }, []);
+  }, [appType]);
 
   const handleDeleteRole = async () => {
     if (!roleToDelete) return;
     try {
-      await rbacApi.deleteAdminRole(roleToDelete.id);
+      if (appType === "admin") {
+        await rbacApi.deleteAdminRole(roleToDelete.id);
+      } else {
+        await rbacApi.deleteUserRole(roleToDelete.id);
+      }
       await loadRoles();
       toastService.success(`Роль "${roleToDelete.name}" успешно удалена`);
     } catch (err) {
@@ -87,9 +103,48 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
     setEditorOpen(true);
   };
 
+  const handleEditMetadata = (role: RbacRole) => {
+    setRoleToEdit(role);
+    setCreateModalOpen(true);
+  };
+
+  const handleCreateOrUpdateRole = async (data: any) => {
+    try {
+      if (roleToEdit) {
+        if (appType === "admin") {
+          await rbacApi.updateAdminRole(roleToEdit.id, data);
+        } else {
+          await rbacApi.updateUserRole(roleToEdit.id, data);
+        }
+        toastService.success(`Роль "${data.name}" успешно обновлена`);
+      } else {
+        if (appType === "admin") {
+          await rbacApi.createAdminRole(data);
+        } else {
+          await rbacApi.createUserRole(data);
+        }
+        toastService.success(`Роль "${data.name}" успешно создана`);
+      }
+      await loadRoles();
+    } catch (err) {
+      toastService.error(err instanceof Error ? err.message : "Ошибка при сохранении");
+    }
+  };
+
+  const title = appType === "admin" ? "Роли администраторов" : "Роли пользователей";
+  const icon = Shield;
+
   if (loading) {
     return (
-      <ProfilePageLayout title="Роли администраторов" icon={Shield} onAddClick={onAddRole}>
+      <ProfilePageLayout
+        title={title}
+        icon={icon}
+        onAddClick={() => {
+          setRoleToEdit(null);
+          setCreateModalOpen(true);
+          onAddRole?.();
+        }}
+      >
         <div className="flex h-96 items-center justify-center">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-900 border-t-transparent" />
         </div>
@@ -101,9 +156,21 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
   const safeRoles = Array.isArray(roles) ? roles : [];
 
   return (
-    <ProfilePageLayout title="Роли администраторов" icon={Shield} onAddClick={onAddRole}>
+    <ProfilePageLayout
+      title={title}
+      icon={icon}
+      onAddClick={() => {
+        setRoleToEdit(null);
+        setCreateModalOpen(true);
+        onAddRole?.();
+      }}
+    >
       <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-sm">
-        <Table aria-label="Таблица ролей администраторов" removeWrapper className="min-w-full">
+        <Table
+          aria-label={`Таблица ролей ${appType === "admin" ? "администраторов" : "пользователей"}`}
+          removeWrapper
+          className="min-w-full"
+        >
           <TableHeader>
             <TableColumn className="bg-zinc-50/50 text-zinc-500 font-semibold py-4 px-6 border-b border-zinc-100 whitespace-nowrap">
               Название
@@ -187,6 +254,17 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
                         <Settings2 className="h-4 w-4" />
                       </Button>
                     </Tooltip>
+                    <Tooltip content="Редактировать метаданные" delay={500}>
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        onPress={() => handleEditMetadata(role)}
+                        className="text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/50"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                    </Tooltip>
                     {!role.isSystem && (
                       <Tooltip content="Удалить роль" color="danger" delay={500}>
                         <Button
@@ -221,16 +299,32 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
           }}
           role={selectedRole}
           permissionsTree={permissionsTree}
-          onSave={async (roleId, permissions, weight) => {
+          onSave={async (roleId, permissions, weight, accessLevelId) => {
             try {
               const promises = [];
 
               // 1. Update permissions
-              promises.push(rbacApi.updateAdminRolePermissions(roleId, permissions));
+              if (appType === "admin") {
+                promises.push(rbacApi.updateAdminRolePermissions(roleId, permissions));
+              } else {
+                promises.push(rbacApi.updateUserRolePermissions(roleId, permissions));
+              }
 
-              // 2. Update weight (if it's different from the current one)
+              // 2. Update weight and accessLevelId
+              const updateData: Partial<RbacRole> = {};
               if (selectedRole.weight !== weight) {
-                promises.push(rbacApi.updateAdminRole(roleId, { weight }));
+                updateData.weight = weight;
+              }
+              if (selectedRole.accessLevelId !== accessLevelId) {
+                updateData.accessLevelId = accessLevelId;
+              }
+
+              if (Object.keys(updateData).length > 0) {
+                if (appType === "admin") {
+                  promises.push(rbacApi.updateAdminRole(roleId, updateData));
+                } else {
+                  promises.push(rbacApi.updateUserRole(roleId, updateData));
+                }
               }
 
               await Promise.all(promises);
@@ -242,6 +336,16 @@ export const RolesManagement: React.FC<RolesManagementProps> = ({ onAddRole }) =
           }}
         />
       )}
+
+      <RoleEditor
+        isOpen={createModalOpen}
+        onClose={() => {
+          setCreateModalOpen(false);
+          setRoleToEdit(null);
+        }}
+        onSave={handleCreateOrUpdateRole}
+        role={roleToEdit}
+      />
 
       <ConfirmDialog
         isOpen={deleteConfirmOpen}

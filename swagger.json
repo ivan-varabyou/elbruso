@@ -659,6 +659,399 @@
         ]
       }
     },
+    "/rbac/permissions/tree": {
+      "get": {
+        "operationId": "RbacController_getPermissionsTree",
+        "summary": "Get permissions tree for admin or user",
+        "parameters": [
+          {
+            "name": "appType",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/rbac/admin/roles": {
+      "get": {
+        "operationId": "RbacController_getAdminRoles",
+        "summary": "Get all admin roles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "RbacController_createAdminRole",
+        "summary": "Create new admin role",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/rbac/admin/roles/{id}": {
+      "get": {
+        "operationId": "RbacController_getAdminRole",
+        "summary": "Get admin role by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "RbacController_updateAdminRole",
+        "summary": "Update admin role",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "RbacController_deleteAdminRole",
+        "summary": "Delete admin role",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/rbac/admin/roles/{id}/permissions": {
+      "put": {
+        "operationId": "RbacController_updateAdminRolePermissions",
+        "summary": "Update admin role permissions",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/rbac/user/roles": {
+      "get": {
+        "operationId": "RbacController_getUserRoles",
+        "summary": "Get all user roles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "RbacController_createUserRole",
+        "summary": "Create new user role",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/rbac/user/roles/{id}": {
+      "get": {
+        "operationId": "RbacController_getUserRole",
+        "summary": "Get user role by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "RbacController_updateUserRole",
+        "summary": "Update user role",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "RbacController_deleteUserRole",
+        "summary": "Delete user role",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/rbac/user/roles/{id}/permissions": {
+      "put": {
+        "operationId": "RbacController_updateUserRolePermissions",
+        "summary": "Update user role permissions",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/rbac/user/{userId}/role": {
+      "get": {
+        "operationId": "RbacController_getUserRoleAssignment",
+        "summary": "Get user role assignment",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "appType",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "RbacController_assignUserRole",
+        "summary": "Assign role to user",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "RBAC"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
     "/workspaces": {
       "post": {
         "operationId": "WorkspaceController_create",
@@ -1323,6 +1716,11 @@
         },
         "tags": [
           "Workspace Templates"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
         ]
       }
     },
@@ -1354,6 +1752,11 @@
         },
         "tags": [
           "Workspace Templates"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
         ]
       }
     },
@@ -2072,7 +2475,7 @@
             }
           },
           "400": {
-            "description": "Cannot delete the last SUPER_ADMIN"
+            "description": "Cannot delete the last SUPER_ADMIN or yourself"
           },
           "404": {
             "description": "Admin user not found"
@@ -3682,6 +4085,66 @@
         ]
       }
     },
+    "/admin/reference/regions": {
+      "get": {
+        "operationId": "RegionsController_findAll",
+        "summary": "Get all regions",
+        "parameters": [
+          {
+            "name": "countryId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by country ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "federalDistrictId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by federal district ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "regionTypeId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by region type ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "isActive",
+            "required": false,
+            "in": "query",
+            "description": "Filter by active status",
+            "schema": {
+              "default": true,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns list of regions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegionsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Regions"
+        ]
+      }
+    },
     "/reference/regions": {
       "get": {
         "operationId": "RegionsController_findAll",
@@ -3742,6 +4205,40 @@
         ]
       }
     },
+    "/admin/reference/regions/{id}": {
+      "get": {
+        "operationId": "RegionsController_findById",
+        "summary": "Get region by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns region",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Region not found"
+          }
+        },
+        "tags": [
+          "Regions"
+        ]
+      }
+    },
     "/reference/regions/{id}": {
       "get": {
         "operationId": "RegionsController_findById",
@@ -3776,6 +4273,40 @@
         ]
       }
     },
+    "/admin/reference/regions/by-district/{districtId}": {
+      "get": {
+        "operationId": "RegionsController_findByDistrict",
+        "summary": "Get regions by federal district",
+        "parameters": [
+          {
+            "name": "districtId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns list of regions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Regions"
+        ]
+      }
+    },
     "/reference/regions/by-district/{districtId}": {
       "get": {
         "operationId": "RegionsController_findByDistrict",
@@ -3783,6 +4314,40 @@
         "parameters": [
           {
             "name": "districtId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns list of regions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Regions"
+        ]
+      }
+    },
+    "/admin/reference/regions/by-country/{countryId}": {
+      "get": {
+        "operationId": "RegionsController_findByCountry",
+        "summary": "Get regions by country",
+        "parameters": [
+          {
+            "name": "countryId",
             "required": true,
             "in": "path",
             "schema": {
@@ -3844,6 +4409,28 @@
         ]
       }
     },
+    "/admin/reference/sports": {
+      "get": {
+        "operationId": "SportsController_findAll",
+        "summary": "Get all sports",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns list of sports",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Sports"
+        ]
+      }
+    },
     "/reference/sports": {
       "get": {
         "operationId": "SportsController_findAll",
@@ -3859,6 +4446,40 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "Sports"
+        ]
+      }
+    },
+    "/admin/reference/sports/{id}": {
+      "get": {
+        "operationId": "SportsController_findById",
+        "summary": "Get sport by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns sport",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sport not found"
           }
         },
         "tags": [
@@ -3893,6 +4514,30 @@
           },
           "404": {
             "description": "Sport not found"
+          }
+        },
+        "tags": [
+          "Sports"
+        ]
+      }
+    },
+    "/admin/reference/sports/{id}/disciplines": {
+      "get": {
+        "operationId": "SportsController_findDisciplines",
+        "summary": "Get disciplines for a sport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns list of disciplines"
           }
         },
         "tags": [
@@ -4034,6 +4679,327 @@
         ]
       }
     },
+    "/reference/indicators/groups": {
+      "post": {
+        "operationId": "IndicatorsController_createGroup",
+        "summary": "Create indicator group",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIndicatorGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Group created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorGroupResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "IndicatorsController_getGroups",
+        "summary": "Get all indicator groups",
+        "parameters": [
+          {
+            "name": "sportId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by sport ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns list of groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/indicators/genders": {
+      "get": {
+        "operationId": "IndicatorsController_getGenders",
+        "summary": "Get all genders",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/indicators/age-groups": {
+      "get": {
+        "operationId": "IndicatorsController_getAgeGroups",
+        "summary": "Get all age groups",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/indicators/generation/templates": {
+      "get": {
+        "operationId": "IndicatorsController_getTemplates",
+        "summary": "Get indicator generation templates",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "IndicatorsController_createTemplate",
+        "summary": "Create indicator generation template",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIndicatorTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Template created"
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/indicators/generation/templates/{id}": {
+      "patch": {
+        "operationId": "IndicatorsController_updateTemplate",
+        "summary": "Update indicator generation template",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIndicatorTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "IndicatorsController_deleteTemplate",
+        "summary": "Delete indicator generation template",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/indicators/generation/templates/{id}/params": {
+      "get": {
+        "operationId": "IndicatorsController_getTemplateParams",
+        "summary": "Get parameters for a specific template",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/indicators/generation/generate": {
+      "post": {
+        "operationId": "IndicatorsController_generate",
+        "summary": "Generate indicators (flexible)",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateIndicatorsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/indicators/by-sport/{sportId}": {
+      "get": {
+        "operationId": "IndicatorsController_findBySport",
+        "summary": "Get indicators for a sport",
+        "parameters": [
+          {
+            "name": "sportId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns list of indicators",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Indicators"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
     "/reference/indicators/{id}": {
       "patch": {
         "operationId": "IndicatorsController_update",
@@ -4127,95 +5093,9 @@
         ]
       }
     },
-    "/reference/indicators/by-sport/{sportId}": {
+    "/admin/reference/indicator-groups": {
       "get": {
-        "operationId": "IndicatorsController_findBySport",
-        "summary": "Get indicators for a sport",
-        "parameters": [
-          {
-            "name": "sportId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns list of indicators",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndicatorsListResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Indicators"
-        ],
-        "security": [
-          {
-            "JWT-auth": []
-          }
-        ]
-      }
-    },
-    "/reference/indicators/generation/templates": {
-      "get": {
-        "operationId": "IndicatorsController_getTemplates",
-        "summary": "Get indicator generation templates",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Indicators"
-        ],
-        "security": [
-          {
-            "JWT-auth": []
-          }
-        ]
-      }
-    },
-    "/reference/indicators/generation/generate": {
-      "post": {
-        "operationId": "IndicatorsController_generate",
-        "summary": "Generate indicators (flexible)",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenerateIndicatorsDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Indicators"
-        ],
-        "security": [
-          {
-            "JWT-auth": []
-          }
-        ]
-      }
-    },
-    "/reference/indicators/groups": {
-      "get": {
-        "operationId": "IndicatorsController_getGroups",
+        "operationId": "IndicatorGroupsController_findAll",
         "summary": "Get all indicator groups",
         "parameters": [
           {
@@ -4225,6 +5105,29 @@
             "description": "Filter by sport ID",
             "schema": {
               "type": "number"
+            }
+          },
+          {
+            "name": "regionId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by region ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Filter by group type",
+            "schema": {
+              "enum": [
+                "Unified",
+                "Legacy",
+                "Custom"
+              ],
+              "type": "string"
             }
           }
         ],
@@ -4241,148 +5144,7 @@
           }
         },
         "tags": [
-          "Indicators"
-        ],
-        "security": [
-          {
-            "JWT-auth": []
-          }
-        ]
-      },
-      "post": {
-        "operationId": "IndicatorsController_createGroup",
-        "summary": "Create indicator group",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateIndicatorGroupDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Group created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndicatorGroupResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Indicators"
-        ],
-        "security": [
-          {
-            "JWT-auth": []
-          }
-        ]
-      }
-    },
-    "/reference/indicators/genders": {
-      "get": {
-        "operationId": "IndicatorsController_getGenders",
-        "summary": "Get all genders",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Indicators"
-        ],
-        "security": [
-          {
-            "JWT-auth": []
-          }
-        ]
-      }
-    },
-    "/reference/indicators/age-groups": {
-      "get": {
-        "operationId": "IndicatorsController_getAgeGroups",
-        "summary": "Get all age groups",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Indicators"
-        ],
-        "security": [
-          {
-            "JWT-auth": []
-          }
-        ]
-      }
-    },
-    "/reference/indicators/groups/{id}": {
-      "patch": {
-        "operationId": "IndicatorsController_updateGroup",
-        "summary": "Update indicator group",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateIndicatorGroupDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Indicators"
-        ],
-        "security": [
-          {
-            "JWT-auth": []
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "IndicatorsController_deleteGroup",
-        "summary": "Delete indicator group",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Indicators"
+          "Indicator Groups"
         ],
         "security": [
           {
@@ -4443,6 +5205,50 @@
         },
         "tags": [
           "Indicator Groups"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/reference/indicator-groups/{id}": {
+      "get": {
+        "operationId": "IndicatorGroupsController_findById",
+        "summary": "Get indicator group by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorGroupResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group not found"
+          }
+        },
+        "tags": [
+          "Indicator Groups"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
         ]
       }
     },
@@ -4477,6 +5283,47 @@
         },
         "tags": [
           "Indicator Groups"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/reference/indicator-groups/{id}/indicators": {
+      "get": {
+        "operationId": "IndicatorGroupsController_findIndicatorsByGroup",
+        "summary": "Get indicators for a specific group",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns list of indicators",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Indicator Groups"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
         ]
       }
     },
@@ -4508,6 +5355,569 @@
         },
         "tags": [
           "Indicator Groups"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/license-categories": {
+      "get": {
+        "operationId": "LicenseCategoriesController_findAll",
+        "summary": "Get all license categories",
+        "parameters": [
+          {
+            "name": "sportId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "type",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "License Categories"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "LicenseCategoriesController_create",
+        "summary": "Create new category",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLicenseCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "License Categories"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/license-categories/{id}": {
+      "get": {
+        "operationId": "LicenseCategoriesController_findById",
+        "summary": "Get category by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "License Categories"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "LicenseCategoriesController_update",
+        "summary": "Update category",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLicenseCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "License Categories"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "LicenseCategoriesController_delete",
+        "summary": "Delete category",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "License Categories"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/organizations/types": {
+      "get": {
+        "operationId": "AdminOrganizationsController_findAllTypes",
+        "summary": "Get all organization types",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganizationTypeResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/organizations/levels": {
+      "get": {
+        "operationId": "AdminOrganizationsController_findAllLevels",
+        "summary": "Get all organization levels",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganizationLevelResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/organizations/reference/countries": {
+      "get": {
+        "operationId": "AdminOrganizationsController_findCountries",
+        "summary": "Get countries for reference",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CountryResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/organizations/reference/regions": {
+      "get": {
+        "operationId": "AdminOrganizationsController_findRegions",
+        "summary": "Get regions for reference",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/organizations/reference/sports": {
+      "get": {
+        "operationId": "AdminOrganizationsController_findSports",
+        "summary": "Get sports for reference",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SportResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/organizations": {
+      "get": {
+        "operationId": "AdminOrganizationsController_findAll",
+        "summary": "List all organizations (including inactive for admin)",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "AdminOrganizationsController_create",
+        "summary": "Create new organization",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data"
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/organizations/{id}/tree": {
+      "get": {
+        "operationId": "AdminOrganizationsController_getTree",
+        "summary": "Get organization tree",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns organization tree"
+          },
+          "404": {
+            "description": "Organization not found"
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/organizations/{id}": {
+      "patch": {
+        "operationId": "AdminOrganizationsController_update",
+        "summary": "Update organization",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrganizationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found"
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "AdminOrganizationsController_remove",
+        "summary": "Delete organization (soft delete)",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organization deleted successfully"
+          },
+          "404": {
+            "description": "Organization not found"
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/organizations/{id}/move": {
+      "put": {
+        "operationId": "AdminOrganizationsController_move",
+        "summary": "Move organization to new parent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveOrganizationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid move (circular dependency)"
+          },
+          "404": {
+            "description": "Organization not found"
+          }
+        },
+        "tags": [
+          "Admin Organizations"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/reference/organizations": {
+      "get": {
+        "operationId": "OrganizationsController_findAll",
+        "summary": "Get all organizations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns list of organizations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Organizations"
         ]
       }
     },
@@ -4519,6 +5929,28 @@
         "responses": {
           "200": {
             "description": "Returns list of organizations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Organizations"
+        ]
+      }
+    },
+    "/admin/reference/organizations/federations": {
+      "get": {
+        "operationId": "OrganizationsController_findFederations",
+        "summary": "Get federations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns list of federations",
             "content": {
               "application/json": {
                 "schema": {
@@ -4555,10 +5987,58 @@
         ]
       }
     },
+    "/admin/reference/organizations/{id}/tree": {
+      "get": {
+        "operationId": "OrganizationsController_getTree",
+        "summary": "Get organization tree",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Organizations"
+        ]
+      }
+    },
     "/reference/organizations/{id}/tree": {
       "get": {
         "operationId": "OrganizationsController_getTree",
         "summary": "Get organization tree",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Organizations"
+        ]
+      }
+    },
+    "/admin/reference/organizations/{id}/hierarchy": {
+      "get": {
+        "operationId": "OrganizationsController_getHierarchy",
+        "summary": "Get organization hierarchy (flat list)",
         "parameters": [
           {
             "name": "id",
@@ -4603,6 +6083,40 @@
         ]
       }
     },
+    "/admin/reference/organizations/{id}": {
+      "get": {
+        "operationId": "OrganizationsController_findById",
+        "summary": "Get organization by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found"
+          }
+        },
+        "tags": [
+          "Organizations"
+        ]
+      }
+    },
     "/reference/organizations/{id}": {
       "get": {
         "operationId": "OrganizationsController_findById",
@@ -4634,6 +6148,142 @@
         },
         "tags": [
           "Organizations"
+        ]
+      }
+    },
+    "/admin/countries/active": {
+      "get": {
+        "operationId": "CountriesController_findActive",
+        "summary": "Get all active countries",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of active countries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CountryResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Countries"
+        ]
+      }
+    },
+    "/countries/active": {
+      "get": {
+        "operationId": "CountriesController_findActive",
+        "summary": "Get all active countries",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of active countries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CountryResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Countries"
+        ]
+      }
+    },
+    "/admin/countries": {
+      "get": {
+        "operationId": "CountriesController_findAll",
+        "summary": "Get all countries",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all countries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CountryResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Countries"
+        ]
+      }
+    },
+    "/countries": {
+      "get": {
+        "operationId": "CountriesController_findAll",
+        "summary": "Get all countries",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all countries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CountryResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Countries"
         ]
       }
     },
@@ -4682,6 +6332,48 @@
         ]
       }
     },
+    "/admin/reference/seasons": {
+      "get": {
+        "operationId": "SeasonsController_findAll",
+        "summary": "Get all seasons",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns list of seasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Seasons"
+        ]
+      },
+      "post": {
+        "operationId": "SeasonsController_create",
+        "summary": "Create a new season",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Season created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Seasons"
+        ]
+      }
+    },
     "/reference/seasons": {
       "get": {
         "operationId": "SeasonsController_findAll",
@@ -4717,6 +6409,91 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "Seasons"
+        ]
+      }
+    },
+    "/admin/reference/seasons/{id}": {
+      "patch": {
+        "operationId": "SeasonsController_update",
+        "summary": "Update an existing season",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Season updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Seasons"
+        ]
+      },
+      "delete": {
+        "operationId": "SeasonsController_delete",
+        "summary": "Delete a season",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Season deleted"
+          }
+        },
+        "tags": [
+          "Seasons"
+        ]
+      },
+      "get": {
+        "operationId": "SeasonsController_findById",
+        "summary": "Get season by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns season",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Season not found"
           }
         },
         "tags": [
@@ -4809,6 +6586,41 @@
         ]
       }
     },
+    "/admin/reference/seasons/generate": {
+      "post": {
+        "operationId": "SeasonsController_generate",
+        "summary": "Autogenerate seasons based on logic",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateSeasonsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Seasons generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SeasonResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Seasons"
+        ]
+      }
+    },
     "/reference/seasons/generate": {
       "post": {
         "operationId": "SeasonsController_generate",
@@ -4844,6 +6656,31 @@
         ]
       }
     },
+    "/admin/reference/seasons/current": {
+      "get": {
+        "operationId": "SeasonsController_findCurrent",
+        "summary": "Get current season",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns current season",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No current season found"
+          }
+        },
+        "tags": [
+          "Seasons"
+        ]
+      }
+    },
     "/reference/seasons/current": {
       "get": {
         "operationId": "SeasonsController_findCurrent",
@@ -4866,6 +6703,91 @@
         },
         "tags": [
           "Seasons"
+        ]
+      }
+    },
+    "/admin/events": {
+      "get": {
+        "operationId": "EventsController_findAll",
+        "summary": "Get all events with filters",
+        "parameters": [
+          {
+            "name": "sportId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by sport ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "regionId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by region ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "importance",
+            "required": false,
+            "in": "query",
+            "description": "Filter by importance",
+            "schema": {
+              "enum": [
+                "High",
+                "Medium",
+                "Low"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Events"
+        ]
+      },
+      "post": {
+        "operationId": "EventsController_create",
+        "summary": "Create a new event",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Event created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Events"
         ]
       }
     },
@@ -4922,6 +6844,134 @@
         "tags": [
           "Events"
         ]
+      },
+      "post": {
+        "operationId": "EventsController_create",
+        "summary": "Create a new event",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Event created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/admin/events/{id}": {
+      "get": {
+        "operationId": "EventsController_findById",
+        "summary": "Get event by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        },
+        "tags": [
+          "Events"
+        ]
+      },
+      "patch": {
+        "operationId": "EventsController_update",
+        "summary": "Update an existing event",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Event updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Events"
+        ]
+      },
+      "delete": {
+        "operationId": "EventsController_delete",
+        "summary": "Delete an event",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Event deleted"
+          }
+        },
+        "tags": [
+          "Events"
+        ]
       }
     },
     "/events/{id}": {
@@ -4959,51 +7009,128 @@
         "tags": [
           "Events"
         ]
-      }
-    },
-    "/countries/active": {
-      "get": {
-        "operationId": "CountriesController_findActive",
-        "summary": "Get all active countries",
+      },
+      "patch": {
+        "operationId": "EventsController_update",
+        "summary": "Update an existing event",
         "parameters": [
           {
-            "name": "lang",
-            "required": false,
-            "in": "query",
+            "name": "id",
+            "required": true,
+            "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "List of active countries",
+            "description": "Event updated",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CountryResponseDto"
-                  }
+                  "$ref": "#/components/schemas/EventResponseDto"
                 }
               }
             }
           }
         },
         "tags": [
-          "Countries"
+          "Events"
+        ]
+      },
+      "delete": {
+        "operationId": "EventsController_delete",
+        "summary": "Delete an event",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Event deleted"
+          }
+        },
+        "tags": [
+          "Events"
         ]
       }
     },
-    "/countries": {
+    "/admin/reference/data/tables": {
       "get": {
-        "operationId": "CountriesController_findAll",
-        "summary": "Get all countries",
+        "operationId": "ReferenceDataController_getAvailableTables",
+        "summary": "Get all available reference tables",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/data/tables": {
+      "get": {
+        "operationId": "ReferenceDataController_getAvailableTables",
+        "summary": "Get all available reference tables",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/reference/data/{table}": {
+      "get": {
+        "operationId": "ReferenceDataController_findAll",
+        "summary": "List all records from a reference table",
         "parameters": [
           {
-            "name": "lang",
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key (e.g. genders, age_groups, event_types)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
             "required": false,
             "in": "query",
+            "description": "Search query",
             "schema": {
               "type": "string"
             }
@@ -5011,21 +7138,462 @@
         ],
         "responses": {
           "200": {
-            "description": "List of all countries",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CountryResponseDto"
-                  }
-                }
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "ReferenceDataController_create",
+        "summary": "Create a new record in a reference table",
+        "parameters": [
+          {
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/data/{table}": {
+      "get": {
+        "operationId": "ReferenceDataController_findAll",
+        "summary": "List all records from a reference table",
+        "parameters": [
+          {
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key (e.g. genders, age_groups, event_types)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "ReferenceDataController_create",
+        "summary": "Create a new record in a reference table",
+        "parameters": [
+          {
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/reference/data/{table}/{id}": {
+      "get": {
+        "operationId": "ReferenceDataController_findById",
+        "summary": "Get a single record by ID",
+        "parameters": [
+          {
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "ReferenceDataController_update",
+        "summary": "Update a record by ID",
+        "parameters": [
+          {
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "ReferenceDataController_delete",
+        "summary": "Delete (or deactivate) a record by ID",
+        "parameters": [
+          {
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Record deleted/deactivated"
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/reference/data/{table}/{id}": {
+      "get": {
+        "operationId": "ReferenceDataController_findById",
+        "summary": "Get a single record by ID",
+        "parameters": [
+          {
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "ReferenceDataController_update",
+        "summary": "Update a record by ID",
+        "parameters": [
+          {
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "ReferenceDataController_delete",
+        "summary": "Delete (or deactivate) a record by ID",
+        "parameters": [
+          {
+            "name": "table",
+            "required": true,
+            "in": "path",
+            "description": "Table key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Record deleted/deactivated"
+          }
+        },
+        "tags": [
+          "Reference Data"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/reference/management": {
+      "get": {
+        "operationId": "ReferenceManagementController_getMetadata",
+        "summary": "Get all dynamic reference tables",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Management"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "ReferenceManagementController_createTable",
+        "summary": "Create a new dynamic reference table",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReferenceTableDto"
               }
             }
           }
         },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
         "tags": [
-          "Countries"
+          "Reference Management"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      }
+    },
+    "/admin/reference/management/{key}": {
+      "get": {
+        "operationId": "ReferenceManagementController_getTableMetadata",
+        "summary": "Get table metadata",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Management"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "ReferenceManagementController_updateTable",
+        "summary": "Update table schema/metadata",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Management"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "ReferenceManagementController_deleteTable",
+        "summary": "Delete a dynamic reference table",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Reference Management"
+        ],
+        "security": [
+          {
+            "JWT-auth": []
+          }
         ]
       }
     }
@@ -5036,14 +7604,84 @@
     "version": "1.0",
     "contact": {}
   },
-  "tags": [],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Authentication and session management"
+    },
+    {
+      "name": "Users",
+      "description": "User profile and account management"
+    },
+    {
+      "name": "Workspaces",
+      "description": "Workspace organization and permissions"
+    },
+    {
+      "name": "Workspace Groups",
+      "description": "Logical grouping of items within workspaces"
+    },
+    {
+      "name": "Pages",
+      "description": "Dashboard and report pages"
+    },
+    {
+      "name": "Blocks",
+      "description": "Content blocks within pages"
+    },
+    {
+      "name": "Dynamic Tables",
+      "description": "Spreadsheet-like dynamic tables with formulas"
+    },
+    {
+      "name": "Sports",
+      "description": "Catalog of sports and disciplines"
+    },
+    {
+      "name": "Seasons",
+      "description": "Athletic seasons and time periods"
+    },
+    {
+      "name": "Regions",
+      "description": "Geographic regions and districts"
+    },
+    {
+      "name": "Organizations",
+      "description": "Sports organizations and federations"
+    },
+    {
+      "name": "Events",
+      "description": "Catalog of sports events and competitions"
+    },
+    {
+      "name": "Indicator Groups",
+      "description": "Groups of performance indicators"
+    },
+    {
+      "name": "Indicators",
+      "description": "Performance indicator catalog"
+    },
+    {
+      "name": "Charts",
+      "description": "Data visualization and charting"
+    }
+  ],
   "servers": [],
   "components": {
     "securitySchemes": {
       "JWT-auth": {
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "type": "http"
+        "type": "http",
+        "name": "JWT",
+        "description": "Enter JWT token",
+        "in": "header"
+      },
+      "API-Key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API Key for agent authentication"
       }
     },
     "schemas": {
@@ -5360,6 +7998,9 @@
           "updated_at": {
             "format": "date-time",
             "type": "string"
+          },
+          "workspaces": {
+            "type": "array"
           }
         },
         "required": [
@@ -5614,6 +8255,9 @@
           "is_approved": {
             "type": "boolean",
             "example": true
+          },
+          "workspaces": {
+            "type": "array"
           }
         }
       },
@@ -8177,29 +10821,38 @@
           "total"
         ]
       },
-      "GenerateIndicatorsDto": {
+      "CreateIndicatorGroupDto": {
         "type": "object",
         "properties": {
-          "templateIds": {
-            "description": "Template IDs to generate from",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "sportId": {
-            "type": "number",
-            "description": "Sport ID filter"
-          },
-          "category": {
+          "name_ru": {
             "type": "string",
-            "description": "Category filter"
+            "description": "Group name in Russian"
           },
-          "overwrite": {
+          "code": {
+            "type": "string",
+            "description": "Technical code"
+          },
+          "description": {
+            "type": "string",
+            "description": "Group description"
+          },
+          "sport_id": {
+            "type": "number",
+            "description": "Sport ID"
+          },
+          "sort_order": {
+            "type": "number",
+            "description": "Sort order"
+          },
+          "is_active": {
             "type": "boolean",
-            "description": "Overwrite existing indicators"
+            "description": "Active status"
           }
-        }
+        },
+        "required": [
+          "name_ru",
+          "code"
+        ]
       },
       "IndicatorGroupResponseDto": {
         "type": "object",
@@ -8255,67 +10908,297 @@
           "updated_at"
         ]
       },
-      "CreateIndicatorGroupDto": {
+      "CreateIndicatorTemplateDto": {
         "type": "object",
         "properties": {
           "name_ru": {
-            "type": "string",
-            "description": "Group name in Russian"
+            "type": "string"
           },
-          "code": {
-            "type": "string",
-            "description": "Technical code"
+          "name_pattern": {
+            "type": "string"
+          },
+          "code_pattern": {
+            "type": "string"
           },
           "description": {
-            "type": "string",
-            "description": "Group description"
+            "type": "string"
+          },
+          "description_pattern": {
+            "type": "string"
           },
           "sport_id": {
-            "type": "number",
-            "description": "Sport ID"
+            "type": "number"
           },
-          "sort_order": {
-            "type": "number",
-            "description": "Sort order"
+          "category_id": {
+            "type": "number"
+          },
+          "measurement_unit_id": {
+            "type": "number"
+          },
+          "base_weight": {
+            "type": "number"
+          },
+          "value_type": {
+            "type": "string"
+          },
+          "use_population": {
+            "type": "boolean"
           },
           "is_active": {
-            "type": "boolean",
-            "description": "Active status"
+            "type": "boolean"
+          },
+          "generation_config": {
+            "type": "object"
           }
         },
         "required": [
           "name_ru",
-          "code"
+          "name_pattern",
+          "code_pattern"
         ]
       },
-      "UpdateIndicatorGroupDto": {
+      "UpdateIndicatorTemplateDto": {
         "type": "object",
         "properties": {
           "name_ru": {
-            "type": "string",
-            "description": "Group name in Russian"
+            "type": "string"
           },
-          "code": {
-            "type": "string",
-            "description": "Technical code"
+          "name_pattern": {
+            "type": "string"
+          },
+          "code_pattern": {
+            "type": "string"
           },
           "description": {
-            "type": "string",
-            "description": "Group description"
+            "type": "string"
           },
+          "description_pattern": {
+            "type": "string"
+          },
+          "sport_id": {
+            "type": "number"
+          },
+          "category_id": {
+            "type": "number"
+          },
+          "measurement_unit_id": {
+            "type": "number"
+          },
+          "base_weight": {
+            "type": "number"
+          },
+          "value_type": {
+            "type": "string"
+          },
+          "use_population": {
+            "type": "boolean"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "generation_config": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "name_ru",
+          "name_pattern",
+          "code_pattern"
+        ]
+      },
+      "GenerateIndicatorsDto": {
+        "type": "object",
+        "properties": {
+          "templateIds": {
+            "description": "Template IDs to generate from",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sportId": {
+            "type": "number",
+            "description": "Sport ID filter"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category filter"
+          },
+          "overwrite": {
+            "type": "boolean",
+            "description": "Overwrite existing indicators"
+          },
+          "filters": {
+            "type": "object",
+            "description": "Filters for template parameters"
+          }
+        }
+      },
+      "CreateLicenseCategoryDto": {
+        "type": "object",
+        "properties": {
           "sport_id": {
             "type": "number",
             "description": "Sport ID"
           },
-          "sort_order": {
+          "name_ru": {
+            "type": "string",
+            "description": "Category name in Russian"
+          },
+          "short_name_ru": {
+            "type": "string",
+            "description": "Short name in Russian"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique code"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description"
+          },
+          "level": {
             "type": "number",
-            "description": "Sort order"
+            "description": "Level (numeric value for sorting/logic)"
+          },
+          "personnel_type": {
+            "type": "string",
+            "description": "Personnel type (e.g., referee, coach)"
+          },
+          "requirements": {
+            "type": "string",
+            "description": "Requirements text"
+          },
+          "discipline_id": {
+            "type": "number",
+            "description": "Discipline ID"
           },
           "is_active": {
             "type": "boolean",
-            "description": "Active status"
+            "description": "Is active status",
+            "default": true
+          }
+        },
+        "required": [
+          "sport_id",
+          "name_ru",
+          "code",
+          "level",
+          "personnel_type"
+        ]
+      },
+      "UpdateLicenseCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name_ru": {
+            "type": "string",
+            "description": "Category name in Russian"
+          },
+          "short_name_ru": {
+            "type": "string",
+            "description": "Short name in Russian"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description"
+          },
+          "level": {
+            "type": "number",
+            "description": "Level"
+          },
+          "requirements": {
+            "type": "string",
+            "description": "Requirements text"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Is active status"
           }
         }
+      },
+      "OrganizationTypeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Type ID"
+          },
+          "name_ru": {
+            "type": "string",
+            "description": "Type name in Russian"
+          },
+          "code": {
+            "type": "string",
+            "description": "Type code"
+          },
+          "sort_order": {
+            "type": "number",
+            "description": "Sort order"
+          }
+        },
+        "required": [
+          "id",
+          "name_ru",
+          "code"
+        ]
+      },
+      "OrganizationLevelResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Level ID"
+          },
+          "name_ru": {
+            "type": "string",
+            "description": "Level name in Russian"
+          },
+          "code": {
+            "type": "string",
+            "description": "Level code"
+          },
+          "sort_order": {
+            "type": "number",
+            "description": "Sort order"
+          }
+        },
+        "required": [
+          "id",
+          "name_ru",
+          "code",
+          "sort_order"
+        ]
+      },
+      "CountryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "Country ID"
+          },
+          "code": {
+            "type": "string",
+            "example": "RU",
+            "description": "Country code (ISO 3166-1 alpha-2)"
+          },
+          "name": {
+            "type": "string",
+            "example": "Россия",
+            "description": "Country name in Russian"
+          },
+          "flag": {
+            "type": "string",
+            "example": "🇷🇺",
+            "description": "Flag emoji"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "flag"
+        ]
       },
       "OrganizationResponseDto": {
         "type": "object",
@@ -8419,6 +11302,148 @@
         "required": [
           "data",
           "total"
+        ]
+      },
+      "CreateOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "name_ru": {
+            "type": "string",
+            "description": "Organization name in Russian"
+          },
+          "abbreviation_ru": {
+            "type": "string",
+            "description": "Abbreviation in Russian",
+            "nullable": true
+          },
+          "internal_code": {
+            "type": "string",
+            "description": "Internal code",
+            "nullable": true
+          },
+          "type_id": {
+            "type": "number",
+            "description": "Organization type ID"
+          },
+          "parent_id": {
+            "type": "number",
+            "description": "Parent organization ID",
+            "nullable": true
+          },
+          "sport_id": {
+            "type": "number",
+            "description": "Sport ID",
+            "nullable": true
+          },
+          "region_id": {
+            "type": "number",
+            "description": "Region ID",
+            "nullable": true
+          },
+          "country_id": {
+            "type": "number",
+            "description": "Country ID",
+            "nullable": true
+          },
+          "level_id": {
+            "type": "number",
+            "description": "Organization level ID"
+          },
+          "founded_year": {
+            "type": "number",
+            "description": "Founded year",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Active status",
+            "default": true
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Metadata (JSON)",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name_ru",
+          "type_id",
+          "level_id"
+        ]
+      },
+      "UpdateOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "name_ru": {
+            "type": "string",
+            "description": "Organization name in Russian"
+          },
+          "abbreviation_ru": {
+            "type": "string",
+            "description": "Abbreviation in Russian",
+            "nullable": true
+          },
+          "internal_code": {
+            "type": "string",
+            "description": "Internal code",
+            "nullable": true
+          },
+          "type_id": {
+            "type": "number",
+            "description": "Organization type ID"
+          },
+          "parent_id": {
+            "type": "number",
+            "description": "Parent organization ID",
+            "nullable": true
+          },
+          "sport_id": {
+            "type": "number",
+            "description": "Sport ID",
+            "nullable": true
+          },
+          "region_id": {
+            "type": "number",
+            "description": "Region ID",
+            "nullable": true
+          },
+          "country_id": {
+            "type": "number",
+            "description": "Country ID",
+            "nullable": true
+          },
+          "level_id": {
+            "type": "number",
+            "description": "Organization level ID"
+          },
+          "founded_year": {
+            "type": "number",
+            "description": "Founded year",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Active status",
+            "default": true
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Metadata (JSON)",
+            "nullable": true
+          }
+        }
+      },
+      "MoveOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "parent_id": {
+            "type": "number",
+            "description": "New parent organization ID (null for root level)",
+            "nullable": true
+          }
+        },
+        "required": [
+          "parent_id"
         ]
       },
       "SportReferenceDto": {
@@ -8557,85 +11582,84 @@
         "properties": {
           "id": {
             "type": "number",
-            "description": "Event ID",
-            "example": 1
+            "description": "Event ID"
           },
-          "title": {
+          "parent_event_id": {
+            "type": "number",
+            "description": "Parent event ID"
+          },
+          "code": {
             "type": "string",
-            "description": "Event title",
-            "example": "Team Meeting"
+            "description": "Unique code"
+          },
+          "name_ru": {
+            "type": "string",
+            "description": "Full name in Russian"
+          },
+          "short_name_ru": {
+            "type": "string",
+            "description": "Short name in Russian"
+          },
+          "event_type_id": {
+            "type": "number",
+            "description": "Event type ID"
+          },
+          "level_id": {
+            "type": "number",
+            "description": "Event level ID"
+          },
+          "stage_id": {
+            "type": "number",
+            "description": "Event stage ID"
+          },
+          "sport_id": {
+            "type": "number",
+            "description": "Sport ID"
+          },
+          "discipline_id": {
+            "type": "number",
+            "description": "Discipline ID"
+          },
+          "gender_id": {
+            "type": "number",
+            "description": "Gender ID"
+          },
+          "age_group_id": {
+            "type": "number",
+            "description": "Age group ID"
+          },
+          "organizer_id": {
+            "type": "number",
+            "description": "Organizer ID"
           },
           "description": {
             "type": "string",
-            "description": "Event description",
-            "example": "Weekly sync with the team"
+            "description": "Description"
           },
-          "startDate": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Start date and time",
-            "example": "2024-01-20T10:00:00.000Z"
+          "metadata": {
+            "type": "object",
+            "description": "Metadata (JSON)"
           },
-          "endDate": {
-            "format": "date-time",
-            "type": "string",
-            "description": "End date and time",
-            "example": "2024-01-20T11:00:00.000Z"
-          },
-          "location": {
-            "type": "string",
-            "description": "Event location",
-            "example": "Conference Room A"
-          },
-          "isAllDay": {
+          "is_active": {
             "type": "boolean",
-            "description": "Whether event is all day",
-            "example": false
-          },
-          "color": {
-            "type": "string",
-            "description": "Event color in hex format",
-            "example": "#3498db"
-          },
-          "status": {
-            "type": "string",
-            "description": "Event status",
-            "enum": [
-              "pending",
-              "confirmed",
-              "cancelled"
-            ],
-            "example": "confirmed"
-          },
-          "userId": {
-            "type": "number",
-            "description": "Creator user ID",
-            "example": 1
+            "description": "Active status"
           },
           "createdAt": {
             "format": "date-time",
             "type": "string",
-            "description": "Creation timestamp",
-            "example": "2024-01-15T10:30:00.000Z"
+            "description": "Creation date"
           },
           "updatedAt": {
             "format": "date-time",
             "type": "string",
-            "description": "Last update timestamp",
-            "example": "2024-01-15T10:30:00.000Z"
+            "description": "Last update date"
           }
         },
         "required": [
           "id",
-          "title",
-          "description",
-          "startDate",
-          "endDate",
-          "location",
-          "isAllDay",
-          "color",
-          "status",
-          "userId",
+          "code",
+          "name_ru",
+          "is_active",
           "createdAt",
           "updatedAt"
         ]
@@ -8661,35 +11685,221 @@
           "total"
         ]
       },
-      "CountryResponseDto": {
+      "CreateEventDto": {
         "type": "object",
         "properties": {
-          "id": {
+          "sport_id": {
             "type": "number",
-            "example": 1,
-            "description": "Country ID"
+            "description": "Sport ID"
           },
           "code": {
             "type": "string",
-            "example": "RU",
-            "description": "Country code (ISO 3166-1 alpha-2)"
+            "description": "Unique code"
           },
-          "name": {
+          "name_ru": {
             "type": "string",
-            "example": "Россия",
-            "description": "Country name in Russian"
+            "description": "Full name in Russian"
           },
-          "flag": {
+          "short_name_ru": {
             "type": "string",
-            "example": "🇷🇺",
-            "description": "Flag emoji"
+            "description": "Short name in Russian"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description"
+          },
+          "event_type_id": {
+            "type": "number",
+            "description": "Event type ID"
+          },
+          "level_id": {
+            "type": "number",
+            "description": "Event level ID"
+          },
+          "stage_id": {
+            "type": "number",
+            "description": "Stage ID"
+          },
+          "discipline_id": {
+            "type": "number",
+            "description": "Discipline ID"
+          },
+          "age_group_id": {
+            "type": "number",
+            "description": "Age group ID"
+          },
+          "gender_id": {
+            "type": "number",
+            "description": "Gender ID"
+          },
+          "organizer_id": {
+            "type": "number",
+            "description": "Organizer ID"
+          },
+          "parent_event_id": {
+            "type": "number",
+            "description": "Parent event ID"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Is active",
+            "default": true
           }
         },
         "required": [
-          "id",
+          "sport_id",
           "code",
-          "name",
-          "flag"
+          "name_ru"
+        ]
+      },
+      "UpdateEventDto": {
+        "type": "object",
+        "properties": {
+          "sport_id": {
+            "type": "number",
+            "description": "Sport ID"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique code"
+          },
+          "name_ru": {
+            "type": "string",
+            "description": "Full name in Russian"
+          },
+          "short_name_ru": {
+            "type": "string",
+            "description": "Short name in Russian"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description"
+          },
+          "event_type_id": {
+            "type": "number",
+            "description": "Event type ID"
+          },
+          "level_id": {
+            "type": "number",
+            "description": "Event level ID"
+          },
+          "stage_id": {
+            "type": "number",
+            "description": "Stage ID"
+          },
+          "discipline_id": {
+            "type": "number",
+            "description": "Discipline ID"
+          },
+          "age_group_id": {
+            "type": "number",
+            "description": "Age group ID"
+          },
+          "gender_id": {
+            "type": "number",
+            "description": "Gender ID"
+          },
+          "organizer_id": {
+            "type": "number",
+            "description": "Organizer ID"
+          },
+          "parent_event_id": {
+            "type": "number",
+            "description": "Parent event ID"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Is active",
+            "default": true
+          }
+        }
+      },
+      "DynamicColumnDefinition": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "editable": {
+            "type": "boolean"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "defaultValue": {
+            "type": "string"
+          },
+          "relation": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "type"
+        ]
+      },
+      "CreateReferenceTableDto": {
+        "type": "object",
+        "properties": {
+          "tableKey": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DynamicColumnDefinition"
+            }
+          },
+          "hasIsActive": {
+            "type": "boolean"
+          },
+          "hasIsSystem": {
+            "type": "boolean"
+          },
+          "hasSortOrder": {
+            "type": "boolean"
+          },
+          "permissionCode": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user"
+            ],
+            "default": "user"
+          },
+          "accessLevelId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "tableKey",
+          "label",
+          "columns"
         ]
       }
     }

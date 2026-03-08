@@ -5,10 +5,9 @@
 
 import type { ColumnType } from "kysely";
 
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U>
-    ? ColumnType<S, I | undefined, U>
-    : ColumnType<T, T | undefined, T>;
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
@@ -45,7 +44,7 @@ export interface AdminRoles {
   description: string | null;
   id: Generated<string>;
   name: string;
-  permissions: Generated<Json | null>;
+  permissions: Generated<Json>;
   updated_at: Generated<Timestamp | null>;
 }
 
@@ -206,6 +205,18 @@ export interface Charts {
   updated_at: Generated<Timestamp | null>;
   updated_by: string | null;
   workspace_id: string;
+}
+
+export interface CompetitionCategories {
+  code: string;
+  country_id: number | null;
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  level: Generated<number>;
+  name_ru: string;
+  sort_order: Generated<number | null>;
 }
 
 export interface Countries {
@@ -504,10 +515,8 @@ export interface IndicatorCatalog {
   default_weight: Generated<Numeric | null>;
   description: string | null;
   discipline_id: number | null;
-  event_id: number | null;
   gender_id: number | null;
   id: Generated<number>;
-  license_category_id: number | null;
   is_active: Generated<boolean | null>;
   is_system: Generated<boolean | null>;
   /**
@@ -796,19 +805,40 @@ export interface PermissionHistory {
   subject_type: string | null;
 }
 
-export interface ReferenceLinks {
-  /**
-   * Автоматическое обновление display_value при изменении справочника
-   */
-  auto_sync: Generated<boolean | null>;
-  column_index: number;
-  created_at: Generated<Timestamp | null>;
-  dynamic_table_id: string;
+export interface RbacPermissions {
+  actions: Generated<string[] | null>;
+  app_type: string;
+  code: string;
+  description: string | null;
+  group_name: string;
   id: Generated<string>;
-  last_synced_at: Timestamp | null;
-  mapping_config: Generated<Json | null>;
-  reference_table: string;
-  reference_type: string;
+  is_system: Generated<boolean | null>;
+  name: string;
+}
+
+export interface RbacRoles {
+  code: string;
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<string>;
+  is_editable: Generated<boolean | null>;
+  is_system: Generated<boolean | null>;
+  name: string;
+  permissions: Generated<Json>;
+  type: string;
+  updated_at: Generated<Timestamp | null>;
+  weight: Generated<number | null>;
+}
+
+export interface RbacUserRoles {
+  app_type: string;
+  expires_at: Timestamp | null;
+  granted_at: Generated<Timestamp | null>;
+  granted_by: string | null;
+  id: Generated<string>;
+  organization_id: number | null;
+  role_id: string;
+  user_id: string;
 }
 
 export interface RefereeLicenseCategories {
@@ -824,6 +854,103 @@ export interface RefereeLicenseCategories {
   requirements: string | null;
   short_name_ru: string | null;
   sport_id: number | null;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface ReferenceLinks {
+  /**
+   * Автоматическое обновление display_value при изменении справочника
+   */
+  auto_sync: Generated<boolean | null>;
+  column_index: number;
+  created_at: Generated<Timestamp | null>;
+  dynamic_table_id: string;
+  id: Generated<string>;
+  last_synced_at: Timestamp | null;
+  mapping_config: Generated<Json | null>;
+  reference_table: string;
+  reference_type: string;
+}
+
+export interface ReferenceMetadata {
+  access_level_id: number | null;
+  category: Generated<string | null>;
+  columns: Json;
+  created_at: Generated<Timestamp | null>;
+  has_is_active: Generated<boolean | null>;
+  has_is_system: Generated<boolean | null>;
+  has_name_en: Generated<boolean | null>;
+  has_sort_order: Generated<boolean | null>;
+  icon: string | null;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  label: string;
+  table_key: string;
+  type: Generated<string | null>;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface RefPartnerCompanies {
+  created_at: Generated<Timestamp | null>;
+  id: Generated<number>;
+  inn: number | null;
+  is_active: Generated<boolean | null>;
+  name: string;
+  sort_order: Generated<number | null>;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface RefProjectMgmt {
+  country_id: number | null;
+  created_at: Generated<Timestamp | null>;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  name: string;
+  priority: number | null;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface RefRefTestTable {
+  age: number | null;
+  created_at: Generated<Timestamp | null>;
+  first_name: string | null;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  name_ru: string;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface RefTestRef {
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  name_ru: string;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface RefUniqueRef123 {
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  name_ru: string;
+  updated_at: Generated<Timestamp | null>;
+}
+
+export interface RegionEconomics {
+  avg_salary: Numeric | null;
+  budget_per_capita: Numeric | null;
+  budget_sports: Numeric | null;
+  budget_total: Numeric | null;
+  created_at: Generated<Timestamp | null>;
+  data_source_id: number | null;
+  grp: Numeric | null;
+  id: Generated<number>;
+  region_id: number;
+  unemployment_rate: Numeric | null;
+  updated_at: Generated<Timestamp | null>;
+  year: number;
 }
 
 export interface RegionPopulation {
@@ -849,6 +976,7 @@ export interface Regions {
 
 export interface RegionTypes {
   code: string;
+  country_id: number | null;
   created_at: Generated<Timestamp | null>;
   id: Generated<number>;
   name_ru: string;
@@ -862,42 +990,6 @@ export interface Roles {
   is_system: Generated<boolean | null>;
   name: string;
   permissions: Generated<Json | null>;
-}
-
-export interface RbacRoles {
-  code: string;
-  created_at: Generated<Timestamp | null>;
-  description: string | null;
-  id: Generated<string>;
-  is_editable: Generated<boolean | null>;
-  is_system: Generated<boolean | null>;
-  name: string;
-  permissions: Generated<Json | null>;
-  type: string;
-  weight: Generated<number>;
-  updated_at: Generated<Timestamp | null>;
-}
-
-export interface RbacPermissions {
-  actions: string[] | null;
-  app_type: string;
-  code: string;
-  created_at: Generated<Timestamp | null>;
-  description: string | null;
-  group_name: string;
-  id: Generated<string>;
-  is_system: Generated<boolean | null>;
-  name: string;
-}
-
-export interface RbacUserRoles {
-  app_type: string;
-  granted_at: Generated<Timestamp | null>;
-  granted_by: string | null;
-  id: Generated<string>;
-  organization_id: number | null;
-  role_id: string;
-  user_id: string;
 }
 
 export interface SavedQueries {
@@ -955,11 +1047,136 @@ export interface Sports {
   updated_at: Generated<Timestamp | null>;
 }
 
+export interface SportsRanks {
+  code: string;
+  country_id: number | null;
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  level: number;
+  name_ru: string;
+  rank_type: string;
+  short_name_ru: string | null;
+  sort_order: Generated<number | null>;
+}
+
+export interface SportsVenues {
+  address: string | null;
+  capacity: number | null;
+  city: string | null;
+  country_id: number | null;
+  created_at: Generated<Timestamp | null>;
+  data_source_id: number | null;
+  id: Generated<number>;
+  indoor: Generated<boolean | null>;
+  is_active: Generated<boolean | null>;
+  meets_standards: Generated<boolean | null>;
+  metadata: Generated<Json | null>;
+  name_ru: string;
+  region_id: number | null;
+  sport_id: number | null;
+  surface_type: string | null;
+  updated_at: Generated<Timestamp | null>;
+  venue_type_id: number;
+  year_built: number | null;
+  year_renovated: number | null;
+}
+
 export interface SportTypes {
   code: string;
   created_at: Generated<Timestamp | null>;
   id: Generated<number>;
   name_ru: string;
+}
+
+export interface SpreadsheetCells {
+  col_index: number;
+  computed_value: string | null;
+  created_at: Generated<Timestamp | null>;
+  formula: string | null;
+  id: Generated<string>;
+  is_locked: Generated<boolean | null>;
+  lock_reason: string | null;
+  raw_value: string | null;
+  row_index: number;
+  sheet_id: string;
+  style: Generated<Json | null>;
+  updated_at: Generated<Timestamp | null>;
+  value_type: Generated<string>;
+}
+
+export interface SpreadsheetColumnConfigs {
+  col_index: number;
+  created_at: Generated<Timestamp | null>;
+  data_source_column: string | null;
+  data_source_id: string | null;
+  data_type: Generated<string>;
+  header_name: string | null;
+  id: Generated<string>;
+  sheet_id: string;
+  updated_at: Generated<Timestamp | null>;
+  validation: Generated<Json | null>;
+  width: Generated<number | null>;
+}
+
+export interface SpreadsheetDataSources {
+  config: Generated<Json | null>;
+  created_at: Generated<Timestamp | null>;
+  display_column: string | null;
+  id: Generated<string>;
+  source_key: string;
+  source_type: string;
+  updated_at: Generated<Timestamp | null>;
+  value_column: string | null;
+}
+
+export interface SpreadsheetMergedRegions {
+  created_at: Generated<Timestamp | null>;
+  end_col: number;
+  end_row: number;
+  id: Generated<string>;
+  sheet_id: string;
+  start_col: number;
+  start_row: number;
+}
+
+export interface Spreadsheets {
+  created_at: Generated<Timestamp | null>;
+  created_by: string | null;
+  description: string | null;
+  group_id: string | null;
+  id: Generated<string>;
+  /**
+   * Whether this spreadsheet is a template for copying
+   */
+  is_template: Generated<boolean>;
+  metadata: Generated<Json | null>;
+  name: string;
+  organization_id: number | null;
+  sport_id: number | null;
+  /**
+   * draft — only admins see; published — available to users; archived — hidden
+   */
+  status: Generated<string>;
+  /**
+   * Entity type: table, reference, indicator, custom_reference
+   */
+  type: Generated<string>;
+  updated_at: Generated<Timestamp | null>;
+  workspace_id: string | null;
+}
+
+export interface SpreadsheetSheets {
+  col_count: Generated<number>;
+  created_at: Generated<Timestamp | null>;
+  id: Generated<string>;
+  name: Generated<string>;
+  row_count: Generated<number>;
+  settings: Generated<Json | null>;
+  sort_order: Generated<number>;
+  spreadsheet_id: string;
+  updated_at: Generated<Timestamp | null>;
 }
 
 export interface StructureHistory {
@@ -1074,6 +1291,16 @@ export interface TemplateGenerationParams {
   weight_formula: Json | null;
 }
 
+export interface TrainingProgramTypes {
+  code: string;
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  name_ru: string;
+  sort_order: Generated<number | null>;
+}
+
 export interface Translations {
   created_at: Generated<Timestamp | null>;
   /**
@@ -1104,12 +1331,26 @@ export interface Users {
   first_name: string | null;
   id: Generated<string>;
   is_active: Generated<boolean | null>;
+  /**
+   * Whether the user has been approved by an administrator
+   */
+  is_approved: Generated<boolean | null>;
   last_name: string | null;
   middle_name: string | null;
   organization_id: number | null;
   password: Generated<string>;
   role: Generated<string | null>;
   updated_at: Generated<Timestamp | null>;
+}
+
+export interface VenueTypes {
+  code: string;
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<number>;
+  is_active: Generated<boolean | null>;
+  name_ru: string;
+  sort_order: Generated<number | null>;
 }
 
 export interface VEventsCatalogFull {
@@ -1355,6 +1596,7 @@ export interface DB {
   cell_history: CellHistory;
   cell_permissions: CellPermissions;
   charts: Charts;
+  competition_categories: CompetitionCategories;
   countries: Countries;
   country_disciplines: CountryDisciplines;
   country_sports: CountrySports;
@@ -1397,20 +1639,36 @@ export interface DB {
   pages: Pages;
   password_reset_tokens: PasswordResetTokens;
   permission_history: PermissionHistory;
+  rbac_permissions: RbacPermissions;
+  rbac_roles: RbacRoles;
+  rbac_user_roles: RbacUserRoles;
+  ref_partner_companies: RefPartnerCompanies;
+  ref_project_mgmt: RefProjectMgmt;
+  ref_ref_test_table: RefRefTestTable;
+  ref_test_ref: RefTestRef;
+  ref_unique_ref_123: RefUniqueRef123;
+  referee_license_categories: RefereeLicenseCategories;
   reference_links: ReferenceLinks;
+  reference_metadata: ReferenceMetadata;
+  region_economics: RegionEconomics;
   region_population: RegionPopulation;
   region_types: RegionTypes;
   regions: Regions;
   roles: Roles;
-  rbac_permissions: RbacPermissions;
-  rbac_roles: RbacRoles;
-  rbac_user_roles: RbacUserRoles;
   saved_queries: SavedQueries;
   season_sports: SeasonSports;
   seasons: Seasons;
   sessions: Sessions;
   sport_types: SportTypes;
   sports: Sports;
+  sports_ranks: SportsRanks;
+  sports_venues: SportsVenues;
+  spreadsheet_cells: SpreadsheetCells;
+  spreadsheet_column_configs: SpreadsheetColumnConfigs;
+  spreadsheet_data_sources: SpreadsheetDataSources;
+  spreadsheet_merged_regions: SpreadsheetMergedRegions;
+  spreadsheet_sheets: SpreadsheetSheets;
+  spreadsheets: Spreadsheets;
   structure_history: StructureHistory;
   table_cells: TableCells;
   table_links: TableLinks;
@@ -1418,9 +1676,9 @@ export interface DB {
   table_snapshots: TableSnapshots;
   table_versions: TableVersions;
   template_generation_params: TemplateGenerationParams;
+  training_program_types: TrainingProgramTypes;
   translations: Translations;
   users: Users;
-  referee_license_categories: RefereeLicenseCategories;
   v_events_catalog_full: VEventsCatalogFull;
   v_generated_indicators: VGeneratedIndicators;
   v_generation_templates: VGenerationTemplates;
@@ -1433,6 +1691,7 @@ export interface DB {
   v_table_recent_changes: VTableRecentChanges;
   v_user_activity: VUserActivity;
   v_user_permissions: VUserPermissions;
+  venue_types: VenueTypes;
   workspace_groups: WorkspaceGroups;
   workspace_permissions: WorkspacePermissions;
   workspaces: Workspaces;

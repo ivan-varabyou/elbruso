@@ -7,3 +7,6 @@ export { IndicatorGroupsTableDumb } from "./components/IndicatorGroupsTable.dumb
 export { IndicatorGroupsTableSmart } from "./components/IndicatorGroupsTable.smart";
 export { IndicatorsTableDumb } from "./components/IndicatorsTable.dumb";
 export { IndicatorsTableSmart } from "./components/IndicatorsTable.smart";
+export { IndicatorTemplateModal } from "./components/IndicatorTemplateModal";
+export { IndicatorTemplatesTableDumb } from "./components/IndicatorTemplatesTable.dumb";
+export { IndicatorTemplatesTableSmart } from "./components/IndicatorTemplatesTable.smart";

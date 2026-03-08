@@ -1,6 +1,6 @@
 # Структура проекта frontend
 
-Генерировано: Пн 16 фев 2026 21:15:23 +03
+Генерировано: Ср 04 мар 2026 14:36:38 +03
 
 /home/ivan/git/elbruso/packages/frontend
 ├── docs
@@ -58,12 +58,14 @@
 │   │   ├── pages.api.ts
 │   │   ├── Pages.ts
 │   │   ├── rbac.api.ts
+│   │   ├── Rbac.ts
 │   │   ├── reference.api.ts
 │   │   ├── Reference.ts
 │   │   ├── tables.api.ts
 │   │   ├── Tables.ts
 │   │   ├── users.api.ts
 │   │   ├── Users.ts
+│   │   ├── V1.ts
 │   │   ├── versions.api.ts
 │   │   ├── Versions.ts
 │   │   ├── websocket.ws.ts
@@ -145,14 +147,29 @@
 │   │   │   │   │   │   ├── LicenseCategoriesSmart.tsx
 │   │   │   │   │   │   └── LicenseCategoryFormModal.tsx
 │   │   │   │   │   ├── Management
+│   │   │   │   │   │   ├── components
+│   │   │   │   │   │   │   ├── ColumnSettingsModal
+│   │   │   │   │   │   │   │   ├── ColumnSettingsModal.dumb.tsx
+│   │   │   │   │   │   │   │   └── ColumnSettingsModal.tsx
+│   │   │   │   │   │   │   ├── ColumnStructureGrid
+│   │   │   │   │   │   │   │   └── ColumnStructureGrid.dumb.tsx
+│   │   │   │   │   │   │   ├── DictionarySettingsForm
+│   │   │   │   │   │   │   │   └── DictionarySettingsForm.dumb.tsx
+│   │   │   │   │   │   │   ├── RelationModal
+│   │   │   │   │   │   │   │   └── RelationModal.dumb.tsx
+│   │   │   │   │   │   │   └── index.ts
+│   │   │   │   │   │   ├── types
+│   │   │   │   │   │   │   └── index.ts
 │   │   │   │   │   │   ├── index.ts
 │   │   │   │   │   │   ├── ReferenceManagerForm.tsx
 │   │   │   │   │   │   └── ReferenceManagerPage.tsx
 │   │   │   │   │   └── UniversalTable
+│   │   │   │   │       ├── components
+│   │   │   │   │       │   └── InlineEditConfirmationModal.tsx
 │   │   │   │   │       ├── index.ts
 │   │   │   │   │       ├── ReferenceFormModal.tsx
 │   │   │   │   │       ├── ReferenceTablePage.tsx
-│   │   │   │   │       └── table-configs.ts
+│   │   │   │   │       └── types.ts
 │   │   │   │   ├── RolesManagement
 │   │   │   │   │   ├── index.ts
 │   │   │   │   │   └── RolesManagement.tsx
@@ -228,7 +245,10 @@
 │   │   │   │   │   │   ├── IndicatorGroupsTable.dumb.tsx
 │   │   │   │   │   │   ├── IndicatorGroupsTable.smart.tsx
 │   │   │   │   │   │   ├── IndicatorsTable.dumb.tsx
-│   │   │   │   │   │   └── IndicatorsTable.smart.tsx
+│   │   │   │   │   │   ├── IndicatorsTable.smart.tsx
+│   │   │   │   │   │   ├── IndicatorTemplateModal.tsx
+│   │   │   │   │   │   ├── IndicatorTemplatesTable.dumb.tsx
+│   │   │   │   │   │   └── IndicatorTemplatesTable.smart.tsx
 │   │   │   │   │   └── index.ts
 │   │   │   │   ├── ProfileLayout
 │   │   │   │   │   ├── Sidebar
@@ -269,6 +289,24 @@
 │   │   │   │   └── index.ts
 │   │   │   └── index.ts
 │   │   ├── sports
+│   │   │   └── index.ts
+│   │   ├── spreadsheet
+│   │   │   ├── api
+│   │   │   │   └── spreadsheet.api.ts
+│   │   │   ├── hooks
+│   │   │   ├── lib
+│   │   │   │   ├── address-utils.ts
+│   │   │   │   ├── formula-engine.spec.ts
+│   │   │   │   └── formula-engine.ts
+│   │   │   ├── stores
+│   │   │   │   └── useSpreadsheetStore.ts
+│   │   │   ├── types
+│   │   │   │   └── spreadsheet.types.ts
+│   │   │   ├── ui
+│   │   │   │   ├── FormulaBar.tsx
+│   │   │   │   ├── SpreadsheetEditor.tsx
+│   │   │   │   ├── SpreadsheetGrid.tsx
+│   │   │   │   └── SpreadsheetsPage.tsx
 │   │   │   └── index.ts
 │   │   ├── table
 │   │   │   ├── hooks
@@ -446,7 +484,8 @@
 │   │   │   └── index.ts
 │   │   ├── workspaces
 │   │   │   ├── ui
-│   │   │   │   └── AdminWorkspacesSmart.tsx
+│   │   │   │   ├── AdminWorkspacesSmart.tsx
+│   │   │   │   └── WorkspaceNavigator.tsx
 │   │   │   └── index.ts
 │   │   └── index.ts
 │   ├── stores
@@ -520,6 +559,9 @@
 │   │   │   ├── RoleCard
 │   │   │   │   ├── index.ts
 │   │   │   │   └── RoleCard.tsx
+│   │   │   ├── RoleEditor
+│   │   │   │   ├── index.ts
+│   │   │   │   └── RoleEditor.tsx
 │   │   │   ├── RolePermissionsEditor
 │   │   │   │   ├── index.ts
 │   │   │   │   └── RolePermissionsEditor.tsx
@@ -537,4 +579,4 @@
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 
-139 directories, 394 files
+154 directories, 421 files

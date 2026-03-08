@@ -15,6 +15,8 @@ import {
   GenerateIndicatorsDto,
   GenerateSeasonsDto,
   UpdateIndicatorGroupDto,
+  CreateIndicatorTemplateDto,
+  UpdateIndicatorTemplateDto,
   CreateEventDto,
   UpdateEventDto,
   EventResponseDto,
@@ -272,6 +274,65 @@ export class Reference<SecurityDataType = unknown> extends HttpClient<SecurityDa
     this.request<void, any>({
       path: `reference/indicators/generation/templates`,
       method: "GET",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerCreateTemplate
+   * @summary Create indicator generation template
+   * @request POST:/reference/indicators/generation/templates
+   * @secure
+   */
+  indicatorsControllerCreateTemplate = (
+    data: CreateIndicatorTemplateDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `reference/indicators/generation/templates`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerUpdateTemplate
+   * @summary Update indicator generation template
+   * @request PATCH:/reference/indicators/generation/templates/{id}
+   * @secure
+   */
+  indicatorsControllerUpdateTemplate = (
+    id: number,
+    data: UpdateIndicatorTemplateDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `reference/indicators/generation/templates/${id}`,
+      method: "PATCH",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Indicators
+   * @name IndicatorsControllerDeleteTemplate
+   * @summary Delete indicator generation template
+   * @request DELETE:/reference/indicators/generation/templates/{id}
+   * @secure
+   */
+  indicatorsControllerDeleteTemplate = (id: number, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `reference/indicators/generation/templates/${id}`,
+      method: "DELETE",
       secure: true,
       ...params,
     });

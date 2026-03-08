@@ -62,7 +62,7 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
     const fetchInitialData = async () => {
       try {
         const sportsResponse = await referenceApi.sportsControllerFindAll();
-        setSports(extractArray(sportsResponse.data));
+        setSports(extractArray(sportsResponse));
         // Initial fetch
         fetchTemplates("");
       } catch (err) {
@@ -251,14 +251,18 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
               <Select
                 value={selectedSportId}
                 onChange={(e) => handleSportChange(e.target.value)}
-                className="min-w-[140px] bg-transparent text-xs font-semibold text-zinc-600 focus:outline-none cursor-pointer hover:text-blue-600"
+                className="min-w-[140px] text-xs font-semibold text-zinc-600 focus:outline-none cursor-pointer hover:text-blue-600"
               >
-                <option value="">Все виды спорта</option>
-                {sports.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name_ru}
-                  </option>
-                ))}
+                <option className="text-zinc-900" value="">
+                  Все виды спорта
+                </option>
+                {Array.isArray(sports)
+                  ? sports.map((s: any) => (
+                      <option className="text-zinc-900" key={s.id} value={s.id}>
+                        {s.name_ru || s.name}
+                      </option>
+                    ))
+                  : null}
               </Select>
             </div>
           )}
@@ -460,7 +464,8 @@ export function GenerateIndicatorsModal({ onClose, onSuccess }: GenerateIndicato
                       </div>
                       <span className="text-sm font-bold text-zinc-900">
                         {selectedSportId
-                          ? sports.find((s) => String(s.id) === selectedSportId)?.name_ru
+                          ? sports.find((s) => String(s.id) === selectedSportId)?.name_ru ||
+                            (sports.find((s) => String(s.id) === selectedSportId) as any)?.name
                           : "Все"}
                       </span>
                     </div>

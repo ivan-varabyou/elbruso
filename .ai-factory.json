@@ -1,7 +1,7 @@
 {
   "version": "1.4.0",
-  "agent": "claude",
-  "skillsDir": ".claude/skills",
+  "agent": "qwen-code",
+  "skillsDirectory": ".agent/skills",
   "installedSkills": [
     "ai-factory",
     "architecture",
@@ -21,6 +21,9 @@
   "mcp": {
     "github": true,
     "filesystem": true,
-    "postgres": true
+    "memory": true,
+    "heroui": true,
+    "chrome-devtools": true,
+    "postgres": false
   }
 }

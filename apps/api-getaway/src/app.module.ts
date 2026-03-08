@@ -25,6 +25,7 @@ import { PagesModule } from '@backend/modules/pages/pages.module';
 import { RegionsModule } from '@backend/modules/regions/regions.module';
 import { SeasonsModule } from '@backend/modules/seasons/seasons.module';
 import { SportsModule } from '@backend/modules/sports/sports.module';
+import { SpreadsheetModule } from '@backend/modules/spreadsheet/spreadsheet.module';
 import { TablesModule } from '@backend/modules/tables/tables.module';
 import { UsersModule } from '@backend/modules/users/users.module';
 import { WorkspaceModule } from '@backend/modules/workspace/workspace.module';
@@ -59,6 +60,7 @@ import { RbacModule } from '@backend/modules/rbac/rbac.module';
     // Reference Data Modules
     RegionsModule,
     SportsModule,
+    SpreadsheetModule,
     IndicatorsModule,
     SeasonsModule,
     EventsModule,

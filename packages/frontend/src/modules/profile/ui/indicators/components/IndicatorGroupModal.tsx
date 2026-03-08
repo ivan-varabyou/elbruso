@@ -29,8 +29,9 @@ export function IndicatorGroupModal({ group, onClose, onSuccess }: Props) {
   useEffect(() => {
     const fetchSports = async () => {
       try {
-        const sportsResponse = await referenceApi.sportsControllerFindAll();
-        setSports((sportsResponse as { data?: Sport[] })?.data || []);
+        const sportsResponse = (await referenceApi.sportsControllerFindAll()) as any;
+        const data = Array.isArray(sportsResponse) ? sportsResponse : sportsResponse?.data;
+        setSports(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Failed to fetch sports:", err);
       }
@@ -141,12 +142,16 @@ export function IndicatorGroupModal({ group, onClose, onSuccess }: Props) {
                 }))
               }
             >
-              <option value="">Все виды спорта (Глобальная)</option>
-              {sports.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name_ru}
-                </option>
-              ))}
+              <option className="text-zinc-900" value="">
+                Все виды спорта (Глобальная)
+              </option>
+              {Array.isArray(sports)
+                ? sports.map((s: any) => (
+                    <option className="text-zinc-900" key={s.id} value={s.id}>
+                      {s.name_ru || s.name}
+                    </option>
+                  ))
+                : null}
             </Select>
           </div>
 

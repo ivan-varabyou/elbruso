@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useAdminAuth } from "@frontend/modules/admin/auth";
 import { AdminMenu } from "../Menu";
 import { adminMenu } from "../Menu/admin.menu";
+import { WorkspaceNavigator } from "@frontend/modules/workspaces";
 
 interface LeftPanelProps {
   isCollapsed: boolean;
@@ -95,8 +96,14 @@ export function AdminLeftPanel({ isCollapsed, onToggle }: LeftPanelProps) {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-1.5 py-1.5">
+        <div className="flex-1 overflow-y-auto px-1.5 py-1.5 space-y-4">
           <AdminMenu items={adminMenu} isCollapsed={isCollapsed} />
+
+          {!isCollapsed && (
+            <div className="mt-4 pt-4 border-t border-zinc-100">
+              <WorkspaceNavigator />
+            </div>
+          )}
         </div>
 
         <div className="border-t border-zinc-100 px-1.5 py-1.5">

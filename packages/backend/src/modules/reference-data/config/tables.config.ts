@@ -644,16 +644,16 @@ export const REFERENCE_TABLES: Record<string, TableConfig> = {
     columns: [
       { key: "id", label: "ID", type: "number" },
       { key: "name_ru", label: "Название", type: "string", required: true, editable: true },
-      { key: "short_name_ru", label: "Сокр. название", type: "string", editable: true },
+      { key: "abbreviation_ru", label: "Сокр. название", type: "string", editable: true },
       {
-        key: "organization_type_id",
+        key: "type_id",
         label: "Тип",
         type: "number",
         editable: true,
         relation: { table: "organization_types", labelField: "name_ru" },
       },
       {
-        key: "organization_level_id",
+        key: "level_id",
         label: "Уровень",
         type: "number",
         editable: true,

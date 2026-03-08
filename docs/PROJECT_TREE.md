@@ -1,6 +1,6 @@
 # Структура проекта
 
-Генерировано: Пн 16 фев 2026 21:15:23 +03
+Генерировано: Ср 04 мар 2026 14:36:38 +03
 
 /home/ivan/git/elbruso
 ├── apps
@@ -62,6 +62,7 @@
 │   │   │   ├── jest-e2e.json
 │   │   │   ├── pages.e2e-spec.ts
 │   │   │   ├── security.e2e-spec.ts
+│   │   │   ├── spreadsheet.e2e-spec.ts
 │   │   │   ├── test-request.helper.ts
 │   │   │   ├── test-schema-full.sql
 │   │   │   ├── test-schema.sql
@@ -79,6 +80,7 @@
 │   │   │   ├── en.json
 │   │   │   └── ru.json
 │   │   ├── docs
+│   │   │   ├── COMPONENT_SYSTEM.md
 │   │   │   └── PROJECT_TREE.md
 │   │   ├── public
 │   │   │   ├── assets
@@ -104,6 +106,10 @@
 │   │   │   │   │   ├── dashboard
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── indicators
+│   │   │   │   │   │   ├── groups
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   ├── templates
+│   │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── reference
 │   │   │   │   │   │   ├── data
@@ -114,10 +120,17 @@
 │   │   │   │   │   │   ├── license-categories
 │   │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   │   └── management
+│   │   │   │   │   │       ├── edit
+│   │   │   │   │   │       │   └── [key]
+│   │   │   │   │   │       │       └── page.tsx
 │   │   │   │   │   │       ├── new
 │   │   │   │   │   │       │   └── page.tsx
 │   │   │   │   │   │       └── page.tsx
 │   │   │   │   │   ├── settings
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── spreadsheets
+│   │   │   │   │   │   ├── [id]
+│   │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── tables
 │   │   │   │   │   │   ├── [id]
@@ -296,6 +309,7 @@
 │   │   ├── TEST_CREDENTIALS.md
 │   │   ├── Всероссийский реестр видов спорта на 12.1.2026.xlsx
 │   │   ├── Иерархия рейтинга РФБ.md
+│   │   ├── Копия Рейтинг регионов 2022-2023 - Показатели.csv
 │   │   ├── Организации и структуры.md
 │   │   └── Реестр_общероссийских_и_региональных_аккредитованных_спортивных_федераций.csv
 │   ├── database
@@ -420,6 +434,7 @@
 │   │   │   └── PROJECT_TREE.md
 │   │   ├── migrations
 │   │   │   ├── add-is-approved-to-users.sql
+│   │   │   ├── rbac-access-levels.sql
 │   │   │   └── rbac-role-weights.sql
 │   │   ├── src
 │   │   │   ├── config
@@ -612,6 +627,7 @@
 │   │   │   │   │   │   ├── indicator-filters.dto.ts
 │   │   │   │   │   │   ├── indicator-group.dto.ts
 │   │   │   │   │   │   ├── indicator-group-filters.dto.ts
+│   │   │   │   │   │   ├── indicator-template.dto.ts
 │   │   │   │   │   │   └── license-category.dto.ts
 │   │   │   │   │   ├── entities
 │   │   │   │   │   ├── interfaces
@@ -757,6 +773,16 @@
 │   │   │   │   │   │   └── sports.service.ts
 │   │   │   │   │   ├── index.ts
 │   │   │   │   │   └── sports.module.ts
+│   │   │   │   ├── spreadsheet
+│   │   │   │   │   ├── controllers
+│   │   │   │   │   │   └── spreadsheet.controller.ts
+│   │   │   │   │   ├── dto
+│   │   │   │   │   │   ├── responses
+│   │   │   │   │   │   │   └── spreadsheet.response.dto.ts
+│   │   │   │   │   │   └── spreadsheet.dto.ts
+│   │   │   │   │   ├── services
+│   │   │   │   │   │   └── spreadsheet.service.ts
+│   │   │   │   │   └── spreadsheet.module.ts
 │   │   │   │   ├── tables
 │   │   │   │   │   ├── controllers
 │   │   │   │   │   │   ├── formula.controller.ts
@@ -794,6 +820,7 @@
 │   │   │   │   │   │   │   ├── index.ts
 │   │   │   │   │   │   │   ├── user.response.dto.ts
 │   │   │   │   │   │   │   └── users-list.response.dto.ts
+│   │   │   │   │   │   ├── create-api-key.dto.ts
 │   │   │   │   │   │   ├── create-user.dto.ts
 │   │   │   │   │   │   ├── index.ts
 │   │   │   │   │   │   ├── update-user.dto.ts
@@ -880,14 +907,23 @@
 │   │   └── USAGE_RU.md
 │   ├── database
 │   │   ├── migrations
-│   │   │   └── 001_add_auth_enhancements.sql
+│   │   │   ├── 001_add_auth_enhancements.sql
+│   │   │   ├── 002_spreadsheet_engine.sql
+│   │   │   └── 003_workspace_spreadsheet_integration.sql
 │   │   ├── src
+│   │   │   ├── check-roles.ts
+│   │   │   ├── check-user-roles.ts
 │   │   │   ├── database.module.ts
 │   │   │   ├── database.service.ts
 │   │   │   ├── db.ts
 │   │   │   ├── index.ts
+│   │   │   ├── seed-roles.ts
 │   │   │   └── types.ts
+│   │   ├── check-perms.js
+│   │   ├── grant-perms.js
 │   │   ├── package.json
+│   │   ├── seed-spreadsheet-demo.js
+│   │   ├── seed-workspace-templates.sql
 │   │   └── tsconfig.json
 │   ├── devtools
 │   │   ├── src
@@ -970,12 +1006,14 @@
 │       │   │   ├── pages.api.ts
 │       │   │   ├── Pages.ts
 │       │   │   ├── rbac.api.ts
+│       │   │   ├── Rbac.ts
 │       │   │   ├── reference.api.ts
 │       │   │   ├── Reference.ts
 │       │   │   ├── tables.api.ts
 │       │   │   ├── Tables.ts
 │       │   │   ├── users.api.ts
 │       │   │   ├── Users.ts
+│       │   │   ├── V1.ts
 │       │   │   ├── versions.api.ts
 │       │   │   ├── Versions.ts
 │       │   │   ├── websocket.ws.ts
@@ -1057,14 +1095,24 @@
 │       │   │   │   │   │   │   ├── LicenseCategoriesSmart.tsx
 │       │   │   │   │   │   │   └── LicenseCategoryFormModal.tsx
 │       │   │   │   │   │   ├── Management
+│       │   │   │   │   │   │   ├── components
+│       │   │   │   │   │   │   │   ├── ColumnSettingsModal
+│       │   │   │   │   │   │   │   ├── ColumnStructureGrid
+│       │   │   │   │   │   │   │   ├── DictionarySettingsForm
+│       │   │   │   │   │   │   │   ├── RelationModal
+│       │   │   │   │   │   │   │   └── index.ts
+│       │   │   │   │   │   │   ├── types
+│       │   │   │   │   │   │   │   └── index.ts
 │       │   │   │   │   │   │   ├── index.ts
 │       │   │   │   │   │   │   ├── ReferenceManagerForm.tsx
 │       │   │   │   │   │   │   └── ReferenceManagerPage.tsx
 │       │   │   │   │   │   └── UniversalTable
+│       │   │   │   │   │       ├── components
+│       │   │   │   │   │       │   └── InlineEditConfirmationModal.tsx
 │       │   │   │   │   │       ├── index.ts
 │       │   │   │   │   │       ├── ReferenceFormModal.tsx
 │       │   │   │   │   │       ├── ReferenceTablePage.tsx
-│       │   │   │   │   │       └── table-configs.ts
+│       │   │   │   │   │       └── types.ts
 │       │   │   │   │   ├── RolesManagement
 │       │   │   │   │   │   ├── index.ts
 │       │   │   │   │   │   └── RolesManagement.tsx
@@ -1140,7 +1188,10 @@
 │       │   │   │   │   │   │   ├── IndicatorGroupsTable.dumb.tsx
 │       │   │   │   │   │   │   ├── IndicatorGroupsTable.smart.tsx
 │       │   │   │   │   │   │   ├── IndicatorsTable.dumb.tsx
-│       │   │   │   │   │   │   └── IndicatorsTable.smart.tsx
+│       │   │   │   │   │   │   ├── IndicatorsTable.smart.tsx
+│       │   │   │   │   │   │   ├── IndicatorTemplateModal.tsx
+│       │   │   │   │   │   │   ├── IndicatorTemplatesTable.dumb.tsx
+│       │   │   │   │   │   │   └── IndicatorTemplatesTable.smart.tsx
 │       │   │   │   │   │   └── index.ts
 │       │   │   │   │   ├── ProfileLayout
 │       │   │   │   │   │   ├── Sidebar
@@ -1181,6 +1232,24 @@
 │       │   │   │   │   └── index.ts
 │       │   │   │   └── index.ts
 │       │   │   ├── sports
+│       │   │   │   └── index.ts
+│       │   │   ├── spreadsheet
+│       │   │   │   ├── api
+│       │   │   │   │   └── spreadsheet.api.ts
+│       │   │   │   ├── hooks
+│       │   │   │   ├── lib
+│       │   │   │   │   ├── address-utils.ts
+│       │   │   │   │   ├── formula-engine.spec.ts
+│       │   │   │   │   └── formula-engine.ts
+│       │   │   │   ├── stores
+│       │   │   │   │   └── useSpreadsheetStore.ts
+│       │   │   │   ├── types
+│       │   │   │   │   └── spreadsheet.types.ts
+│       │   │   │   ├── ui
+│       │   │   │   │   ├── FormulaBar.tsx
+│       │   │   │   │   ├── SpreadsheetEditor.tsx
+│       │   │   │   │   ├── SpreadsheetGrid.tsx
+│       │   │   │   │   └── SpreadsheetsPage.tsx
 │       │   │   │   └── index.ts
 │       │   │   ├── table
 │       │   │   │   ├── hooks
@@ -1358,7 +1427,8 @@
 │       │   │   │   └── index.ts
 │       │   │   ├── workspaces
 │       │   │   │   ├── ui
-│       │   │   │   │   └── AdminWorkspacesSmart.tsx
+│       │   │   │   │   ├── AdminWorkspacesSmart.tsx
+│       │   │   │   │   └── WorkspaceNavigator.tsx
 │       │   │   │   └── index.ts
 │       │   │   └── index.ts
 │       │   ├── stores
@@ -1432,6 +1502,9 @@
 │       │   │   │   ├── RoleCard
 │       │   │   │   │   ├── index.ts
 │       │   │   │   │   └── RoleCard.tsx
+│       │   │   │   ├── RoleEditor
+│       │   │   │   │   ├── index.ts
+│       │   │   │   │   └── RoleEditor.tsx
 │       │   │   │   ├── RolePermissionsEditor
 │       │   │   │   │   ├── index.ts
 │       │   │   │   │   └── RolePermissionsEditor.tsx
@@ -1461,10 +1534,12 @@
 │   ├── setup-rbac.sh
 │   ├── setup-rbac-test.sh
 │   └── test-rbac.sh
+├── access-control-roadmap.md.resolved
 ├── AGENTS.md
 ├── docker-compose.yml
 ├── eslint.config.mjs
 ├── fix-read-permissions.sql
+├── implementation_plan.md.resolved
 ├── opencode.json
 ├── package.json
 ├── package-lock.json
@@ -1472,9 +1547,11 @@
 ├── pnpm-workspace.yaml
 ├── project_tree.md
 ├── swagger.json
+├── task.md.resolved
 ├── TEST_CREDENTIALS.md
 ├── tsconfig.base.json
 ├── tsconfig.json
-└── turbo.json
+├── turbo.json
+└── use-cases.md.resolved
 
-426 directories, 1047 files
+452 directories, 1098 files

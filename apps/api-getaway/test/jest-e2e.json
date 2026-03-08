@@ -2,11 +2,20 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": "..",
   "testEnvironment": "node",
-  "testRegex": "test/.e2e-spec.ts$",
+  "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": ["ts-jest", { "tsconfig": "tsconfig.json" }]
+    "^.+\\.(t|j)s$": [
+      "ts-jest",
+      { "tsconfig": "tsconfig.json", "isolatedModules": true }
+    ]
   },
-  "globalSetup": "<rootDir>/apps/api/test/global-setup.js",
-  "setupFiles": ["<rootDir>/apps/api/test/setup-env.js"],
-  "moduleDirectories": ["node_modules", "<rootDir>/apps/api/src", "<rootDir>/packages/database/src", "<rootDir>/packages/types/src"]
+  "moduleNameMapper": {
+    "^@apigateway/(.*)$": "<rootDir>/src/$1",
+    "^@database$": "<rootDir>/../../packages/database/src/index",
+    "^@database/(.*)$": "<rootDir>/../../packages/database/src/$1",
+    "^@backend$": "<rootDir>/../../packages/backend/src/index",
+    "^@backend/(.*)$": "<rootDir>/../../packages/backend/src/$1",
+    "^@shared/(.*)$": "<rootDir>/../../packages/shared/src/$1",
+    "^@frontend/(.*)$": "<rootDir>/../../packages/frontend/src/$1"
+  }
 }

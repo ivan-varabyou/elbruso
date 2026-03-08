@@ -10,8 +10,13 @@
  * ---------------------------------------------------------------
  */
 
-import { EventResponseDto, EventsListResponseDto } from "./data-contracts";
-import { HttpClient, RequestParams } from "./http-client";
+import {
+  CreateEventDto,
+  EventResponseDto,
+  EventsListResponseDto,
+  UpdateEventDto,
+} from "./data-contracts";
+import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Events<
   SecurityDataType = unknown,
@@ -46,6 +51,23 @@ export class Events<
    * No description
    *
    * @tags Events
+   * @name EventsControllerCreate
+   * @summary Create a new event
+   * @request POST:/events
+   */
+  eventsControllerCreate = (data: CreateEventDto, params: RequestParams = {}) =>
+    this.request<EventResponseDto, any>({
+      path: `/events`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Events
    * @name EventsControllerFindById
    * @summary Get event by ID
    * @request GET:/events/{id}
@@ -55,6 +77,41 @@ export class Events<
       path: `/events/${id}`,
       method: "GET",
       format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Events
+   * @name EventsControllerUpdate
+   * @summary Update an existing event
+   * @request PATCH:/events/{id}
+   */
+  eventsControllerUpdate = (
+    id: number,
+    data: UpdateEventDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<EventResponseDto, any>({
+      path: `/events/${id}`,
+      method: "PATCH",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Events
+   * @name EventsControllerDelete
+   * @summary Delete an event
+   * @request DELETE:/events/{id}
+   */
+  eventsControllerDelete = (id: number, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/events/${id}`,
+      method: "DELETE",
       ...params,
     });
 }

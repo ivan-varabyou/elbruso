@@ -1,0 +1,253 @@
+# Spreadsheet Engine — Новая система с нуля
+
+## Концепция
+
+Создаём **новый модуль `SpreadsheetEngine`** с нуля — отдельный, масштабируемый движок электронных таблиц. Не патчим существующие компоненты. Новый движок заменит и текущие справочные таблицы ([ReferenceTablePage](file:///home/ivan/git/elbruso/packages/frontend/src/modules/admin/ui/ReferenceData/UniversalTable/ReferenceTablePage.tsx#44-615)), и [DynamicTable](file:///home/ivan/git/elbruso/packages/frontend/src/modules/table/types/table.types.ts#3-20) — единая система для всех табличных данных.
+
+> [!IMPORTANT]
+> **Архитектурное решение**: существующие [DynamicTable](file:///home/ivan/git/elbruso/packages/frontend/src/modules/table/types/table.types.ts#3-20), [ReferenceTablePage](file:///home/ivan/git/elbruso/packages/frontend/src/modules/admin/ui/ReferenceData/UniversalTable/ReferenceTablePage.tsx#44-615), [AdminWorkspacesSmart](file:///home/ivan/git/elbruso/packages/frontend/src/modules/workspaces/ui/AdminWorkspacesSmart.tsx#10-199) — **не трогаем**. Новый модуль работает параллельно. После стабилизации — старые компоненты мигрируем на новый движок поэтапно.
+
+---
+
+## Архитектура
+
+```mermaid
+graph TB
+    subgraph "Frontend"
+        SE["SpreadsheetEngine Module"]
+        SE --> Grid["SpreadsheetGrid (ag-grid)"]
+        SE --> FM["FormulaEngine (HyperFormula)"]
+        SE --> TB["Toolbar"]
+        SE --> ST["SheetTabs"]
+        SE --> PP["PropertiesPanel"]
+        SE --> DS["DataSourceRegistry"]
+        DS --> REF["References API"]
+        DS --> IND["Indicators API"]
+    end
+    
+    subgraph "Backend"
+        API["SpreadsheetController"]
+        API --> SVC["SpreadsheetService"]
+        SVC --> DB["PostgreSQL"]
+    end
+    
+    SE --> API
+```
+
+### Domain Model
+
+```mermaid
+erDiagram
+    SPREADSHEET ||--o{ SHEET : "has many"
+    SHEET ||--o{ CELL : "has many"
+    SHEET ||--o{ MERGED_REGION : "has many"
+    SHEET ||--o{ COLUMN_CONFIG : "has many"
+    CELL }o--o| DATA_BINDING : "optional"
+    DATA_BINDING }o--|| DATA_SOURCE : "references"
+
+    SPREADSHEET {
+        uuid id PK
+        string name
+        string description
+        enum status "draft|published"
+        int organization_id FK
+        int sport_id FK
+        jsonb metadata
+        timestamp created_at
+        string created_by
+    }
+    
+    SHEET {
+        uuid id PK
+        uuid spreadsheet_id FK
+        string name
+        int sort_order
+        int row_count
+        int col_count
+        jsonb settings
+    }
+    
+    CELL {
+        uuid id PK
+        uuid sheet_id FK
+        int row
+        int col
+        jsonb value "raw value"
+        string formula
+        jsonb style "font, color, align, border"
+        boolean is_locked
+        string lock_reason
+    }
+    
+    MERGED_REGION {
+        uuid id PK
+        uuid sheet_id FK
+        int start_row
+        int start_col
+        int end_row
+        int end_col
+    }
+    
+    COLUMN_CONFIG {
+        uuid id PK
+        uuid sheet_id FK
+        int col_index
+        string header_name
+        int width
+        enum data_type "text|number|date|reference|indicator"
+        uuid data_source_id FK
+        string data_source_column
+        jsonb validation
+    }
+    
+    DATA_SOURCE {
+        uuid id PK
+        enum source_type "reference|indicator|formula"
+        string source_key "table_key или indicator_code"
+        string display_column
+        string value_column
+        jsonb config
+    }
+```
+
+---
+
+## Phase 1: Backend — Новые таблицы и API
+
+### [NEW] SQL миграция `002_spreadsheet_engine.sql`
+Создание таблиц: `spreadsheets`, `spreadsheet_sheets`, `spreadsheet_cells`, `spreadsheet_merged_regions`, `spreadsheet_column_configs`, `spreadsheet_data_sources`
+
+### [NEW] `packages/backend/src/modules/spreadsheet/`
+```
+spreadsheet/
+├── spreadsheet.module.ts
+├── controllers/
+│   └── spreadsheet.controller.ts    # REST API для CRUD
+├── services/
+│   └── spreadsheet.service.ts       # Business logic
+├── dto/
+│   ├── spreadsheet.dto.ts           # Create/Update DTOs
+│   ├── sheet.dto.ts
+│   ├── cell.dto.ts
+│   └── responses/
+│       └── spreadsheet.response.dto.ts
+└── entities/
+    └── spreadsheet.entity.ts
+```
+
+**Endpoints**:
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/spreadsheets` | Создать spreadsheet |
+| `GET` | `/spreadsheets` | Список (фильтры: org, sport, status) |
+| `GET` | `/spreadsheets/:id` | Полный spreadsheet с sheets + cells |
+| `PUT` | `/spreadsheets/:id` | Обновить метаданные |
+| `DELETE` | `/spreadsheets/:id` | Удалить с каскадом |
+| `POST` | `/spreadsheets/:id/sheets` | Добавить sheet |
+| `PUT` | `/spreadsheets/:id/sheets/:sheetId` | Обновить sheet |
+| `DELETE` | `/spreadsheets/:id/sheets/:sheetId` | Удалить sheet |
+| `PUT` | `/spreadsheets/:id/sheets/:sheetId/cells` | Batch update cells |
+| `PUT` | `/spreadsheets/:id/sheets/:sheetId/columns` | Update column configs |
+| `POST` | `/spreadsheets/:id/publish` | Опубликовать |
+| `POST` | `/spreadsheets/:id/clone` | Клонировать |
+
+---
+
+## Phase 2: Frontend — Модуль SpreadsheetEngine
+
+### [NEW] `packages/frontend/src/modules/spreadsheet/`
+```
+spreadsheet/
+├── types/
+│   ├── spreadsheet.types.ts     # Spreadsheet, Sheet, Cell, ColumnConfig, DataSource
+│   └── index.ts
+├── api/
+│   └── spreadsheet.api.ts       # API client (typed)
+├── stores/
+│   └── useSpreadsheetStore.ts   # Zustand store
+├── lib/
+│   ├── formula-engine.ts        # HyperFormula wrapper (свежий, без legacy)
+│   ├── data-source-registry.ts  # Unified data sourcing
+│   └── cell-utils.ts            # Helper functions
+├── hooks/
+│   ├── useSpreadsheet.hook.ts
+│   ├── useSheetManager.hook.ts
+│   └── useCellSelection.hook.ts
+├── ui/
+│   ├── SpreadsheetEditor.tsx    # Главный компонент (Admin mode)
+│   ├── SpreadsheetViewer.tsx    # Read-only/User mode
+│   ├── SpreadsheetGrid.tsx      # ag-grid wrapper
+│   ├── SpreadsheetToolbar.tsx   # Bold, Italic, Merge, Lock, DataType
+│   ├── FormulaBar.tsx
+│   ├── SheetTabs.tsx            # Управление вкладками (с data)
+│   ├── PropertiesPanel.tsx      # Правая панель свойств ячейки
+│   ├── DataSourcePicker.tsx     # Выбор источника данных (ref/indicator)
+│   ├── ContextMenu.tsx
+│   └── index.ts
+└── index.ts
+```
+
+### Key Design Decisions
+
+1. **ag-grid Community** — grid rendering, virtual scroll, cell editing
+2. **HyperFormula** — formula engine, multi-sheet support built-in
+3. **Zustand** — state management, granular selectors
+4. **DataSourceRegistry** — unified interface для справочников и индикаторов
+5. **Server-first** — все изменения идут на сервер, optimistic updates на клиенте
+
+---
+
+## Phase 3: Admin Edit Page
+
+### [NEW] `apps/app-admin/src/app/(admin)/spreadsheets/page.tsx`
+Список spreadsheet-шаблонов (gallery view + table view)
+
+### [NEW] `apps/app-admin/src/app/(admin)/spreadsheets/[id]/page.tsx`
+Полный редактор: `SpreadsheetEditor` + `PropertiesPanel`
+
+### [MODIFY] Sidebar navigation
+Добавить пункт меню «Spreadsheets» / «Таблицы» в навигацию
+
+---
+
+## Phase 4: Data Source Integration
+
+### [NEW] `data-source-registry.ts`
+```typescript
+enum DataSourceType {
+  REFERENCE = 'reference',     // Данные из справочника
+  INDICATOR = 'indicator',     // Данные из индикатора  
+  MANUAL = 'manual',           // Ручной ввод
+}
+```
+
+- Загружает данные из API справочников и индикаторов
+- Предоставляет unified dropdown для ячеек
+- Поддерживает автозаполнение связанных столбцов
+
+---
+
+## Phase 5: User Mode
+
+### [NEW] `SpreadsheetViewer.tsx`
+- Locked cells → readonly (серый фон)
+- Unlocked cells → editable
+- Reference cells → dropdown
+- Formula cells → auto-calculated
+
+---
+
+## Phase 6: Миграция существующих справочников
+
+После стабилизации — перевод [ReferenceTablePage](file:///home/ivan/git/elbruso/packages/frontend/src/modules/admin/ui/ReferenceData/UniversalTable/ReferenceTablePage.tsx#44-615) на новый `SpreadsheetViewer` поэтапно.
+
+---
+
+## Verification Plan
+
+### Автоматизированные тесты
+- Backend e2e: CRUD spreadsheets, sheets, cells
+- Frontend unit: formula engine, data source registry
+
+### Ручная верификация
+Все use cases из [use-cases.md](file:///home/ivan/.gemini/antigravity/brain/8d418aa8-b742-4de0-8ce1-daf9d841694d/use-cases.md) проверяются через UI.

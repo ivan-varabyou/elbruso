@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum, IsBoolean } from "class-validator";
+import { IsString, IsOptional, IsEnum, IsBoolean, IsArray } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { UserRole } from "../enums/user-role.enum";
 
@@ -18,9 +18,10 @@ export class UpdateUserDto {
   @IsString()
   middle_name?: string;
 
-  @ApiProperty({ example: "1" })
+  @ApiPropertyOptional({ example: "1" })
+  @IsOptional()
   @IsString()
-  organization_id!: string;
+  organization_id?: string;
 
   @ApiPropertyOptional({ enum: UserRole })
   @IsOptional()
@@ -36,4 +37,9 @@ export class UpdateUserDto {
   @IsOptional()
   @IsBoolean()
   is_approved?: boolean;
+
+  @ApiPropertyOptional({ type: "array" })
+  @IsOptional()
+  @IsArray()
+  workspaces?: { id: string; role: string }[];
 }

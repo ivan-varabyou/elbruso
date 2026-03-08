@@ -1,24 +1,33 @@
 "use client";
 
-
 import { apiClient } from "@frontend/api/admin/client";
 import { ApiResponse } from "@frontend/types";
+import { ProfilePageLayout } from "@frontend/ui/layout/ProfilePageLayout/ProfilePageLayout";
 import { Spinner } from "@heroui/react";
-import { AllCommunityModule, ColDef, ModuleRegistry } from "ag-grid-community";
+import {
+  AllCommunityModule,
+  type CellClassParams,
+  type CellValueChangedEvent,
+  type ColDef,
+  type ICellRendererParams,
+  type IRowNode,
+  ModuleRegistry,
+} from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { type AxiosResponse } from "axios";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
-import { Edit, Plus, Search, Trash2, X } from "lucide-react";
+import { Database, Edit, ExternalLink, Search, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { InlineEditConfirmationModal } from "./components/InlineEditConfirmationModal";
+import { ReferenceFormModal } from "./ReferenceFormModal";
+import type { ReferenceTableConfig } from "./types";
 
 // Register all community modules
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-import { ReferenceFormModal } from "./ReferenceFormModal";
-import { type FrontendTableConfig, getTableConfig } from "./table-configs";
 
 interface ReferenceTablePageProps {
   tableKey: string;
@@ -27,13 +36,13 @@ interface ReferenceTablePageProps {
 export interface ApiReferenceResponse<T = Record<string, unknown>> {
   data: T[];
   total: number;
-  config: FrontendTableConfig;
+  config: ReferenceTableConfig;
 }
 
 export type AxiosReferenceResponse = AxiosResponse<ApiResponse<ApiReferenceResponse>>;
 
 export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
-  const [config, setConfig] = useState<FrontendTableConfig | null>(null);
+  const [config, setConfig] = useState<ReferenceTableConfig | null>(null);
   const [rows, setRows] = useState<Record<string, unknown>[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -41,13 +50,23 @@ export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
   const [editingRow, setEditingRow] = useState<Record<string, unknown> | null>(null);
   const [relatedData, setRelatedData] = useState<Record<string, Record<string, unknown>[]>>({});
 
+  // Inline edit state
+  const [pendingEdit, setPendingEdit] = useState<{
+    node: IRowNode;
+    field: string;
+    oldValue: unknown;
+    newValue: unknown;
+    displayOldValue: unknown;
+    displayNewValue: unknown;
+    columnLabel: string;
+  } | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const isRevertingRef = useRef(false);
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  useEffect(() => {
-    const cfg = getTableConfig(tableKey);
-    if (cfg) setConfig(cfg);
-  }, [tableKey]);
+  // Config is loaded from the API response on fetchData — no static fallback needed.
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -60,7 +79,7 @@ export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
       const apiResponse = response.data;
 
       if (apiResponse.success && apiResponse.data) {
-        const referenceData = apiResponse.data as ApiReferenceResponse;
+        const referenceData = apiResponse.data;
         setRows(referenceData.data);
         if (referenceData.config) {
           setConfig(referenceData.config);
@@ -142,7 +161,123 @@ export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
     }
   };
 
-  const visibleColumns = useMemo(() => config?.columns.filter((c) => !c.hidden) || [], [config]);
+  const onCellValueChanged = useCallback(
+    async (params: CellValueChangedEvent) => {
+      if (!config || isRevertingRef.current || isConfirmModalOpen) return;
+      const { data, colDef, newValue, oldValue, node } = params;
+      const field = colDef.field;
+
+      // Normalize values for comparison (handles null/undefined and number/string mismatches)
+      const normalize = (v: unknown) =>
+        v === null || v === undefined || v === "" ? "" : String(v);
+
+      const oldVal = normalize(oldValue);
+      const newVal = normalize(newValue);
+
+      if (oldVal === newVal || !field) return;
+
+      const column = config.columns.find((c) => c.key === field);
+      if (!column) return;
+
+      const skipConfirm = localStorage.getItem("elbruso_skip_inline_confirm") === "true";
+
+      if (skipConfirm) {
+        try {
+          await apiClient.patch(`reference/data/${tableKey}/${data.id}`, {
+            [field]: newValue,
+          });
+          // Refresh data to ensure UI is in sync (especially if there are calculations/triggers)
+          fetchData();
+        } catch (error) {
+          console.error("Failed to update cell:", error);
+          // Revert on error
+          isRevertingRef.current = true;
+          params.node.setDataValue(field, oldValue);
+          setTimeout(() => {
+            isRevertingRef.current = false;
+          }, 0);
+        }
+      } else {
+        // Resolve labels for confirmation modal if it's a relation
+        let displayOldValue = oldValue;
+        let displayNewValue = newValue;
+
+        if (column.relation) {
+          const refData = colDef.refData;
+          if (refData) {
+            displayOldValue = (refData as Record<string, string>)[String(oldValue)] || oldValue;
+            displayNewValue = (refData as Record<string, string>)[String(newValue)] || newValue;
+          }
+        }
+
+        setPendingEdit({
+          node,
+          field,
+          oldValue,
+          newValue,
+          displayOldValue,
+          displayNewValue,
+          columnLabel: column.label,
+        });
+        setIsConfirmModalOpen(true);
+      }
+    },
+    [config, tableKey, fetchData, isConfirmModalOpen],
+  );
+
+  const confirmInlineEdit = async (skipNextTime: boolean) => {
+    if (!pendingEdit) return;
+    const { node, field, newValue, oldValue } = pendingEdit;
+    const data = node.data;
+
+    if (!field) {
+      setIsConfirmModalOpen(false);
+      setPendingEdit(null);
+      return;
+    }
+
+    if (skipNextTime) {
+      localStorage.setItem("elbruso_skip_inline_confirm", "true");
+    }
+
+    try {
+      await apiClient.patch(`reference/data/${tableKey}/${data.id}`, {
+        [field]: newValue,
+      });
+      setIsConfirmModalOpen(false);
+      setPendingEdit(null);
+      fetchData();
+    } catch (error) {
+      console.error("Failed to update cell:", error);
+      isRevertingRef.current = true;
+      node.setDataValue(field, oldValue);
+      setTimeout(() => {
+        isRevertingRef.current = false;
+      }, 0);
+      setIsConfirmModalOpen(false);
+      setPendingEdit(null);
+    }
+  };
+
+  const cancelInlineEdit = () => {
+    if (pendingEdit) {
+      const { node, field, oldValue } = pendingEdit;
+      if (field) {
+        isRevertingRef.current = true;
+        node.setDataValue(field, oldValue);
+        setTimeout(() => {
+          isRevertingRef.current = false;
+        }, 0);
+      }
+    }
+    setIsConfirmModalOpen(false);
+    setPendingEdit(null);
+  };
+
+  const visibleColumns = useMemo(
+    () => config?.columns.filter((c) => !c.hidden && c.key !== "id") || [],
+    [config],
+  );
 
   const columnDefs = useMemo<ColDef[]>(() => {
     if (!config) return [];
@@ -153,7 +288,7 @@ export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
         field: "id",
         width: 100,
         pinned: "left",
-        cellRenderer: (params: any) => {
+        cellRenderer: (params: ICellRendererParams) => {
           const isSystem =
             config &&
             ((config.hasIsSystem && params.data.is_system === true) ||
@@ -176,11 +311,47 @@ export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
           field: col.key,
           flex: 1,
           minWidth: 150,
+          editable: (params) => {
+            // System records might have partial protection, but generic reference manager usually allows editing if metadata says so.
+            return !!col.editable;
+          },
+          cellClassRules: {
+            "bg-blue-50/30": (params: CellClassParams) =>
+              !!(col.editable && !params.node.isSelected()),
+          },
         };
 
-        colDef.cellRenderer = (params: any) => {
+        if (col.relation) {
+          const relTable = relatedData[col.relation.table] || [];
+          const labelField = col.relation.labelField;
+
+          // Create mapping for ag-grid refData (ID -> Label)
+          const refData: Record<string, string> = {};
+          relTable.forEach((item: Record<string, unknown>) => {
+            refData[String(item.id)] = String(item[labelField]);
+          });
+
+          colDef.refData = refData;
+          colDef.cellEditor = "agSelectCellEditor";
+          colDef.cellEditorParams = (params: ICellRendererParams) => {
+            const currentValue = String(params.value);
+            const values = relTable.map((item: Record<string, unknown>) => String(item.id));
+
+            // Move current value to the first position if it exists in the list
+            const sortedValues = [...values];
+            const index = sortedValues.indexOf(currentValue);
+            if (index > -1) {
+              sortedValues.splice(index, 1);
+              sortedValues.unshift(currentValue);
+            }
+
+            return { values: sortedValues };
+          };
+        }
+
+        colDef.cellRenderer = (params: ICellRendererParams) => {
           const value = params.value;
-          if (value === null || value === undefined)
+          if (value === null || value === undefined || value === "")
             return <span className="text-zinc-300">—</span>;
 
           if (col.format === "flag" && typeof value === "string") {
@@ -198,38 +369,40 @@ export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
             );
           }
 
-          if (col.relation && typeof value === "number") {
-            const relTable = relatedData[col.relation.table];
-            const relItem = relTable?.find((item: any) => item.id === value);
-            const label = relItem ? String(relItem[col.relation.labelField]) : String(value);
+          if (col.relation) {
+            const refDataValue = colDef.refData as Record<string, string> | undefined;
+            const label = (refDataValue ? refDataValue[String(value)] : null) || String(value);
 
-            let flagCode = null;
-            if (col.relation.table === "countries") {
-              flagCode = (relItem?.code_alpha2 as string | undefined)?.toLowerCase();
+            const relItem = (relatedData[col.relation.table] || []).find(
+              (item: Record<string, unknown>) => String(item.id) === String(value),
+            );
+
+            let flagCode: string | undefined = undefined;
+            if (col.relation.table === "countries" && typeof relItem?.code_alpha2 === "string") {
+              flagCode = relItem.code_alpha2.toLowerCase();
             }
 
             return (
-              <div className="flex items-center gap-2 h-full">
-                {flagCode ? (
-                  <Link
-                    href={`/reference/data/${col.relation.table}?id=${value}`}
-                    className="hover:scale-110 transition-transform"
-                  >
+              <div className="flex items-center justify-between gap-2 h-full w-full group">
+                <div className="flex items-center gap-2 truncate">
+                  {flagCode && (
                     <img
                       src={`https://flagcdn.com/w20/${flagCode}.png`}
                       width="20"
                       alt={label}
-                      className="rounded-sm"
+                      className="rounded-sm shrink-0"
                     />
-                  </Link>
-                ) : (
-                  <Link
-                    href={`/reference/data/${col.relation.table}?id=${value}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {label}
-                  </Link>
-                )}
+                  )}
+                  <span className="truncate">{label}</span>
+                </div>
+                <Link
+                  href={`/reference/data/${col.relation.table}?id=${value}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-zinc-100 text-zinc-400 hover:text-blue-600 transition-all shrink-0"
+                  title="Перейти к записи"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                </Link>
               </div>
             );
           }
@@ -265,7 +438,7 @@ export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
         sortable: false,
         filter: false,
         resizable: false,
-        cellRenderer: (params: any) => (
+        cellRenderer: (params: ICellRendererParams) => (
           <div className="flex items-center justify-end gap-1 h-full">
             <button
               onClick={() => handleEdit(params.data)}
@@ -311,40 +484,38 @@ export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
   if (!config) return null;
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-zinc-900">{config.label}</h1>
-        <button
-          onClick={handleCreate}
-          className="flex items-center gap-2 px-4 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors text-sm"
-        >
-          <Plus className="h-4 w-4" />
-          Добавить
-        </button>
-      </div>
-
-      {/* Search */}
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-        <input
-          type="text"
-          placeholder="Поиск..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-4 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-400 transition-all font-inter"
-        />
-
+    <ProfilePageLayout
+      title={config.label}
+      icon={Database}
+      onAddClick={handleCreate}
+      constructorLabel="Режим конструктора"
+      constructorLink={`/reference/management/edit/${tableKey}`}
+      actions={
+        <div className="relative w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <input
+            type="text"
+            placeholder="Поиск..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-9 pr-4 py-1.5 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-400 transition-all font-inter"
+          />
+        </div>
+      }
+    >
+      <div className="space-y-4">
         {/* Active Filter Chips */}
         {config &&
           Array.from(searchParams.entries()).filter(([k]) => k !== "search").length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2">
+            <div className="flex flex-wrap gap-2">
               {Array.from(searchParams.entries())
                 .filter(([k]) => k !== "search")
                 .map(([key, val]) => {
                   const col = config.columns.find((c) => c.key === key);
                   const relTable = col?.relation ? relatedData[col.relation.table] : null;
-                  const relItem = relTable?.find((item) => String(item.id) === val);
+                  const relItem = relTable?.find(
+                    (item: Record<string, unknown>) => String(item.id) === val,
+                  );
                   const label = relItem ? String(relItem[col!.relation!.labelField]) : val;
 
                   return (
@@ -377,52 +548,67 @@ export function ReferenceTablePage({ tableKey }: ReferenceTablePageProps) {
               </button>
             </div>
           )}
-      </div>
 
-      {/* Table Section */}
-      <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm h-[calc(100vh-320px)] min-h-[400px]">
-        {loading ? (
-          <div className="flex h-full items-center justify-center">
-            <Spinner size="lg" />
-          </div>
-        ) : rows.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-zinc-400 text-sm">
-            Нет данных {searchParams.toString() && "(попробуйте сбросить фильтры)"}
-          </div>
-        ) : (
-          <div className="ag-theme-quartz h-full w-full">
-            <AgGridReact
-              rowData={rows}
-              columnDefs={columnDefs}
-              defaultColDef={{
-                resizable: true,
-                sortable: true,
-                filter: true,
-              }}
-              pagination={true}
-              paginationPageSize={20}
-              headerHeight={44}
-              rowHeight={44}
-              suppressCellFocus={true}
-              enableCellTextSelection={true}
-            />
-          </div>
+        {/* Table Section */}
+        <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm h-[calc(100vh-200px)] min-h-[400px]">
+          {loading ? (
+            <div className="flex h-full items-center justify-center">
+              <Spinner size="lg" />
+            </div>
+          ) : rows.length === 0 ? (
+            <div className="flex h-full items-center justify-center text-zinc-400 text-sm">
+              Нет данных {searchParams.toString() && "(попробуйте сбросить фильтры)"}
+            </div>
+          ) : (
+            <div className="ag-theme-quartz h-full w-full">
+              <AgGridReact
+                rowData={rows}
+                columnDefs={columnDefs}
+                defaultColDef={{
+                  resizable: true,
+                  sortable: true,
+                  filter: true,
+                }}
+                pagination={true}
+                paginationPageSize={20}
+                headerHeight={44}
+                rowHeight={44}
+                suppressCellFocus={false}
+                enableCellTextSelection={true}
+                onCellValueChanged={onCellValueChanged}
+                undoRedoCellEditing={true}
+                undoRedoCellEditingLimit={5}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Inline Edit Confirmation */}
+        {pendingEdit && (
+          <InlineEditConfirmationModal
+            isOpen={isConfirmModalOpen}
+            oldValue={pendingEdit.displayOldValue}
+            newValue={pendingEdit.displayNewValue}
+            columnLabel={pendingEdit.columnLabel}
+            onConfirm={confirmInlineEdit}
+            onCancel={cancelInlineEdit}
+          />
         )}
+
+        {!loading && rows.length > 0 && (
+          <div className="text-xs text-zinc-400">Всего записей: {rows.length}</div>
+        )}
+
+        <ReferenceFormModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave}
+          columns={config.columns}
+          initialData={editingRow}
+          tableLabel={config.label}
+          relatedData={relatedData}
+        />
       </div>
-
-      {!loading && rows.length > 0 && (
-        <div className="text-xs text-zinc-400">Всего записей: {rows.length}</div>
-      )}
-
-      <ReferenceFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSave}
-        columns={config.columns}
-        initialData={editingRow}
-        tableLabel={config.label}
-        relatedData={relatedData}
-      />
-    </div>
+    </ProfilePageLayout>
   );
 }
